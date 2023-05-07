@@ -3,9 +3,8 @@ import { CodeToExecute } from '../../types/types';
 const apiHost = process.env['RAPIDAPI_HOST']
 const apiKey = process.env['RAPIDAPI_KEY']
 
-export async function sendCode(codeObject: CodeToExecute) {
-  
-  const submissionPost = {
+export async function sendCode(codeToExecute: CodeToExecute) {
+  const codeSubmissionReq = {
     url: 'https://' + apiHost + '/submissions',
     params: {
       base64_encoded: 'false', //<-- update this when we set up encoding in frontend
@@ -19,17 +18,18 @@ export async function sendCode(codeObject: CodeToExecute) {
       'X-RapidAPI-Host':apiHost,
     },
     data: {
-      language_id: codeObject.language_id,
-      source_code: codeObject.source_code,
-      stdin: codeObject.stdin,
+      language_id: codeToExecute.language_id,
+      source_code: codeToExecute.source_code,
+      stdin: codeToExecute.stdin,
     }
   } 
+  //still need to add logic here for status messages
 
-  const submissionPostResponse = await axios.request(submissionPost)
-  const token = submissionPostResponse.data.token;
+  const codeSubmissionRes = await axios.request(codeSubmissionReq)
+  const submissionToken = codeSubmissionRes.data.token;
   
-  const submissionGet = {
-    url: 'https://' + apiHost + '/submissions/' + token,
+  const submissionResultReq = {
+    url: 'https://' + apiHost + '/submissions/' + submissionToken,
     params: {
       base64_encoded: 'false',  //<-- update this when we set up encoding in frontend
       fields: '*' //might be able to remove this entirely
@@ -41,8 +41,6 @@ export async function sendCode(codeObject: CodeToExecute) {
     }
   }
 
-  //still need to add logic here for status messages
-
-  const responseTwo = await axios.request(submissionGet);
-  return responseTwo.data.stdout
+  const submissionResultRes = await axios.request(submissionResultReq);
+  return submissionResultRes.data.stdout
 }

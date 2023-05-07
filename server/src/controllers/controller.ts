@@ -5,14 +5,10 @@ import { CodeToExecute } from "../types/types";
 export async function getConsoleOutput(req: Request, res: Response) {
   console.log('POST received - getConsoleOutput')
   try {
-    // const codeToBeExecuted: CodeToExecute = req.body
-    const reqBodySample: CodeToExecute = {
-      language_id: "63",
-      source_code: "function test() { console.log('let us see if this works') }; test();",
-      stdin: ""
-    }
-
-    const codeExecutionOutput = await sendCode(reqBodySample)
+    //add condtionals here for error handling
+    //add tests
+    const codeToBeExecuted: CodeToExecute = req.body
+    const codeExecutionOutput = await sendCode(codeToBeExecuted)
     res.status(200).send(codeExecutionOutput)
     //still need to add error handling here
   } catch (err) {
