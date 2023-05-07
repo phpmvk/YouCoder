@@ -26,7 +26,8 @@ This project requires certain configuration variables to be set in a `.env` file
 
 2. Replace the placeholder values in `.env` with your own values.
 
-- `DB_HOST`: Your [Judge0 API key](https://rapidapi.com/judge0-official/api/judge0-ce/pricing).
+- `RAPIDAPI_KEY`: Your [Judge0 API key](https://rapidapi.com/judge0-official/api/judge0-ce/pricing).
+- `RAPIDAPI_HOST`: The host url for Judge0 on RapidAPI.
 - `PORT`: The port number that the server should listen on.
 
 3. Save the `.env` file and make sure it's in the [root || server] directory of the project.
