@@ -1,4 +1,7 @@
-import * as dotenv from 'dotenv'
+import dotenv from 'dotenv'
+import path from 'path'
+const rootDir = path.join(__dirname, '..') //necessary since we have server and client in same repo. If we move server to another repo, we can eliminate this step
+process.chdir(rootDir)
 dotenv.config()
 import express, { Request, Response } from 'express'
 import cors from 'cors'
