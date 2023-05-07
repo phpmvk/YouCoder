@@ -21,3 +21,5 @@ app
 app.listen(PORT, () => {
   console.log(`Server up and listening on port: ${PORT}`)
 })
+
+export { app };

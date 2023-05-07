@@ -9,7 +9,7 @@ export async function getConsoleOutput(req: Request, res: Response) {
     //add tests
     const codeToBeExecuted: CodeToExecute = req.body
     const codeExecutionOutput = await sendCode(codeToBeExecuted)
-    res.status(200).send(codeExecutionOutput)
+    res.status(200).send({stdout: codeExecutionOutput})
     //still need to add error handling here
   } catch (err) {
     console.error(err)
