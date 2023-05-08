@@ -2,31 +2,28 @@ import { Request, Response } from "express";
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 import admin from "../services/Firebase";
-import { DecodedIdToken } from "firebase-admin/auth";
-
 
 export async function creatorLogin(req: Request, res: Response) {
   console.log('Users - POST received - creatorLogin')
-
-  const headerToken = req.headers.authorization
-
-  if (!headerToken) {
-    return res.status(401).send({ message: 'No token provided' });
-  }
-  if (headerToken && headerToken.split(' ')[0] !== 'Bearer') {
-    return res.status(401).send({ message: 'Invalid token' })
-  }
+  try {
+    const headerToken = req.headers.authorization
   
-  const token = headerToken.split(' ')[1];
-  let validatedToken;
-
-  try {
-    validatedToken = await admin.auth().verifyIdToken(token)
-  } catch (err) {
-    return res.status(403).send({ message: 'Could not authorize' + err })
-  }
-
-  try {
+    if (!headerToken) {
+      return res.status(401).send({ message: 'No token provided' });
+    }
+    if (headerToken && headerToken.split(' ')[0] !== 'Bearer') {
+      return res.status(401).send({ message: 'Invalid token' })
+    }
+    
+    const token = headerToken.split(' ')[1];
+    let validatedToken;
+  
+    try {
+      validatedToken = await admin.auth().verifyIdToken(token)
+    } catch (err) {
+      return res.status(403).send({ message: 'Could not authorize' + err })
+    }
+  
     const user = await prisma.creator.findUnique({
       where: {
         uid: validatedToken.uid 
@@ -45,10 +42,10 @@ export async function creatorLogin(req: Request, res: Response) {
       })
       res.status(201).send({ user: newUser})
     }
-    
+
   } catch (err) {
-    console.error(err);
-    res.status(400).send({ error: err});
+    console.error(err)
+    res.status(500).send({ error: 'Internal server error'})
   }
 }
 
@@ -60,7 +57,23 @@ export function updateCreator(req: Request, res: Response) {
 
 
 //delete user
-export function deleteCreator(req: Request, res: Response) {
-  console.log('Users - DELETE received - deleteCreator')
+export async function deleteCreator(req: Request, res: Response) {
+  try {
+    const { creatorid } = req.params;
+    if (!creatorid) res.status(400).send({ error: 'Bad request' })
 
+    try {
+      await prisma.creator.delete({
+        where: {
+          uid: creatorid
+        }
+      })
+      return res.status(204).send() // <--- make sure this URL works
+    } catch (err) {
+      return res.status(400).send({ error: 'User not found'})
+    }
+  } catch (err) {
+    console.error(err)
+    res.status(500).send({ error: 'Internal server error'})
+  }
 }
