@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   getAuth,
   GoogleAuthProvider,
@@ -6,19 +6,26 @@ import {
   GithubAuthProvider,
 } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import EmailLogin from '../components/EmailLogin';
+import { BsGoogle, BsGithub } from 'react-icons/bs';
 
 export interface ILoginPageProps {}
 
 const LoginPage: React.FC<ILoginPageProps> = () => {
   const auth = getAuth();
   const navigate = useNavigate();
-  const [authing, setAuthing] = React.useState(false);
+  const [authing, setAuthing] = useState(false);
+  const [alerts, setAlerts] = useState<string>('');
 
   const signInWithGoogle = async () => {
     setAuthing(true);
     signInWithPopup(auth, new GoogleAuthProvider())
       .then((response) => {
-        console.log('user from google: ', response.user);
+        console.log('user from google: ', response);
+        const token = response?.user?.accessToken;
+        if (token) {
+          localStorage.setItem('token', token);
+        }
         navigate('/');
       })
       .catch((error) => {
@@ -31,7 +38,11 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
     setAuthing(true);
     signInWithPopup(auth, new GithubAuthProvider())
       .then((response) => {
-        console.log('user from github: ', response.user);
+        console.log('user from github: ', response);
+        const token = response?.user?.accessToken;
+        if (token) {
+          localStorage.setItem('token', token);
+        }
         navigate('/');
       })
       .catch((error) => {
@@ -40,21 +51,50 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
       });
   };
 
+  const signInWithEmail = async (email: string, password: string) => {
+    setAuthing(true);
+    // signInWithEmailAndPassword(auth, email, password)
+    //   .then((response) => {
+    //    console.log('user from email: ', response.user);
+    //    navigate('/');
+    //  })
+    //  .catch((error) => {
+    //    console.log(error);
+    //    setAuthing(false);
+    //  });
+  };
+
   return (
-    <div>
-      <h1>Login Page</h1>
-      <button
-        onClick={() => signInWithGoogle()}
-        disabled={authing}
-      >
-        Sign in with Google
-      </button>
-      <button
-        onClick={() => signInWithGithub()}
-        disabled={authing}
-      >
-        Sign in with Github
-      </button>
+    <div className='w-full max-w-xs'>
+      <h1 className='mb-6'>Login</h1>
+      {/* <EmailLogin
+        login={signInWithEmail}
+        alerts={alerts}
+        setAlerts={setAlerts}
+        authing={authing}
+      /> */}
+      <div className='flex justify-evenly'>
+        <button
+          className='flex items-center'
+          onClick={() => signInWithGoogle()}
+          disabled={authing}
+        >
+          Sign in with
+          <span className='ml-2'>
+            <BsGoogle />
+          </span>
+        </button>
+        <button
+          className='flex items-center'
+          onClick={() => signInWithGithub()}
+          disabled={authing}
+        >
+          Sign in with{' '}
+          <span className='ml-2 text-lg'>
+            <BsGithub />
+          </span>
+        </button>
+      </div>
     </div>
   );
 };
