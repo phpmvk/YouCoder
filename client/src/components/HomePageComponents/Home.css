@@ -1,0 +1,140 @@
+/* .home {
+    text-align: center;
+    background-color: #050505;
+    font-family: Space Grotesk;
+  }
+   */
+
+  /* .heading-text {
+    text-align: center;
+    white-space: nowrap;
+    font-weight: 600;
+    margin-top: 35vh;
+    z-index: 1;
+  } */
+  
+  /* .heading {
+    height: 75vh;
+  } */
+  
+  /* .text-white {
+    color: white;
+    
+  }
+  
+  .text-purple {
+    color: #b300ff;
+  } */
+  
+  /* .blinking-cursor {
+    animation: blink 1.5s infinite;
+  } */
+  
+  /* @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  } */
+  
+  
+  /* .blinking-dot {
+    position: absolute;
+    top: 5%;
+    right: 20%;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    border-radius: 50%;
+    animation: blinking 1s infinite;
+  } */
+  
+  /* .blinking-dot2 {
+    animation: blinking 1s infinite;
+  } */
+  
+  /* @keyframes blinking {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }  */
+  
+  /* .expand-rectangle {
+    animation-name: expand;
+    animation-duration: 3s;
+    animation-fill-mode:forwards;
+  }
+  
+  @keyframes expand {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(6);
+    }
+  } */
+  
+  /* .actively {
+    animation-name: toYellow;
+    animation-duration: 4s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    
+  }
+  
+  @keyframes toYellow {
+    from {
+      color: white;
+      
+    }
+    to {
+      color: #ccff00;
+      
+    }
+  } */
+  
+  /* .top-ball {
+    position: absolute;
+    transform: translate(-40vw, -40vw);
+    border-radius: 50%;
+    background: linear-gradient(75deg, black ,black, black, black,   #b300ff, white );
+  } */
+  
+  /* .middle-ball {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    background: radial-gradient(circle, black, black, black, black, black, black, #b300ff, white, black);
+    box-shadow:
+      0 0 0.3vw 0.3vw rgb(204,255,0, 0.9),
+      0 0 1vw 1vw rgba(255, 255, 255, 0.6),
+      0 0 2vw 2vw rgba(255, 255, 255, 0.3),
+      0 0 3vw 3vw rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 9rem;
+      font-weight: 600;
+  } */
+  
+  /* .bottom-ball {
+    position: absolute;
+    transform: translate(50vw, 50vw);
+    border-radius: 50%;
+    background: radial-gradient(circle, #ccff00,  transparent, transparent, transparent, transparent);
+    
+  } */
+  
+  
