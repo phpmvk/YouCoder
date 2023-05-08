@@ -38,6 +38,7 @@ userHttp.interceptors.request.use(
 
 class UserApiService {
   creatorLogin(token: string): Promise<AxiosResponse<typeof rootUser>> {
+    console.log('checking token', token);
     return new Promise(async (resolve, reject) => {
       try {
         const response = await userHttp.post<typeof rootUser>(

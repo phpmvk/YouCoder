@@ -1,10 +1,11 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export const rootUser = {
-  id: '',
-  username: '',
+  uid: '',
+  displayName: '',
   email: '',
-  accessToken: '',
+  join_date: '',
+  recordings: [],
 };
 
 export const userSlice = createSlice({
