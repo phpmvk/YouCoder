@@ -1,5 +1,6 @@
-import axios, { AxiosResponse, AxiosError } from 'axios';
+import axios, { AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios';
 import { rootUser } from '../redux/userSlice';
+import baseURL from './baseUrl';
 
 /***************************
 to use this file:
@@ -18,17 +19,27 @@ userApi.creatorLogin(id)
 ****************************/
 
 const userHttp = axios.create({
-  baseURL: 'http://localhost:3001',
+  baseURL,
   headers: {
     'Content-type': 'application/json',
-    Authorization: `Bearer ${localStorage.getItem('token')}`,
   },
 });
 
+userHttp.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 class UserApiService {
-  creatorLogin(
-    id: string
-  ): Promise<AxiosResponse<typeof rootUser> | string[]> | undefined {
+  creatorLogin():
+    | Promise<AxiosResponse<typeof rootUser> | string[]>
+    | undefined {
     try {
       return userHttp.post<typeof rootUser>(`/users/creator/add`);
     } catch (e) {

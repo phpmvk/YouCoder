@@ -1,5 +1,12 @@
-import { AxiosResponse, AxiosError } from 'axios';
-import http from './http-common';
+import axios, { AxiosResponse, AxiosError } from 'axios';
+import baseURL from './baseUrl';
+
+const http = axios.create({
+  baseURL,
+  headers: {
+    'Content-type': 'application/json',
+  },
+});
 
 class RecordingApiService {
   getRecording(id: string): Promise<AxiosResponse<string>> | undefined {
@@ -23,3 +30,5 @@ class RecordingApiService {
     }
   }
 }
+
+export default new RecordingApiService();

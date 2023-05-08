@@ -20,9 +20,8 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
   const signInWithGoogle = async () => {
     setAuthing(true);
     signInWithPopup(auth, new GoogleAuthProvider())
-      .then((response) => {
-        console.log('user from google: ', response);
-        const token = response?.user?.accessToken;
+      .then(async (response) => {
+        const token = await response.user.getIdToken();
         if (token) {
           localStorage.setItem('token', token);
         }
@@ -37,9 +36,8 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
   const signInWithGithub = async () => {
     setAuthing(true);
     signInWithPopup(auth, new GithubAuthProvider())
-      .then((response) => {
-        console.log('user from github: ', response);
-        const token = response?.user?.accessToken;
+      .then(async (response) => {
+        const token = await response.user.getIdToken();
         if (token) {
           localStorage.setItem('token', token);
         }
@@ -51,18 +49,18 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
       });
   };
 
-  const signInWithEmail = async (email: string, password: string) => {
-    setAuthing(true);
-    // signInWithEmailAndPassword(auth, email, password)
-    //   .then((response) => {
-    //    console.log('user from email: ', response.user);
-    //    navigate('/');
-    //  })
-    //  .catch((error) => {
-    //    console.log(error);
-    //    setAuthing(false);
-    //  });
-  };
+  // const signInWithEmail = async (email: string, password: string) => {
+  //   setAuthing(true);
+  //   // signInWithEmailAndPassword(auth, email, password)
+  //   //   .then((response) => {
+  //   //    console.log('user from email: ', response.user);
+  //   //    navigate('/');
+  //   //  })
+  //   //  .catch((error) => {
+  //   //    console.log(error);
+  //   //    setAuthing(false);
+  //   //  });
+  // };
 
   return (
     <div className='w-full max-w-xs'>
