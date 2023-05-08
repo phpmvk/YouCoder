@@ -1,8 +1,9 @@
 import { Router } from 'express'
 const router = Router();
-import { addNewCreator } from '../controllers/users.controller'
+import { creatorLogin, updateCreator, deleteCreator } from '../controllers/users.controller'
 
-router.post('/user/creator/add', addNewCreator)
-
+router.post('/users/creator/add', creatorLogin)
+router.patch('/users/creator/update/:creatorid', updateCreator)
+router.delete('/users/creator/delete/:creatorid', deleteCreator)
 
 export default router
