@@ -18,7 +18,20 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
     setAuthing(true);
     signInWithPopup(auth, new GoogleAuthProvider())
       .then((response) => {
-        console.log(response.user.uid);
+        console.log('user from google: ', response.user);
+        navigate('/');
+      })
+      .catch((error) => {
+        console.log(error);
+        setAuthing(false);
+      });
+  };
+
+  const signInWithGithub = async () => {
+    setAuthing(true);
+    signInWithPopup(auth, new GithubAuthProvider())
+      .then((response) => {
+        console.log('user from github: ', response.user);
         navigate('/');
       })
       .catch((error) => {
@@ -35,6 +48,12 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
         disabled={authing}
       >
         Sign in with Google
+      </button>
+      <button
+        onClick={() => signInWithGithub()}
+        disabled={authing}
+      >
+        Sign in with Github
       </button>
     </div>
   );
