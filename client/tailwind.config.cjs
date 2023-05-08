@@ -9,7 +9,12 @@ module.exports = {
         bg: {
           pri: '#050505',
           sec: '#b300ff',
-          alt: '#ccff00'
+          alt: '#ccff00',
+          blackTransparent: 'rgba(3, 0, 0, 0.5)',
+          muigrey: '#2a2a2a',
+        },
+        text: {
+        // normal: 'slate-300',
         },
       },
       fontFamily: {
@@ -35,7 +40,7 @@ module.exports = {
         },
       },
       backgroundImage:(theme) => ({
-        'gradient-primary': `radial-gradient(at left center, rgb(0, 0, 0), rgb(17, 24, 39), rgb(0, 0, 0))`,
+        'gradient-primary': `radial-gradient(at bottom center, rgb(0, 0, 0), rgb(17, 24, 39), rgb(0, 0, 0))`,
       })
     }
   },

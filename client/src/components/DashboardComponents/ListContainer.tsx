@@ -15,9 +15,9 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const ListContainer = () => {
   return (
-<div className="bg-transparent h-[auto] w-10/12 m-auto mt-[5vh] mb-[20vh]rounded-sm ">
+<div className="bg-transparent h-[auto] w-9/12 m-auto mt-[5vh] mb-[20vh]rounded-sm ">
 <Box sx={{ width: '100%' }}>
-      <Stack spacing={1}>
+      <Stack spacing={3}>
         <ListItem>Item 1</ListItem>
         <ListItem>Item 1</ListItem>
         <ListItem>Item 1</ListItem>

@@ -40,7 +40,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({}) => {
   console.log('showCreateRecording', showCreateRecording);
 
   return (
-    <div className="bg-gradient-primary h-screen overflow-auto">
+    <div className="bg-bg-pri h-screen overflow-auto">
       <TopNavBar showSearch={true} showCreateRecording={showCreateRecording} />
       <div>
         <CreateRecordingButton ref={createRecordingButtonRef} />
