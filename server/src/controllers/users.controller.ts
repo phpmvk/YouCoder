@@ -49,14 +49,11 @@ export async function creatorLogin(req: Request, res: Response) {
   }
 }
 
-//update user
+//this should be discarded if we dont implement this feature in the deployed version
 export function updateCreator(req: Request, res: Response) {
   console.log('Users - PATCH received - updateCreator')
-
 }
 
-
-//delete user
 export async function deleteCreator(req: Request, res: Response) {
   try {
     const { creatorid } = req.params;
