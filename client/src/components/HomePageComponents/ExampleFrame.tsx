@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './Home.css';
+
 
 const debounce = (func, wait) => {
   let timeout;
@@ -41,7 +41,7 @@ const ExampleFrame: React.FC = () => {
   return (
     <>
       <div
-        className={`rectangle${scrollPosition >= window.innerHeight * 0.5 ? ' expand-rectangle' : ''}`}
+        className={`rectangle${scrollPosition >= window.innerHeight * 0.5 ? ' animate-expand' : ''}`}
         style={{
           display: 'flex',
           position: 'absolute',
@@ -56,7 +56,7 @@ const ExampleFrame: React.FC = () => {
           zIndex: 1000,
         }}
       />
-      <div style={{ height: '300vh' }}></div>
+      <div className="h-[300vh]"></div>
     </>
   );
 };

@@ -7,10 +7,14 @@ interface BallProps {
 
 const BottomBall: React.FC<BallProps> = ({percentage}) => {
   return (
-    <div className="bottom-ball"
+    <div 
     style={{
         width: percentage * 1000 - 220,
         height: percentage * 1000 - 220,
+        position: 'absolute',
+        transform: 'translate(50vw, 50vw)',
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, #ccff00, transparent, transparent, transparent, transparent)',
     }}
     ></div>
   )

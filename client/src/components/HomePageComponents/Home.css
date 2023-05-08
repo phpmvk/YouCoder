@@ -5,32 +5,32 @@
   }
    */
 
-  .heading-text {
+  /* .heading-text {
     text-align: center;
     white-space: nowrap;
     font-weight: 600;
     margin-top: 35vh;
     z-index: 1;
-  }
+  } */
   
   /* .heading {
     height: 75vh;
   } */
   
-  .text-white {
+  /* .text-white {
     color: white;
     
   }
   
   .text-purple {
     color: #b300ff;
-  }
+  } */
   
-  .blinking-cursor {
+  /* .blinking-cursor {
     animation: blink 1.5s infinite;
-  }
+  } */
   
-  @keyframes blink {
+  /* @keyframes blink {
     0%,
     100% {
       opacity: 1;
@@ -38,7 +38,7 @@
     50% {
       opacity: 0;
     }
-  }
+  } */
   
   
   /* .blinking-dot {
@@ -52,11 +52,11 @@
     animation: blinking 1s infinite;
   } */
   
-  .blinking-dot2 {
+  /* .blinking-dot2 {
     animation: blinking 1s infinite;
-  }
+  } */
   
-  @keyframes blinking {
+  /* @keyframes blinking {
     0%,
     100% {
       opacity: 1;
@@ -64,9 +64,9 @@
     50% {
       opacity: 0;
     }
-  } 
+  }  */
   
-  .expand-rectangle {
+  /* .expand-rectangle {
     animation-name: expand;
     animation-duration: 3s;
     animation-fill-mode:forwards;
@@ -79,17 +79,17 @@
     to {
       transform: scale(6);
     }
-  }
+  } */
   
-  .actively {
-    animation-name: example;
+  /* .actively {
+    animation-name: toYellow;
     animation-duration: 4s;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
     
   }
   
-  @keyframes example {
+  @keyframes toYellow {
     from {
       color: white;
       
@@ -98,7 +98,7 @@
       color: #ccff00;
       
     }
-  }
+  } */
   
   /* .top-ball {
     position: absolute;
@@ -129,12 +129,12 @@
       font-weight: 600;
   } */
   
-  .bottom-ball {
+  /* .bottom-ball {
     position: absolute;
     transform: translate(50vw, 50vw);
     border-radius: 50%;
     background: radial-gradient(circle, #ccff00,  transparent, transparent, transparent, transparent);
     
-  }
+  } */
   
   

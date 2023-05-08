@@ -53,10 +53,10 @@ const TeachInteractively = () => {
         className="text-white"
         style={{ fontSize: '5rem', marginLeft: `${marginLeft}vw` }}
       >
-        <span style={{ color: 'white' }}>Teach Inter</span>
+        <span className="text-white">Teach Inter</span>
         <span
           style={{ fontWeight: 600 }}
-          className={isActive ? 'actively' : ''}
+          className={isActive ? 'animate-turnYellow' : ''}
         >
           actively.
         </span>
