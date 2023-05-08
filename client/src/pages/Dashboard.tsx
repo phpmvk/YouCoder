@@ -43,7 +43,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({}) => {
     <div className="bg-bg-pri h-screen overflow-auto">
       <TopNavBar showSearch={true} showCreateRecording={showCreateRecording} />
       <div>
-        <CreateRecordingButton ref={createRecordingButtonRef} />
+        <CreateRecordingButton ref={createRecordingButtonRef}  />
         <ListContainer />
       </div>
       <Footer />

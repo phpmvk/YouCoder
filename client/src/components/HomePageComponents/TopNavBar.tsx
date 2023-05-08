@@ -172,7 +172,7 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard, showFeature
             }}
             >
             {/* Conditionally render the Create Recording button */}
-            {showCreateRecording && <Button color="inherit" variant="outlined">Create Recording</Button>}
+            {showCreateRecording && <Button className="w-full h-full t-[10vw] border-solid !border-2 !border-red-700 !text-white !rounded-full !text-xl"color="inherit" variant="outlined">Create Recording</Button>}
             {/* Conditionally render the Dashboard button */}
             {showDashboard && <Button color="inherit">Dashboard</Button>}
             {showFeatures && <Button color="inherit">Features</Button>}
