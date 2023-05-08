@@ -8,6 +8,9 @@ import {
 import { useNavigate } from 'react-router-dom';
 import EmailLogin from '../components/EmailLogin';
 import { BsGoogle, BsGithub } from 'react-icons/bs';
+import http from '../services/userApi';
+import { rootUser, setUser } from '../redux/userSlice';
+import { useAppDispatch } from '../redux/hooks';
 
 export interface ILoginPageProps {}
 
@@ -16,6 +19,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
   const navigate = useNavigate();
   const [authing, setAuthing] = useState(false);
   const [alerts, setAlerts] = useState<string>('');
+  const dispatch = useAppDispatch();
 
   const signInWithGoogle = async () => {
     setAuthing(true);
@@ -24,8 +28,8 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
         const token = await response.user.getIdToken();
         if (token) {
           localStorage.setItem('token', token);
+          login;
         }
-        navigate('/');
       })
       .catch((error) => {
         console.log(error);
@@ -40,14 +44,27 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
         const token = await response.user.getIdToken();
         if (token) {
           localStorage.setItem('token', token);
+          login(token);
         }
-        navigate('/');
       })
       .catch((error) => {
         console.log(error);
         setAuthing(false);
       });
   };
+
+  async function login(token: string) {
+    http
+      .creatorLogin(token)
+      .then((response) => {
+        dispatch(setUser(response.data));
+        navigate('/');
+      })
+      .catch((error) => {
+        console.log(error);
+        setAuthing(false);
+      });
+  }
 
   // const signInWithEmail = async (email: string, password: string) => {
   //   setAuthing(true);

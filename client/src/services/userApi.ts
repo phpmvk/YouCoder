@@ -37,15 +37,20 @@ userHttp.interceptors.request.use(
 );
 
 class UserApiService {
-  creatorLogin():
-    | Promise<AxiosResponse<typeof rootUser> | string[]>
-    | undefined {
-    try {
-      return userHttp.post<typeof rootUser>(`/users/creator/add`);
-    } catch (e) {
-      const error = e as AxiosError;
-      console.log(error);
-    }
+  creatorLogin(token: string): Promise<AxiosResponse<typeof rootUser>> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await userHttp.post<typeof rootUser>(
+          `/users/creator/add`,
+          { token }
+        );
+        resolve(response);
+      } catch (e) {
+        const error = e as AxiosError;
+        console.log(error);
+        reject(error);
+      }
+    });
   }
 
   creatorUpdate(
