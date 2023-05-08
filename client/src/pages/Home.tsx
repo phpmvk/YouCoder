@@ -1,22 +1,26 @@
 import React, { useState} from 'react';
 import { getAuth, signOut } from 'firebase/auth';
-import './Home.css';
+import './../components/HomePageComponents/Home.css';
 import { Parallax } from 'react-parallax';
-import TopNavBar from './TopNavBar.tsx';
-import TeachInteractively from './TeachInteractively.tsx';
-import Heading from './Heading.tsx';
-import ExampleFrame from './ExampleFrame.tsx';
-import TopBall from './TopBall.tsx';
-import MiddleBall from './MiddleBall.tsx';
-import BottomBall from './BottomBall.tsx';
+import TopNavBar from './../components/HomePageComponents/TopNavBar';
+import TeachInteractively from './../components/HomePageComponents/TeachInteractively';
+import Heading from './../components/HomePageComponents/Heading';
+import ExampleFrame from './../components/HomePageComponents/ExampleFrame';
+import TopBall from './../components/HomePageComponents/TopBall';
+import MiddleBall from './../components/HomePageComponents/MiddleBall';
+import BottomBall from './../components/HomePageComponents/BottomBall';
+import Footer from './../components/HomePageComponents/Footer';
 
 const HomePage: React.FC = () => {
   const auth = getAuth();
 
   return (
-    <div className="home">
+    <div className="text-center bg-bg-pri font-title">
       {/* <button onClick={() => signOut(auth)}>Sign out</button> */}
-      <TopNavBar style={{ position: 'sticky', top: 0, zIndex: 100 }} />
+      <div className="sticky top-0 z-50">
+        <TopNavBar />
+      </div>
+      
       <Parallax
         strength={600}
         renderLayer={(percentage) => (
@@ -27,6 +31,7 @@ const HomePage: React.FC = () => {
             <TeachInteractively />
             <MiddleBall percentage={percentage} />
             <ExampleFrame />
+            <Footer/>
           </>
         )}
       />

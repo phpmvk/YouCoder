@@ -1,9 +1,10 @@
-.home {
+/* .home {
     text-align: center;
     background-color: #050505;
     font-family: Space Grotesk;
   }
-  
+   */
+
   .heading-text {
     text-align: center;
     white-space: nowrap;
@@ -12,9 +13,9 @@
     z-index: 1;
   }
   
-  .heading {
+  /* .heading {
     height: 75vh;
-  }
+  } */
   
   .text-white {
     color: white;
@@ -40,7 +41,7 @@
   }
   
   
-  .blinking-dot {
+  /* .blinking-dot {
     position: absolute;
     top: 5%;
     right: 20%;
@@ -49,7 +50,7 @@
     background-color: red;
     border-radius: 50%;
     animation: blinking 1s infinite;
-  }
+  } */
   
   .blinking-dot2 {
     animation: blinking 1s infinite;
@@ -99,14 +100,14 @@
     }
   }
   
-  .top-ball {
+  /* .top-ball {
     position: absolute;
     transform: translate(-40vw, -40vw);
     border-radius: 50%;
     background: linear-gradient(75deg, black ,black, black, black,   #b300ff, white );
-  }
+  } */
   
-  .middle-ball {
+  /* .middle-ball {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -126,7 +127,7 @@
       color: white;
       font-size: 9rem;
       font-weight: 600;
-  }
+  } */
   
   .bottom-ball {
     position: absolute;

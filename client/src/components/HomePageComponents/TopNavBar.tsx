@@ -13,7 +13,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import youcoderlogo from './youcoderlogo.png'
 import { Button } from '@mui/material';
-import './../../Home.css';
+
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -140,7 +140,7 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard }: { showSea
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar sx={{ backgroundColor: 'black', maxHeight:'7vh' }}>
+      <AppBar sx={{ backgroundColor: '#050505', maxHeight:'7vh' }}>
         <Toolbar>
           
           <Typography
