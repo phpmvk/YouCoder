@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
-import firebase from "../services/Firebase";
+import admin from "../services/Firebase";
 
 export function creatorLogin(req: Request, res: Response) {
   console.log('Users - POST received - creatorLogin')
@@ -18,7 +18,7 @@ export function creatorLogin(req: Request, res: Response) {
   //if not exists, create user and return user object
   const token = headerToken.split(' ')[1];
 
-  firebase
+  admin
     .auth()
     .verifyIdToken(token)
     .then((data) => {
