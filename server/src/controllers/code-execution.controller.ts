@@ -3,7 +3,7 @@ import { sendCode } from '../services/Judge0/judge0'
 import { CodeToExecute } from "../types/types";
 
 export async function getConsoleOutput(req: Request, res: Response) {
-  console.log('POST received - getConsoleOutput')
+  console.log('Code-Execution POST received - getConsoleOutput')
   try {
     //add condtionals here for error handling
     //add tests
@@ -15,19 +15,4 @@ export async function getConsoleOutput(req: Request, res: Response) {
     console.error(err)
     res.status(500).send({error: '500: Internal server error'})
   }
-}
-
-
-export function uploadRecording(req: Request, res: Response) {
-  console.log('POST received - uploadRecording')
-}
-
-export function getRecordingById(req: Request, res: Response) {
-  console.log('GET received - getRecordingById')
-}
-
-
-
-export function addNewCreator(req: Request, res: Response) {
-  console.log('POST received - addNewCreator')
 }
