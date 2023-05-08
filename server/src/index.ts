@@ -6,16 +6,20 @@ dotenv.config()
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { PORT } from './config';
-import router from './routes/router';
+import { default as usersRouter}  from './routes/users.router'
+import { default as codeExecutionRouter}  from './routes/code-execution.router'
+import { default as recordingsRouter}  from './routes/recordings.router'
 
 const app = express();
 
 app
   .use(cors())
   .use(express.json())
-  .use(router)
+  .use(usersRouter)
+  .use(recordingsRouter)
+  .use(codeExecutionRouter)
   .use((_, res: Response) => {
-    res.status(404).send('404: Not found') //<--- create a not found View for this
+    res.status(404).send({error: 'The endpoint requested does not exist'})
   })
 
 app.listen(PORT, () => {

@@ -17,9 +17,16 @@ export async function getConsoleOutput(req: Request, res: Response) {
   }
 }
 
+
 export function uploadRecording(req: Request, res: Response) {
   console.log('POST received - uploadRecording')
 }
+
+export function getRecordingById(req: Request, res: Response) {
+  console.log('GET received - getRecordingById')
+}
+
+
 
 export function addNewCreator(req: Request, res: Response) {
   console.log('POST received - addNewCreator')
