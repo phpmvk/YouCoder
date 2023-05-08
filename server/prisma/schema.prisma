@@ -10,6 +10,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Creator {
+  creator_id Int         @id @default(autoincrement())
+  username String
+  email String
+  join_date   DateTime
+  recordings Recording[]
+}
+
 model User {
-  id Int @id @default(autoincrement())
+  user_id Int @id @default(autoincrement())
+  username String
+  email String
+  join_date DateTime
+  favorited_recordings String[]
+  creators_followed String[] //Is this a good way to go about this? Should this be creator IDs?
+}
+
+model Recording {
+  recording_id     Int     @id @default(autoincrement())
+  creator          Creator @relation(fields: [creator_id], references: [creator_id])
+  creator_id       Int //primary key in User model
+  thumbnail_link   String?
+  header           String
+  description      String?
+  public           Boolean
+  language         String
+  recorder_actions Json
+  audio_link       String
 }
