@@ -18,7 +18,7 @@ const HomePage: React.FC = () => {
     <div className="text-center bg-bg-pri font-title">
       {/* <button onClick={() => signOut(auth)}>Sign out</button> */}
       <div className="sticky top-0 z-50">
-        <TopNavBar />
+        <TopNavBar showFeatures={true} showExamples={true}/>
       </div>
       
       <Parallax

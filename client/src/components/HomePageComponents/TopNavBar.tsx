@@ -56,7 +56,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-function TopNavBar({ showSearch, showCreateRecording, showDashboard }: { showSearch: boolean, showCreateRecording: boolean, showDashboard: boolean }) {
+function TopNavBar({ showSearch, showCreateRecording, showDashboard, showFeatures, showExamples }: { showSearch: boolean, showCreateRecording: boolean, showDashboard: boolean, showFeatures: boolean, showExamples: boolean }) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -140,9 +140,8 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard }: { showSea
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar sx={{ backgroundColor: '#050505', maxHeight:'7vh' }}>
+      <AppBar sx={{ backgroundColor: '#050505', maxHeight:'8vh' }}>
         <Toolbar>
-          
           <Typography
             variant="h6"
             noWrap
@@ -176,8 +175,8 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard }: { showSea
             {showCreateRecording && <Button color="inherit" variant="outlined">Create Recording</Button>}
             {/* Conditionally render the Dashboard button */}
             {showDashboard && <Button color="inherit">Dashboard</Button>}
-            <Button color="inherit">Features</Button>
-            <Button color="inherit">Examples</Button>
+            {showFeatures && <Button color="inherit">Features</Button>}
+            {showExamples && <Button color="inherit">Examples</Button>}
             <Button color="inherit">Docs</Button>
           </Box>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

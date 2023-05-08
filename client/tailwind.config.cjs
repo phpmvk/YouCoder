@@ -33,7 +33,10 @@ module.exports = {
           '0%': { transform: 'scale(1)' },
           '100%': { transform: 'scale(6)' },
         },
-      }
+      },
+      backgroundImage:(theme) => ({
+        'gradient-primary': `radial-gradient(at left center, rgb(0, 0, 0), rgb(17, 24, 39), rgb(0, 0, 0))`,
+      })
     }
   },
   plugins: []
