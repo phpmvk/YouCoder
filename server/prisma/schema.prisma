@@ -11,28 +11,28 @@ datasource db {
 }
 
 model Creator {
-  creator_id Int         @id @default(autoincrement())
-  username String
-  email String
-  join_date   DateTime
-  recordings Recording[]
+  uid          String      @id @unique
+  display_name String
+  email        String
+  join_date    DateTime
+  recordings   Recording[]
 }
 
 model User {
-  user_id Int @id @default(autoincrement())
-  username String
-  email String
-  join_date DateTime
+  user_id              Int      @id @default(autoincrement())
+  username             String
+  email                String
+  join_date            DateTime
   favorited_recordings String[]
-  creators_followed String[] //Is this a good way to go about this? Should this be creator IDs?
+  creators_followed    String[] //Is this a good way to go about this? Should this be creator IDs?
 }
 
 model Recording {
   recording_id     Int     @id @default(autoincrement())
-  creator          Creator @relation(fields: [creator_id], references: [creator_id])
-  creator_id       Int //primary key in User model
+  creator          Creator @relation(fields: [creator_uid], references: [uid])
+  creator_uid      String //primary key in Creator model
   thumbnail_link   String?
-  header           String
+  title            String
   description      String?
   public           Boolean
   language         String
