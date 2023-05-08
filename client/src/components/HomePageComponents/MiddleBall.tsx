@@ -1,5 +1,5 @@
 import React from 'react';
-import './Home.css';
+
 
 interface BallProps {
     percentage: number;
@@ -31,7 +31,7 @@ const MiddleBall: React.FC<BallProps> = ({percentage}) => {
 <div>
   <div>Code.</div>
   <div>Record
-  <span className="text-red-700 animate-[blink_1s_infinite] " >.</span></div>
+  <span className="text-red-700 animate-[blinking_1s_infinite] " >.</span></div>
   <div>Share.</div>
   <div>Engage.</div>
 </div>

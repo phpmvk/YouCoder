@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './Home.css';
+
 
 const TeachInteractively = () => {
   const [isActive, setIsActive] = useState(false);

@@ -1,6 +1,6 @@
 import React, { FC, ReactElement } from "react";
 import { Box, Container, Grid, Typography } from "@mui/material";
-import './Home.css';
+
 
 export const Footer: FC = (): ReactElement => {
   return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import './Home.css';
+
 
   interface HeadingProps {
     percentage: number;
@@ -25,7 +25,7 @@ import './Home.css';
    
     <div className="h-[75vh]">
         {percentage > 0.9 && (
-              <div className="absolute w-5 h-5 bg-red-700 top-[5%] right-[20%] rounded-full animate-[blink_1s_infinite]"/>
+              <div className="absolute w-5 h-5 bg-red-700 top-[5%] right-[20%] rounded-full animate-[blinking_1s_infinite]"/>
             )}
               <div
                 className="text-center whitespace-no-wrap font-semibold mt-[35vh] z-1"
@@ -39,7 +39,7 @@ import './Home.css';
                   return (
                     <React.Fragment key={index}>
                       {isCursor && (
-                        <span className="text-white animate-[blink_1.5s_infinite]">|</span>
+                        <span className="text-white animate-[blinking_1.5s_infinite]">|</span>
                       )}
                       <span
                         className={
