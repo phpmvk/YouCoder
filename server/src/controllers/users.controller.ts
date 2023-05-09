@@ -1,14 +1,13 @@
 import { Request, Response } from "express";
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
-import admin from "../services/Firebase";
 
 export async function creatorLogin(req: Request, res: Response) {
   console.log('Users - POST received - creatorLogin')
   try {
     const user = await prisma.creator.findUnique({
       where: {
-        uid: req.body.uid
+        uid: req.body.user.uid
       }
     })
     if (user) {
@@ -16,9 +15,9 @@ export async function creatorLogin(req: Request, res: Response) {
     } else {
       const newUser = await prisma.creator.create({
         data: {
-          uid: req.body.uid,
-          display_name: req.body.name,
-          email: req.body.email!,
+          uid: req.body.user.uid,
+          display_name: req.body.user.name,
+          email: req.body.user.email!,
           join_date: new Date(Date.now()),
         }
       })
