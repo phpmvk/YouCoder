@@ -1,11 +1,11 @@
 -- CreateTable
 CREATE TABLE "Creator" (
-    "creator_id" SERIAL NOT NULL,
-    "username" TEXT NOT NULL,
+    "uid" TEXT NOT NULL,
+    "display_name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "join_date" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Creator_pkey" PRIMARY KEY ("creator_id")
+    CONSTRAINT "Creator_pkey" PRIMARY KEY ("uid")
 );
 
 -- CreateTable
@@ -22,18 +22,24 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "Recording" (
-    "recording_id" SERIAL NOT NULL,
-    "creator_id" INTEGER NOT NULL,
+    "recording_id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
+    "creator_uid" TEXT NOT NULL,
     "thumbnail_link" TEXT,
-    "header" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
     "description" TEXT,
-    "public" BOOLEAN NOT NULL,
+    "published" BOOLEAN NOT NULL DEFAULT false,
     "language" TEXT NOT NULL,
     "recorder_actions" JSONB NOT NULL,
     "audio_link" TEXT NOT NULL,
+    "created_at" TEXT NOT NULL,
+    "full_link" TEXT,
+    "iframe_link" TEXT,
 
     CONSTRAINT "Recording_pkey" PRIMARY KEY ("recording_id")
 );
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Creator_uid_key" ON "Creator"("uid");
+
 -- AddForeignKey
-ALTER TABLE "Recording" ADD CONSTRAINT "Recording_creator_id_fkey" FOREIGN KEY ("creator_id") REFERENCES "Creator"("creator_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Recording" ADD CONSTRAINT "Recording_creator_uid_fkey" FOREIGN KEY ("creator_uid") REFERENCES "Creator"("uid") ON DELETE RESTRICT ON UPDATE CASCADE;
