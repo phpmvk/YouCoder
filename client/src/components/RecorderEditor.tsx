@@ -125,6 +125,11 @@ export function RecorderEditor() {
         return { ...action, playbackTimestamp: adjustedTimestamp };
       });
 
+    //Get current editor language
+    const model = editorInstance!.getModel();
+    const language = model!.getLanguageId();
+    console.log('current ', language);
+
     // if (window.confirm('Would you like to save or discard your recording?')) {
     //   //save recording logic
     // } else {
