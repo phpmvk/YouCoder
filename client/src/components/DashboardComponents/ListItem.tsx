@@ -7,10 +7,10 @@ const ListItem = () => {
 
 
   return (
-    <div className="bg-gray-900 h-[45vh] flex flex-col items-center justify-center p-4 rounded-md">
+    <div className="bg-bg-gptdark h-[45vh] flex flex-col items-center justify-center p-4 rounded-md">
     <div className="w-full flex items-center">
     <div className="relative w-4/12 h-[27vh] bg-bg-pri bg-cover bg-center mr-1 rounded-md" style={{ backgroundImage: "url('./../../../public/matrixgif.gif')" }}>
-  <div className="bg-gray-800 w-10 h-10 z-20 absolute top-2 right-2 rounded"><IconButton aria-label="edit image">
+  <div className="bg-gray-900 w-10 h-10 z-20 absolute top-2 right-2 rounded"><IconButton aria-label="edit image">
   <EditIcon className="stroke-white"/></IconButton></div>
 </div>
 
@@ -28,7 +28,7 @@ const ListItem = () => {
         <IconButton aria-label="edit image">
   <EditIcon className="stroke-white"/></IconButton>
         </div>
-        <div className="h-6"></div>
+        <div className="h-2"></div>
         <div><IconButton aria-label="edit image">
   <EditIcon className="stroke-white"/></IconButton></div>
       </div>

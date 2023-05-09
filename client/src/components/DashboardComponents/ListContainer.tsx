@@ -4,6 +4,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import ListItem from './ListItem';
+import PlaceholderItem from './PlaceholderItem';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -15,14 +16,13 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const ListContainer = () => {
   return (
-<div className="bg-transparent h-[auto] w-9/12 m-auto mt-[5vh] mb-[20vh]rounded-sm ">
+<div className="bg-transparent min-h-screen h-[auto] w-9/12 m-auto mt-[5vh] mb-[20vh]rounded-sm ">
 <Box sx={{ width: '100%' }}>
       <Stack spacing={3}>
+        <PlaceholderItem></PlaceholderItem>
+        {/* <ListItem>Item 1</ListItem>
         <ListItem>Item 1</ListItem>
-        <ListItem>Item 1</ListItem>
-        <ListItem>Item 1</ListItem>
-       
-        
+        <ListItem>Item 1</ListItem> */}
       </Stack>
     </Box>
 </div>

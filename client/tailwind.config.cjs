@@ -12,6 +12,7 @@ module.exports = {
           alt: '#ccff00',
           blackTransparent: 'rgba(3, 0, 0, 0.5)',
           muigrey: '#2a2a2a',
+          gptdark: '#202123',
         },
         text: {
         // normal: 'slate-300',

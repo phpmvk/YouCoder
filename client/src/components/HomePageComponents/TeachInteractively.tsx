@@ -45,7 +45,7 @@ const TeachInteractively = () => {
     };
   }, []);
 
-  const marginLeft = scrollPosition * 0.02;
+  const marginLeft = scrollPosition * 0.04;
 
   return (
     <div ref={ref} >

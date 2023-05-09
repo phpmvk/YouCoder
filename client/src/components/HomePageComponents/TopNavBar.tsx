@@ -13,13 +13,14 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import youcoderlogo from './youcoderlogo.png'
 import { Button } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  backgroundColor: '#202123',
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
@@ -172,7 +173,7 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard, showFeature
             }}
             >
             {/* Conditionally render the Create Recording button */}
-            {showCreateRecording && <Button className="w-full h-full t-[10vw] border-solid !border-2 !border-red-700 !text-white !rounded-full !text-xl"color="inherit" variant="outlined">Create Recording</Button>}
+            {showCreateRecording && <Button className="w-full h-full t-[10vw] border-solid !border-2 !border-red-700 !text-white !rounded-full !text-l"color="inherit" variant="outlined">Create Recording</Button>}
             {/* Conditionally render the Dashboard button */}
             {showDashboard && <Button color="inherit">Dashboard</Button>}
             {showFeatures && <Button color="inherit">Features</Button>}
@@ -180,7 +181,13 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard, showFeature
             <Button color="inherit">Docs</Button>
           </Box>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton
+            <Link 
+            to='/login'
+            >
+            <Button className="!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto" variant="outlined">Sign In</Button>
+            </Link>
+
+            {/* <IconButton
               size="large"
               edge="end"
               aria-label="account of current user"
@@ -190,7 +197,7 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard, showFeature
               color="inherit"
             >
               <AccountCircle />
-            </IconButton>
+            </IconButton> */}
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
