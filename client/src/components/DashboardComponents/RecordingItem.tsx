@@ -7,26 +7,20 @@ import Modal from '../Modal';
 import http from '../../services/recordingApi';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@emotion/react';
+import PublishModal from './PublishModal';
 
 interface RecordingItemProps {
   recording: Recording;
 }
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      // light: will be calculated from palette.primary.main,
-      main: '#b300ff',
-      // dark: will be calculated from palette.primary.main,
-      // contrastText: will be calculated to contrast with palette.primary.main
-    },
-  },
-});
+const theme = createTheme({ palette: { primary: { main: '#b300ff' } } });
 
 const RecordingItem = ({ recording }: RecordingItemProps) => {
   const [showEditTitle, setShowEditTitle] = useState(false);
   const [showEditDescription, setShowEditDescription] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [published, setPublished] = useState(recording.published);
 
   const editTitle = () => {
     setShowEditTitle(true);
@@ -69,27 +63,26 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
   };
 
   const showCopied = (text: string) => {
-    setShowModal(true);
+    setShowToast(true);
     setTimeout(() => {
-      setShowModal(false);
+      setShowToast(false);
     }, 1000);
   };
 
   const handlePublish = () => {
-    if (recording.published) {
-      // warn that unpublishing will make all the links where this recording is embedded to stop working
-      // if they click yes, then send the unpublish request to the backend
+    if (published) {
+      setShowModal(true);
     } else {
+      setPublished(true);
       http
         .patchRecording(recording.recording_id, { published: true })
         .then((res) => {
           console.log('res from publishing: ', res);
         })
         .catch((err) => {
+          // setPublished(false);
           console.log('err from publishing: ', err);
         });
-
-      // send the publish request to the backend
     }
   };
 
@@ -101,7 +94,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
             className='relative w-4/12 h-60 bg-bg-pri bg-cover bg-center mr-1 rounded-md'
             style={{ backgroundImage: `url(${recording.thumbnail_link})` }}
           >
-            <div className='bg-gray-900 w-10 h-10 z-20 absolute top-2 right-2 rounded'>
+            <div className='bg-gray-900 w-10 h-10 z-10 absolute top-2 right-2 rounded'>
               <IconButton
                 aria-label='edit image'
                 aria-roledescription='button'
@@ -118,10 +111,11 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
                   <input
                     id='title'
                     type='text'
-                    className='text-4xl w-full mx-4 bg-transparent border-white border rounded-md'
+                    className='text-4xl w-full mx-4 bg-transparent'
                     defaultValue={recording.title}
                     onBlur={() => setShowEditTitle(false)}
                     onKeyDown={handleKeyDown}
+                    autoFocus
                   />
                 </div>
               </>
@@ -136,11 +130,12 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
                 <div className='relative'>
                   <textarea
                     id='description'
-                    className='text-base w-full m-4 h-full bg-transparent border-white border rounded-md'
+                    className='text-base w-full m-4 h-full bg-transparent'
                     defaultValue={recording.description}
                     onBlur={() => setShowEditDescription(false)}
                     onKeyDown={handleKeyDown}
                     rows={4}
+                    autoFocus
                   />
                 </div>
               </>
@@ -161,7 +156,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
                   control={
                     <ThemeProvider theme={theme}>
                       <Switch
-                        checked={recording.published}
+                        checked={published}
                         onChange={handlePublish}
                         color='primary'
                       />
@@ -198,7 +193,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
             <div className='w-2/12 h-10 z-10 m-1 rounded-md flex items-center justify-center'>
               <Button
                 variant='outlined'
-                className='w-[100%] h-[100%] !border-bg-alt !text-white'
+                className='w-full h-full !border-bg-alt !text-white hover:!bg-bg-alt hover:!bg-opacity-10'
                 onClick={() => {
                   showCopied('copied');
                   navigator.clipboard.writeText(recording.full_link);
@@ -215,7 +210,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
             <div className='w-2/12 h-10 z-10 m-1 rounded-md flex items-center justify-center'>
               <Button
                 variant='outlined'
-                className='w-full h-full !border-bg-sec !text-white'
+                className='w-full h-full !border-bg-sec !text-white hover:!bg-bg-sec hover:!bg-opacity-10'
                 onClick={() => {
                   showCopied('copied');
                   navigator.clipboard.writeText(recording.iframe_link);
@@ -230,7 +225,13 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
           </div>
         </div>
       </div>
-      {showModal && <Modal text={'copied'} />}
+      {showToast && <Modal text={'copied'} />}
+      <PublishModal
+        recording={recording}
+        isModalOpen={showModal}
+        setIsModalOpen={setShowModal}
+        setPublished={setPublished}
+      />
     </>
   );
 };
