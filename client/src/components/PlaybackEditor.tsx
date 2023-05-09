@@ -21,7 +21,6 @@ export function PlaybackEditor() {
   const [ignoreUserInputs, setIgnoreUserInputs] = useState<boolean>(false);
   const playbackStateRef = useRef(playbackState);
   const timeoutIdsRef = useRef<number[]>([]);
-  const [pausedContent, setPausedContent] = useState<string>('');
 
   //scrubber states
   const [sliderValue, setSliderValue] = useState<number>(0);
@@ -90,62 +89,55 @@ export function PlaybackEditor() {
 
   function startPlayback(
     editorActions: EditorAction[],
-    editor: editor.IStandaloneCodeEditor,
-    playbackStartPosition: number = 0
+    editor: editor.IStandaloneCodeEditor
   ) {
-    if (audioElement && playbackStartPosition === 0) {
-      audioElement.currentTime = playbackStartPosition / 1000;
+    const baseTimestamp = sliderValue;
+
+    // Filter out actions that have already been executed based on the scrubber position
+    const actionsToExecute = editorActions.filter(
+      (action) => action.playbackTimestamp >= baseTimestamp
+    );
+
+    if (audioElement && sliderValue === 0) {
       audioElement.play();
     }
+
     // Clear existing timeouts if any
     timeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
     timeoutIdsRef.current = [];
 
-    if (playbackStateRef.current.status !== 'paused') {
-      setPlaybackState({
-        status: 'playing',
-        currentPosition: playbackStartPosition,
-      });
-    } else {
-      setPlaybackState({
-        status: 'playing',
-        currentPosition: playbackStateRef.current.currentPosition,
-      });
-    }
-
-    const baseTimestamp =
-      playbackStartPosition > 0
-        ? editorActions[playbackStartPosition - 1].playbackTimestamp
-        : 0;
+    setPlaybackState({
+      status: 'playing',
+      currentPosition: baseTimestamp,
+    });
 
     setIgnoreUserInputs(true);
 
-    // When scrubbing, apply all changes up to the scrubber position instantly
-    if (playbackStartPosition > 0) {
-      editorActions
-        .slice(0, playbackStartPosition)
-        .forEach((action: EditorAction) => {
-          applyChange(action, editor, action.text);
-        });
-    }
+    // Apply all changes up to the scrubber position instantly
+    const actionsToApplyInstantly = editorActions.filter(
+      (action) => action.playbackTimestamp < baseTimestamp
+    );
 
-    editorActions
-      .slice(playbackStartPosition)
-      .forEach((action: EditorAction, index: number) => {
-        const timeoutId = window.setTimeout(() => {
-          if (playbackStateRef.current.status === 'playing') {
-            applyChange(action, editor, action.text);
-            setPlaybackState((prevState) => ({
-              status: 'playing',
-              currentPosition: prevState.currentPosition + 1,
-            }));
-          }
-          if (index === editorActions.length - 1) {
-            setIgnoreUserInputs(false);
-          }
-        }, action.playbackTimestamp - baseTimestamp);
-        timeoutIdsRef.current.push(timeoutId);
-      });
+    actionsToApplyInstantly.forEach((action: EditorAction) => {
+      applyChange(action, editor, action.text);
+    });
+
+    actionsToExecute.forEach((action: EditorAction) => {
+      const timeoutId = window.setTimeout(() => {
+        if (playbackStateRef.current.status === 'playing') {
+          applyChange(action, editor, action.text);
+          setPlaybackState((prevState) => ({
+            status: 'playing',
+            currentPosition: prevState.currentPosition + 100,
+          }));
+        }
+        if (action === actionsToExecute[actionsToExecute.length - 1]) {
+          setIgnoreUserInputs(false);
+        }
+      }, action.playbackTimestamp - baseTimestamp);
+      timeoutIdsRef.current.push(timeoutId);
+    });
+
     sliderIntervalIdRef.current = startSliderInterval();
   }
 
@@ -156,31 +148,30 @@ export function PlaybackEditor() {
       startPlayback(importedActions.editorActions, editorInstance!);
     }
   }
+
   function handlePausePlayback() {
     audioElement?.pause();
     setPlaybackState((prevState) => ({
       status: 'paused',
       currentPosition: prevState.currentPosition,
     }));
-    setPausedContent(editorInstance!.getValue());
     setIgnoreUserInputs(false);
     clearInterval(sliderIntervalIdRef.current!);
   }
+
   function handleResumePlayback() {
     audioElement?.play();
     if (importedActions) {
-      editorInstance!.setValue(pausedContent);
-      startPlayback(
-        importedActions.editorActions,
-        editorInstance!,
-        playbackState.currentPosition
-      );
+      startPlayback(importedActions.editorActions, editorInstance!);
     }
+    clearInterval(sliderIntervalIdRef.current!);
     sliderIntervalIdRef.current = startSliderInterval();
   }
 
   function handleScrubberChange(scrubberPosition: number) {
     updateAudioCurrentTime(scrubberPosition);
+    audioElement?.play();
+
     clearInterval(sliderIntervalIdRef.current!);
     setSliderValue(scrubberPosition);
     setPlaybackState((prevState) => ({
@@ -193,16 +184,8 @@ export function PlaybackEditor() {
     timeoutIdsRef.current = [];
     editorInstance!.setValue('');
 
-    const editorActions = importedActions!.editorActions;
-
-    // Find the nearest action with the given playback timestamp
-    const playbackStartPosition = editorActions.findIndex(
-      (action) => action.playbackTimestamp >= scrubberPosition
-    );
-
-    startPlayback(editorActions, editorInstance!, playbackStartPosition);
+    startPlayback(importedActions!.editorActions, editorInstance!);
     setSliderValue(scrubberPosition);
-    audioElement?.play();
   }
 
   function startSliderInterval() {
