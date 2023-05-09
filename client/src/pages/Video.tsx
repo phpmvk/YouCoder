@@ -3,6 +3,7 @@ import { PlaybackEditor } from '../components/PlaybackEditor';
 import TopNavBar from '../components/HomePageComponents/TopNavBar';
 import YouCoderHeading from '../components/YouCoderHeading';
 
+
 interface VideoPageProps {}
 
 
@@ -15,17 +16,18 @@ const VideoPage: React.FC<VideoPageProps> = ({}) => {
     <div className="min-h-screen overflow-y-hidden bg-bg-pri">
   <div>
     <TopNavBar />
+    
 
     <div className="bg-bg-pri relative flex justify-center items-center h-screen p-5">
-      <div className="bg-white scale-85 border-solid p-2 mx-auto top-[20px] mb-1 rounded-lg">
+      <div className="fixed bg-white scale-85 border-solid p-2 mx-auto top-[20px] mb-1 rounded-lg">
         <PlaybackEditor />
-        <div className="w-full bg-yellow-500 h-[120px] bottom-[20px] mt-[10px] rounded-lg">
+        <div className="w-full bg-gray-800 h-[120px] bottom-[20px] mt-[10px] rounded-lg">
           <div className="flex h-full">
             <div className="flex justify-center items-center">
               {/* Black div wrapper */}
-              <div className="bg-blue-400 w-[200px] h-[120px] rounded-lg ">
+              <div className="bg-gray-800 w-[200px] h-[120px] rounded-lg ">
                 <img className="fixed bg-green-500 h-[80px] p-4 w-[80px] flex-shrink-0 mt-1 ml-[60px] rounded-full border-2 border-bg-alt"></img>
-                <div className="bg-red-500 h-[40px] p-3 w-full flex-shrink-0 mt-20 rounded-lg text-gray-200 text-xl flex justify-center items-center">
+                <div className="bg-gray-700 h-[40px] p-3 w-full flex-shrink-0 mt-20 rounded-lg text-gray-200 text-xl flex justify-center items-center">
                   Someones Name
                 </div>
               </div>
