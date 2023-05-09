@@ -74,6 +74,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
     <div className="bg-bg-pri w-1/2 h-full flex items-center justify-center ml-3">
       <div className="bg-bg-pri w-[22vw] h-[50vh] max-w-l flex flex-col items-center justify-center rounded-lg">
       <div className="absolute top-20 z-20 lg:text-6xl sm:text-4xl left-5 flex items-center mx-12 font-title">
+  
   <span className="text-white">You</span>
   &nbsp;
   <span className="text-bg-sec">{`{`}</span>
@@ -88,8 +89,8 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
           onClick={() => signInWithGoogle()}
           disabled={authing}
         >
-          SIGN IN WITH
-          <span className="ml-2 text-4xl text-bg-alt">
+          Sign in with Google
+          <span className="ml-2 text-2xl text-bg-alt">
             <BsGoogle />
           </span>
         </button>
@@ -99,8 +100,8 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
           onClick={() => signInWithGithub()}
           disabled={authing}
         >
-          SIGN IN WITH{" "}
-          <span className="ml-2 text-4xl text-bg-alt">
+          Sign in with GitHub{" "}
+          <span className="ml-2 text-2xl text-bg-alt">
             <BsGithub />
           </span>
         </button>
