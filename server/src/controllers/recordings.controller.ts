@@ -72,7 +72,7 @@ export async function uploadRecording(req: Request, res: Response) {
         language: language,
         recorder_actions: recorder_actions,
         audio_link: audio_link,
-        created_at: created_at,
+        created_at: new Date(Date.now()),
         full_link: full_link,
         iframe_link: iframe_link,
       }
@@ -94,12 +94,16 @@ export async function updateRecording(req: Request, res: Response) {
   
   const dataToUpdate: Record<string, string> = {};
 
-  const fieldsToUpdate: string[] = ['recording_id', 'creator', 'creator_uid', 'thumbnail_link', 'title', 'description', 'published', 'language', 'recorder_actions', 'audio_link']
+  const fieldsToUpdate: string[] = ['recording_id', 'creator', 'creator_uid', 'thumbnail_link', 'title', 'description', 'published', 'language', 'recorder_actions', 'audio_link', 'created_at', 'full_link', 'iframe_link']
   fieldsToUpdate.forEach((field: string) => {
     if (req.body[field]) {
       dataToUpdate[field] = req.body[field]
     }
   })
+
+  if (Object.keys(dataToUpdate).length === 0) {
+    return res.status(400).send({ message: 'Error updating resource: no fields to update provided' })
+  }
 
   try {
     const updatedRecording = await prisma.recording.update({
