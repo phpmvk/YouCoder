@@ -12,13 +12,13 @@ export async function getConsoleOutput(req: Request, res: Response) {
     if (judgeZeroLanguages.filter(el => el.id === +language_id).length < 1) {
       return res.status(400).send({ error: 'Bad request, language_id is not accepted' })
     }
-    
     const codeToBeExecuted = req.body
     const codeExecutionOutput = await sendCode(codeToBeExecuted)
-    res.status(200).send({stdout: codeExecutionOutput})
+    res.status(200).send({output: codeExecutionOutput})
 
   } catch (err) {
     console.error(err)
     res.status(500).send({error: '500: Internal server error'})
   }
 }
+
