@@ -14,6 +14,8 @@ const AuthRoute: React.FC<AuthRouteProps> = ({ children }) => {
   useEffect(() => {
     const AuthCheck = onAuthStateChanged(auth, (user) => {
       if (user) {
+        console.log('user from AuthCheck: ', user);
+        console.log('authorized');
         setLoading(false);
       } else {
         console.log('unauthorized');

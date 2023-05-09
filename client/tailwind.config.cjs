@@ -1,8 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    './src/**/*.{js,jsx,ts,tsx}'
-  ],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -15,21 +13,22 @@ module.exports = {
           gptdark: '#202123',
         },
         text: {
-        // normal: 'slate-300',
+          // normal: 'slate-300',
         },
       },
       fontFamily: {
-        title: ['"Space Grotesk"']
+        title: ['"Space Grotesk"'],
+        console: ['"IBM Plex Mono"'],
       },
       animation: {
-        'blink': 'blink 1.5s infinite',
-        'turnYellow': 'toYellow 4s 1 forwards',
-        'expand': 'expand 3s forwards'
+        blink: 'blink 1.5s infinite',
+        turnYellow: 'toYellow 4s 1 forwards',
+        expand: 'expand 3s forwards',
       },
       keyframes: {
         blinking: {
-          '0%, 100%': {opacity: 1},
-          '50%': {opacity: 0}
+          '0%, 100%': { opacity: 1 },
+          '50%': { opacity: 0 },
         },
         toYellow: {
           '0%': { color: 'white' },
@@ -40,10 +39,10 @@ module.exports = {
           '100%': { transform: 'scale(6)' },
         },
       },
-      backgroundImage:(theme) => ({
+      backgroundImage: (theme) => ({
         'gradient-primary': `radial-gradient(at bottom center, rgb(0, 0, 0), rgb(17, 24, 39), rgb(0, 0, 0))`,
-      })
-    }
+      }),
+    },
   },
-  plugins: []
-}
+  plugins: [],
+};

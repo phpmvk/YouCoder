@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios';
 import { rootUser } from '../redux/userSlice';
 import baseURL from './baseUrl';
-import { getAuth } from 'firebase/auth';
+import { auth } from '../config/firebase';
 
 /***************************
 to use this file:
@@ -18,7 +18,6 @@ userApi.creatorLogin(id)
 });
 
 ****************************/
-const auth = getAuth();
 
 const isTokenExpired = (token: string) => {
   try {

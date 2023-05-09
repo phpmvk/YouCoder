@@ -11,10 +11,13 @@ export interface Recording {
   creator: Creator;
   creator_uid: string;
   thumbnail_link: string;
-  header: string;
+  title: string;
   description: string;
-  public: string;
+  published: boolean;
   language: string;
   recorder_actions: RecorderAction[];
   audio_link: string;
+  created_at: string;
+  full_link: string;
+  iframe_link: string;
 }
