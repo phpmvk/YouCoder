@@ -4,6 +4,9 @@ import { editor } from 'monaco-editor';
 import * as monaco from 'monaco-editor';
 import RecordRTC from 'recordrtc';
 
+import http from '../services/consoleApi';
+import { CodeToExecute } from '../types/console';
+
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
     useState<editor.IStandaloneCodeEditor | null>(null);
@@ -13,16 +16,6 @@ export function RecorderEditor() {
 
   const [audioRecorder, setAudioRecorder] = useState<RecordRTC | null>(null);
 
-  const handleLanguageChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const model = editorInstance!.getModel();
-    console.log('Selected language', event.target.value);
-    monacoInstance!.editor.setModelLanguage(model!, event.target.value);
-    const language = model!.getLanguageId();
-    console.log('current ', language);
-  };
-
   const recorderActions = useRef<RecorderActions>({
     start: 0,
     end: 0,
@@ -31,6 +24,32 @@ export function RecorderEditor() {
     pauseLengthArray: [],
     editorActions: [],
   });
+
+  function getLanguageId(language: Language): string | null {
+    const languageMapping: Record<Language, string> = {
+      javascript: '93',
+      python: '70',
+      java: '91',
+      csharp: '51',
+      cpp: '76',
+      ruby: '72',
+      go: '95',
+    };
+
+    return languageMapping[language];
+  }
+
+  const handleLanguageChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const model = editorInstance!.getModel();
+    console.log('Selected language', event.target.value);
+    monacoInstance!.editor.setModelLanguage(model!, event.target.value);
+    const language = model!.getLanguageId();
+    console.log('current ', language);
+
+    console.log(monacoInstance!.languages.getLanguages());
+  };
 
   const handleEditorDidMount = (
     editor: editor.IStandaloneCodeEditor,
@@ -135,9 +154,6 @@ export function RecorderEditor() {
       });
 
     //Get current editor language
-    const model = editorInstance!.getModel();
-    const language = model!.getLanguageId();
-    console.log('current ', language);
 
     // if (window.confirm('Would you like to save or discard your recording?')) {
     //   //save recording logic
@@ -168,6 +184,22 @@ export function RecorderEditor() {
     URL.revokeObjectURL(url);
   }
 
+  function handleJudge0() {
+    const model = editorInstance!.getModel();
+    const language = model!.getLanguageId() as Language;
+    console.log('current ', language);
+    const source_code = editorInstance!.getValue();
+    const language_id = getLanguageId(language)!;
+
+    const judge0: CodeToExecute = { language_id, source_code };
+    console.log(judge0);
+    http.getOutput(judge0)!.then((response) => {
+      const div = document.getElementById('console');
+      div!.innerHTML = response.data.stdout;
+      console.log(response);
+    });
+  }
+
   return (
     <>
       <select onChange={handleLanguageChange}>
@@ -175,19 +207,30 @@ export function RecorderEditor() {
         <option value="python">Python</option>
         <option value="java">Java</option>
         <option value="csharp">C#</option>
-        {/* Add more options as needed */}
+        <option value="cpp">C++</option>
+        <option value="ruby">Ruby</option>
+        <option value="go">Go</option>
       </select>
-      <Editor
-        height="60vh"
-        defaultLanguage="javascript"
-        defaultValue=""
-        theme="vs-dark"
-        options={{
-          wordWrap: 'on',
-        }}
-        onChange={handleEditorChange}
-        onMount={handleEditorDidMount}
-      />
+      <div className="flex max-w-full">
+        <div className="w-3/4">
+          <Editor
+            height="60vh"
+            defaultLanguage="javascript"
+            defaultValue=""
+            theme="vs-dark"
+            options={{
+              wordWrap: 'on',
+            }}
+            onChange={handleEditorChange}
+            onMount={handleEditorDidMount}
+          />
+        </div>
+        <div className="w-1/4">
+          <button onClick={handleJudge0}>Compile & Execute</button>
+          <h1 id="console"></h1>
+        </div>
+      </div>
+
       <button className="p-2" onClick={handleStartRecording}>
         Start Recording
       </button>
