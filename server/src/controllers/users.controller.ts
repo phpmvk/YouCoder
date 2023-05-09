@@ -6,23 +6,41 @@ import admin from "../services/Firebase";
 export async function creatorLogin(req: Request, res: Response) {
   console.log('Users - POST received - creatorLogin')
   try {
+    const headerToken = req.headers.authorization
+  
+    if (!headerToken) {
+      return res.status(401).send({ message: 'No token provided' });
+    }
+    if (headerToken && headerToken.split(' ')[0] !== 'Bearer') {
+      return res.status(401).send({ message: 'Invalid token' })
+    }
+    
+    const token = headerToken.split(' ')[1];
+    let validatedToken;
+  
+    try {
+      validatedToken = await admin.auth().verifyIdToken(token)
+    } catch (err) {
+      return res.status(403).send({ message: 'Could not authorize' + err })
+    }
+  
     const user = await prisma.creator.findUnique({
       where: {
-        uid: req.body.uid
+        uid: validatedToken.uid 
       }
     })
     if (user) {
-      return res.status(200).send({ user: user })
+      return res.status(200).send({user: user})
     } else {
       const newUser = await prisma.creator.create({
         data: {
-          uid: req.body.uid,
-          display_name: req.body.name,
-          email: req.body.email!,
+          uid: validatedToken.uid,
+          display_name: validatedToken.name,
+          email: validatedToken.email!,
           join_date: new Date(Date.now()),
         }
       })
-      res.status(201).send({ user: newUser })
+      res.status(201).send({ user: newUser})
     }
 
   } catch (err) {
@@ -47,7 +65,7 @@ export async function deleteCreator(req: Request, res: Response) {
           uid: creatorid
         }
       })
-      return res.status(204).send()
+      return res.status(204).send() // <--- make sure this URL works
     } catch (err) {
       return res.status(400).send({ error: 'User not found'})
     }
