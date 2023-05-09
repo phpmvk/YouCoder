@@ -9,7 +9,7 @@ export async function getRecordingById(req: Request, res: Response) {
 
     const recording = await prisma.recording.findUnique({
       where: {
-        recording_id: +recordingId
+        recording_id: recordingId
       }
     })
 
@@ -17,7 +17,7 @@ export async function getRecordingById(req: Request, res: Response) {
       return res.status(404).send({ message: 'Resource not found' })
     }
 
-    res.send(200).send(recording)
+    res.status(200).send(recording)
 
   } catch (err) {
     console.error(err)
@@ -72,7 +72,7 @@ export async function uploadRecording(req: Request, res: Response) {
         language: language,
         recorder_actions: recorder_actions,
         audio_link: audio_link,
-        created_at: new Date(Date.now()),
+        created_at: (new Date(Date.now())).toString(),
         full_link: full_link,
         iframe_link: iframe_link,
       }
@@ -85,7 +85,6 @@ export async function uploadRecording(req: Request, res: Response) {
 }
 
 export async function updateRecording(req: Request, res: Response) {
-  //patch route for update of any property, and reponse should be all the recordings
   console.log('Recordings - PATCH received - updateRecording')
   const recordingId = req.params.recordingid
   if (!recordingId) {
@@ -105,11 +104,13 @@ export async function updateRecording(req: Request, res: Response) {
     return res.status(400).send({ message: 'Error updating resource: no fields to update provided' })
   }
 
+  const searchConditions = {
+    recording_id: req.params.recordingid,
+    creator_uid: req.body.user.id
+  }
   try {
     const updatedRecording = await prisma.recording.update({
-      where: {
-        recording_id: +req.params.recordingid
-      }, 
+      where: searchConditions, 
       data: dataToUpdate
     })
     if (!updatedRecording) {
@@ -119,6 +120,9 @@ export async function updateRecording(req: Request, res: Response) {
     const allUserRecordings = await prisma.recording.findMany({
       where: {
         creator_uid: req.body.user.uid
+      },
+      orderBy: {
+        created_at: 'desc'
       }
     })
     if (!allUserRecordings) {
@@ -129,4 +133,23 @@ export async function updateRecording(req: Request, res: Response) {
     console.error(err);
     res.status(500).send({ message: 'Internal server error'})
   }
+}
+
+export async function deleteRecording(req: Request, res: Response) {
+  console.log('Recordings - DELETE received - deleteRecording')
+  try {
+    const recordingId = req.params.recordingid;
+  
+    const deletedRecording = await prisma.recording.delete({
+      where: {
+        recording_id: recordingId
+      }
+    })
+    console.log(deletedRecording)
+    res.status(204).send({deleteRecording})
+  } catch (err) {
+    console.error(err)
+    res.status(404).send({ message: 'Resource not found'})
+  }
+
 }
