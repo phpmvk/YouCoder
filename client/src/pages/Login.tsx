@@ -89,7 +89,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
           disabled={authing}
         >
           SIGN IN WITH
-          <span className="ml-2 text-4xl">
+          <span className="ml-2 text-4xl text-bg-alt">
             <BsGoogle />
           </span>
         </button>
@@ -100,7 +100,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
           disabled={authing}
         >
           SIGN IN WITH{" "}
-          <span className="ml-2 text-4xl">
+          <span className="ml-2 text-4xl text-bg-alt">
             <BsGithub />
           </span>
         </button>
