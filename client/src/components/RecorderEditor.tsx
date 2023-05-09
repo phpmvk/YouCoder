@@ -11,8 +11,17 @@ export function RecorderEditor() {
     null
   );
 
-  //audio states
   const [audioRecorder, setAudioRecorder] = useState<RecordRTC | null>(null);
+
+  const handleLanguageChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const model = editorInstance!.getModel();
+    console.log('Selected language', event.target.value);
+    monacoInstance!.editor.setModelLanguage(model!, event.target.value);
+    const language = model!.getLanguageId();
+    console.log('current ', language);
+  };
 
   const recorderActions = useRef<RecorderActions>({
     start: 0,
@@ -161,6 +170,13 @@ export function RecorderEditor() {
 
   return (
     <>
+      <select onChange={handleLanguageChange}>
+        <option value="javascript">JavaScript</option>
+        <option value="python">Python</option>
+        <option value="java">Java</option>
+        <option value="csharp">C#</option>
+        {/* Add more options as needed */}
+      </select>
       <Editor
         height="60vh"
         defaultLanguage="javascript"
