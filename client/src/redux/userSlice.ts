@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export const rootUser = {
+  shortName: '',
   uid: '',
   displayName: '',
   email: '',
@@ -13,7 +14,8 @@ export const userSlice = createSlice({
   initialState: rootUser,
   reducers: {
     setUser: (_state, action) => {
-      return action.payload;
+      const shortName = action.payload.user.display_name.split(' ')[0];
+      return { ...action.payload.user, shortName: shortName };
     },
     removeUser: (_state, _action) => {
       return rootUser;

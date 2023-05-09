@@ -1,6 +1,7 @@
 import axios, { AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios';
 import { rootUser } from '../redux/userSlice';
 import baseURL from './baseUrl';
+import { getAuth } from 'firebase/auth';
 
 /***************************
 to use this file:
@@ -17,6 +18,17 @@ userApi.creatorLogin(id)
 });
 
 ****************************/
+const auth = getAuth();
+
+const isTokenExpired = (token: string) => {
+  try {
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    const currentTime = new Date().getTime() / 1000;
+    return decodedToken.exp < currentTime;
+  } catch (e) {
+    return false;
+  }
+};
 
 const userHttp = axios.create({
   baseURL,
@@ -26,10 +38,18 @@ const userHttp = axios.create({
 });
 
 userHttp.interceptors.request.use(
-  (config) => {
+  async (config) => {
     const token = localStorage.getItem('token');
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      console.log('******* auth ********', auth);
+      console.log('isTokenExpired(token)', isTokenExpired(token));
+      if (isTokenExpired(token) && auth.currentUser) {
+        const refreshedToken = await auth.currentUser.getIdToken(true);
+        localStorage.setItem('token', refreshedToken);
+        config.headers.Authorization = `Bearer ${refreshedToken}`;
+      } else {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
     return config;
   },
