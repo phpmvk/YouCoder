@@ -11,7 +11,7 @@ import Menu from '@mui/material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import youcoderlogo from './youcoderlogo.png'
+import youcoderlogo from './youcoderlogo.png';
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 
@@ -121,16 +121,14 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard, showFeature
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        
-      </MenuItem>
+      <MenuItem></MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
+          size='large'
+          aria-label='account of current user'
+          aria-controls='primary-search-account-menu'
+          aria-haspopup='true'
+          color='inherit'
         >
           <AccountCircle />
         </IconButton>
@@ -144,13 +142,14 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard, showFeature
       <AppBar sx={{ backgroundColor: '#050505', maxHeight:'8vh' }}>
         <Toolbar>
           <Typography
-            variant="h6"
+            variant='h6'
             noWrap
-            component="div"
+            component='div'
             sx={{ display: { xs: 'none', sm: 'block' } }}
-          > LOGO
-          {/* <img src={youcoderlogo} style={{width: '80px', height: '80px'}}></img>  */}
-            
+          >
+            {' '}
+            LOGO
+            {/* <img src={youcoderlogo} style={{width: '80px', height: '80px'}}></img>  */}
           </Typography>
           {showSearch && (
             <Search>
@@ -158,7 +157,7 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard, showFeature
                 <SearchIcon />
               </SearchIconWrapper>
               <StyledInputBase
-                placeholder="Search…"
+                placeholder='Search…'
                 inputProps={{ 'aria-label': 'search' }}
               />
             </Search>
@@ -168,12 +167,20 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard, showFeature
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
-              width: '25%', 
+              width: '25%',
               marginRight: 2,
             }}
-            >
+          >
             {/* Conditionally render the Create Recording button */}
             {showCreateRecording && <Button className="w-full h-full t-[10vw] border-solid !border-2 !border-red-700 !text-white !rounded-full !text-l"color="inherit" variant="outlined">Create Recording</Button>}
+            {showCreateRecording && (
+              <Button
+                color='inherit'
+                variant='outlined'
+              >
+                Create Recording
+              </Button>
+            )}
             {/* Conditionally render the Dashboard button */}
             {showDashboard && <Button color="inherit">Dashboard</Button>}
             {showFeatures && <Button color="inherit">Features</Button>}
@@ -192,21 +199,21 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard, showFeature
               edge="end"
               aria-label="account of current user"
               aria-controls={menuId}
-              aria-haspopup="true"
+              aria-haspopup='true'
               onClick={handleProfileMenuOpen}
-              color="inherit"
+              color='inherit'
             >
               <AccountCircle />
             </IconButton> */}
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
-              size="large"
-              aria-label="show more"
+              size='large'
+              aria-label='show more'
               aria-controls={mobileMenuId}
-              aria-haspopup="true"
+              aria-haspopup='true'
               onClick={handleMobileMenuOpen}
-              color="inherit"
+              color='inherit'
             >
               <MoreIcon />
             </IconButton>

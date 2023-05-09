@@ -10,10 +10,17 @@ import RecordingPage from './pages/Recording';
 import DocsPage from './pages/Docs';
 import VideoPage from './pages/Video';
 import NotFoundPage from './pages/NotFound';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser, editUser } from './redux/userSlice';
+import { useAppDispatch, useAppSelector } from './redux/hooks';
 
 export const Firebase = initializeApp(config.firebaseConfig);
 
 function App() {
+  const user = useAppSelector((state) => state.user);
+  console.log('user: ', user);
+  const dispatch = useAppDispatch();
+  // dispatch(editUser({ avatar: ' ' }));
   return (
     <BrowserRouter>
       <Routes>
