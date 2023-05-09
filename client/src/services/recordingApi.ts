@@ -40,6 +40,8 @@ class RecordingApiService {
     id: string,
     data: updateRecording
   ): Promise<AxiosResponse<Recording[]>> {
+    console.log('id', id);
+    console.log('data', data);
     return new Promise(async (resolve, reject) => {
       try {
         const response = await protectedHttp.patch<Recording[]>(

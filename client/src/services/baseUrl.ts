@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { auth } from '../config/firebase';
 
-// const baseURL = 'http://localhost:3000';
-const baseURL = 'https://fc20-45-133-139-102.ngrok-free.app';
+const baseURL = 'http://localhost:3000';
+// const baseURL = 'https://fc20-45-133-139-102.ngrok-free.app';
 
 export const http = axios.create({
   baseURL,

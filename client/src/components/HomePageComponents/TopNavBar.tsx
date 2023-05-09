@@ -243,7 +243,8 @@ function TopNavBar({
               <>
                 <Link to='/login'>
                   <Button
-                    className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto'
+                    // className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto'
+                    className='!border-bg-alt !text-bg-pri hover:!bg-bg-pri !h-8 !my-auto !bg-bg-alt'
                     variant='outlined'
                   >
                     Sign In

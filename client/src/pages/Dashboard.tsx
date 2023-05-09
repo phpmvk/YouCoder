@@ -49,7 +49,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({}) => {
 
   const recordingsList = user.recordings || [
     {
-      id: '1',
+      recording_id: '46af9ea2-43fa-4703-b960-54b1f920d013',
       title: 'test 1',
       description:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
@@ -63,7 +63,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({}) => {
         '<iframe src="https://www.w3schools.com" title="W3Schools Free Online Web Tutorials"></iframe>',
     },
     {
-      id: '2',
+      recording_id: '79fdd1ad-1048-48e1-abf6-30d941c6a097',
       title: 'test 2',
       description:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',

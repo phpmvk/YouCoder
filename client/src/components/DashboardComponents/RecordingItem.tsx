@@ -5,21 +5,23 @@ import { Recording } from '../../types/Creator';
 import { useState } from 'react';
 import Modal from '../Modal';
 import http from '../../services/recordingApi';
+import { createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@emotion/react';
 
 interface RecordingItemProps {
   recording: Recording;
 }
 
-// recording_id: number;
-// creator: Creator;
-// creator_uid: string;
-// thumbnail_link: string;
-// title: string;
-// description: string;
-// public: boolean;
-// language: string;
-// recorder_actions: RecorderAction[];
-// audio_link: string;
+const theme = createTheme({
+  palette: {
+    primary: {
+      // light: will be calculated from palette.primary.main,
+      main: '#b300ff',
+      // dark: will be calculated from palette.primary.main,
+      // contrastText: will be calculated to contrast with palette.primary.main
+    },
+  },
+});
 
 const RecordingItem = ({ recording }: RecordingItemProps) => {
   const [showEditTitle, setShowEditTitle] = useState(false);
@@ -41,15 +43,25 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
         http
           .patchRecording(recording.recording_id, { title: e.target.value })
           .then((res) => {
-            console.log(res);
+            console.log('res from updating title: ', res);
           })
           .catch((err) => {
-            console.log(err);
+            console.log('err from updating title', err);
           });
 
         setShowEditTitle(false);
       } else if (e.target.id === 'description') {
         // if description send the updated description to the backend
+        http
+          .patchRecording(recording.recording_id, {
+            description: e.target.value,
+          })
+          .then((res) => {
+            console.log('res from updating description: ', res);
+          })
+          .catch((err) => {
+            console.log('err from updating title', err);
+          });
 
         setShowEditDescription(false);
       }
@@ -68,6 +80,15 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
       // warn that unpublishing will make all the links where this recording is embedded to stop working
       // if they click yes, then send the unpublish request to the backend
     } else {
+      http
+        .patchRecording(recording.recording_id, { published: true })
+        .then((res) => {
+          console.log('res from publishing: ', res);
+        })
+        .catch((err) => {
+          console.log('err from publishing: ', err);
+        });
+
       // send the publish request to the backend
     }
   };
@@ -138,10 +159,13 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
               <FormGroup>
                 <FormControlLabel
                   control={
-                    <Switch
-                      checked={recording.published}
-                      onChange={handlePublish}
-                    />
+                    <ThemeProvider theme={theme}>
+                      <Switch
+                        checked={recording.published}
+                        onChange={handlePublish}
+                        color='primary'
+                      />
+                    </ThemeProvider>
                   }
                   label='Published'
                 />
@@ -183,7 +207,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
                 COPY LINK
               </Button>
             </div>
-            <div className='bg-bg-pri w-10/12 h-10 px-4 z-10 m-1 rounded-md flex items-center text-white font-console overflow-hidden'>
+            <div className='bg-bg-pri w-10/12 h-10 px-4 z-10 m-1 rounded-md flex items-center text-white font-console overflow-hidden hover:underline hover:cursor-pointer'>
               {recording.full_link}
             </div>
           </div>
