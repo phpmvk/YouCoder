@@ -6,12 +6,12 @@ import {
   GithubAuthProvider,
 } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import EmailLogin from '../components/EmailLogin';
 import { BsGoogle, BsGithub } from 'react-icons/bs';
 import http from '../services/userApi';
 import { rootUser, setUser } from '../redux/userSlice';
 import { useAppDispatch } from '../redux/hooks';
-
+import { Button } from '@mui/material';
+import LoginArt from './LoginArt';
 export interface ILoginPageProps {}
 
 const LoginPage: React.FC<ILoginPageProps> = () => {
@@ -69,51 +69,50 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
       });
   }
 
-  // const signInWithEmail = async (email: string, password: string) => {
-  //   setAuthing(true);
-  //   // signInWithEmailAndPassword(auth, email, password)
-  //   //   .then((response) => {
-  //   //    console.log('user from email: ', response.user);
-  //   //    navigate('/');
-  //   //  })
-  //   //  .catch((error) => {
-  //   //    console.log(error);
-  //   //    setAuthing(false);
-  //   //  });
-  // };
-
   return (
-    <div className='w-full max-w-xs'>
-      <h1 className='mb-6'>Login</h1>
-      {/* <EmailLogin
-        login={signInWithEmail}
-        alerts={alerts}
-        setAlerts={setAlerts}
-        authing={authing}
-      /> */}
-      <div className='flex justify-evenly'>
+    <div className="bg-bg-pri h-screen w-full flex overflow-hidden">
+    <div className="bg-bg-pri w-1/2 h-full flex items-center justify-center ml-3">
+      <div className="bg-bg-pri w-[22vw] h-[50vh] max-w-l flex flex-col items-center justify-center rounded-lg">
+      <div className="absolute top-20 z-20 lg:text-6xl sm:text-4xl left-5 flex items-center mx-12 font-title">
+  <span className="text-white">You</span>
+  &nbsp;
+  <span className="text-bg-sec">{`{`}</span>
+  <span className="text-white"> </span>
+  <span className="text-white">Coder</span>
+  <span className="text-bg-sec">{`}`}</span>
+</div>
+      <div className="flex flex-col justify-evenly h-full m">
         <button
-          className='flex items-center'
+          // variant="outlined"
+          className="bg-bg-pri z-20 flex items-center py- w-full h-1/6 t-[10vw] border-solid !border-2 border-bg-sec rounded-lg !text-white lg:text-xl sm:text-sm p-6 hover:border-bg-alt"
           onClick={() => signInWithGoogle()}
           disabled={authing}
         >
-          Sign in with
-          <span className='ml-2'>
+          SIGN IN WITH
+          <span className="ml-2 text-4xl">
             <BsGoogle />
           </span>
         </button>
         <button
-          className='flex items-center'
+          // variant="outlined"
+          className="bg-bg-pri z-20 flex items-center py- w-full h-1/6 t-[10vw] border-solid !border-2 border-bg-sec rounded-lg !text-white lg:text-xl sm:text-sm p-6 hover:border-bg-alt"
           onClick={() => signInWithGithub()}
           disabled={authing}
         >
-          Sign in with{' '}
-          <span className='ml-2 text-lg'>
+          SIGN IN WITH{" "}
+          <span className="ml-2 text-4xl">
             <BsGithub />
           </span>
         </button>
       </div>
     </div>
+  </div>
+  <div className="">
+    <LoginArt/>
+  </div>
+  
+</div>
+
   );
 };
 
