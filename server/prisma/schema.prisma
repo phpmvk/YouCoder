@@ -28,14 +28,17 @@ model User {
 }
 
 model Recording {
-  recording_id     Int     @id @default(autoincrement())
-  creator          Creator @relation(fields: [creator_uid], references: [uid])
+  recording_id     Int      @id @default(autoincrement())
+  creator          Creator  @relation(fields: [creator_uid], references: [uid])
   creator_uid      String //primary key in Creator model
   thumbnail_link   String?
   title            String
   description      String?
-  public           Boolean
+  published        Boolean
   language         String
   recorder_actions Json
   audio_link       String
+  created_at       DateTime
+  full_link        String
+  iframe_link      String
 }
