@@ -61,7 +61,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
       .then((response) => {
         console.log('user from response: ', response.data);
         dispatch(setUser(response.data));
-        navigate('/');
+        navigate('/dashboard');
       })
       .catch((error) => {
         console.log(error);

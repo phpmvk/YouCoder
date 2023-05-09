@@ -3,3 +3,7 @@ export type CodeToExecute = {
   source_code: string;
   stdin: string;
 };
+
+export type ExecutedCode = {
+  stdout: string;
+};
