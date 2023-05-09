@@ -10,7 +10,7 @@ This project requires certain configuration variables to be set in a `.env` file
 
 1. Copy the `example.env` file to a new file called `.env`: 
 
-``cp example.env env``
+``cp .env.example .env``
 
 2. Replace the placeholder values in `.env` with your own values.
 
