@@ -20,7 +20,7 @@ const HomePage: React.FC = () => {
         localStorage.removeItem('token');
         console.log('signed out');
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         console.log(error);
       });
   }
