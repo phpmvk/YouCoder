@@ -52,6 +52,16 @@ export function PlaybackEditor() {
     setMonacoInstance(monaco);
   };
 
+  // Set current theme based on if darkmode is on or not
+
+  // const toggleTheme = () => {
+  //   if (darkMode) {
+  //     monacoInstance!.editor.setTheme('vs-dark');
+  //   } else {
+  //     monacoInstance!.editor.setTheme('vs-light');
+  //   }
+  // };
+
   function applyChange(
     range: ChangeRange,
     editor: editor.IStandaloneCodeEditor,
