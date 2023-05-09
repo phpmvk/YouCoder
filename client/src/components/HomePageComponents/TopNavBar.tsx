@@ -11,10 +11,8 @@ import Menu from '@mui/material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import youcoderlogo from './youcoderlogo.png'
+import youcoderlogo from './youcoderlogo.png';
 import { Button } from '@mui/material';
-
-
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -56,7 +54,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-function TopNavBar({ showSearch, showCreateRecording, showDashboard }: { showSearch: boolean, showCreateRecording: boolean, showDashboard: boolean }) {
+interface TopNavBarProps {
+  showSearch?: boolean;
+  showCreateRecording?: boolean;
+  showDashboard?: boolean;
+}
+
+function TopNavBar({
+  showSearch = false,
+  showCreateRecording = false,
+  showDashboard = false,
+}: TopNavBarProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -120,16 +128,14 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard }: { showSea
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        
-      </MenuItem>
+      <MenuItem></MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
+          size='large'
+          aria-label='account of current user'
+          aria-controls='primary-search-account-menu'
+          aria-haspopup='true'
+          color='inherit'
         >
           <AccountCircle />
         </IconButton>
@@ -140,17 +146,17 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard }: { showSea
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar sx={{ backgroundColor: '#050505', maxHeight:'7vh' }}>
+      <AppBar sx={{ backgroundColor: '#050505', maxHeight: '7vh' }}>
         <Toolbar>
-          
           <Typography
-            variant="h6"
+            variant='h6'
             noWrap
-            component="div"
+            component='div'
             sx={{ display: { xs: 'none', sm: 'block' } }}
-          > LOGO
-          {/* <img src={youcoderlogo} style={{width: '80px', height: '80px'}}></img>  */}
-            
+          >
+            {' '}
+            LOGO
+            {/* <img src={youcoderlogo} style={{width: '80px', height: '80px'}}></img>  */}
           </Typography>
           {showSearch && (
             <Search>
@@ -158,7 +164,7 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard }: { showSea
                 <SearchIcon />
               </SearchIconWrapper>
               <StyledInputBase
-                placeholder="Search…"
+                placeholder='Search…'
                 inputProps={{ 'aria-label': 'search' }}
               />
             </Search>
@@ -168,39 +174,46 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard }: { showSea
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
-              width: '25%', 
+              width: '25%',
               marginRight: 2,
             }}
-            >
+          >
             {/* Conditionally render the Create Recording button */}
-            {showCreateRecording && <Button color="inherit" variant="outlined">Create Recording</Button>}
+            {showCreateRecording && (
+              <Button
+                color='inherit'
+                variant='outlined'
+              >
+                Create Recording
+              </Button>
+            )}
             {/* Conditionally render the Dashboard button */}
-            {showDashboard && <Button color="inherit">Dashboard</Button>}
-            <Button color="inherit">Features</Button>
-            <Button color="inherit">Examples</Button>
-            <Button color="inherit">Docs</Button>
+            {showDashboard && <Button color='inherit'>Dashboard</Button>}
+            <Button color='inherit'>Features</Button>
+            <Button color='inherit'>Examples</Button>
+            <Button color='inherit'>Docs</Button>
           </Box>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
+              size='large'
+              edge='end'
+              aria-label='account of current user'
               aria-controls={menuId}
-              aria-haspopup="true"
+              aria-haspopup='true'
               onClick={handleProfileMenuOpen}
-              color="inherit"
+              color='inherit'
             >
               <AccountCircle />
             </IconButton>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
-              size="large"
-              aria-label="show more"
+              size='large'
+              aria-label='show more'
               aria-controls={mobileMenuId}
-              aria-haspopup="true"
+              aria-haspopup='true'
               onClick={handleMobileMenuOpen}
-              color="inherit"
+              color='inherit'
             >
               <MoreIcon />
             </IconButton>

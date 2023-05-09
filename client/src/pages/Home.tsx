@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { getAuth, signOut } from 'firebase/auth';
 import './../components/HomePageComponents/Home.css';
 import { Parallax } from 'react-parallax';
@@ -14,13 +14,24 @@ import Footer from './../components/HomePageComponents/Footer';
 const HomePage: React.FC = () => {
   const auth = getAuth();
 
+  function logOut() {
+    signOut(auth)
+      .then(() => {
+        localStorage.removeItem('token');
+        console.log('signed out');
+      })
+      .catch((error: Error) => {
+        console.log(error);
+      });
+  }
+
   return (
-    <div className="text-center bg-bg-pri font-title">
+    <div className='text-center bg-bg-pri font-title'>
       {/* <button onClick={() => signOut(auth)}>Sign out</button> */}
-      <div className="sticky top-0 z-50">
+      <div className='sticky top-0 z-50'>
         <TopNavBar />
       </div>
-      
+
       <Parallax
         strength={600}
         renderLayer={(percentage) => (
@@ -31,7 +42,7 @@ const HomePage: React.FC = () => {
             <TeachInteractively />
             <MiddleBall percentage={percentage} />
             <ExampleFrame />
-            <Footer/>
+            <Footer />
           </>
         )}
       />
