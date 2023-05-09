@@ -85,7 +85,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
       <div className="flex flex-col justify-evenly h-full m">
         <button
           // variant="outlined"
-          className="bg-bg-pri z-20 flex items-center py- w-full h-1/6 t-[10vw] border-solid !border-2 border-bg-sec rounded-lg !text-white lg:text-xl sm:text-sm p-6 hover:border-bg-alt"
+          className="bg-bg-pri z-20 flex items-center py- w-full h-1/6 t-[10px] border-solid !border-2 border-bg-sec rounded-lg !text-white lg:text-xl sm:text-sm p-6 hover:border-bg-alt"
           onClick={() => signInWithGoogle()}
           disabled={authing}
         >
@@ -96,7 +96,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
         </button>
         <button
           // variant="outlined"
-          className="bg-bg-pri z-20 flex items-center py- w-full h-1/6 t-[10vw] border-solid !border-2 border-bg-sec rounded-lg !text-white lg:text-xl sm:text-sm p-6 hover:border-bg-alt"
+          className="bg-bg-pri z-20 flex items-center py- w-full h-1/6 t-[10px] border-solid !border-2 border-bg-sec rounded-lg !text-white lg:text-xl sm:text-sm p-6 hover:border-bg-alt"
           onClick={() => signInWithGithub()}
           disabled={authing}
         >
