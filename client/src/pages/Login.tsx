@@ -44,7 +44,6 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
       .then(async (response) => {
         const token = await response.user.getIdToken();
         if (token) {
-          console.log('----token: ', token);
           localStorage.setItem('token', token);
           login(token);
         }
@@ -59,7 +58,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
     http
       .creatorLogin(token)
       .then((response) => {
-        console.log('user from response: ', response.data);
+        console.log('user from backend response: ', response.data);
         dispatch(setUser(response.data));
         navigate('/dashboard');
       })

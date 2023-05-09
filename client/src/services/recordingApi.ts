@@ -1,12 +1,6 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import baseURL from './baseUrl';
-
-const http = axios.create({
-  baseURL,
-  headers: {
-    'Content-type': 'application/json',
-  },
-});
+import { protectedHttp, http } from './baseUrl';
 
 class RecordingApiService {
   getRecording(id: string): Promise<AxiosResponse<string>> | undefined {
@@ -23,7 +17,7 @@ class RecordingApiService {
     // data: RecorderActions
   ): Promise<AxiosResponse<string>> | undefined {
     try {
-      return http.post<string>(`/recording/upload`, data);
+      return protectedHttp.post<string>(`/recording/upload`, data);
     } catch (e) {
       const error = e as AxiosError;
       console.log(error);

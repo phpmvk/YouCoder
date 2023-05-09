@@ -23,16 +23,28 @@ interface RecordingItemProps {
 const RecordingItem = ({ recording }: RecordingItemProps) => {
   const [showEditTitle, setShowEditTitle] = useState(false);
   const [showEditDescription, setShowEditDescription] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   const editTitle = () => {
     setShowEditTitle(true);
-    console.log('edit title');
   };
 
   const editDescription = () => {
-    console.log('edit description');
+    setShowEditDescription(true);
+  };
+
+  const handleKeyDown = (e: any) => {
+    if (e.key === 'Enter') {
+      if (e.target.id === 'title') {
+        // if title send the upfdasted title to the backend
+
+        setShowEditTitle(false);
+      } else if (e.target.id === 'description') {
+        // if description send the updated description to the backend
+
+        setShowEditDescription(false);
+      }
+    }
   };
 
   const showCopied = (text: string) => {
@@ -60,15 +72,17 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
             </div>
           </div>
 
-          <div className=' w-7/12 h-60 z-10 ml-1 text-white rounded-md flex flex-col justify-start relative flex-1'>
+          <div className=' w-7/12 h-60 z-10 ml-1 text-white rounded-md flex flex-col justify-start relative flex-1 box-content'>
             {showEditTitle ? (
               <>
                 <div className='relative'>
                   <input
+                    id='title'
                     type='text'
-                    className='text-4xl w-full mx-4 bg-transparent border-b-white border-b-4 rounded-md'
+                    className='text-4xl w-full mx-4 bg-transparent border-white border rounded-md'
                     defaultValue={recording.title}
                     onBlur={() => setShowEditTitle(false)}
+                    onKeyDown={handleKeyDown}
                   />
                 </div>
               </>
@@ -77,9 +91,28 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
                 <div className='text-4xl w-full mx-4'>{recording.title}</div>
               </>
             )}
-            <div className='text-base text-slate-300 w-full m-4'>
-              {recording.description || '... add a description'}
-            </div>
+
+            {showEditDescription ? (
+              <>
+                <div className='relative'>
+                  <textarea
+                    id='description'
+                    className='text-base w-full m-4 h-full bg-transparent border-white border rounded-md'
+                    defaultValue={recording.description}
+                    onBlur={() => setShowEditDescription(false)}
+                    onKeyDown={handleKeyDown}
+                    rows={4}
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className='text-base text-slate-300 w-full m-4 multiline-ellipsis6'>
+                  {recording.description || '... add a description'}
+                </div>
+              </>
+            )}
+
             <div className='text-1xl text-slate-300 w-full mx-4 absolute bottom-0 lef '>
               3 Weeks Ago
             </div>
@@ -127,7 +160,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
             <div className='w-2/12 h-10 z-10 m-1 rounded-md flex items-center justify-center'>
               <Button
                 variant='outlined'
-                className='w-[100%] h-[100%] !border-bg-sec !text-white'
+                className='w-full h-full !border-bg-sec !text-white'
                 onClick={() => {
                   showCopied('copied');
                   navigator.clipboard.writeText(recording.iframe_link);

@@ -17,9 +17,9 @@ import { useAppDispatch, useAppSelector } from './redux/hooks';
 export const Firebase = initializeApp(config.firebaseConfig);
 
 function App() {
-  const user = useAppSelector((state) => state.user);
-  console.log('user: ', user);
-  const dispatch = useAppDispatch();
+  // const user = useAppSelector((state) => state.user);
+  // console.log('user: ', user);
+  // const dispatch = useAppDispatch();
   // dispatch(editUser({ avatar: ' ' }));
   return (
     <BrowserRouter>
