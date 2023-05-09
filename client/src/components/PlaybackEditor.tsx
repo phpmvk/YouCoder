@@ -66,7 +66,6 @@ export function PlaybackEditor() {
     editor: editor.IStandaloneCodeEditor,
     text: string
   ) {
-    if (playbackStateRef.current.status !== 'playing') return;
     const model = editor.getModel();
     const rangeInstance = new monacoInstance!.Range(
       range.startLineNumber,
@@ -162,6 +161,7 @@ export function PlaybackEditor() {
   function handleResumePlayback() {
     audioElement?.play();
     if (importedActions) {
+      editorInstance!.setValue('');
       startPlayback(importedActions.editorActions, editorInstance!);
     }
     clearInterval(sliderIntervalIdRef.current!);
