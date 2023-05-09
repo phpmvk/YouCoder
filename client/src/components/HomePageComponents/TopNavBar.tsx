@@ -13,11 +13,14 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import youcoderlogo from './youcoderlogo.png';
 import { Button } from '@mui/material';
+import { Link } from 'react-router-dom';
+
+
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  backgroundColor: '#202123',
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
@@ -54,17 +57,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-interface TopNavBarProps {
-  showSearch?: boolean;
-  showCreateRecording?: boolean;
-  showDashboard?: boolean;
-}
-
-function TopNavBar({
-  showSearch = false,
-  showCreateRecording = false,
-  showDashboard = false,
-}: TopNavBarProps) {
+function TopNavBar({ showSearch, showCreateRecording, showDashboard, showFeatures, showExamples }: { showSearch: boolean, showCreateRecording: boolean, showDashboard: boolean, showFeatures: boolean, showExamples: boolean }) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -146,7 +139,7 @@ function TopNavBar({
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar sx={{ backgroundColor: '#050505', maxHeight: '7vh' }}>
+      <AppBar sx={{ backgroundColor: '#050505', maxHeight:'8vh' }}>
         <Toolbar>
           <Typography
             variant='h6'
@@ -179,32 +172,32 @@ function TopNavBar({
             }}
           >
             {/* Conditionally render the Create Recording button */}
-            {showCreateRecording && (
-              <Button
-                color='inherit'
-                variant='outlined'
-              >
-                Create Recording
-              </Button>
-            )}
+            {showCreateRecording && <Button className="w-full h-full t-[10vw] border-solid !border-2 !border-red-700 !text-white !rounded-full !text-l"color="inherit" variant="outlined">Create Recording</Button>}
+           
             {/* Conditionally render the Dashboard button */}
-            {showDashboard && <Button color='inherit'>Dashboard</Button>}
-            <Button color='inherit'>Features</Button>
-            <Button color='inherit'>Examples</Button>
-            <Button color='inherit'>Docs</Button>
+            {showDashboard && <Button color="inherit">Dashboard</Button>}
+            {showFeatures && <Button color="inherit">Features</Button>}
+            {showExamples && <Button color="inherit">Examples</Button>}
+            <Button color="inherit">Docs</Button>
           </Box>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton
-              size='large'
-              edge='end'
-              aria-label='account of current user'
+            <Link 
+            to='/login'
+            >
+            <Button className="!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto" variant="outlined">Sign In</Button>
+            </Link>
+
+            {/* <IconButton
+              size="large"
+              edge="end"
+              aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup='true'
               onClick={handleProfileMenuOpen}
               color='inherit'
             >
               <AccountCircle />
-            </IconButton>
+            </IconButton> */}
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
