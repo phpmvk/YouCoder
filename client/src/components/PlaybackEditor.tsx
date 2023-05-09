@@ -271,9 +271,15 @@ export function PlaybackEditor() {
       <br></br>
       <br></br>
       <input type="file" onChange={handleFileInput} />
-      <button onClick={handleStartPlayback}>Start Playback</button>
-      <button onClick={handlePausePlayback}>Pause Playback</button>
-      <button onClick={handleResumePlayback}>Resume Playback</button>
+      <button className="p-2" onClick={handleStartPlayback}>
+        Start Playback
+      </button>
+      <button className="p-2" onClick={handlePausePlayback}>
+        Pause Playback
+      </button>
+      <button className="p-2" onClick={handleResumePlayback}>
+        Resume Playback
+      </button>
       <input type="file" onChange={handleAudioFileInput} />
       <br />
       <br />
