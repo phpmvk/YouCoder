@@ -23,3 +23,12 @@ type EditorAction = ChangeRange & {
 type RecorderAction = {
   timestamp: number;
 };
+
+type Language =
+  | 'javascript'
+  | 'python'
+  | 'java'
+  | 'csharp'
+  | 'cpp'
+  | 'ruby'
+  | 'go';

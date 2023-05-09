@@ -52,6 +52,16 @@ export function PlaybackEditor() {
     setMonacoInstance(monaco);
   };
 
+  // Set current theme based on if darkmode is on or not
+
+  // const toggleTheme = () => {
+  //   if (darkMode) {
+  //     monacoInstance!.editor.setTheme('vs-dark');
+  //   } else {
+  //     monacoInstance!.editor.setTheme('vs-light');
+  //   }
+  // };
+
   function applyChange(
     range: ChangeRange,
     editor: editor.IStandaloneCodeEditor,
@@ -254,31 +264,41 @@ export function PlaybackEditor() {
           setAudioElement(audio);
         }}
       ></audio>
-      <Editor
-        height="60vh"
-        defaultLanguage="javascript"
-        defaultValue=""
-        theme="vs-dark"
-        options={{
-          wordWrap: 'on',
-          readOnly: ignoreUserInputs,
-        }}
-        onMount={handleEditorDidMount}
-      />
+      <div className="flex max-w-full">
+        <div className="w-3/4">
+          <Editor
+            height="60vh"
+            defaultLanguage="javascript"
+            defaultValue=""
+            theme="vs-dark"
+            options={{
+              wordWrap: 'on',
+              readOnly: ignoreUserInputs,
+            }}
+            onMount={handleEditorDidMount}
+          />
+        </div>
+        <div className="w-1/4">
+          <h1>hello</h1>
+        </div>
+      </div>
 
       <br></br>
       <br></br>
-      <input type="file" onChange={handleFileInput} />
-      <button className="p-2" onClick={handleStartPlayback}>
+      <input className="mx-4" type="file" onChange={handleFileInput} />
+      <button
+        className="p-2 bg-slate-500 rounded-sm"
+        onClick={handleStartPlayback}
+      >
         Start Playback
       </button>
-      <button className="p-2" onClick={handlePausePlayback}>
+      <button className="p-2 bg-slate-500 mx-4" onClick={handlePausePlayback}>
         Pause Playback
       </button>
-      <button className="p-2" onClick={handleResumePlayback}>
+      <button className="p-2 bg-slate-500" onClick={handleResumePlayback}>
         Resume Playback
       </button>
-      <input type="file" onChange={handleAudioFileInput} />
+      <input className="mx-4" type="file" onChange={handleAudioFileInput} />
       <br />
       <br />
       <ReactSlider
