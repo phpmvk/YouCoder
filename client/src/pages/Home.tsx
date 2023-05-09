@@ -28,8 +28,8 @@ const HomePage: React.FC = () => {
   return (
     <div className='text-center bg-bg-pri font-title'>
       {/* <button onClick={() => signOut(auth)}>Sign out</button> */}
-      <div className='sticky top-0 z-50'>
-        <TopNavBar />
+      <div className="sticky top-0 z-50">
+        <TopNavBar showFeatures={true} showExamples={true}/>
       </div>
 
       <Parallax
