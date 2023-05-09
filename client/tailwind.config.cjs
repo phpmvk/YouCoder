@@ -24,6 +24,8 @@ module.exports = {
         blink: 'blink 1.5s infinite',
         turnYellow: 'toYellow 4s 1 forwards',
         expand: 'expand 3s forwards',
+        'spin-slow': 'spin 5s linear infinite',
+        'spin-xslow': 'spin 20s linear infinite',
       },
       keyframes: {
         blinking: {
