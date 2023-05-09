@@ -5,6 +5,11 @@ module.exports = {
   ],
   theme: {
     extend: {
+      scale: {
+        '80': '.80',
+        '82': '82',
+        '85': '.85',
+      },
       colors: {
         bg: {
           pri: '#050505',
