@@ -4,7 +4,7 @@ import { editor } from 'monaco-editor';
 import * as monaco from 'monaco-editor';
 import RecordRTC from 'recordrtc';
 
-import http from '../services/consoleApi';
+import consoleApi from '../services/consoleApi';
 import { CodeToExecute } from '../types/console';
 
 export function RecorderEditor() {
@@ -193,7 +193,7 @@ export function RecorderEditor() {
 
     const judge0: CodeToExecute = { language_id, source_code };
     console.log(judge0);
-    http.getOutput(judge0)!.then((response) => {
+    consoleApi.getOutput(judge0)!.then((response) => {
       const div = document.getElementById('console');
       div!.innerHTML = response.data.stdout;
       console.log(response);
