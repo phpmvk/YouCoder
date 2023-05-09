@@ -1,32 +1,29 @@
-import React from 'react'
+import React from 'react';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { styled } from '@mui/material/styles';
 import ListItem from './ListItem';
 import PlaceholderItem from './PlaceholderItem';
 
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
-
-const ListContainer = () => {
-  return (
-<div className="bg-transparent min-h-screen h-[auto] w-9/12 m-auto mt-[5vh] mb-[20vh]rounded-sm ">
-<Box sx={{ width: '100%' }}>
-      <Stack spacing={3}>
-        <PlaceholderItem></PlaceholderItem>
-        {/* <ListItem>Item 1</ListItem>
-        <ListItem>Item 1</ListItem>
-        <ListItem>Item 1</ListItem> */}
-      </Stack>
-    </Box>
-</div>
-  )
+interface ListContainerProps {
+  showCreateRecording: boolean;
 }
 
-export default ListContainer
+const rec = [];
+
+const ListContainer: React.FC<ListContainerProps> = ({ showCreateRecording }) => {
+  return (
+    <div className="bg-transparent min-h-screen h-[auto] w-9/12 m-auto mt-[5vh] mb-[20vh] rounded-sm ">
+      <Box sx={{ width: '100%' }}>
+        <Stack spacing={3}>
+          {rec.length > 0 ? (
+            rec.map((item, index) => <ListItem key={index}>Item {item}</ListItem>)
+          ) : (
+            <PlaceholderItem showCreateRecording={showCreateRecording} />
+          )}
+        </Stack>
+      </Box>
+    </div>
+  );
+};
+
+export default ListContainer;

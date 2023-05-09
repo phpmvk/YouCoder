@@ -44,7 +44,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({}) => {
       <TopNavBar showSearch={true} showCreateRecording={showCreateRecording} />
       <div>
         <CreateRecordingButton ref={createRecordingButtonRef}  />
-        <ListContainer />
+        <ListContainer showCreateRecording={showCreateRecording}  />
       </div>
       <Footer />
     </div>
