@@ -23,9 +23,9 @@ export async function sendCode(codeToExecute: CodeToExecute) {
       stdin: codeToExecute.stdin,
     }
   } 
-  //still need to add logic here for status messages
-
+  
   const codeSubmissionRes = await axios.request(codeSubmissionReq)
+  
   const submissionToken = codeSubmissionRes.data.token;
   
   const submissionResultReq = {
@@ -40,7 +40,12 @@ export async function sendCode(codeToExecute: CodeToExecute) {
       'X-RapidAPI-Host':apiHost,
     }
   }
-
+  
   const submissionResultRes = await axios.request(submissionResultReq);
-  return submissionResultRes.data.stdout
+
+  if (submissionResultRes.data.stdout === null) {
+    return submissionResultRes.data.stderr
+  } else {
+    return submissionResultRes.data.stdout
+  }
 }
