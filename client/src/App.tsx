@@ -43,9 +43,9 @@ function App() {
         <Route
           path='/dashboard'
           element={
-            <AuthRoute>
+            // <AuthRoute>
               <DashboardPage />
-            </AuthRoute>
+            // </AuthRoute>
           }
         />
         <Route
