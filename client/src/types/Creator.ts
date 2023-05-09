@@ -7,7 +7,7 @@ export interface Creator {
 }
 
 export interface Recording {
-  recording_id: number;
+  recording_id: string;
   creator: Creator;
   creator_uid: string;
   thumbnail_link: string;
@@ -20,4 +20,11 @@ export interface Recording {
   created_at: string;
   full_link: string;
   iframe_link: string;
+}
+
+export interface updateRecording {
+  title?: string;
+  description?: string;
+  published?: boolean;
+  thumbnail_link?: string;
 }

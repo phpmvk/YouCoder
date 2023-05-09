@@ -1,9 +1,10 @@
-import { Button } from '@mui/material';
+import { Button, FormControlLabel, FormGroup, Switch } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import { Recording } from '../../types/Creator';
 import { useState } from 'react';
 import Modal from '../Modal';
+import http from '../../services/recordingApi';
 
 interface RecordingItemProps {
   recording: Recording;
@@ -37,6 +38,14 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
     if (e.key === 'Enter') {
       if (e.target.id === 'title') {
         // if title send the upfdasted title to the backend
+        http
+          .patchRecording(recording.recording_id, { title: e.target.value })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
 
         setShowEditTitle(false);
       } else if (e.target.id === 'description') {
@@ -52,6 +61,15 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
     setTimeout(() => {
       setShowModal(false);
     }, 1000);
+  };
+
+  const handlePublish = () => {
+    if (recording.published) {
+      // warn that unpublishing will make all the links where this recording is embedded to stop working
+      // if they click yes, then send the unpublish request to the backend
+    } else {
+      // send the publish request to the backend
+    }
   };
 
   return (
@@ -115,6 +133,19 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
 
             <div className='text-1xl text-slate-300 w-full mx-4 absolute bottom-0 lef '>
               3 Weeks Ago
+            </div>
+            <div className='absolute bottom-0 right-0'>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={recording.published}
+                      onChange={handlePublish}
+                    />
+                  }
+                  label='Published'
+                />
+              </FormGroup>
             </div>
           </div>
 

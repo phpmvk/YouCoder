@@ -39,24 +39,34 @@ class UserApiService {
     id: string,
     data: typeof rootUser
   ): Promise<AxiosResponse<typeof rootUser>> | undefined {
-    try {
-      return protectedHttp.patch<typeof rootUser>(
-        `/users/creator/update/${id}`,
-        data
-      );
-    } catch (e) {
-      const error = e as AxiosError;
-      console.log(error);
-    }
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await protectedHttp.patch<typeof rootUser>(
+          `/users/creator/update/${id}`,
+          data
+        );
+        resolve(response);
+      } catch (e) {
+        const error = e as AxiosError;
+        console.log(error);
+        reject(error);
+      }
+    });
   }
 
   creatorDelete(id: string): Promise<AxiosResponse<string>> | undefined {
-    try {
-      return protectedHttp.delete(`/users/creator/delete/${id}`);
-    } catch (e) {
-      const error = e as AxiosError;
-      console.log(error);
-    }
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await protectedHttp.delete<string>(
+          `/users/creator/delete/${id}`
+        );
+        resolve(response);
+      } catch (e) {
+        const error = e as AxiosError;
+        console.log(error);
+        reject(error);
+      }
+    });
   }
 }
 
