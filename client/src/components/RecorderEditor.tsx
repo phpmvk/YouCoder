@@ -167,10 +167,18 @@ export function RecorderEditor() {
         onChange={handleEditorChange}
         onMount={handleEditorDidMount}
       />
-      <button onClick={handleStartRecording}>Start Recording</button>
-      <button onClick={handlePauseRecording}>Pause Recording</button>
-      <button onClick={handleResumeRecording}>Resume Recording</button>
-      <button onClick={handleEndRecording}>End Recording</button>
+      <button className="p-2" onClick={handleStartRecording}>
+        Start Recording
+      </button>
+      <button className="p-2" onClick={handlePauseRecording}>
+        Pause Recording
+      </button>
+      <button className="p-2" onClick={handleResumeRecording}>
+        Resume Recording
+      </button>
+      <button className="p-2" onClick={handleEndRecording}>
+        End Recording
+      </button>
     </>
   );
 }

@@ -83,8 +83,6 @@ export function PlaybackEditor() {
     editor: editor.IStandaloneCodeEditor,
     playbackStartPosition: number = 0
   ) {
-    console.log('editorActions in startPlayback', editorActions);
-
     if (audioElement && playbackStartPosition === 0) {
       audioElement.currentTime = playbackStartPosition / 1000;
       audioElement.play();
