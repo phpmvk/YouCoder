@@ -18,7 +18,7 @@ export async function authenticateToken (req: Request, res: Response, next: Next
       return res.status(401).send({ message: 'Unauthorized' })
     }
 
-    req.body = validatedToken
+    req.body.user = validatedToken
     next();
   } catch (err) {
     console.error(err)

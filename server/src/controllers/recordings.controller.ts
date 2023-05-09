@@ -40,7 +40,23 @@ export async function uploadRecording(req: Request, res: Response) {
     full_link,
     iframe_link
   } = req.body
-  
+
+  if (
+    !user.uid || typeof user.uid !== 'string' ||
+    !thumbnail_link || typeof thumbnail_link !== 'string' ||
+    !title || typeof title !== 'string' ||
+    !description || typeof description !== 'string' ||
+    !published || typeof published !== 'boolean' ||
+    !language || typeof language !== 'string' ||
+    !recorder_actions || typeof recorder_actions !== 'object' || typeof recorder_actions === null ||
+    !audio_link || typeof audio_link !== 'string' ||
+    !created_at || typeof created_at !== 'string' ||
+    !full_link || typeof full_link !== 'string' ||
+    !iframe_link || typeof iframe_link !== 'string'
+  ) {
+    return res.status(400).send({ message: 'Bad request' })
+  }
+
   try {
     const newRecording = await prisma.recording.create({
       data: {
@@ -49,7 +65,6 @@ export async function uploadRecording(req: Request, res: Response) {
             uid: user.uid
           }
         },
-        creator_uid: user.uid,
         thumbnail_link: thumbnail_link,
         title: title,
         description: description,
@@ -62,8 +77,7 @@ export async function uploadRecording(req: Request, res: Response) {
         iframe_link: iframe_link,
       }
     })
-    //make sure response includes recording_id
-    res.status(201).send({ newRecording })
+    res.status(201).send(newRecording)
   } catch (err) {
     console.error(err);
     res.status(409).send({ message: 'Unable to create resource' })
@@ -72,7 +86,7 @@ export async function uploadRecording(req: Request, res: Response) {
 
 export async function updateRecording(req: Request, res: Response) {
   //patch route for update of any property, and reponse should be all the recordings
-  console.log('Recordings - POST received - uploadRecording')
+  console.log('Recordings - PATCH received - updateRecording')
   const recordingId = req.params.recordingid
   if (!recordingId) {
     return res.status(400).send({ message: 'Unable to update resource' })
