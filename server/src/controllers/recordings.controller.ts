@@ -94,14 +94,24 @@ export async function updateRecording(req: Request, res: Response) {
 
   validateRecordingId(recordingId)
   
-  const dataToUpdate: Record<string, string> = {};
-
+  const dataToUpdate: Record<string, string | boolean> = {};
+  
   const fieldsToUpdate: string[] = ['recording_id', 'creator', 'creator_uid', 'thumbnail_link', 'title', 'description', 'published', 'language', 'recorder_actions', 'audio_link', 'created_at', 'full_link', 'iframe_link']
+  let invalidFields: string[] = [];
   fieldsToUpdate.forEach((field: string) => {
-    if (req.body[field]) {
+    if (req.body[field] !== undefined) {
+      if (field !== 'published' && typeof req.body[field] !== 'string') {
+        invalidFields.push(field)
+      }
+      if (field === 'published' && typeof req.body[field] !== 'boolean') {
+        invalidFields.push(field)
+      }
       dataToUpdate[field] = req.body[field]
     }
   })
+  if (invalidFields.length > 0) {
+    return res.status(400).send({ message: 'Type of field to update error'})
+  }
 
   if (Object.keys(dataToUpdate).length === 0) {
     return res.status(400).send({ message: 'Error updating resource: no fields to update provided' })
@@ -136,7 +146,7 @@ export async function updateRecording(req: Request, res: Response) {
     if (err instanceof InvalidRecordingError) {
       res.status(400).send({ message: err.message})
     } else {
-      res.status(500).send({ message: 'Internal server error'})
+      res.status(500).send({ message: 'Internal server error' })
     }
   }
 }

@@ -47,14 +47,13 @@ export function updateCreator(req: Request, res: Response) {
 export async function deleteCreator(req: Request, res: Response) {
   console.log('Users - DELETE received - deleteCreator');
   try {
-    const test = await prisma.creator.delete({
+      await prisma.creator.delete({
       where: {
         uid: req.body.user.uid,
       },
     });
     return res.status(204).send();
   } catch (err) {
-    console.error(err)
     return res.status(400).send({ error: 'User not found' });
   }
 }
