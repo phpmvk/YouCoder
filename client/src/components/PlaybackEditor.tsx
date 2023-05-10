@@ -15,6 +15,7 @@ export function PlaybackEditor() {
   );
 
   const [consoleOutput, setConsoleOutput] = useState('');
+  const [editorLanguage, setEditorLanguage] = useState('');
 
   //editor playback states
   const [importedActions, setImportedActions] =
@@ -176,6 +177,7 @@ export function PlaybackEditor() {
   function handleStartPlayback() {
     if (importedActions) {
       console.log(importedActions);
+      getCurrentLanguage();
       editorInstance!.setValue('');
       startPlayback(importedActions.editorActions, editorInstance!);
     }
@@ -278,6 +280,12 @@ export function PlaybackEditor() {
     }
   }
 
+  function getCurrentLanguage() {
+    const model = editorInstance!.getModel();
+    const language = model!.getLanguageId();
+    setEditorLanguage(language);
+  }
+
   return (
     <>
       <audio
@@ -285,6 +293,7 @@ export function PlaybackEditor() {
           setAudioElement(audio);
         }}
       ></audio>
+      <h1>{editorLanguage}</h1>
       <div className="flex max-w-[80vw] h-[500px] px-40">
         <Allotment>
           <Allotment.Pane minSize={600}>
