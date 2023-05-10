@@ -15,23 +15,22 @@ const DashboardPage: React.FC<DashboardPageProps> = ({}) => {
 
   // import the user from the reducer
   const user = useAppSelector((state) => state.user);
+  console.log('user from DashboardPage: ', user);
 
+  const observerCallback = (entries: any, observer: any) => {
+    entries.forEach((entry: any) => {
+      if (entry.intersectionRatio !== 1) {
+        // if (entry.boundingClientRect.top <= 1 && entry.intersectionRatio === 0) {
+        setShowCreateRecording(true);
+      } else {
+        setShowCreateRecording(false);
+      }
+    });
+  };
   useEffect(() => {
-    const observerCallback = (entries: any, observer: any) => {
-      entries.forEach((entry: any) => {
-        if (
-          entry.boundingClientRect.top <= 1 &&
-          entry.intersectionRatio === 0
-        ) {
-          setShowCreateRecording(true);
-        } else {
-          setShowCreateRecording(false);
-        }
-      });
-    };
-
     const observer = new IntersectionObserver(observerCallback, {
-      threshold: 0,
+      rootMargin: '60px',
+      threshold: 1,
     });
 
     if (createRecordingButtonRef.current) {
@@ -43,7 +42,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({}) => {
         observer.unobserve(createRecordingButtonRef.current);
       }
     };
-  }, []);
+  }, [createRecordingButtonRef]);
 
   console.log('showCreateRecording', showCreateRecording);
 
@@ -88,7 +87,10 @@ const DashboardPage: React.FC<DashboardPageProps> = ({}) => {
         showExamples={false}
       />
       <div>
-        <CreateRecordingButton ref={createRecordingButtonRef} />
+        <div ref={createRecordingButtonRef}>
+          {/* <CreateRecordingButton ref={createRecordingButtonRef} /> */}
+          <CreateRecordingButton />
+        </div>
         {/* {user?.recordings?.length > 0 ? ( */}
         {recordingsList.length > 0 ? (
           // <RecordingsList recordings={user.recordings} />

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-
 const TeachInteractively = () => {
   const [isActive, setIsActive] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -48,12 +47,12 @@ const TeachInteractively = () => {
   const marginLeft = scrollPosition * 0.04;
 
   return (
-    <div ref={ref} >
+    <div ref={ref}>
       <div
-        className="text-white"
+        className='text-white'
         style={{ fontSize: '5rem', marginLeft: `${marginLeft}vw` }}
       >
-        <span className="text-white">Teach Inter</span>
+        <span className='text-white'>Teach Inter</span>
         <span
           style={{ fontWeight: 600 }}
           className={isActive ? 'animate-turnYellow' : ''}

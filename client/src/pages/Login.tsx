@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   getAuth,
   GoogleAuthProvider,
@@ -22,6 +22,13 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
   const [alerts, setAlerts] = useState<string>('');
   const dispatch = useAppDispatch();
   const [showLoading, setShowLoading] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      login(token);
+    }
+  }, []);
 
   const signInWithGoogle = async () => {
     setAuthing(true);

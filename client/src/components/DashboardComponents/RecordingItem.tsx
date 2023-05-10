@@ -89,7 +89,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
   return (
     <>
       <div className='bg-bg-gptdark h-96 flex flex-col items-center justify-center p-4 rounded-md'>
-        <div className='w-full flex items-center'>
+        <div className='w-full flex items-center relative'>
           <div
             className='relative w-4/12 h-60 bg-bg-pri bg-cover bg-center mr-1 rounded-md'
             style={{ backgroundImage: `url(${recording.thumbnail_link})` }}
@@ -104,52 +104,52 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
             </div>
           </div>
 
-          <div className=' w-7/12 h-60 z-10 ml-1 text-white rounded-md flex flex-col justify-start relative flex-1 box-content'>
-            {showEditTitle ? (
-              <>
-                <div className='relative'>
-                  <input
-                    id='title'
-                    type='text'
-                    className='text-4xl w-full mx-4 bg-transparent'
-                    defaultValue={recording.title}
-                    onBlur={() => setShowEditTitle(false)}
-                    onKeyDown={handleKeyDown}
-                    autoFocus
-                  />
-                </div>
-              </>
-            ) : (
-              <>
-                <div className='text-4xl w-full mx-4'>{recording.title}</div>
-              </>
-            )}
+          <div className='w-9/12 h-60 z-10 ml-1 text-white/80 rounded-md flex flex-col justify-between flex-1 box-content'>
+            <div>
+              {showEditTitle ? (
+                <>
+                  <div className='relative'>
+                    <input
+                      id='title'
+                      type='text'
+                      className='text-4xl w-full mx-4 bg-transparent'
+                      defaultValue={recording.title}
+                      onBlur={() => setShowEditTitle(false)}
+                      onKeyDown={handleKeyDown}
+                      autoFocus
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className='text-4xl w-full mx-4'>{recording.title}</div>
+                </>
+              )}
 
-            {showEditDescription ? (
-              <>
-                <div className='relative'>
-                  <textarea
-                    id='description'
-                    className='text-base w-full m-4 h-full bg-transparent'
-                    defaultValue={recording.description}
-                    onBlur={() => setShowEditDescription(false)}
-                    onKeyDown={handleKeyDown}
-                    rows={4}
-                    autoFocus
-                  />
-                </div>
-              </>
-            ) : (
-              <>
-                <div className='text-base text-slate-300 w-full m-4 multiline-ellipsis6'>
-                  {recording.description || '... add a description'}
-                </div>
-              </>
-            )}
-
-            <div className='text-1xl text-slate-300 w-full mx-4 absolute bottom-0 lef '>
-              3 Weeks Ago
+              {showEditDescription ? (
+                <>
+                  <div className='relative'>
+                    <textarea
+                      id='description'
+                      className='text-base w-full m-4 h-full bg-transparent'
+                      defaultValue={recording.description}
+                      onBlur={() => setShowEditDescription(false)}
+                      onKeyDown={handleKeyDown}
+                      rows={5}
+                      autoFocus
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className='text-base text-white/80 w-full m-4 multiline-ellipsis6'>
+                    {recording.description || '... add a description'}
+                  </div>
+                </>
+              )}
             </div>
+
+            <div className='text-white/70 w-full mx-4 h-8'>3 Weeks Ago</div>
             <div className='absolute bottom-0 right-0'>
               <FormGroup>
                 <FormControlLabel
@@ -168,7 +168,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
             </div>
           </div>
 
-          <div className='ml-10 w-1/12 h-full z-10 text-white rounded-md flex flex-col justify-start'>
+          <div className='ml-10 h-full z-10 text-white/80 rounded-md flex flex-col justify-start'>
             <div>
               <IconButton
                 aria-label='edit image'
@@ -193,7 +193,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
             <div className='w-2/12 h-10 z-10 m-1 rounded-md flex items-center justify-center'>
               <Button
                 variant='outlined'
-                className='w-full h-full !border-bg-alt !text-white hover:!bg-bg-alt hover:!bg-opacity-10'
+                className='w-full h-full !border-bg-alt !text-white/80 hover:!bg-bg-alt hover:!bg-opacity-10'
                 onClick={() => {
                   showCopied('copied');
                   navigator.clipboard.writeText(recording.full_link);
@@ -202,15 +202,22 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
                 COPY LINK
               </Button>
             </div>
-            <div className='bg-bg-pri w-10/12 h-10 px-4 z-10 m-1 rounded-md flex items-center text-white font-console overflow-hidden hover:underline hover:cursor-pointer'>
-              {recording.full_link}
+            <div className='bg-bg-pri w-10/12 h-10 px-4 z-10 m-1 rounded-md flex items-center text-white/80 font-console overflow-hidden hover:underline hover:cursor-pointer'>
+              <a
+                className='no-underline text-white/80'
+                href={recording.full_link}
+                target='_blank'
+                rel='noreferrer'
+              >
+                {recording.full_link}
+              </a>
             </div>
           </div>
           <div className='flex mt-2'>
             <div className='w-2/12 h-10 z-10 m-1 rounded-md flex items-center justify-center'>
               <Button
                 variant='outlined'
-                className='w-full h-full !border-bg-sec !text-white hover:!bg-bg-sec hover:!bg-opacity-10'
+                className='w-full h-full !border-bg-sec !text-white/80 hover:!bg-bg-sec hover:!bg-opacity-10'
                 onClick={() => {
                   showCopied('copied');
                   navigator.clipboard.writeText(recording.iframe_link);
@@ -219,7 +226,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
                 COPY EMBED
               </Button>
             </div>
-            <div className='bg-bg-pri w-10/12 h-10 px-4 z-10 m-1 rounded-md flex items-center text-white font-console overflow-hidden whitespace-nowrap'>
+            <div className='bg-bg-pri w-10/12 h-10 px-4 z-10 m-1 rounded-md flex items-center text-white/80 font-console overflow-hidden whitespace-nowrap'>
               {recording.iframe_link}
             </div>
           </div>

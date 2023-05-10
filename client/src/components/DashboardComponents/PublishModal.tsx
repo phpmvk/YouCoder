@@ -72,7 +72,7 @@ const PublishModal: React.FC<PublishModalProps> = ({
                   Warning
                 </Dialog.Title>
                 <div className='mt-2'>
-                  <p className='text-sm text-white/60'>
+                  <p className='text-base text-white/60'>
                     If you unpublish this recording, all the links where this
                     recording is embedded will stop working until you publish it
                     again. Are you sure you want to proceed?
@@ -81,7 +81,7 @@ const PublishModal: React.FC<PublishModalProps> = ({
                 <div className='mt-4'>
                   <button
                     type='button'
-                    className='inline-flex justify-center px-4 py-2 text-sm font-medium border-red-500 text-white/60 bg-red-500/10 border border-transparent rounded-md hover:bg-red-500/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white'
+                    className='inline-flex justify-center px-4 py-2 text-sm font-medium border-red-500 text-white/60 bg-red-500/10 border rounded-md hover:bg-red-500/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white'
                     onClick={handleUnpublish}
                   >
                     Yes, Unpublish

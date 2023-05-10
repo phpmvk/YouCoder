@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-
 const debounce = (func, wait) => {
   let timeout;
   return function executedFunction(...args) {
@@ -21,7 +20,11 @@ const ExampleFrame: React.FC = () => {
     const handleScroll = debounce(() => {
       const currentScrollPosition = window.pageYOffset;
       setScrollPosition(currentScrollPosition);
-      setPercentage((currentScrollPosition / (document.body.offsetHeight - window.innerHeight)) * 80);
+      setPercentage(
+        (currentScrollPosition /
+          (document.body.offsetHeight - window.innerHeight)) *
+          80
+      );
     }, 10); // Set debounce duration (10ms in this case)
 
     window.addEventListener('scroll', handleScroll);
@@ -41,7 +44,9 @@ const ExampleFrame: React.FC = () => {
   return (
     <>
       <div
-        className={`rectangle${scrollPosition >= window.innerHeight * 0.5 ? ' animate-expand' : ''}`}
+        className={`rectangle${
+          scrollPosition >= window.innerHeight * 0.5 ? ' animate-expand' : ''
+        }`}
         style={{
           display: 'flex',
           position: 'absolute',
@@ -56,7 +61,7 @@ const ExampleFrame: React.FC = () => {
           zIndex: 1000,
         }}
       />
-      <div className="h-[300vh]"></div>
+      <div className='h-[300vh]'></div>
     </>
   );
 };

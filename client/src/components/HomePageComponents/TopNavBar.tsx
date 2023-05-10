@@ -17,6 +17,7 @@ import { Link, Router, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { getAuth, signOut } from 'firebase/auth';
 import { removeUser } from '../../redux/userSlice';
+import { AiFillVideoCamera } from 'react-icons/ai';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -176,7 +177,7 @@ function TopNavBar({
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, height: '60px' }}>
       <AppBar sx={{ backgroundColor: '#050505', maxHeight: '60px' }}>
         <Toolbar>
           <Link to='/'>
@@ -206,7 +207,8 @@ function TopNavBar({
           <Box
             sx={{
               display: 'flex',
-              justifyContent: 'space-between',
+              // justifyContent: 'space-between',
+              alignItems: 'center',
               // width: '25%',
               marginRight: 2,
             }}
@@ -214,19 +216,46 @@ function TopNavBar({
             {/* Conditionally render the Create Recording button */}
             {showCreateRecording && (
               <Button
-                className='w-full h-full t-[10vw] border-solid !border-2 !border-red-700 !text-white !rounded-full !text-l'
+                className='w-full h-full t-[10vw] border-solid !border-2 !border-red-700 hover:!bg-red-700/20 !text-white !rounded-full !text-l !mr-6'
                 color='inherit'
                 variant='outlined'
               >
+                <AiFillVideoCamera className='text-red-700 mr-2 text-lg' />
                 Create Recording
               </Button>
             )}
 
             {/* Conditionally render the Dashboard button */}
-            {showDashboard && <Button color='inherit'>Dashboard</Button>}
-            {showFeatures && <Button color='inherit'>Features</Button>}
-            {showExamples && <Button color='inherit'>Examples</Button>}
-            <Button color='inherit'>Docs</Button>
+            {showDashboard && (
+              <Button
+                className='hover:!underline'
+                color='inherit'
+              >
+                Dashboard
+              </Button>
+            )}
+            {showFeatures && (
+              <Button
+                className='hover:!underline hover:!underline-offset-8'
+                color='inherit'
+              >
+                Features
+              </Button>
+            )}
+            {showExamples && (
+              <Button
+                className='hover:!underline hover:!underline-offset-8'
+                color='inherit'
+              >
+                Examples
+              </Button>
+            )}
+            <Button
+              className='hover:!underline hover:!underline-offset-8'
+              color='inherit'
+            >
+              Docs
+            </Button>
           </Box>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             {loggedIn ? (
@@ -244,7 +273,7 @@ function TopNavBar({
                 <Link to='/login'>
                   <Button
                     // className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto'
-                    className='!border-bg-alt !text-bg-pri hover:!bg-bg-pri !h-8 !my-auto !bg-bg-alt'
+                    className='!border-bg-alt !text-bg-pri hover:!bg-bg-pri hover:!text-bg-alt !h-8 !my-auto !bg-bg-alt'
                     variant='outlined'
                   >
                     Sign In
