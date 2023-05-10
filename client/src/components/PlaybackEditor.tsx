@@ -254,7 +254,7 @@ export function PlaybackEditor() {
         <Allotment>
           <Allotment.Pane minSize={600}>
             <Editor
-              height='60vh'
+              height='500px'
               defaultLanguage='javascript'
               defaultValue=''
               theme='vs-dark'
