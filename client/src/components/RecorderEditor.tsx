@@ -26,7 +26,18 @@ export function RecorderEditor() {
     resumeArray: [],
     pauseLengthArray: [],
     editorActions: [],
+    consoleLogChanges: [],
   });
+
+  function handleConsoleLogChange(text: string, timestamp: number) {
+    if (recorderState === 'recording') {
+      recorderActions.current.consoleLogChanges.push({
+        text,
+        timestamp,
+        playbackTimestamp: 0,
+      });
+    }
+  }
 
   function getLanguageId(language: Language): string | null {
     const languageMapping: Record<Language, string> = {
@@ -130,33 +141,32 @@ export function RecorderEditor() {
         });
     }
 
-    // Calculate playbackTimestamp for each action
+    // Calculate playbackTimestamp for each editor action
     recorderActions.current.editorActions =
       recorderActions.current.editorActions.map((action: EditorAction) => {
-        let totalPauseTime = 0;
-        for (let i = 0; i < recorderActions.current.pauseArray.length; i++) {
-          const pauseTimestamp =
-            recorderActions.current.pauseArray[i].timestamp;
-          const resumeTimestamp = recorderActions.current.resumeArray[i]
-            ? recorderActions.current.resumeArray[i].timestamp
-            : timestamp;
-
-          if (action.actionCreationTimestamp < pauseTimestamp) {
-            break;
-          }
-
-          if (action.actionCreationTimestamp > resumeTimestamp) {
-            totalPauseTime += resumeTimestamp - pauseTimestamp;
-          } else {
-            totalPauseTime += action.actionCreationTimestamp - pauseTimestamp;
-          }
-        }
+        let totalPauseTime = calculateTotalPauseTime(
+          action.actionCreationTimestamp,
+          timestamp
+        );
 
         const adjustedTimestamp =
           action.actionCreationTimestamp -
           recorderActions.current.start -
           totalPauseTime;
         return { ...action, playbackTimestamp: adjustedTimestamp };
+      });
+
+    // Calculate playbackTimestamp for each console log change
+    recorderActions.current.consoleLogChanges =
+      recorderActions.current.consoleLogChanges.map((change) => {
+        let totalPauseTime = calculateTotalPauseTime(
+          change.timestamp,
+          timestamp
+        );
+
+        const adjustedTimestamp =
+          change.timestamp - recorderActions.current.start - totalPauseTime;
+        return { ...change, playbackTimestamp: adjustedTimestamp };
       });
 
     //Get current editor language
@@ -191,19 +201,48 @@ export function RecorderEditor() {
     URL.revokeObjectURL(url);
   }
 
+  function calculateTotalPauseTime(
+    actionTimestamp: number,
+    endTimestamp: number
+  ) {
+    let totalPauseTime = 0;
+    for (let i = 0; i < recorderActions.current.pauseArray.length; i++) {
+      const pauseTimestamp = recorderActions.current.pauseArray[i].timestamp;
+      const resumeTimestamp = recorderActions.current.resumeArray[i]
+        ? recorderActions.current.resumeArray[i].timestamp
+        : endTimestamp;
+
+      if (actionTimestamp < pauseTimestamp) {
+        break;
+      }
+
+      if (actionTimestamp > resumeTimestamp) {
+        totalPauseTime += resumeTimestamp - pauseTimestamp;
+      } else {
+        totalPauseTime += actionTimestamp - pauseTimestamp;
+      }
+    }
+    return totalPauseTime;
+  }
+
   function handleJudge0() {
     const model = editorInstance!.getModel();
     const language = model!.getLanguageId() as Language;
-    console.log('current ', language);
     const source_code = editorInstance!.getValue();
     const language_id = getLanguageId(language)!;
 
     const judge0: CodeToExecute = { language_id, source_code };
-    console.log(judge0);
     consoleApi.getOutput(judge0)!.then((response) => {
       const div = document.getElementById('console');
       div!.innerHTML = response.data.stdout;
-      console.log(response);
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'childList') {
+            handleConsoleLogChange(div!.innerHTML, Date.now());
+          }
+        });
+      });
+      observer.observe(div!, { childList: true });
     });
   }
 

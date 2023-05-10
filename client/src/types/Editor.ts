@@ -5,6 +5,7 @@ type RecorderActions = {
   resumeArray: RecorderAction[];
   pauseLengthArray: number[];
   editorActions: EditorAction[];
+  consoleLogChanges: ConsoleLog[];
 };
 
 type ChangeRange = {
@@ -32,3 +33,9 @@ type Language =
   | 'cpp'
   | 'ruby'
   | 'go';
+
+type ConsoleLog = {
+  text: string;
+  timestamp: number;
+  playbackTimestamp: number;
+};
