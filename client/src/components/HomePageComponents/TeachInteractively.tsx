@@ -45,10 +45,10 @@ const TeachInteractively = () => {
     };
   }, []);
 
-  const marginLeft = scrollPosition * 0.04;
+  const marginLeft = scrollPosition * 0.08;
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="whitespace-nowrap z-50">
       <div
         className='text-white'
         style={{ fontSize: '5rem', marginLeft: `${marginLeft}vw` }}
