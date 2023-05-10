@@ -1,11 +1,15 @@
 import { Request, Response } from "express";
 import { PrismaClient } from '@prisma/client'
+import validator from 'validator'
+
 const prisma = new PrismaClient()
 
 export async function getRecordingById(req: Request, res: Response) {
   console.log('Recordings - GET received - getRecordingById')
   try {
     const recordingId = req.params.recordingid;
+
+    validateRecordingId(recordingId)
 
     const recording = await prisma.recording.findUnique({
       where: {
@@ -20,8 +24,11 @@ export async function getRecordingById(req: Request, res: Response) {
     res.status(200).send(recording)
 
   } catch (err) {
-    console.error(err)
-    res.status(500).send({ message: 'Internal server error'})
+    if (err instanceof InvalidRecordingError) {
+      res.status(400).send({ message: err.message})
+    } else {
+      res.status(500).send({ message: 'Internal server error'})
+    }
   }
 }
 
@@ -84,9 +91,8 @@ export async function uploadRecording(req: Request, res: Response) {
 export async function updateRecording(req: Request, res: Response) {
   console.log('Recordings - PATCH received - updateRecording')
   const recordingId = req.params.recordingid
-  if (!recordingId) {
-    return res.status(400).send({ message: 'Unable to update resource' })
-  }
+
+  validateRecordingId(recordingId)
   
   const dataToUpdate: Record<string, string> = {};
 
@@ -127,8 +133,11 @@ export async function updateRecording(req: Request, res: Response) {
     }
     res.status(200).send(allUserRecordings)
   } catch (err) {
-    console.error(err);
-    res.status(500).send({ message: 'Internal server error'})
+    if (err instanceof InvalidRecordingError) {
+      res.status(400).send({ message: err.message})
+    } else {
+      res.status(500).send({ message: 'Internal server error'})
+    }
   }
 }
 
@@ -137,16 +146,41 @@ export async function deleteRecording(req: Request, res: Response) {
   try {
     const recordingId = req.params.recordingid;
   
+    validateRecordingId(recordingId);
+
+    const recording = await prisma.recording.findUnique({
+      where: {
+        recording_id: recordingId
+      }
+    })
+
+    if (!recording) {
+      return res.status(404).send({ message: 'Resource not found'})
+    }
+
+    if (recording.creator_uid !== req.body.user.uid) {
+      return res.status(403).send({ message: 'Not authorized'})
+    }
+
     const deletedRecording = await prisma.recording.delete({
       where: {
         recording_id: recordingId
       }
     })
-    console.log(deletedRecording)
-    res.status(204).send({deleteRecording})
+    res.status(204).send(deletedRecording)
   } catch (err) {
-    console.error(err)
-    res.status(404).send({ message: 'Resource not found'})
+    if (err instanceof InvalidRecordingError) {
+      res.status(400).send({ message: err.message})
+    } else {
+      res.status(500).send({ message: 'Internal server error'})
+    }
   }
-
 }
+
+function validateRecordingId(recordingId: string) {
+  if (!validator.isUUID(recordingId)) {
+    throw new InvalidRecordingError('Invalid recording id parameter')
+  }
+}
+
+class InvalidRecordingError extends Error {}

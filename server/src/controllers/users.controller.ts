@@ -9,6 +9,13 @@ export async function creatorLogin(req: Request, res: Response) {
       where: {
         uid: req.body.user.uid,
       },
+      include: {
+        recordings: {
+          orderBy: {
+            created_at: 'desc'
+          }
+        }
+      }
     });
     if (user) {
       return res.status(200).send({ user: user });
@@ -20,6 +27,9 @@ export async function creatorLogin(req: Request, res: Response) {
           email: req.body.user.email!,
           join_date: new Date(Date.now()),
         },
+        include: {
+          recordings: true
+        }
       });
       res.status(201).send({ user: newUser });
     }

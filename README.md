@@ -32,7 +32,7 @@ Note: **Do not commit the `.env` file to version control!** It will likely conta
 
 `npm run start:dev`
 
-- Starts the application in development using nodemon and ts-node
+- Runs npm run build then starts the application in development using nodemon and ts-node
 
 `tsnd --respawn index.ts`
 
