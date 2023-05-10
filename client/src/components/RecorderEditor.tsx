@@ -182,7 +182,6 @@ export function RecorderEditor() {
           change.timestamp - recorderActions.current.start - totalPauseTime;
         return { ...change, playbackTimestamp: adjustedTimestamp };
       });
-    console.log(recorderActions);
 
     //Get current editor language
 
@@ -204,24 +203,30 @@ export function RecorderEditor() {
     description: string,
     thumbnail: File | null
   ) {
-    const audioBlob = audioRecorder!.getBlob();
+    try {
+      const audioBlob = audioRecorder!.getBlob();
 
-    const json = JSON.stringify(recorderActions.current);
-    const jsonBlob = new Blob([json], { type: 'application/json' });
+      const json = JSON.stringify(recorderActions.current);
+      const jsonBlob = new Blob([json], { type: 'application/json' });
 
-    await saveYCRFile(jsonBlob, audioBlob);
-    const Recording = {
-      title,
-      description,
-      thumbnail, //turn into cloudinary link
-      recorderActions: recorderActions.current,
-      audio_link: 'link to audio', //or combine into .ycr file
-    };
+      const ycrFileUrl = await saveYCRFile(jsonBlob, audioBlob);
+      console.log(ycrFileUrl);
 
-    //send recording object to backend
-    console.log('Title:', title);
-    console.log('Description:', description);
-    console.log('Thumbnail:', thumbnail);
+      const Recording = {
+        title,
+        description,
+        thumbnail, //turn into cloudinary link
+        recorderActions: recorderActions.current,
+        audio_link: 'link to audio', //or combine into .ycr file
+      };
+
+      //send recording object to backend
+      console.log('Title:', title);
+      console.log('Description:', description);
+      console.log('Thumbnail:', thumbnail);
+    } catch (error) {
+      console.error('Error saving recording', error);
+    }
   }
 
   function handleDiscard() {
@@ -260,7 +265,6 @@ export function RecorderEditor() {
 
     const judge0: CodeToExecute = { language_id, source_code };
     consoleApi.getOutput(judge0)!.then((response) => {
-      console.log(response);
       setConsoleOutput(response.data.output);
       handleConsoleLogOutput(response.data.output, Date.now());
     });

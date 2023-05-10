@@ -13,8 +13,10 @@ import NotFoundPage from './pages/NotFound';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser, editUser } from './redux/userSlice';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
+import { getStorage } from 'firebase/storage';
 
 export const Firebase = initializeApp(config.firebaseConfig);
+export const storage = getStorage(Firebase);
 
 function App() {
   // const user = useAppSelector((state) => state.user);
@@ -24,24 +26,12 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/docs" element={<DocsPage />} />
+        <Route path="/video" element={<VideoPage />} />
         <Route
-          path='/'
-          element={<HomePage />}
-        />
-        <Route
-          path='/login'
-          element={<LoginPage />}
-        />
-        <Route
-          path='/docs'
-          element={<DocsPage />}
-        />
-        <Route
-          path='/video'
-          element={<VideoPage />}
-        />
-        <Route
-          path='/dashboard'
+          path="/dashboard"
           element={
             <AuthRoute>
               <DashboardPage />
@@ -49,17 +39,14 @@ function App() {
           }
         />
         <Route
-          path='/recording'
+          path="/recording"
           element={
             <AuthRoute>
               <RecordingPage />
             </AuthRoute>
           }
         />
-        <Route
-          path='*'
-          element={<NotFoundPage />}
-        />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
