@@ -7,6 +7,7 @@ import RecordRTC from 'recordrtc';
 import consoleApi from '../services/consoleApi';
 import { CodeToExecute } from '../types/Console';
 import { SaveRecordingModal } from './HomePageComponents/SaveRecordingModal';
+import { saveYCRFile } from '../utils/ycrUtils';
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
@@ -192,37 +193,32 @@ export function RecorderEditor() {
     // }
 
     if (audioRecorder) {
-      audioRecorder.stopRecording(() => {
-        const fileName = 'recordedAudio.webm';
-        const blob = audioRecorder.getBlob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        a.click();
-        URL.revokeObjectURL(url);
-      });
+      audioRecorder.stopRecording();
     }
     setRecorderState('stopped');
     setSaveModalVisible(true);
-
-    const fileName = 'recorderActions.json';
-    const json = JSON.stringify(recorderActions.current);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fileName;
-    a.click();
-    URL.revokeObjectURL(url);
   }
 
-  function handleSave(
+  async function handleSave(
     title: string,
     description: string,
     thumbnail: File | null
   ) {
-    // Implement the logic to save the recording
+    const audioBlob = audioRecorder!.getBlob();
+
+    const json = JSON.stringify(recorderActions.current);
+    const jsonBlob = new Blob([json], { type: 'application/json' });
+
+    await saveYCRFile(jsonBlob, audioBlob);
+    const Recording = {
+      title,
+      description,
+      thumbnail, //turn into cloudinary link
+      recorderActions: recorderActions.current,
+      audio_link: 'link to audio', //or combine into .ycr file
+    };
+
+    //send recording object to backend
     console.log('Title:', title);
     console.log('Description:', description);
     console.log('Thumbnail:', thumbnail);
