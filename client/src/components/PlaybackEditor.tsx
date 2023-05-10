@@ -104,9 +104,7 @@ export function PlaybackEditor() {
     );
 
     const consoleOutputsToExecute = importedActions!.consoleLogOutputs.filter(
-      (output) => {
-        output.playbackTimestamp >= baseTimestamp;
-      }
+      (output) => output.playbackTimestamp >= baseTimestamp
     );
 
     if (audioElement && sliderValue === 0) {
@@ -161,7 +159,7 @@ export function PlaybackEditor() {
       }, action.playbackTimestamp - baseTimestamp);
       actionTimeoutIdsRef.current.push(timeoutId);
     });
-
+    console.log(consoleOutputsToExecute);
     consoleOutputsToExecute.forEach((output) => {
       const timeoutId = window.setTimeout(() => {
         if (playbackStateRef.current.status === 'playing') {
