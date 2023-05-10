@@ -13,6 +13,7 @@ export function PlaybackEditor() {
   const [monacoInstance, setMonacoInstance] = useState<typeof monaco | null>(
     null
   );
+  const [output, setOutput] = useState<string[]>([]);
 
   //editor playback states
   const [importedActions, setImportedActions] =
@@ -270,7 +271,7 @@ export function PlaybackEditor() {
             preferredSize={300}
           >
             <div className='border w-full h-full border-[#1e1e1e]'>
-              <Terminal output={'test'} />
+              <Terminal output={output} />
             </div>
           </Allotment.Pane>
         </Allotment>
