@@ -250,14 +250,14 @@ export function PlaybackEditor() {
           setAudioElement(audio);
         }}
       ></audio>
-      <div className='flex max-w-[80vw] h-[500px] px-40'>
+      <div className="flex max-w-[80vw] h-[500px] px-40">
         <Allotment>
           <Allotment.Pane minSize={600}>
             <Editor
-              height='500px'
-              defaultLanguage='javascript'
-              defaultValue=''
-              theme='vs-dark'
+              height="500px"
+              defaultLanguage="javascript"
+              defaultValue=""
+              theme="vs-dark"
               options={{
                 wordWrap: 'on',
                 readOnly: ignoreUserInputs,
@@ -265,11 +265,8 @@ export function PlaybackEditor() {
               onMount={handleEditorDidMount}
             />
           </Allotment.Pane>
-          <Allotment.Pane
-            minSize={100}
-            preferredSize={300}
-          >
-            <div className='border w-full h-full border-[#1e1e1e]'>
+          <Allotment.Pane minSize={100} preferredSize={300}>
+            <div className="border w-full h-full border-[#1e1e1e]">
               <Terminal output={'test'} />
             </div>
           </Allotment.Pane>
@@ -278,39 +275,34 @@ export function PlaybackEditor() {
 
       <br></br>
       <br></br>
-      <input
-        className='mx-4'
-        type='file'
-        onChange={handleFileInput}
-      />
-      <button
-        className='p-2 bg-slate-500 rounded-sm'
-        onClick={handleStartPlayback}
-      >
-        Start Playback
-      </button>
-      <button
-        className='p-2 bg-slate-500 mx-4'
-        onClick={handlePausePlayback}
-      >
-        Pause Playback
-      </button>
-      <button
-        className='p-2 bg-slate-500'
-        onClick={handleResumePlayback}
-      >
-        Resume Playback
-      </button>
-      <input
-        className='mx-4'
-        type='file'
-        onChange={handleAudioFileInput}
-      />
+      <input className="mx-4" type="file" onChange={handleFileInput} />
+      {playbackState.status === 'stopped' && (
+        <button
+          className="p-2 bg-slate-500 rounded-sm"
+          onClick={handleStartPlayback}
+        >
+          Start Playback
+        </button>
+      )}
+
+      {playbackState.status === 'playing' && (
+        <button className="p-2 bg-slate-500 mx-4" onClick={handlePausePlayback}>
+          Pause Playback
+        </button>
+      )}
+
+      {playbackState.status === 'paused' && (
+        <button className="p-2 bg-slate-500" onClick={handleResumePlayback}>
+          Resume Playback
+        </button>
+      )}
+
+      <input className="mx-4" type="file" onChange={handleAudioFileInput} />
       <br />
       <br />
       <ReactSlider
-        className='horizontal-slider'
-        thumbClassName='slider-thumb'
+        className="horizontal-slider"
+        thumbClassName="slider-thumb"
         value={sliderValue}
         step={0.001}
         max={audioDuration}
