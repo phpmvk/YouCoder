@@ -6,6 +6,7 @@ import RecordRTC from 'recordrtc';
 
 import consoleApi from '../services/consoleApi';
 import { CodeToExecute } from '../types/Console';
+import { SaveRecordingModal } from './HomePageComponents/SaveRecordingModal';
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
@@ -21,6 +22,7 @@ export function RecorderEditor() {
   const [recorderLoading, setRecorderLoading] = useState(false);
 
   const [consoleOutput, setConsoleOutput] = useState('');
+  const [saveModalVisible, setSaveModalVisible] = useState(false);
 
   const recorderActions = useRef<RecorderActions>({
     start: 0,
@@ -188,6 +190,7 @@ export function RecorderEditor() {
     // } else {
     //   //discard recording logic
     // }
+
     if (audioRecorder) {
       audioRecorder.stopRecording(() => {
         const fileName = 'recordedAudio.webm';
@@ -201,6 +204,7 @@ export function RecorderEditor() {
       });
     }
     setRecorderState('stopped');
+    setSaveModalVisible(true);
 
     const fileName = 'recorderActions.json';
     const json = JSON.stringify(recorderActions.current);
@@ -211,6 +215,21 @@ export function RecorderEditor() {
     a.download = fileName;
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  function handleSave(
+    title: string,
+    description: string,
+    thumbnail: File | null
+  ) {
+    // Implement the logic to save the recording
+    console.log('Title:', title);
+    console.log('Description:', description);
+    console.log('Thumbnail:', thumbnail);
+  }
+
+  function handleDiscard() {
+    // Implement the logic to discard the recording
   }
 
   function calculateTotalPauseTime(
@@ -313,6 +332,13 @@ export function RecorderEditor() {
         <div className="p-2">
           <span>Loading...</span>
         </div>
+      )}
+      {saveModalVisible && (
+        <SaveRecordingModal
+          onSave={handleSave}
+          onDiscard={handleDiscard}
+          onClose={() => setSaveModalVisible(false)}
+        />
       )}
     </>
   );
