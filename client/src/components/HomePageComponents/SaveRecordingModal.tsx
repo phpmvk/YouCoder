@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import { storage } from '../../App';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 interface SaveRecordingModalProps {
-  onSave: (title: string, description: string, thumbnail: File | null) => void;
+  onSave: (
+    title: string,
+    description: string,
+    thumbnail: string | null
+  ) => void;
   onDiscard: () => void;
   onClose: () => void;
 }
@@ -14,7 +20,7 @@ export const SaveRecordingModal: React.FC<SaveRecordingModalProps> = ({
 }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [thumbnail, setThumbnail] = useState<string | null>(null);
   const [showDiscardModal, setShowDiscardModal] = useState(false);
 
   const handleSave = () => {
@@ -34,6 +40,22 @@ export const SaveRecordingModal: React.FC<SaveRecordingModalProps> = ({
     onDiscard();
     onClose();
   };
+
+  async function handleThumbnail(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files![0];
+    if (file) {
+      try {
+        const storageRef = ref(storage, `thumbnails/${file.name}`);
+        const snapshot = await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(snapshot.ref);
+        setThumbnail(url);
+      } catch (error) {
+        console.error('Error uploading thumbnail:', error);
+      }
+    } else {
+      setThumbnail(null);
+    }
+  }
 
   return (
     <Transition appear show={true} as={React.Fragment}>
@@ -84,9 +106,7 @@ export const SaveRecordingModal: React.FC<SaveRecordingModalProps> = ({
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) =>
-                    setThumbnail(e.target.files ? e.target.files[0] : null)
-                  }
+                  onChange={handleThumbnail}
                 />
               </div>
               <button onClick={handleSave}>Save</button>

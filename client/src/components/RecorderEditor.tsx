@@ -8,6 +8,7 @@ import consoleApi from '../services/consoleApi';
 import { CodeToExecute } from '../types/Console';
 import { SaveRecordingModal } from './HomePageComponents/SaveRecordingModal';
 import { saveYCRFile } from '../utils/ycrUtils';
+import { useAppSelector } from '../redux/hooks';
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
@@ -56,6 +57,9 @@ export function RecorderEditor() {
 
     return languageMapping[language];
   }
+
+  const user = useAppSelector((state) => state.user);
+  console.log('this is the user', user);
 
   const handleLanguageChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -201,7 +205,7 @@ export function RecorderEditor() {
   async function handleSave(
     title: string,
     description: string,
-    thumbnail: File | null
+    thumbnail: string | null
   ) {
     try {
       const audioBlob = audioRecorder!.getBlob();
@@ -209,15 +213,18 @@ export function RecorderEditor() {
       const json = JSON.stringify(recorderActions.current);
       const jsonBlob = new Blob([json], { type: 'application/json' });
 
-      const ycrFileUrl = await saveYCRFile(jsonBlob, audioBlob);
+      const ycrFileUrl = await saveYCRFile(jsonBlob, audioBlob, user.uid);
+      console.log(user);
       console.log(ycrFileUrl);
+      const model = editorInstance!.getModel();
+      const language = model!.getLanguageId();
 
       const Recording = {
         title,
         description,
-        thumbnail, //turn into cloudinary link
-        recorderActions: recorderActions.current,
-        audio_link: 'link to audio', //or combine into .ycr file
+        thumbnail,
+        recording_link: ycrFileUrl,
+        language,
       };
 
       //send recording object to backend

@@ -11,12 +11,19 @@ export function str2ab(str: string): ArrayBuffer {
   return buf;
 }
 
-export async function saveYCRFile(jsonBlob: Blob, audioBlob: Blob) {
+export async function saveYCRFile(
+  jsonBlob: Blob,
+  audioBlob: Blob,
+  userId: string
+) {
   const zip = new JSZip();
   zip.file('recorderActions.json', jsonBlob);
   zip.file('recordedAudio.webm', audioBlob);
   const ycrBlob = await zip.generateAsync({ type: 'blob' });
-  const fileRef = ref(storage, 'recordings/recording.ycr');
+  const fileRef = ref(
+    storage,
+    `recordings/${userId}/recording_${new Date(Date.now())}`
+  );
   await uploadBytes(fileRef, ycrBlob);
   const fileUrl = await getDownloadURL(fileRef);
   return fileUrl;
