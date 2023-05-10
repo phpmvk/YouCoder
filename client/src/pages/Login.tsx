@@ -10,8 +10,10 @@ import { BsGoogle, BsGithub } from 'react-icons/bs';
 import http from '../services/userApi';
 import { setUser } from '../redux/userSlice';
 import { useAppDispatch } from '../redux/hooks';
+
 import LoginArt from '../components/HomePageComponents/LoginArt';
 import Loading from '../components/Loading';
+
 export interface ILoginPageProps {}
 
 const LoginPage: React.FC<ILoginPageProps> = () => {
