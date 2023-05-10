@@ -20,6 +20,8 @@ export function RecorderEditor() {
   >('stopped');
   const [recorderLoading, setRecorderLoading] = useState(false);
 
+  const [consoleOutput, setConsoleOutput] = useState('');
+
   const recorderActions = useRef<RecorderActions>({
     start: 0,
     end: 0,
@@ -245,16 +247,7 @@ export function RecorderEditor() {
     const judge0: CodeToExecute = { language_id, source_code };
     consoleApi.getOutput(judge0)!.then((response) => {
       console.log(response);
-      const div = document.getElementById('console');
-      div!.innerHTML = response.data.output;
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'childList') {
-            handleConsoleLogChange(div!.innerHTML, Date.now());
-          }
-        });
-      });
-      observer.observe(div!, { childList: true });
+      setConsoleOutput(response.data.output);
     });
   }
 
@@ -285,7 +278,7 @@ export function RecorderEditor() {
         </div>
         <div className="w-1/4">
           <button onClick={handleJudge0}>Compile & Execute</button>
-          <h1 id="console"></h1>
+          <h1>{consoleOutput}</h1>
         </div>
       </div>
 
