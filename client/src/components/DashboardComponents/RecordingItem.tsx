@@ -3,11 +3,12 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import { Recording } from '../../types/Creator';
 import { useState } from 'react';
-import Modal from '../Modal';
+import Modal from '../Toast';
 import http from '../../services/recordingApi';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@emotion/react';
 import PublishModal from './PublishModal';
+import MoreOptionsToggle from './MoreOptionsToggle';
 
 interface RecordingItemProps {
   recording: Recording;
@@ -104,7 +105,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
             </div>
           </div>
 
-          <div className='w-9/12 h-60 z-10 ml-1 text-white/80 rounded-md flex flex-col justify-between flex-1 box-content'>
+          <div className='w-9/12 z-10 ml-1 h-60 text-white/80 rounded-md flex flex-col justify-between flex-1 box-content'>
             <div>
               {showEditTitle ? (
                 <>
@@ -148,44 +149,48 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
                 </>
               )}
             </div>
-
-            <div className='text-white/70 w-full mx-4 h-8'>3 Weeks Ago</div>
-            <div className='absolute bottom-0 right-0'>
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <ThemeProvider theme={theme}>
-                      <Switch
-                        checked={published}
-                        onChange={handlePublish}
-                        color='primary'
-                      />
-                    </ThemeProvider>
-                  }
-                  label='Published'
-                />
-              </FormGroup>
+            <div className='flex items-end justify-between'>
+              <div className='text-white/70 w-full mx-4'>3 Weeks Ago</div>
+              <div className=''>
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <ThemeProvider theme={theme}>
+                        <Switch
+                          checked={published}
+                          onChange={handlePublish}
+                          color='primary'
+                        />
+                      </ThemeProvider>
+                    }
+                    label='Published'
+                  />
+                </FormGroup>
+              </div>
             </div>
           </div>
 
-          <div className='ml-10 h-full z-10 text-white/80 rounded-md flex flex-col justify-start'>
+          <div className='ml-10 h-60 z-10 text-white/80 rounded-md flex flex-col justify-between'>
             <div>
-              <IconButton
-                aria-label='edit image'
-                onClick={editTitle}
-              >
-                <EditIcon className='stroke-white' />
-              </IconButton>
+              <div>
+                <IconButton
+                  aria-label='edit image'
+                  onClick={editTitle}
+                >
+                  <EditIcon className='stroke-white' />
+                </IconButton>
+              </div>
+              <div className='h-2'></div>
+              <div>
+                <IconButton
+                  aria-label='edit image'
+                  onClick={editDescription}
+                >
+                  <EditIcon className='stroke-white' />
+                </IconButton>
+              </div>
             </div>
-            <div className='h-2'></div>
-            <div>
-              <IconButton
-                aria-label='edit image'
-                onClick={editDescription}
-              >
-                <EditIcon className='stroke-white' />
-              </IconButton>
-            </div>
+            <MoreOptionsToggle recording_id={recording.recording_id} />
           </div>
         </div>
         <div className='w-full mt-2'>
@@ -238,6 +243,11 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
         isModalOpen={showModal}
         setIsModalOpen={setShowModal}
         setPublished={setPublished}
+        title={'Warning'}
+        description={
+          'If you unpublish this recording, all the links where this recording is embedded will stop working until you publish it again. Are you sure you want to proceed?'
+        }
+        yesBtnText={'Yes, Unpublish'}
       />
     </>
   );

@@ -12,7 +12,8 @@ const rec = [];
 
 const RecordingsList = ({ recordings }: RecordingsListProps) => {
   return (
-    <div className='bg-transparent min-h-screen h-[auto] w-9/12 m-auto mt-[5vh] mb-[20vh] rounded-sm '>
+    // <div className='bg-transparent min-h-screen h-[auto] w-9/12 m-auto mt-[5vh] mb-[20vh] rounded-sm '>
+    <div className='bg-transparent w-9/12 m-auto min-h-screen mb-20 rounded-sm '>
       <Box sx={{ width: '100%' }}>
         <Stack spacing={3}>
           {recordings.map((recording, index) => (

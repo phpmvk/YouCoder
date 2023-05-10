@@ -18,9 +18,11 @@ const DashboardPage: React.FC<DashboardPageProps> = ({}) => {
   // import the user from the reducer
   const user = useAppSelector((state) => state.user);
   console.log('user id from DashboardPage: ', user.uid);
-  if (!user.uid) {
-    navigate('/login');
-  }
+  useEffect(() => {
+    if (!user.uid) {
+      navigate('/login');
+    }
+  }, [user]);
 
   const observerCallback = (entries: any, observer: any) => {
     entries.forEach((entry: any) => {
