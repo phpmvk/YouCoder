@@ -3,15 +3,21 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import { Recording } from '../../types/Creator';
 import { useState } from 'react';
-import Modal from '../Modal';
+import Toast from '../Toast';
 import http from '../../services/recordingApi';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@emotion/react';
 import PublishModal from './PublishModal';
+import MoreOptionsToggle from './MoreOptionsToggle';
+import Modal from '../Modal';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { editUser } from '../../redux/userSlice';
 
 interface RecordingItemProps {
   recording: Recording;
 }
+
+type Field = 'title' | 'description';
 
 const theme = createTheme({ palette: { primary: { main: '#b300ff' } } });
 
@@ -20,7 +26,10 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
   const [showEditDescription, setShowEditDescription] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [showdeleteModal, setShowdeleteModal] = useState(false);
   const [published, setPublished] = useState(recording.published);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
 
   const editTitle = () => {
     setShowEditTitle(true);
@@ -30,34 +39,48 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
     setShowEditDescription(true);
   };
 
-  const handleKeyDown = (e: any) => {
-    if (e.key === 'Enter') {
-      if (e.target.id === 'title') {
-        // if title send the upfdasted title to the backend
-        http
-          .patchRecording(recording.recording_id, { title: e.target.value })
-          .then((res) => {
-            console.log('res from updating title: ', res);
-          })
-          .catch((err) => {
-            console.log('err from updating title', err);
-          });
+  const deleteRecording = () => {
+    http
+      .deleteRecording(recording.recording_id)
+      .then((res) => {
+        console.log('res from deleting recording: ', res);
+        setShowdeleteModal(false);
+      })
+      .catch((err) => {
+        console.log('err from deleting recording: ', err);
+      });
+  };
 
-        setShowEditTitle(false);
-      } else if (e.target.id === 'description') {
-        // if description send the updated description to the backend
-        http
-          .patchRecording(recording.recording_id, {
-            description: e.target.value,
-          })
-          .then((res) => {
-            console.log('res from updating description: ', res);
-          })
-          .catch((err) => {
-            console.log('err from updating title', err);
-          });
+  const updateRecording = (field: Field, value: string): Promise<void> => {
+    return http
+      .patchRecording(recording.recording_id, { [field]: value })
+      .then((res) => {
+        console.log(`res from updating ${field}: `, res);
+        dispatch(editUser({ ...user, recordings: res.data }));
+      })
+      .catch((err) => {
+        console.log(`err from updating ${field}`, err);
+      });
+  };
 
-        setShowEditDescription(false);
+  const handleEnter = (field: Field, value: string): void => {
+    updateRecording(field, value);
+
+    if (field === 'title') {
+      setShowEditTitle(false);
+    } else if (field === 'description') {
+      setShowEditDescription(false);
+    }
+  };
+
+  const handleKeyDown = <T extends HTMLInputElement | HTMLTextAreaElement>(
+    event: React.KeyboardEvent<T>
+  ): void => {
+    if (event.key === 'Enter') {
+      const field = event.currentTarget.id as Field;
+
+      if (field === 'title' || field === 'description') {
+        handleEnter(field, event.currentTarget.value);
       }
     }
   };
@@ -78,6 +101,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
         .patchRecording(recording.recording_id, { published: true })
         .then((res) => {
           console.log('res from publishing: ', res);
+          dispatch(editUser({ ...user, recordings: res.data }));
         })
         .catch((err) => {
           // setPublished(false);
@@ -104,7 +128,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
             </div>
           </div>
 
-          <div className='w-9/12 h-60 z-10 ml-1 text-white/80 rounded-md flex flex-col justify-between flex-1 box-content'>
+          <div className='w-9/12 z-10 ml-1 h-60 text-white/80 rounded-md flex flex-col justify-between flex-1 box-content'>
             <div>
               {showEditTitle ? (
                 <>
@@ -148,52 +172,56 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
                 </>
               )}
             </div>
-
-            <div className='text-white/70 w-full mx-4 h-8'>3 Weeks Ago</div>
-            <div className='absolute bottom-0 right-0'>
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <ThemeProvider theme={theme}>
-                      <Switch
-                        checked={published}
-                        onChange={handlePublish}
-                        color='primary'
-                      />
-                    </ThemeProvider>
-                  }
-                  label='Published'
-                />
-              </FormGroup>
+            <div className='flex items-end justify-between'>
+              <div className='text-white/70 w-full mx-4'>3 Weeks Ago</div>
+              <div className=''>
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <ThemeProvider theme={theme}>
+                        <Switch
+                          checked={published}
+                          onChange={handlePublish}
+                          color='primary'
+                        />
+                      </ThemeProvider>
+                    }
+                    label='Published'
+                  />
+                </FormGroup>
+              </div>
             </div>
           </div>
 
-          <div className='ml-10 h-full z-10 text-white/80 rounded-md flex flex-col justify-start'>
+          <div className='ml-10 h-60 z-10 text-white/80 rounded-md flex flex-col justify-between'>
             <div>
-              <IconButton
-                aria-label='edit image'
-                onClick={editTitle}
-              >
-                <EditIcon className='stroke-white' />
-              </IconButton>
+              <div>
+                <IconButton
+                  aria-label='edit image'
+                  onClick={editTitle}
+                >
+                  <EditIcon className='stroke-white' />
+                </IconButton>
+              </div>
+              <div className='h-2'></div>
+              <div>
+                <IconButton
+                  aria-label='edit image'
+                  onClick={editDescription}
+                >
+                  <EditIcon className='stroke-white' />
+                </IconButton>
+              </div>
             </div>
-            <div className='h-2'></div>
-            <div>
-              <IconButton
-                aria-label='edit image'
-                onClick={editDescription}
-              >
-                <EditIcon className='stroke-white' />
-              </IconButton>
-            </div>
+            <MoreOptionsToggle recording_id={recording.recording_id} />
           </div>
         </div>
         <div className='w-full mt-2'>
           <div className='flex'>
-            <div className='w-2/12 h-10 z-10 m-1 rounded-md flex items-center justify-center'>
+            <div className='w-2/12 h-10 z-10 m-1 rounded-md flex items-center justify-center min-w-[150px]'>
               <Button
                 variant='outlined'
-                className='w-full h-full !border-bg-alt !text-white/80 hover:!bg-bg-alt hover:!bg-opacity-10'
+                className='!w-full !h-full !border-bg-alt !text-white/80 hover:!bg-bg-alt hover:!bg-opacity-10'
                 onClick={() => {
                   showCopied('copied');
                   navigator.clipboard.writeText(recording.full_link);
@@ -214,7 +242,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
             </div>
           </div>
           <div className='flex mt-2'>
-            <div className='w-2/12 h-10 z-10 m-1 rounded-md flex items-center justify-center'>
+            <div className='w-2/12 h-10 z-10 m-1 rounded-md flex items-center justify-center min-w-[150px]'>
               <Button
                 variant='outlined'
                 className='w-full h-full !border-bg-sec !text-white/80 hover:!bg-bg-sec hover:!bg-opacity-10'
@@ -232,12 +260,22 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
           </div>
         </div>
       </div>
-      {showToast && <Modal text={'copied'} />}
+      {showToast && <Toast text={'copied'} />}
       <PublishModal
         recording={recording}
         isModalOpen={showModal}
         setIsModalOpen={setShowModal}
         setPublished={setPublished}
+        title={'Warning'}
+        description={
+          'If you unpublish this recording, all the links where this recording is embedded will stop working until you publish it again. Are you sure you want to proceed?'
+        }
+        yesBtnText={'Yes, Unpublish'}
+      />
+      <Modal
+        isModalOpen={showdeleteModal}
+        handleClickYes={deleteRecording}
+        setIsModalOpen={setShowdeleteModal}
       />
     </>
   );
