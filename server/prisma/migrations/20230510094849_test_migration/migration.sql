@@ -42,4 +42,4 @@ CREATE TABLE "Recording" (
 CREATE UNIQUE INDEX "Creator_uid_key" ON "Creator"("uid");
 
 -- AddForeignKey
-ALTER TABLE "Recording" ADD CONSTRAINT "Recording_creator_uid_fkey" FOREIGN KEY ("creator_uid") REFERENCES "Creator"("uid") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Recording" ADD CONSTRAINT "Recording_creator_uid_fkey" FOREIGN KEY ("creator_uid") REFERENCES "Creator"("uid") ON DELETE CASCADE ON UPDATE CASCADE;

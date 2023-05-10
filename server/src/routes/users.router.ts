@@ -5,7 +5,7 @@ import { defaultLimiter } from '../middleware/rate-limiter';
 import { authenticateToken } from '../middleware/auth';
 
 router.post('/users/creator/add', defaultLimiter, authenticateToken, creatorLogin)
-router.patch('/users/creator/update/:creatorid', defaultLimiter, authenticateToken, updateCreator)
-router.delete('/users/creator/delete/:creatorid', defaultLimiter, authenticateToken, deleteCreator)
+router.patch('/users/creator/update', defaultLimiter, authenticateToken, updateCreator)
+router.delete('/users/creator/delete', defaultLimiter, authenticateToken, deleteCreator)
 
 export default router
