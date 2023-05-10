@@ -10,28 +10,11 @@ export function str2ab(str: string): ArrayBuffer {
 }
 
 export async function saveYCRFile(jsonBlob: Blob, audioBlob: Blob) {
-  const jsonBuffer = await jsonBlob.arrayBuffer();
-  const audioBuffer = await audioBlob.arrayBuffer();
-  const jsonLength = jsonBuffer.byteLength;
-  const audioLength = audioBuffer.byteLength;
+  const zip = new JSZip();
+  zip.file('recorderActions.json', jsonBlob);
+  zip.file('recordedAudio.webm', audioBlob);
 
-  const header = new ArrayBuffer(8);
-  const headerView = new DataView(header);
-  headerView.setUint32(0, jsonLength, true);
-  headerView.setUint32(4, audioLength, true);
-
-  const combinedBuffer = new ArrayBuffer(
-    header.byteLength + jsonLength + audioLength
-  );
-  const combinedBufferView = new Uint8Array(combinedBuffer);
-  combinedBufferView.set(new Uint8Array(header), 0);
-  combinedBufferView.set(new Uint8Array(jsonBuffer), header.byteLength);
-  combinedBufferView.set(
-    new Uint8Array(audioBuffer),
-    header.byteLength + jsonLength
-  );
-
-  const ycrBlob = new Blob([combinedBuffer], { type: 'application/ycr' });
+  const ycrBlob = await zip.generateAsync({ type: 'blob' });
   const fileName = 'recording.ycr';
   const url = URL.createObjectURL(ycrBlob);
   const a = document.createElement('a');
@@ -41,7 +24,9 @@ export async function saveYCRFile(jsonBlob: Blob, audioBlob: Blob) {
   URL.revokeObjectURL(url);
 }
 
-export async function loadYCRFile(file: File) {
+export async function loadYCRFile(
+  file: File
+): Promise<{ recorderActions: RecorderActions; recordedAudioURL: string }> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (event: ProgressEvent<FileReader>) => {
