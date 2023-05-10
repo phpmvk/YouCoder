@@ -106,6 +106,7 @@ export function RecorderEditor() {
     editorInstance!.setValue('');
     recorderActions.current.start = Date.now();
     setRecorderState('recording');
+    setConsoleOutput('');
   }
 
   function handlePauseRecording() {
