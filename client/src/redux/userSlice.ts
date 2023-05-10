@@ -11,20 +11,6 @@ export const rootUser: UserState = {
   recordings: [],
 };
 
-/*
-setUser: (_state, action: PayloadAction<{ user: Creator }>) => {
-  const shortName = action.payload.user.display_name?.split(' ')[0] || '';
-  return { ...action.payload.user, shortName: shortName } as UserState;
-},
-editUser: (state, action: PayloadAction<UserState>) => {
-  return {
-    ...state,
-    ...action.payload,
-  };
-},
-
-*/
-
 export const userSlice = createSlice({
   name: 'user',
   initialState: rootUser,
