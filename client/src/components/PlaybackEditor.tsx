@@ -14,6 +14,8 @@ export function PlaybackEditor() {
     null
   );
 
+  const [consoleOutput, setConsoleOutput] = useState('');
+
   //editor playback states
   const [importedActions, setImportedActions] =
     useState<RecorderActions | null>(null);
@@ -23,7 +25,8 @@ export function PlaybackEditor() {
   }>({ status: 'stopped', currentPosition: 0 });
   const [ignoreUserInputs, setIgnoreUserInputs] = useState<boolean>(false);
   const playbackStateRef = useRef(playbackState);
-  const timeoutIdsRef = useRef<number[]>([]);
+  const actionTimeoutIdsRef = useRef<number[]>([]);
+  const consoleTimeoutIdsRef = useRef<number[]>([]);
 
   //scrubber states
   const [sliderValue, setSliderValue] = useState<number>(0);
@@ -100,13 +103,23 @@ export function PlaybackEditor() {
       (action) => action.playbackTimestamp >= baseTimestamp
     );
 
+    const consoleOutputsToExecute = importedActions!.consoleLogOutputs.filter(
+      (output) => {
+        output.playbackTimestamp >= baseTimestamp;
+      }
+    );
+
     if (audioElement && sliderValue === 0) {
       audioElement.play();
     }
 
     // Clear existing timeouts if any
-    timeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
-    timeoutIdsRef.current = [];
+    actionTimeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
+    actionTimeoutIdsRef.current = [];
+    consoleTimeoutIdsRef.current.forEach((timeoutId) =>
+      clearTimeout(timeoutId)
+    );
+    consoleTimeoutIdsRef.current = [];
 
     setPlaybackState({
       status: 'playing',
@@ -124,6 +137,15 @@ export function PlaybackEditor() {
       applyChange(action, editor, action.text);
     });
 
+    const consoleOutputsToApplyInstantly =
+      importedActions!.consoleLogOutputs.filter(
+        (output) => output.playbackTimestamp < baseTimestamp
+      );
+
+    consoleOutputsToApplyInstantly.forEach((output) => {
+      setConsoleOutput(output.text);
+    });
+
     actionsToExecute.forEach((action: EditorAction) => {
       const timeoutId = window.setTimeout(() => {
         if (playbackStateRef.current.status === 'playing') {
@@ -137,7 +159,16 @@ export function PlaybackEditor() {
           setIgnoreUserInputs(false);
         }
       }, action.playbackTimestamp - baseTimestamp);
-      timeoutIdsRef.current.push(timeoutId);
+      actionTimeoutIdsRef.current.push(timeoutId);
+    });
+
+    consoleOutputsToExecute.forEach((output) => {
+      const timeoutId = window.setTimeout(() => {
+        if (playbackStateRef.current.status === 'playing') {
+          setConsoleOutput(output.text);
+        }
+      }, output.playbackTimestamp - baseTimestamp);
+      consoleTimeoutIdsRef.current.push(timeoutId);
     });
 
     sliderIntervalIdRef.current = startSliderInterval();
@@ -146,6 +177,7 @@ export function PlaybackEditor() {
   //playback handlers
   function handleStartPlayback() {
     if (importedActions) {
+      console.log(importedActions);
       editorInstance!.setValue('');
       startPlayback(importedActions.editorActions, editorInstance!);
     }
@@ -183,8 +215,13 @@ export function PlaybackEditor() {
     }));
 
     // Clear existing timeouts if any
-    timeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
-    timeoutIdsRef.current = [];
+    actionTimeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
+    actionTimeoutIdsRef.current = [];
+    consoleTimeoutIdsRef.current.forEach((timeoutId) =>
+      clearTimeout(timeoutId)
+    );
+    consoleTimeoutIdsRef.current = [];
+
     editorInstance!.setValue('');
 
     startPlayback(importedActions!.editorActions, editorInstance!);
@@ -267,7 +304,7 @@ export function PlaybackEditor() {
           </Allotment.Pane>
           <Allotment.Pane minSize={100} preferredSize={300}>
             <div className="border w-full h-full border-[#1e1e1e]">
-              <Terminal output={'test'} />
+              <Terminal output={consoleOutput} />
             </div>
           </Allotment.Pane>
         </Allotment>

@@ -5,7 +5,7 @@ type RecorderActions = {
   resumeArray: RecorderAction[];
   pauseLengthArray: number[];
   editorActions: EditorAction[];
-  consoleLogChanges: ConsoleLog[];
+  consoleLogOutputs: ConsoleLog[];
 };
 
 type ChangeRange = {

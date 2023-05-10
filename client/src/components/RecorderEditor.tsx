@@ -29,17 +29,15 @@ export function RecorderEditor() {
     resumeArray: [],
     pauseLengthArray: [],
     editorActions: [],
-    consoleLogChanges: [],
+    consoleLogOutputs: [],
   });
 
-  function handleConsoleLogChange(text: string, timestamp: number) {
-    if (recorderState === 'recording') {
-      recorderActions.current.consoleLogChanges.push({
-        text,
-        timestamp,
-        playbackTimestamp: 0,
-      });
-    }
+  function handleConsoleLogOutput(text: string, timestamp: number) {
+    recorderActions.current.consoleLogOutputs.push({
+      text,
+      timestamp,
+      playbackTimestamp: 0,
+    });
   }
 
   function getLanguageId(language: Language): string | null {
@@ -145,8 +143,8 @@ export function RecorderEditor() {
           return action.actionCreationTimestamp < lastPauseTimestamp;
         });
 
-      recorderActions.current.consoleLogChanges =
-        recorderActions.current.consoleLogChanges.filter(
+      recorderActions.current.consoleLogOutputs =
+        recorderActions.current.consoleLogOutputs.filter(
           (change: ConsoleLog) => {
             return change.timestamp < lastPauseTimestamp;
           }
@@ -169,8 +167,8 @@ export function RecorderEditor() {
       });
 
     // Calculate playbackTimestamp for each console log change
-    recorderActions.current.consoleLogChanges =
-      recorderActions.current.consoleLogChanges.map((change) => {
+    recorderActions.current.consoleLogOutputs =
+      recorderActions.current.consoleLogOutputs.map((change) => {
         let totalPauseTime = calculateTotalPauseTime(
           change.timestamp,
           timestamp
@@ -248,6 +246,7 @@ export function RecorderEditor() {
     consoleApi.getOutput(judge0)!.then((response) => {
       console.log(response);
       setConsoleOutput(response.data.output);
+      handleConsoleLogOutput(response.data.output, Date.now());
     });
   }
 
