@@ -32,7 +32,6 @@ export async function uploadRecording(req: Request, res: Response) {
     thumbnail_link,
     title,
     description,
-    published,
     language,
     recorder_actions,
     audio_link,
@@ -46,7 +45,6 @@ export async function uploadRecording(req: Request, res: Response) {
     !thumbnail_link || typeof thumbnail_link !== 'string' ||
     !title || typeof title !== 'string' ||
     !description || typeof description !== 'string' ||
-    !published || typeof published !== 'boolean' ||
     !language || typeof language !== 'string' ||
     !recorder_actions || typeof recorder_actions !== 'object' || typeof recorder_actions === null ||
     !audio_link || typeof audio_link !== 'string' ||
@@ -68,7 +66,6 @@ export async function uploadRecording(req: Request, res: Response) {
         thumbnail_link: thumbnail_link,
         title: title,
         description: description,
-        published: published,
         language: language,
         recorder_actions: recorder_actions,
         audio_link: audio_link,
