@@ -6,6 +6,7 @@ import ReactSlider from 'react-slider';
 import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
 import Terminal from './TerminalOutput';
+import { loadYCRFile } from '../utils/ycrUtils';
 
 export function PlaybackEditor() {
   const [editorInstance, setEditorInstance] =
@@ -13,6 +14,9 @@ export function PlaybackEditor() {
   const [monacoInstance, setMonacoInstance] = useState<typeof monaco | null>(
     null
   );
+
+  const [consoleOutput, setConsoleOutput] = useState('');
+  const [editorLanguage, setEditorLanguage] = useState('');
 
   //editor playback states
   const [importedActions, setImportedActions] =
@@ -23,7 +27,8 @@ export function PlaybackEditor() {
   }>({ status: 'stopped', currentPosition: 0 });
   const [ignoreUserInputs, setIgnoreUserInputs] = useState<boolean>(false);
   const playbackStateRef = useRef(playbackState);
-  const timeoutIdsRef = useRef<number[]>([]);
+  const actionTimeoutIdsRef = useRef<number[]>([]);
+  const consoleTimeoutIdsRef = useRef<number[]>([]);
 
   //scrubber states
   const [sliderValue, setSliderValue] = useState<number>(0);
@@ -100,13 +105,21 @@ export function PlaybackEditor() {
       (action) => action.playbackTimestamp >= baseTimestamp
     );
 
+    const consoleOutputsToExecute = importedActions!.consoleLogOutputs.filter(
+      (output) => output.playbackTimestamp >= baseTimestamp
+    );
+
     if (audioElement && sliderValue === 0) {
       audioElement.play();
     }
 
     // Clear existing timeouts if any
-    timeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
-    timeoutIdsRef.current = [];
+    actionTimeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
+    actionTimeoutIdsRef.current = [];
+    consoleTimeoutIdsRef.current.forEach((timeoutId) =>
+      clearTimeout(timeoutId)
+    );
+    consoleTimeoutIdsRef.current = [];
 
     setPlaybackState({
       status: 'playing',
@@ -124,6 +137,15 @@ export function PlaybackEditor() {
       applyChange(action, editor, action.text);
     });
 
+    const consoleOutputsToApplyInstantly =
+      importedActions!.consoleLogOutputs.filter(
+        (output) => output.playbackTimestamp < baseTimestamp
+      );
+
+    consoleOutputsToApplyInstantly.forEach((output) => {
+      setConsoleOutput(output.text);
+    });
+
     actionsToExecute.forEach((action: EditorAction) => {
       const timeoutId = window.setTimeout(() => {
         if (playbackStateRef.current.status === 'playing') {
@@ -137,7 +159,15 @@ export function PlaybackEditor() {
           setIgnoreUserInputs(false);
         }
       }, action.playbackTimestamp - baseTimestamp);
-      timeoutIdsRef.current.push(timeoutId);
+      actionTimeoutIdsRef.current.push(timeoutId);
+    });
+    consoleOutputsToExecute.forEach((output) => {
+      const timeoutId = window.setTimeout(() => {
+        if (playbackStateRef.current.status === 'playing') {
+          setConsoleOutput(output.text);
+        }
+      }, output.playbackTimestamp - baseTimestamp);
+      consoleTimeoutIdsRef.current.push(timeoutId);
     });
 
     sliderIntervalIdRef.current = startSliderInterval();
@@ -146,6 +176,8 @@ export function PlaybackEditor() {
   //playback handlers
   function handleStartPlayback() {
     if (importedActions) {
+      console.log(importedActions);
+      getCurrentLanguage();
       editorInstance!.setValue('');
       startPlayback(importedActions.editorActions, editorInstance!);
     }
@@ -183,8 +215,13 @@ export function PlaybackEditor() {
     }));
 
     // Clear existing timeouts if any
-    timeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
-    timeoutIdsRef.current = [];
+    actionTimeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
+    actionTimeoutIdsRef.current = [];
+    consoleTimeoutIdsRef.current.forEach((timeoutId) =>
+      clearTimeout(timeoutId)
+    );
+    consoleTimeoutIdsRef.current = [];
+
     editorInstance!.setValue('');
 
     startPlayback(importedActions!.editorActions, editorInstance!);
@@ -203,44 +240,77 @@ export function PlaybackEditor() {
     return intervalId;
   }
 
-  function handleFileInput(event: React.ChangeEvent<HTMLInputElement>) {
+  // function handleFileInput(event: React.ChangeEvent<HTMLInputElement>) {
+  //   const file = event.target.files![0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = (e: ProgressEvent<FileReader>) => {
+  //       const fileContents = e.target!.result as string;
+  //       const importedRecorderActions = JSON.parse(fileContents);
+
+  //       setImportedActions(importedRecorderActions);
+
+  //       editorInstance!.setValue('');
+  //       // startPlayback(importedRecorderActions.editorActions, editorInstance!);
+  //     };
+  //     reader.readAsText(file);
+  //   }
+  // }
+
+  async function handleFileInput(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files![0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        const fileContents = e.target!.result as string;
-        const importedRecorderActions = JSON.parse(fileContents);
+    if (file && file.name.endsWith('.ycr')) {
+      try {
+        const { recorderActions, recordedAudioURL } = await loadYCRFile(file);
+        // Use the extracted data (recorderActions and recordedAudioURL) as needed
+        console.log(recorderActions, recordedAudioURL);
 
-        setImportedActions(importedRecorderActions);
+        setImportedActions(recorderActions);
 
-        editorInstance!.setValue('');
-        // startPlayback(importedRecorderActions.editorActions, editorInstance!);
-      };
-      reader.readAsText(file);
-    }
-  }
-
-  function handleAudioFileInput(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files![0];
-    if (file) {
-      const fileReader = new FileReader();
-      fileReader.onload = () => {
-        const arrayBuffer = fileReader.result as ArrayBuffer;
+        // Decode audio data and set audio duration
         const audioContext = new AudioContext();
-        audioContext.decodeAudioData(arrayBuffer).then((decodedData) => {
-          setAudioDuration(decodedData.duration * 1000);
-        });
-      };
-      fileReader.readAsArrayBuffer(file);
-      const url = URL.createObjectURL(file);
-      setAudioSource(url);
+        const response = await fetch(recordedAudioURL);
+        const arrayBuffer = await response.arrayBuffer();
+        const decodedData = await audioContext.decodeAudioData(arrayBuffer);
+        setAudioDuration(decodedData.duration * 1000);
+
+        // Set the audio source
+        setAudioSource(recordedAudioURL);
+      } catch (error) {
+        console.error('Error loading .ycr file:', error);
+      }
+    } else {
+      console.error('Please select a valid .ycr file');
     }
   }
+
+  // function handleAudioFileInput(event: React.ChangeEvent<HTMLInputElement>) {
+  //   const file = event.target.files![0];
+  //   if (file) {
+  //     const fileReader = new FileReader();
+  //     fileReader.onload = () => {
+  //       const arrayBuffer = fileReader.result as ArrayBuffer;
+  //       const audioContext = new AudioContext();
+  //       audioContext.decodeAudioData(arrayBuffer).then((decodedData) => {
+  //         setAudioDuration(decodedData.duration * 1000);
+  //       });
+  //     };
+  //     fileReader.readAsArrayBuffer(file);
+  //     const url = URL.createObjectURL(file);
+  //     setAudioSource(url);
+  //   }
+  // }
 
   function updateAudioCurrentTime(scrubberPosition: number) {
     if (audioElement) {
       audioElement.currentTime = scrubberPosition / 1000;
     }
+  }
+
+  function getCurrentLanguage() {
+    const model = editorInstance!.getModel();
+    const language = model!.getLanguageId();
+    setEditorLanguage(language);
   }
 
   return (
@@ -250,14 +320,15 @@ export function PlaybackEditor() {
           setAudioElement(audio);
         }}
       ></audio>
-      <div className='flex max-w-[80vw] h-[500px] px-40'>
+      <h1>{editorLanguage}</h1>
+      <div className="flex max-w-[80vw] h-[500px] px-40">
         <Allotment>
           <Allotment.Pane minSize={600}>
             <Editor
-              height='500px'
-              defaultLanguage='javascript'
-              defaultValue=''
-              theme='vs-dark'
+              height="500px"
+              defaultLanguage="javascript"
+              defaultValue=""
+              theme="vs-dark"
               options={{
                 wordWrap: 'on',
                 readOnly: ignoreUserInputs,
@@ -265,12 +336,9 @@ export function PlaybackEditor() {
               onMount={handleEditorDidMount}
             />
           </Allotment.Pane>
-          <Allotment.Pane
-            minSize={100}
-            preferredSize={300}
-          >
-            <div className='border w-full h-full border-[#1e1e1e]'>
-              <Terminal output={'test'} />
+          <Allotment.Pane minSize={100} preferredSize={300}>
+            <div className="border w-full h-full border-[#1e1e1e]">
+              <Terminal output={consoleOutput} />
             </div>
           </Allotment.Pane>
         </Allotment>
@@ -278,39 +346,34 @@ export function PlaybackEditor() {
 
       <br></br>
       <br></br>
-      <input
-        className='mx-4'
-        type='file'
-        onChange={handleFileInput}
-      />
-      <button
-        className='p-2 bg-slate-500 rounded-sm'
-        onClick={handleStartPlayback}
-      >
-        Start Playback
-      </button>
-      <button
-        className='p-2 bg-slate-500 mx-4'
-        onClick={handlePausePlayback}
-      >
-        Pause Playback
-      </button>
-      <button
-        className='p-2 bg-slate-500'
-        onClick={handleResumePlayback}
-      >
-        Resume Playback
-      </button>
-      <input
-        className='mx-4'
-        type='file'
-        onChange={handleAudioFileInput}
-      />
+      <input className="mx-4" type="file" onChange={handleFileInput} />
+      {playbackState.status === 'stopped' && (
+        <button
+          className="p-2 bg-slate-500 rounded-sm"
+          onClick={handleStartPlayback}
+        >
+          Start Playback
+        </button>
+      )}
+
+      {playbackState.status === 'playing' && (
+        <button className="p-2 bg-slate-500 mx-4" onClick={handlePausePlayback}>
+          Pause Playback
+        </button>
+      )}
+
+      {playbackState.status === 'paused' && (
+        <button className="p-2 bg-slate-500" onClick={handleResumePlayback}>
+          Resume Playback
+        </button>
+      )}
+
+      {/* <input className="mx-4" type="file" onChange={handleAudioFileInput} /> */}
       <br />
       <br />
       <ReactSlider
-        className='horizontal-slider'
-        thumbClassName='slider-thumb'
+        className="horizontal-slider"
+        thumbClassName="slider-thumb"
         value={sliderValue}
         step={0.001}
         max={audioDuration}
