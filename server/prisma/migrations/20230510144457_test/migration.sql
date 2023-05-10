@@ -4,6 +4,7 @@ CREATE TABLE "Creator" (
     "display_name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "join_date" TIMESTAMP(3) NOT NULL,
+    "picture" TEXT NOT NULL,
 
     CONSTRAINT "Creator_pkey" PRIMARY KEY ("uid")
 );

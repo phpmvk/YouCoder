@@ -11,6 +11,13 @@ export async function creatorLogin(req: Request, res: Response) {
       },
       include: {
         recordings: {
+          include: {
+            creator: {
+              select: {
+                picture: true
+              }
+            }
+          },
           orderBy: {
             created_at: 'desc'
           }
@@ -25,6 +32,7 @@ export async function creatorLogin(req: Request, res: Response) {
           uid: req.body.user.uid,
           display_name: req.body.user.name,
           email: req.body.user.email!,
+          picture: req.body.user.picture,
           join_date: new Date(Date.now()),
         },
         include: {

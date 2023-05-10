@@ -15,6 +15,7 @@ model Creator {
   display_name String
   email        String
   join_date    DateTime
+  picture      String
   recordings   Recording[]
 }
 

@@ -14,6 +14,13 @@ export async function getRecordingById(req: Request, res: Response) {
     const recording = await prisma.recording.findUnique({
       where: {
         recording_id: recordingId
+      },
+      include: {
+        creator: {
+          select: {
+            picture: true
+          }
+        }
       }
     })
 
@@ -79,6 +86,13 @@ export async function uploadRecording(req: Request, res: Response) {
         created_at: (new Date(Date.now())).toString(),
         full_link: full_link,
         iframe_link: iframe_link,
+      },
+      include: {
+        creator: {
+          select: {
+            picture: true
+          }
+        }
       }
     })
     res.status(201).send(newRecording)
@@ -136,6 +150,13 @@ export async function updateRecording(req: Request, res: Response) {
       },
       orderBy: {
         created_at: 'desc'
+      },
+      include: {
+        creator: {
+          select: {
+            picture: true
+          }
+        }
       }
     })
     if (!allUserRecordings) {
@@ -177,7 +198,7 @@ export async function deleteRecording(req: Request, res: Response) {
         recording_id: recordingId
       }
     })
-    res.status(204).send(deletedRecording)
+    res.status(204).send()
   } catch (err) {
     if (err instanceof InvalidRecordingError) {
       res.status(400).send({ message: err.message})
