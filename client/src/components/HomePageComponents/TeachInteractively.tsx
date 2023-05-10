@@ -20,6 +20,7 @@ const TeachInteractively = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
+        console.log('entries: ', entries);
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setIsActive(true);

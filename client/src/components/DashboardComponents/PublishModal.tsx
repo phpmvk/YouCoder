@@ -21,9 +21,8 @@ const PublishModal: React.FC<PublishModalProps> = ({
   };
 
   const handleUnpublish = () => {
-    recording.published = false;
-    setIsModalOpen(false);
     setPublished(false);
+    setIsModalOpen(false);
     http
       .patchRecording(recording.recording_id, { published: false })
       .then((res) => {

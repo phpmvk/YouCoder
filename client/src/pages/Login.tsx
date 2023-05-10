@@ -11,7 +11,7 @@ import http from '../services/userApi';
 import { rootUser, setUser } from '../redux/userSlice';
 import { useAppDispatch } from '../redux/hooks';
 import { Button } from '@mui/material';
-import LoginArt from './LoginArt';
+import LoginArt from '../components/HomePageComponents/LoginArt';
 import Loading from '../components/Loading';
 export interface ILoginPageProps {}
 
