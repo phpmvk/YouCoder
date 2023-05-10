@@ -47,7 +47,7 @@ export async function uploadRecording(req: Request, res: Response) {
     title,
     description,
     language,
-    recorder_actions,
+    recording_link,
     audio_link,
     created_at,
     full_link,
@@ -60,7 +60,7 @@ export async function uploadRecording(req: Request, res: Response) {
     !title || typeof title !== 'string' ||
     !description || typeof description !== 'string' ||
     !language || typeof language !== 'string' ||
-    !recorder_actions || typeof recorder_actions !== 'object' || typeof recorder_actions === null ||
+    !recording_link || typeof recording_link !== 'string' ||
     !audio_link || typeof audio_link !== 'string' ||
     !created_at || typeof created_at !== 'string' ||
     !full_link || typeof full_link !== 'string' ||
@@ -81,8 +81,7 @@ export async function uploadRecording(req: Request, res: Response) {
         title: title,
         description: description,
         language: language,
-        recorder_actions: recorder_actions,
-        audio_link: audio_link,
+        recording_link: recording_link,
         created_at: (new Date(Date.now())).toString(),
         full_link: full_link,
         iframe_link: iframe_link,
@@ -110,7 +109,7 @@ export async function updateRecording(req: Request, res: Response) {
   
   const dataToUpdate: Record<string, string | boolean> = {};
   
-  const fieldsToUpdate: string[] = ['recording_id', 'creator', 'creator_uid', 'thumbnail_link', 'title', 'description', 'published', 'language', 'recorder_actions', 'audio_link', 'created_at', 'full_link', 'iframe_link']
+  const fieldsToUpdate: string[] = ['thumbnail_link', 'title', 'description', 'published', 'language', 'full_link', 'iframe_link']
   let invalidFields: string[] = [];
   fieldsToUpdate.forEach((field: string) => {
     if (req.body[field] !== undefined) {

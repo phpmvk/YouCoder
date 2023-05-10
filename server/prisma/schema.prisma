@@ -29,17 +29,16 @@ model User {
 }
 
 model Recording {
-  recording_id     String  @id @default(dbgenerated("uuid_generate_v4()"))
-  creator          Creator @relation(fields: [creator_uid], references: [uid], onDelete: Cascade, onUpdate: Cascade)
-  creator_uid      String //primary key in Creator model
-  thumbnail_link   String?
-  title            String
-  description      String?
-  published        Boolean @default(false)
-  language         String
-  recorder_actions Json
-  audio_link       String
-  created_at       String
-  full_link        String?
-  iframe_link      String?
+  recording_id   String  @id @default(dbgenerated("uuid_generate_v4()"))
+  creator        Creator @relation(fields: [creator_uid], references: [uid], onDelete: Cascade, onUpdate: Cascade)
+  creator_uid    String //primary key in Creator model
+  thumbnail_link String?
+  title          String
+  description    String?
+  published      Boolean @default(false)
+  language       String
+  recording_link String
+  created_at     String
+  full_link      String?
+  iframe_link    String?
 }
