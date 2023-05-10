@@ -18,6 +18,7 @@ export function RecorderEditor() {
   const [recorderState, setRecorderState] = useState<
     'stopped' | 'recording' | 'paused'
   >('stopped');
+  const [recorderLoading, setRecorderLoading] = useState(false);
 
   const recorderActions = useRef<RecorderActions>({
     start: 0,
@@ -92,34 +93,35 @@ export function RecorderEditor() {
 
   //recording handlers
   function handleStartRecording() {
-    recorderActions.current.editorActions = [];
-    editorInstance!.setValue('');
-    recorderActions.current.start = Date.now();
-    setRecorderState('recording');
-
     // Start audio recording
+    setRecorderLoading(true);
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       const options = { mimeType: 'audio/webm' as 'audio/webm' };
       const recordRTC = new RecordRTC(stream, options);
       setAudioRecorder(recordRTC);
       recordRTC.startRecording();
+      setRecorderLoading(false);
     });
+    recorderActions.current.editorActions = [];
+    editorInstance!.setValue('');
+    recorderActions.current.start = Date.now();
+    setRecorderState('recording');
   }
 
   function handlePauseRecording() {
-    let timestamp = Date.now();
-    recorderActions.current.pauseArray.push({ timestamp });
     if (audioRecorder) {
       audioRecorder.pauseRecording();
     }
+    let timestamp = Date.now();
+    recorderActions.current.pauseArray.push({ timestamp });
     setRecorderState('paused');
   }
   function handleResumeRecording() {
-    let timestamp = Date.now();
-    recorderActions.current.resumeArray.push({ timestamp });
     if (audioRecorder) {
       audioRecorder.resumeRecording();
     }
+    let timestamp = Date.now();
+    recorderActions.current.resumeArray.push({ timestamp });
     setRecorderState('recording');
   }
   function handleEndRecording() {
@@ -303,6 +305,11 @@ export function RecorderEditor() {
             End Recording
           </button>
         </>
+      )}
+      {recorderLoading && (
+        <div className="p-2">
+          <span>Loading...</span>
+        </div>
       )}
     </>
   );
