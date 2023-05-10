@@ -16,6 +16,7 @@ interface MoreOptionsToggleProps {
 const MoreOptionsToggle: React.FC<MoreOptionsToggleProps> = ({
   recording_id,
 }) => {
+  const [showModal, setShowModal] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -26,6 +27,7 @@ const MoreOptionsToggle: React.FC<MoreOptionsToggleProps> = ({
 
   const handleClose = () => {
     setAnchorEl(null);
+    setShowModal(true);
 
     // if delete recording is clicked, send a delete request to the backend
   };

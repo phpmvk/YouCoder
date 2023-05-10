@@ -3,16 +3,21 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import { Recording } from '../../types/Creator';
 import { useState } from 'react';
-import Modal from '../Toast';
+import Toast from '../Toast';
 import http from '../../services/recordingApi';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@emotion/react';
 import PublishModal from './PublishModal';
 import MoreOptionsToggle from './MoreOptionsToggle';
+import Modal from '../Modal';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { editUser } from '../../redux/userSlice';
 
 interface RecordingItemProps {
   recording: Recording;
 }
+
+type Field = 'title' | 'description';
 
 const theme = createTheme({ palette: { primary: { main: '#b300ff' } } });
 
@@ -21,7 +26,10 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
   const [showEditDescription, setShowEditDescription] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [showdeleteModal, setShowdeleteModal] = useState(false);
   const [published, setPublished] = useState(recording.published);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
 
   const editTitle = () => {
     setShowEditTitle(true);
@@ -31,34 +39,48 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
     setShowEditDescription(true);
   };
 
-  const handleKeyDown = (e: any) => {
-    if (e.key === 'Enter') {
-      if (e.target.id === 'title') {
-        // if title send the upfdasted title to the backend
-        http
-          .patchRecording(recording.recording_id, { title: e.target.value })
-          .then((res) => {
-            console.log('res from updating title: ', res);
-          })
-          .catch((err) => {
-            console.log('err from updating title', err);
-          });
+  const deleteRecording = () => {
+    http
+      .deleteRecording(recording.recording_id)
+      .then((res) => {
+        console.log('res from deleting recording: ', res);
+        setShowdeleteModal(false);
+      })
+      .catch((err) => {
+        console.log('err from deleting recording: ', err);
+      });
+  };
 
-        setShowEditTitle(false);
-      } else if (e.target.id === 'description') {
-        // if description send the updated description to the backend
-        http
-          .patchRecording(recording.recording_id, {
-            description: e.target.value,
-          })
-          .then((res) => {
-            console.log('res from updating description: ', res);
-          })
-          .catch((err) => {
-            console.log('err from updating title', err);
-          });
+  const updateRecording = (field: Field, value: string): Promise<void> => {
+    return http
+      .patchRecording(recording.recording_id, { [field]: value })
+      .then((res) => {
+        console.log(`res from updating ${field}: `, res);
+        dispatch(editUser({ ...user, recordings: res.data }));
+      })
+      .catch((err) => {
+        console.log(`err from updating ${field}`, err);
+      });
+  };
 
-        setShowEditDescription(false);
+  const handleEnter = (field: Field, value: string): void => {
+    updateRecording(field, value);
+
+    if (field === 'title') {
+      setShowEditTitle(false);
+    } else if (field === 'description') {
+      setShowEditDescription(false);
+    }
+  };
+
+  const handleKeyDown = <T extends HTMLInputElement | HTMLTextAreaElement>(
+    event: React.KeyboardEvent<T>
+  ): void => {
+    if (event.key === 'Enter') {
+      const field = event.currentTarget.id as Field;
+
+      if (field === 'title' || field === 'description') {
+        handleEnter(field, event.currentTarget.value);
       }
     }
   };
@@ -237,7 +259,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
           </div>
         </div>
       </div>
-      {showToast && <Modal text={'copied'} />}
+      {showToast && <Toast text={'copied'} />}
       <PublishModal
         recording={recording}
         isModalOpen={showModal}
@@ -248,6 +270,11 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
           'If you unpublish this recording, all the links where this recording is embedded will stop working until you publish it again. Are you sure you want to proceed?'
         }
         yesBtnText={'Yes, Unpublish'}
+      />
+      <Modal
+        isModalOpen={showdeleteModal}
+        handleClickYes={deleteRecording}
+        setIsModalOpen={setShowdeleteModal}
       />
     </>
   );

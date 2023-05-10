@@ -23,7 +23,7 @@ class UserApiService {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await protectedHttp.post<typeof rootUser>(
-          `/users/creator/add`,
+          `/users/creator/login`,
           { token }
         );
         resolve(response);
