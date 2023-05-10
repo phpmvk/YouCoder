@@ -1,6 +1,7 @@
 import { AxiosResponse, AxiosError } from 'axios';
 import { rootUser } from '../redux/userSlice';
 import { protectedHttp } from './baseUrl';
+import { Creator } from '../types/Creator';
 
 /***************************
 to use this file:
@@ -17,13 +18,16 @@ userApi.creatorLogin(id)
 });
 
 ****************************/
+interface UserLogin {
+  user: Creator;
+}
 
 class UserApiService {
-  creatorLogin(token: string): Promise<AxiosResponse<typeof rootUser>> {
+  creatorLogin(token: string): Promise<AxiosResponse<UserLogin>> {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await protectedHttp.post<typeof rootUser>(
-          `/users/creator/add`,
+        const response = await protectedHttp.post<UserLogin>(
+          `/users/creator/login`,
           { token }
         );
         resolve(response);

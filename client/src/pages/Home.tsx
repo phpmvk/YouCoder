@@ -10,8 +10,11 @@ import TopBall from './../components/HomePageComponents/TopBall';
 import MiddleBall from './../components/HomePageComponents/MiddleBall';
 import BottomBall from './../components/HomePageComponents/BottomBall';
 import Footer from './../components/HomePageComponents/Footer';
+import { useAppSelector } from '../redux/hooks';
 
 const HomePage: React.FC = () => {
+  const user = useAppSelector((state) => state.user);
+
   return (
     <div className='text-center bg-bg-pri font-title'>
       {/* <button onClick={() => signOut(auth)}>Sign out</button> */}

@@ -56,6 +56,21 @@ class RecordingApiService {
       }
     });
   }
+
+  deleteRecording(id: string): Promise<AxiosResponse<Recording[]>> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await protectedHttp.delete<Recording[]>(
+          `/recording/delete/${id}`
+        );
+        resolve(response);
+      } catch (e) {
+        const error = e as AxiosError;
+        console.log(error);
+        reject(error);
+      }
+    });
+  }
 }
 
 export default new RecordingApiService();

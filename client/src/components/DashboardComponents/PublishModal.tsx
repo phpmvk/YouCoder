@@ -2,12 +2,17 @@ import React, { useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import http from '../../services/recordingApi';
 import { Recording } from '../../types/Creator';
+import { editUser } from '../../redux/userSlice';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 
 interface PublishModalProps {
   recording: Recording;
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
   setPublished: (published: boolean) => void;
+  title?: string;
+  description?: string;
+  yesBtnText?: string;
 }
 
 const PublishModal: React.FC<PublishModalProps> = ({
@@ -15,18 +20,25 @@ const PublishModal: React.FC<PublishModalProps> = ({
   isModalOpen,
   setIsModalOpen,
   setPublished,
+  title,
+  description,
+  yesBtnText,
 }) => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
 
   const handleUnpublish = () => {
-    setPublished(false);
+    // setPublished(false);
     setIsModalOpen(false);
     http
       .patchRecording(recording.recording_id, { published: false })
       .then((res) => {
         console.log('res from unpublishing: ', res);
+        dispatch(editUser({ ...user, recordings: res.data }));
         setIsModalOpen(false);
       })
       .catch((err) => {
@@ -66,28 +78,24 @@ const PublishModal: React.FC<PublishModalProps> = ({
               <div className='inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-bg-pri shadow-[0px_0px_3px_1px_rgba(0,0,0)] rounded-2xl shadow-bg-sec'>
                 <Dialog.Title
                   as='h3'
-                  className='text-lg font-medium leading-6 text-white/80'
+                  className='text-lg font-medium leading-6 text-white/95'
                 >
-                  Warning
+                  {title}
                 </Dialog.Title>
                 <div className='mt-2'>
-                  <p className='text-base text-white/60'>
-                    If you unpublish this recording, all the links where this
-                    recording is embedded will stop working until you publish it
-                    again. Are you sure you want to proceed?
-                  </p>
+                  <p className='text-base text-white/95'>{description}</p>
                 </div>
                 <div className='mt-4'>
                   <button
                     type='button'
-                    className='inline-flex justify-center px-4 py-2 text-sm font-medium border-red-500 text-white/60 bg-red-500/10 border rounded-md hover:bg-red-500/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white'
+                    className='inline-flex justify-center px-4 py-2 text-sm font-medium border-red-500 text-white/80 bg-red-500/10 border rounded-md hover:bg-red-500/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white'
                     onClick={handleUnpublish}
                   >
-                    Yes, Unpublish
+                    {yesBtnText}
                   </button>
                   <button
                     type='button'
-                    className='ml-4 inline-flex justify-center px-4 py-2 text-sm font-medium text-white/50 border-white/50 border  rounded-md hover:bg-gray-200/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white'
+                    className='ml-4 inline-flex justify-center px-4 py-2 text-sm font-medium text-white/70 border-white/70 border  rounded-md hover:bg-gray-200/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white'
                     onClick={closeModal}
                   >
                     Cancel
