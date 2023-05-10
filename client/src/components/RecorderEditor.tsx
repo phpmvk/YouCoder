@@ -137,10 +137,18 @@ export function RecorderEditor() {
         recorderActions.current.pauseArray[
           recorderActions.current.pauseArray.length - 1
         ].timestamp;
+
       recorderActions.current.editorActions =
         recorderActions.current.editorActions.filter((action: EditorAction) => {
           return action.actionCreationTimestamp < lastPauseTimestamp;
         });
+
+      recorderActions.current.consoleLogChanges =
+        recorderActions.current.consoleLogChanges.filter(
+          (change: ConsoleLog) => {
+            return change.timestamp < lastPauseTimestamp;
+          }
+        );
     }
 
     // Calculate playbackTimestamp for each editor action
@@ -170,6 +178,7 @@ export function RecorderEditor() {
           change.timestamp - recorderActions.current.start - totalPauseTime;
         return { ...change, playbackTimestamp: adjustedTimestamp };
       });
+    console.log(recorderActions);
 
     //Get current editor language
 
@@ -235,8 +244,9 @@ export function RecorderEditor() {
 
     const judge0: CodeToExecute = { language_id, source_code };
     consoleApi.getOutput(judge0)!.then((response) => {
+      console.log(response);
       const div = document.getElementById('console');
-      div!.innerHTML = response.data.stdout;
+      div!.innerHTML = response.data.output;
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.type === 'childList') {
