@@ -190,10 +190,10 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
         </div>
         <div className='w-full mt-2'>
           <div className='flex'>
-            <div className='w-2/12 h-10 z-10 m-1 rounded-md flex items-center justify-center'>
+            <div className='w-2/12 h-10 z-10 m-1 rounded-md flex items-center justify-center min-w-[150px]'>
               <Button
                 variant='outlined'
-                className='w-full h-full !border-bg-alt !text-white/80 hover:!bg-bg-alt hover:!bg-opacity-10'
+                className='!w-full !h-full !border-bg-alt !text-white/80 hover:!bg-bg-alt hover:!bg-opacity-10'
                 onClick={() => {
                   showCopied('copied');
                   navigator.clipboard.writeText(recording.full_link);
@@ -214,7 +214,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
             </div>
           </div>
           <div className='flex mt-2'>
-            <div className='w-2/12 h-10 z-10 m-1 rounded-md flex items-center justify-center'>
+            <div className='w-2/12 h-10 z-10 m-1 rounded-md flex items-center justify-center min-w-[150px]'>
               <Button
                 variant='outlined'
                 className='w-full h-full !border-bg-sec !text-white/80 hover:!bg-bg-sec hover:!bg-opacity-10'
