@@ -15,7 +15,8 @@
     "express-rate-limit": "^6.7.0",
     "firebase-admin": "^11.8.0",
     "jsonwebtoken": "^9.0.0",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",

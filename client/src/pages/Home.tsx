@@ -10,26 +10,22 @@ import TopBall from './../components/HomePageComponents/TopBall';
 import MiddleBall from './../components/HomePageComponents/MiddleBall';
 import BottomBall from './../components/HomePageComponents/BottomBall';
 import Footer from './../components/HomePageComponents/Footer';
+import { useAppSelector } from '../redux/hooks';
 
 const HomePage: React.FC = () => {
-  const auth = getAuth();
-
-  function logOut() {
-    signOut(auth)
-      .then(() => {
-        localStorage.removeItem('token');
-        console.log('signed out');
-      })
-      .catch((error: Error) => {
-        console.log(error);
-      });
-  }
+  const user = useAppSelector((state) => state.user);
 
   return (
     <div className='text-center bg-bg-pri font-title'>
       {/* <button onClick={() => signOut(auth)}>Sign out</button> */}
-      <div className="sticky top-0 z-50">
-        <TopNavBar showFeatures={true} showExamples={true}/>
+      <div className='sticky top-0 z-50'>
+        <TopNavBar
+          showFeatures={true}
+          showExamples={true}
+          showSearch={false}
+          showCreateRecording={false}
+          showDashboard={false}
+        />
       </div>
 
       <Parallax

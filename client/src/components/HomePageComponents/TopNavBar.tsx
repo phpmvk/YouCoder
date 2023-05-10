@@ -13,9 +13,11 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import youcoderlogo from './youcoderlogo.png';
 import { Button } from '@mui/material';
-import { Link } from 'react-router-dom';
-
-
+import { Link, Router, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { getAuth, signOut } from 'firebase/auth';
+import { removeUser } from '../../redux/userSlice';
+import { AiFillVideoCamera } from 'react-icons/ai';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -57,10 +59,47 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-function TopNavBar({ showSearch, showCreateRecording, showDashboard, showFeatures, showExamples }: { showSearch: boolean, showCreateRecording: boolean, showDashboard: boolean, showFeatures: boolean, showExamples: boolean }) {
+interface TopNavBarProps {
+  showSearch: boolean;
+  showCreateRecording: boolean;
+  showDashboard: boolean;
+  showFeatures: boolean;
+  showExamples: boolean;
+}
+
+function TopNavBar({
+  showSearch,
+  showCreateRecording,
+  showDashboard,
+  showFeatures,
+  showExamples,
+}: TopNavBarProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  // import the user from the reducer
+  const { shortName } = useAppSelector((state) => state.user);
+  console.log('short name: ', shortName);
+  const [loggedIn, setLoggedIn] = React.useState(shortName ? true : false);
+
+  const auth = getAuth();
+
+  function logOut() {
+    signOut(auth)
+      .then(() => {
+        localStorage.removeItem('token');
+        dispatch(removeUser({}));
+        console.log('signed out');
+        setLoggedIn(false);
+        navigate('/');
+      })
+      .catch((error: Error) => {
+        console.log(error);
+      });
+  }
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -138,19 +177,21 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard, showFeature
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar sx={{ backgroundColor: '#050505', maxHeight:'8vh' }}>
+    <Box sx={{ flexGrow: 1, height: '60px' }}>
+      <AppBar sx={{ backgroundColor: '#050505', maxHeight: '60px' }}>
         <Toolbar>
-          <Typography
-            variant='h6'
-            noWrap
-            component='div'
-            sx={{ display: { xs: 'none', sm: 'block' } }}
-          >
-            {' '}
-            LOGO
-            {/* <img src={youcoderlogo} style={{width: '80px', height: '80px'}}></img>  */}
-          </Typography>
+          <Link to='/'>
+            <Typography
+              variant='h6'
+              noWrap
+              component='div'
+              sx={{ display: { xs: 'none', sm: 'block' } }}
+            >
+              {' '}
+              LOGO
+              {/* <img src={youcoderlogo} style={{width: '80px', height: '80px'}}></img>  */}
+            </Typography>
+          </Link>
           {showSearch && (
             <Search>
               <SearchIconWrapper>
@@ -166,26 +207,80 @@ function TopNavBar({ showSearch, showCreateRecording, showDashboard, showFeature
           <Box
             sx={{
               display: 'flex',
-              justifyContent: 'space-between',
-              width: '25%',
+              // justifyContent: 'space-between',
+              alignItems: 'center',
+              // width: '25%',
               marginRight: 2,
             }}
           >
             {/* Conditionally render the Create Recording button */}
-            {showCreateRecording && <Button className="w-full h-full t-[10vw] border-solid !border-2 !border-red-700 !text-white !rounded-full !text-l"color="inherit" variant="outlined">Create Recording</Button>}
-           
+            {showCreateRecording && (
+              <Button
+                className='w-full h-full t-[10vw] border-solid !border-2 !border-red-700 hover:!bg-red-700/20 !text-white !rounded-full !text-l !mr-6'
+                color='inherit'
+                variant='outlined'
+              >
+                <AiFillVideoCamera className='text-red-700 mr-2 text-lg' />
+                Create Recording
+              </Button>
+            )}
+
             {/* Conditionally render the Dashboard button */}
-            {showDashboard && <Button color="inherit">Dashboard</Button>}
-            {showFeatures && <Button color="inherit">Features</Button>}
-            {showExamples && <Button color="inherit">Examples</Button>}
-            <Button color="inherit">Docs</Button>
+            {showDashboard && (
+              <Button
+                className='hover:!underline'
+                color='inherit'
+              >
+                Dashboard
+              </Button>
+            )}
+            {showFeatures && (
+              <Button
+                className='hover:!underline hover:!underline-offset-8'
+                color='inherit'
+              >
+                Features
+              </Button>
+            )}
+            {showExamples && (
+              <Button
+                className='hover:!underline hover:!underline-offset-8'
+                color='inherit'
+              >
+                Examples
+              </Button>
+            )}
+            <Button
+              className='hover:!underline hover:!underline-offset-8'
+              color='inherit'
+            >
+              Docs
+            </Button>
           </Box>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <Link 
-            to='/login'
-            >
-            <Button className="!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto" variant="outlined">Sign In</Button>
-            </Link>
+            {loggedIn ? (
+              <>
+                <Button
+                  className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto'
+                  variant='outlined'
+                  onClick={logOut}
+                >
+                  Log Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link to='/login'>
+                  <Button
+                    // className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto'
+                    className='!border-bg-alt !text-bg-pri hover:!bg-bg-pri hover:!text-bg-alt !h-8 !my-auto !bg-bg-alt'
+                    variant='outlined'
+                  >
+                    Sign In
+                  </Button>
+                </Link>
+              </>
+            )}
 
             {/* <IconButton
               size="large"

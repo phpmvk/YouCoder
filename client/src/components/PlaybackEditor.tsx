@@ -3,6 +3,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { editor } from 'monaco-editor';
 import * as monaco from 'monaco-editor';
 import ReactSlider from 'react-slider';
+import { Allotment } from 'allotment';
+import 'allotment/dist/style.css';
+import Terminal from './TerminalOutput';
 
 export function PlaybackEditor() {
   const [editorInstance, setEditorInstance] =
@@ -21,7 +24,6 @@ export function PlaybackEditor() {
   const [ignoreUserInputs, setIgnoreUserInputs] = useState<boolean>(false);
   const playbackStateRef = useRef(playbackState);
   const timeoutIdsRef = useRef<number[]>([]);
-  const [pausedContent, setPausedContent] = useState<string>('');
 
   //scrubber states
   const [sliderValue, setSliderValue] = useState<number>(0);
@@ -67,7 +69,6 @@ export function PlaybackEditor() {
     editor: editor.IStandaloneCodeEditor,
     text: string
   ) {
-    if (playbackStateRef.current.status !== 'playing') return;
     const model = editor.getModel();
     const rangeInstance = new monacoInstance!.Range(
       range.startLineNumber,
@@ -90,62 +91,55 @@ export function PlaybackEditor() {
 
   function startPlayback(
     editorActions: EditorAction[],
-    editor: editor.IStandaloneCodeEditor,
-    playbackStartPosition: number = 0
+    editor: editor.IStandaloneCodeEditor
   ) {
-    if (audioElement && playbackStartPosition === 0) {
-      audioElement.currentTime = playbackStartPosition / 1000;
+    const baseTimestamp = sliderValue;
+
+    // Filter out actions that have already been executed based on the scrubber position
+    const actionsToExecute = editorActions.filter(
+      (action) => action.playbackTimestamp >= baseTimestamp
+    );
+
+    if (audioElement && sliderValue === 0) {
       audioElement.play();
     }
+
     // Clear existing timeouts if any
     timeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
     timeoutIdsRef.current = [];
 
-    if (playbackStateRef.current.status !== 'paused') {
-      setPlaybackState({
-        status: 'playing',
-        currentPosition: playbackStartPosition,
-      });
-    } else {
-      setPlaybackState({
-        status: 'playing',
-        currentPosition: playbackStateRef.current.currentPosition,
-      });
-    }
-
-    const baseTimestamp =
-      playbackStartPosition > 0
-        ? editorActions[playbackStartPosition - 1].playbackTimestamp
-        : 0;
+    setPlaybackState({
+      status: 'playing',
+      currentPosition: baseTimestamp,
+    });
 
     setIgnoreUserInputs(true);
 
-    // When scrubbing, apply all changes up to the scrubber position instantly
-    if (playbackStartPosition > 0) {
-      editorActions
-        .slice(0, playbackStartPosition)
-        .forEach((action: EditorAction) => {
-          applyChange(action, editor, action.text);
-        });
-    }
+    // Apply all changes up to the scrubber position instantly
+    const actionsToApplyInstantly = editorActions.filter(
+      (action) => action.playbackTimestamp < baseTimestamp
+    );
 
-    editorActions
-      .slice(playbackStartPosition)
-      .forEach((action: EditorAction, index: number) => {
-        const timeoutId = window.setTimeout(() => {
-          if (playbackStateRef.current.status === 'playing') {
-            applyChange(action, editor, action.text);
-            setPlaybackState((prevState) => ({
-              status: 'playing',
-              currentPosition: prevState.currentPosition + 1,
-            }));
-          }
-          if (index === editorActions.length - 1) {
-            setIgnoreUserInputs(false);
-          }
-        }, action.playbackTimestamp - baseTimestamp);
-        timeoutIdsRef.current.push(timeoutId);
-      });
+    actionsToApplyInstantly.forEach((action: EditorAction) => {
+      applyChange(action, editor, action.text);
+    });
+
+    actionsToExecute.forEach((action: EditorAction) => {
+      const timeoutId = window.setTimeout(() => {
+        if (playbackStateRef.current.status === 'playing') {
+          applyChange(action, editor, action.text);
+          setPlaybackState((prevState) => ({
+            status: 'playing',
+            currentPosition: prevState.currentPosition + 100,
+          }));
+        }
+        if (action === actionsToExecute[actionsToExecute.length - 1]) {
+          setIgnoreUserInputs(false);
+        }
+      }, action.playbackTimestamp - baseTimestamp);
+      timeoutIdsRef.current.push(timeoutId);
+    });
+
     sliderIntervalIdRef.current = startSliderInterval();
   }
 
@@ -156,31 +150,31 @@ export function PlaybackEditor() {
       startPlayback(importedActions.editorActions, editorInstance!);
     }
   }
+
   function handlePausePlayback() {
     audioElement?.pause();
     setPlaybackState((prevState) => ({
       status: 'paused',
       currentPosition: prevState.currentPosition,
     }));
-    setPausedContent(editorInstance!.getValue());
     setIgnoreUserInputs(false);
     clearInterval(sliderIntervalIdRef.current!);
   }
+
   function handleResumePlayback() {
     audioElement?.play();
     if (importedActions) {
-      editorInstance!.setValue(pausedContent);
-      startPlayback(
-        importedActions.editorActions,
-        editorInstance!,
-        playbackState.currentPosition
-      );
+      editorInstance!.setValue('');
+      startPlayback(importedActions.editorActions, editorInstance!);
     }
+    clearInterval(sliderIntervalIdRef.current!);
     sliderIntervalIdRef.current = startSliderInterval();
   }
 
   function handleScrubberChange(scrubberPosition: number) {
     updateAudioCurrentTime(scrubberPosition);
+    audioElement?.play();
+
     clearInterval(sliderIntervalIdRef.current!);
     setSliderValue(scrubberPosition);
     setPlaybackState((prevState) => ({
@@ -193,16 +187,8 @@ export function PlaybackEditor() {
     timeoutIdsRef.current = [];
     editorInstance!.setValue('');
 
-    const editorActions = importedActions!.editorActions;
-
-    // Find the nearest action with the given playback timestamp
-    const playbackStartPosition = editorActions.findIndex(
-      (action) => action.playbackTimestamp >= scrubberPosition
-    );
-
-    startPlayback(editorActions, editorInstance!, playbackStartPosition);
+    startPlayback(importedActions!.editorActions, editorInstance!);
     setSliderValue(scrubberPosition);
-    audioElement?.play();
   }
 
   function startSliderInterval() {
@@ -228,7 +214,7 @@ export function PlaybackEditor() {
         setImportedActions(importedRecorderActions);
 
         editorInstance!.setValue('');
-        startPlayback(importedRecorderActions.editorActions, editorInstance!);
+        // startPlayback(importedRecorderActions.editorActions, editorInstance!);
       };
       reader.readAsText(file);
     }
@@ -264,46 +250,67 @@ export function PlaybackEditor() {
           setAudioElement(audio);
         }}
       ></audio>
-      <div className="flex max-w-full">
-        <div className="w-3/4">
-          <Editor
-            height="60vh"
-            defaultLanguage="javascript"
-            defaultValue=""
-            theme="vs-dark"
-            options={{
-              wordWrap: 'on',
-              readOnly: ignoreUserInputs,
-            }}
-            onMount={handleEditorDidMount}
-          />
-        </div>
-        <div className="w-1/4">
-          <h1>hello</h1>
-        </div>
+      <div className='flex max-w-[80vw] h-[500px] px-40'>
+        <Allotment>
+          <Allotment.Pane minSize={600}>
+            <Editor
+              height='500px'
+              defaultLanguage='javascript'
+              defaultValue=''
+              theme='vs-dark'
+              options={{
+                wordWrap: 'on',
+                readOnly: ignoreUserInputs,
+              }}
+              onMount={handleEditorDidMount}
+            />
+          </Allotment.Pane>
+          <Allotment.Pane
+            minSize={100}
+            preferredSize={300}
+          >
+            <div className='border w-full h-full border-[#1e1e1e]'>
+              <Terminal output={'test'} />
+            </div>
+          </Allotment.Pane>
+        </Allotment>
       </div>
 
       <br></br>
       <br></br>
-      <input className="mx-4" type="file" onChange={handleFileInput} />
+      <input
+        className='mx-4'
+        type='file'
+        onChange={handleFileInput}
+      />
       <button
-        className="p-2 bg-slate-500 rounded-sm"
+        className='p-2 bg-slate-500 rounded-sm'
         onClick={handleStartPlayback}
       >
         Start Playback
       </button>
-      <button className="p-2 bg-slate-500 mx-4" onClick={handlePausePlayback}>
+      <button
+        className='p-2 bg-slate-500 mx-4'
+        onClick={handlePausePlayback}
+      >
         Pause Playback
       </button>
-      <button className="p-2 bg-slate-500" onClick={handleResumePlayback}>
+      <button
+        className='p-2 bg-slate-500'
+        onClick={handleResumePlayback}
+      >
         Resume Playback
       </button>
-      <input className="mx-4" type="file" onChange={handleAudioFileInput} />
+      <input
+        className='mx-4'
+        type='file'
+        onChange={handleAudioFileInput}
+      />
       <br />
       <br />
       <ReactSlider
-        className="horizontal-slider"
-        thumbClassName="slider-thumb"
+        className='horizontal-slider'
+        thumbClassName='slider-thumb'
         value={sliderValue}
         step={0.001}
         max={audioDuration}

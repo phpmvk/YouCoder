@@ -4,8 +4,8 @@ import { editor } from 'monaco-editor';
 import * as monaco from 'monaco-editor';
 import RecordRTC from 'recordrtc';
 
-import http from '../services/consoleApi';
-import { CodeToExecute } from '../types/console';
+import consoleApi from '../services/consoleApi';
+import { CodeToExecute } from '../types/Console';
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
@@ -193,7 +193,7 @@ export function RecorderEditor() {
 
     const judge0: CodeToExecute = { language_id, source_code };
     console.log(judge0);
-    http.getOutput(judge0)!.then((response) => {
+    consoleApi.getOutput(judge0)!.then((response) => {
       const div = document.getElementById('console');
       div!.innerHTML = response.data.stdout;
       console.log(response);
@@ -203,21 +203,21 @@ export function RecorderEditor() {
   return (
     <>
       <select onChange={handleLanguageChange}>
-        <option value="javascript">JavaScript</option>
-        <option value="python">Python</option>
-        <option value="java">Java</option>
-        <option value="csharp">C#</option>
-        <option value="cpp">C++</option>
-        <option value="ruby">Ruby</option>
-        <option value="go">Go</option>
+        <option value='javascript'>JavaScript</option>
+        <option value='python'>Python</option>
+        <option value='java'>Java</option>
+        <option value='csharp'>C#</option>
+        <option value='cpp'>C++</option>
+        <option value='ruby'>Ruby</option>
+        <option value='go'>Go</option>
       </select>
-      <div className="flex max-w-full">
-        <div className="w-3/4">
+      <div className='flex max-w-full'>
+        <div className='w-3/4'>
           <Editor
-            height="60vh"
-            defaultLanguage="javascript"
-            defaultValue=""
-            theme="vs-dark"
+            height='60vh'
+            defaultLanguage='javascript'
+            defaultValue=''
+            theme='vs-dark'
             options={{
               wordWrap: 'on',
             }}
@@ -225,22 +225,34 @@ export function RecorderEditor() {
             onMount={handleEditorDidMount}
           />
         </div>
-        <div className="w-1/4">
+        <div className='w-1/4'>
           <button onClick={handleJudge0}>Compile & Execute</button>
-          <h1 id="console"></h1>
+          <h1 id='console'></h1>
         </div>
       </div>
 
-      <button className="p-2" onClick={handleStartRecording}>
+      <button
+        className='p-2'
+        onClick={handleStartRecording}
+      >
         Start Recording
       </button>
-      <button className="p-2" onClick={handlePauseRecording}>
+      <button
+        className='p-2'
+        onClick={handlePauseRecording}
+      >
         Pause Recording
       </button>
-      <button className="p-2" onClick={handleResumeRecording}>
+      <button
+        className='p-2'
+        onClick={handleResumeRecording}
+      >
         Resume Recording
       </button>
-      <button className="p-2" onClick={handleEndRecording}>
+      <button
+        className='p-2'
+        onClick={handleEndRecording}
+      >
         End Recording
       </button>
     </>
