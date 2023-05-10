@@ -101,6 +101,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
         .patchRecording(recording.recording_id, { published: true })
         .then((res) => {
           console.log('res from publishing: ', res);
+          dispatch(editUser({ ...user, recordings: res.data }));
         })
         .catch((err) => {
           // setPublished(false);

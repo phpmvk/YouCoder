@@ -4,6 +4,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ThemeProvider, createTheme } from '@mui/material';
+import Modal from '../Modal';
 
 const options = ['Delete Recording'];
 
@@ -33,46 +34,48 @@ const MoreOptionsToggle: React.FC<MoreOptionsToggleProps> = ({
   };
 
   return (
-    <div>
-      <ThemeProvider theme={theme}>
-        <IconButton
-          aria-label='more'
-          id='long-button'
-          aria-controls={open ? 'long-menu' : undefined}
-          aria-expanded={open ? 'true' : undefined}
-          aria-haspopup='true'
-          onClick={handleClick}
-          color='primary'
-        >
-          <MoreVertIcon />
-        </IconButton>
-      </ThemeProvider>
-      <Menu
-        id='long-menu'
-        MenuListProps={{
-          'aria-labelledby': 'long-button',
-        }}
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          style: {
-            maxHeight: ITEM_HEIGHT * 4.5,
-            width: '16ch',
-          },
-        }}
-      >
-        {options.map((option) => (
-          <MenuItem
-            key={option}
-            selected={option === 'Pyxis'}
-            onClick={handleClose}
+    <>
+      <div>
+        <ThemeProvider theme={theme}>
+          <IconButton
+            aria-label='more'
+            id='long-button'
+            aria-controls={open ? 'long-menu' : undefined}
+            aria-expanded={open ? 'true' : undefined}
+            aria-haspopup='true'
+            onClick={handleClick}
+            color='primary'
           >
-            {option}
-          </MenuItem>
-        ))}
-      </Menu>
-    </div>
+            <MoreVertIcon />
+          </IconButton>
+        </ThemeProvider>
+        <Menu
+          id='long-menu'
+          MenuListProps={{
+            'aria-labelledby': 'long-button',
+          }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          PaperProps={{
+            style: {
+              maxHeight: ITEM_HEIGHT * 4.5,
+              width: '16ch',
+            },
+          }}
+        >
+          {options.map((option) => (
+            <MenuItem
+              key={option}
+              selected={option === 'Pyxis'}
+              onClick={handleClose}
+            >
+              {option}
+            </MenuItem>
+          ))}
+        </Menu>
+      </div>
+    </>
   );
 };
 

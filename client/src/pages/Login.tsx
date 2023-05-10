@@ -8,9 +8,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { BsGoogle, BsGithub } from 'react-icons/bs';
 import http from '../services/userApi';
-import { rootUser, setUser } from '../redux/userSlice';
+import { setUser } from '../redux/userSlice';
 import { useAppDispatch } from '../redux/hooks';
-import { Button } from '@mui/material';
 import LoginArt from '../components/HomePageComponents/LoginArt';
 import Loading from '../components/Loading';
 export interface ILoginPageProps {}
@@ -70,7 +69,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
       .creatorLogin(token)
       .then((response) => {
         console.log('user from backend response: ', response.data);
-        dispatch(setUser(response.data));
+        dispatch(setUser({ user: response.data.user }));
         navigate('/dashboard');
       })
       .catch((error) => {

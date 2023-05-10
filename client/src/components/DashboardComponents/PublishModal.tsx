@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import http from '../../services/recordingApi';
 import { Recording } from '../../types/Creator';
+import { editUser } from '../../redux/userSlice';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 
 interface PublishModalProps {
   recording: Recording;
@@ -22,17 +24,21 @@ const PublishModal: React.FC<PublishModalProps> = ({
   description,
   yesBtnText,
 }) => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
 
   const handleUnpublish = () => {
-    setPublished(false);
+    // setPublished(false);
     setIsModalOpen(false);
     http
       .patchRecording(recording.recording_id, { published: false })
       .then((res) => {
         console.log('res from unpublishing: ', res);
+        dispatch(editUser({ ...user, recordings: res.data }));
         setIsModalOpen(false);
       })
       .catch((err) => {
