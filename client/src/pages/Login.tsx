@@ -13,6 +13,7 @@ import { useAppDispatch } from '../redux/hooks';
 
 import LoginArt from '../components/HomePageComponents/LoginArt';
 import Loading from '../components/Loading';
+import ErrorBackend from '../components/LoginPageComponents/ErrorBackend';
 
 export interface ILoginPageProps {}
 
@@ -23,6 +24,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
   const [alerts, setAlerts] = useState<string>('');
   const dispatch = useAppDispatch();
   const [showLoading, setShowLoading] = useState(false);
+  const [showError, setShowError] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -75,15 +77,21 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
         navigate('/dashboard');
       })
       .catch((error) => {
-        // error handling
+        //--------------------------------------[here]
         console.log(error);
+        setShowError(true);
+        navigate('/*');
+      })
+      .finally(() => {
         setAuthing(false);
         setShowLoading(false);
+        
       });
   }
 
   return (
     <>
+    {showError && !showLoading && <ErrorBackend />}
       {showLoading && <Loading />}
       <div className='bg-bg-pri h-screen w-full flex overflow-hidden'>
         <div className='bg-bg-pri w-1/2 h-full flex items-center justify-center ml-3'>
