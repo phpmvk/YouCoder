@@ -11,7 +11,7 @@ const NoRecordings: React.FC<NoRecordingsProps> = ({}) => {
           <div className='text-white text-7xl'>
             <Typewriter
               options={{
-                strings: [`Hi ${user.shortName}`, "it's time", 'to record!'],
+                strings: [`Hi ${user.shortName}`, "it's time", 'to record.'],
                 autoStart: true,
                 loop: true,
                 wrapperClassName: 'font-console',

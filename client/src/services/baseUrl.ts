@@ -4,13 +4,6 @@ import { auth } from '../config/firebase';
 // const baseURL = 'http://localhost:3000';
 const baseURL = 'https://1db1-45-133-139-102.ngrok-free.app';
 
-export const http = axios.create({
-  baseURL,
-  headers: {
-    'Content-type': 'application/json',
-  },
-});
-
 export const protectedHttp = axios.create({
   baseURL,
   headers: {
