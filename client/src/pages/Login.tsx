@@ -94,9 +94,9 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
     {/* {showError && !showLoading && <ErrorBackend />} */}
       {showLoading && <Loading />}
       <div className='bg-bg-pri h-screen w-full flex overflow-hidden'>
-        <div className='bg-bg-pri w-1/3 min-w-[200px] h-full flex items-center justify-center mx-6'>
+        <div className='bg-bg-pri w-1/3 min-w-[300px] h-full flex items-center justify-center mx-6'>
           {/* <div className='bg-bg-alt w-[22vw] h-[50vh] max-w-l flex flex-col items-center justify-center rounded-lg'> */}
-            <div className='absolute top-20 z-20 lg:text-6xl text-4xl left-5 flex items-center mx-12 font-title'>
+            <div className='absolute top-20 z-20 text-5xl max-lg:mx-auto ml:24 flex items-center mx-12 font-title'>
               <span className='text-white'>You</span>
               &nbsp;
               <span className='text-bg-sec'>{`{`}</span>
@@ -104,7 +104,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
               <span className='text-white'>Coder</span>
               <span className='text-bg-sec'>{`}`}</span>
             </div>
-            <div className='flex flex-col justify-evenly h-1/2 min-w-[200px] '>
+            <div className='flex flex-col justify-evenly h-1/3 min-w-[200px] '>
               <button
                 // variant="outlined"
                 className='bg-bg-pri z-20 flex items-center w-full h-1/8 t-[10px] border-solid !border-2 border-bg-sec rounded-lg !text-white lg:text-xl sm:text-sm  md:p-6 p-3 hover:border-bg-alt whitespace-nowrap'
@@ -130,7 +130,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
             </div>
           {/* </div> */}
         </div>
-        <div className='w-2/3'>
+        <div className='w-2/3 min-w-[400px]'>
           <LoginArt />
         </div>
       </div>
