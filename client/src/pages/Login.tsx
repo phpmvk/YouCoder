@@ -29,7 +29,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      login(token);
+      login();
     }
   }, []);
 
@@ -41,7 +41,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
         if (token) {
           console.log('----token: ', token);
           localStorage.setItem('token', token);
-          login(token);
+          login();
         }
       })
       .catch((error) => {
@@ -58,7 +58,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
         if (token) {
           console.log('----token: ', token);
           localStorage.setItem('token', token);
-          login(token);
+          login();
         }
       })
       .catch((error) => {
@@ -67,10 +67,10 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
       });
   };
 
-  async function login(token: string) {
+  async function login() {
     setShowLoading(true);
     http
-      .creatorLogin(token)
+      .creatorLogin()
       .then((response) => {
         console.log('user from backend response: ', response.data);
         dispatch(setUser({ user: response.data.user }));

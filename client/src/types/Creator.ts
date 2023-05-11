@@ -1,11 +1,12 @@
 export interface Creator {
-  uid: string;
+  uid?: string;
   username?: string;
-  email: string;
+  email?: string;
   join_date: string;
   recordings?: Recording[];
   shortName?: string;
   display_name?: string;
+  picture?: string;
 }
 
 export const rootUser: Creator = {

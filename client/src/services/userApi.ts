@@ -23,12 +23,11 @@ interface UserLogin {
 }
 
 class UserApiService {
-  creatorLogin(token: string): Promise<AxiosResponse<UserLogin>> {
+  creatorLogin(): Promise<AxiosResponse<UserLogin>> {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await protectedHttp.post<UserLogin>(
-          `/users/creator/login`,
-          { token }
+          `/users/creator/login`
         );
         resolve(response);
       } catch (e) {
@@ -39,14 +38,39 @@ class UserApiService {
     });
   }
 
+  // async creatorLogin2(): Promise<AxiosResponse<UserLogin>> {
+  //   try {
+  //     const response = await protectedHttp.post<UserLogin>(
+  //       `/users/creator/login`
+  //     );
+  //     return { response, error: null };
+  //   } catch (e) {
+  //     const error = e as AxiosError;
+  //     console.log(error);
+  //     return { response: null, error };
+  //   }
+  // }
+  /*
+  async function xxxxxx (){
+  const user = await creatorLogin2()
+  if (user.error) {
+
+  } else {
+
+  }
+
+
+  }
+
+
+  */
   creatorUpdate(
-    id: string,
     data: typeof rootUser
   ): Promise<AxiosResponse<typeof rootUser>> | undefined {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await protectedHttp.patch<typeof rootUser>(
-          `/users/creator/update/${id}`,
+          `/users/creator/update/`,
           data
         );
         resolve(response);
@@ -58,11 +82,11 @@ class UserApiService {
     });
   }
 
-  creatorDelete(id: string): Promise<AxiosResponse<string>> | undefined {
+  creatorDelete(): Promise<AxiosResponse<string>> | undefined {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await protectedHttp.delete<string>(
-          `/users/creator/delete/${id}`
+          `/users/creator/delete`
         );
         resolve(response);
       } catch (e) {
