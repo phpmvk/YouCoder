@@ -14,6 +14,7 @@ import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
 import Terminal from './TerminalOutput';
 import recordingApi from '../services/recordingApi';
+import { formatLanguage } from '../utils/editorUtils';
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
@@ -30,6 +31,7 @@ export function RecorderEditor() {
 
   const [consoleOutput, setConsoleOutput] = useState('');
   const [saveModalVisible, setSaveModalVisible] = useState(false);
+  const [editorLanguage, setEditorLanguage] = useState('javascript');
 
   const recorderActions = useRef<RecorderActions>({
     start: 0,
@@ -121,6 +123,9 @@ export function RecorderEditor() {
     recorderActions.current.start = Date.now();
     setRecorderState('recording');
     setConsoleOutput('');
+    const model = editorInstance!.getModel();
+    const language = model!.getLanguageId();
+    setEditorLanguage(formatLanguage(language));
   }
 
   function handlePauseRecording() {
@@ -297,27 +302,37 @@ export function RecorderEditor() {
 
   return (
     <>
-      <div className="flex items-center">
-        <label
-          className="block mb-2 text-sm font-medium text-white mr-3"
-          htmlFor="language"
-        >
-          Choose a language to record in:
-        </label>
-        <select
-          id="language"
-          onChange={handleLanguageChange}
-          className="border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3"
-        >
-          <option defaultValue="javascript">JavaScript</option>
-          <option value="python">Python</option>
-          <option value="java">Java</option>
-          <option value="csharp">C#</option>
-          <option value="cpp">C++</option>
-          <option value="ruby">Ruby</option>
-          <option value="go">Go</option>
-        </select>
-      </div>
+      {recorderState === 'stopped' && (
+        <>
+          <div className="flex items-center">
+            <label
+              className="block mb-2 text-sm font-medium text-white mr-3"
+              htmlFor="language"
+            >
+              Choose a language to record in:
+            </label>
+            <select
+              id="language"
+              onChange={handleLanguageChange}
+              className="border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3"
+            >
+              <option defaultValue="javascript">JavaScript</option>
+              <option value="typescript">TypeScript</option>
+              <option value="python">Python</option>
+              <option value="java">Java</option>
+              <option value="csharp">C#</option>
+              <option value="cpp">C++</option>
+              <option value="ruby">Ruby</option>
+              <option value="go">Go</option>
+            </select>
+          </div>
+        </>
+      )}
+      {recorderState !== 'stopped' && (
+        <div className="border text-sm rounded-lg w-48 bg-gray-700 border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mb-3 flex items-center justify-center">
+          {editorLanguage}
+        </div>
+      )}
 
       <div className="flex w-full h-[500px] border border-white rounded-sm">
         <Allotment>
