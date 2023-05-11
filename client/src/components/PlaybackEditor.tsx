@@ -365,11 +365,13 @@ export function PlaybackEditor({
         }}
       ></audio>
       
-      <h1 className="ml-10 text-white uppercase bg-bg-pri w-[20ch] text-center rounded-t-full mt-2">{editorLanguage}blah</h1>
-      <div className="bg-bg-gptdark flex w-full h-[400px] px-10 ">
+      <h1 className="ml-10 text-gray-200 uppercase bg-bg-pri w-[20ch] text-center rounded-t-full mt-2">{editorLanguage}</h1>
+      <div className="">
+      <div className="bg-bg-gptdark flex w-full h-[400px] px-10  ">
         <Allotment>
           <Allotment.Pane minSize={600}>
             <Editor
+            className=" border-bg-pri border-8 border-r-6 "
               height="500px"
               defaultLanguage="javascript"
               defaultValue=""
@@ -382,16 +384,20 @@ export function PlaybackEditor({
             />
           </Allotment.Pane>
           <Allotment.Pane minSize={100} preferredSize={300}>
-            <div className="border w-full h-[50%] border-[#1e1e1e]">
+            <div className=" w-full h-[50%] border-r-8 border-t-8 border-l-2 border-bg-pri ">
               <Terminal
                 terminalName="output"
                 output={TeacherConsoleOutput}
               />
             </div>
-            <div className="border w-full h-[50%] border-[#1e1e1e]">
-              <button className="text-white" onClick={handleJudge0}>
+            <div className="w-full h-[50%]  border-t-6 border-l-2 border-r-8 border-bg-pri">
+              <div className='flex'>
+              <Button 
+              variant="outlined"
+              className="!text-gray-200 w-full !rounded-full !border-bg-alt" onClick={handleJudge0}>
                 Compile & Execute
-              </button>
+              </Button>
+              </div>
               <Terminal 
               terminalName="your output"
               output={StudentConsoleOutput} />
@@ -402,12 +408,12 @@ export function PlaybackEditor({
 
       <br></br>
       <br></br>
-      <div className='w-auto flex items-center justify-start space-x-16 -mt-12 bg-bg-pri rounded-b-full mx-10 px-2 md:pax-auto'>
+      <div className='w-auto flex items-center justify-evenly space-x-16 -mt-12 bg-bg-pri rounded-b-full mx-10 px-2 md:pax-auto'>
       {/* <input className="mx-4" type="file" onChange={handleFileInput} /> */}
       {playbackState.status === 'stopped' && (
         <Button
           variant="outlined"
-          className=" !rounded-full !border-bg-alt !text-white"
+          className="!rounded-full !border-bg-alt !text-gray-200"
           onClick={handleStartPlayback}
         >
           <PlayArrowIcon/>
@@ -417,7 +423,7 @@ export function PlaybackEditor({
       {playbackState.status === 'playing' && (
         <Button 
         variant="outlined"
-        className="mx-4 !rounded-full !border-bg-alt !text-white" onClick={handlePausePlayback}>
+        className="!rounded-full !border-bg-alt !text-gray-200" onClick={handlePausePlayback}>
           <PauseIcon/>
         </Button>
       )}
@@ -425,12 +431,12 @@ export function PlaybackEditor({
       {playbackState.status === 'paused' && (
         <Button 
         variant="outlined"
-        className="!rounded-full !border-bg-alt !text-white" onClick={handleResumePlayback}>
+        className="!rounded-full !border-bg-alt !text-gray-200" onClick={handleResumePlayback}>
           <PlayArrowIcon/>
         </Button>
       )}
 
-<div className="text-white mx-4 whitespace-nowrap">
+<div className="text-gray-200 mx-4 whitespace-nowrap">
         {formatTime(sliderValue)} / {formatTime(audioDuration)}
 
 
@@ -450,7 +456,8 @@ export function PlaybackEditor({
 
    <br></br>   
       
-
+</div>
     </>
+    
   );
 }

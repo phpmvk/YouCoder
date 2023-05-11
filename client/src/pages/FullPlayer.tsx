@@ -29,18 +29,18 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
         <TopNavBar />
 
         <div className="bg-bg-pri relative flex justify-center items-center overflow-y-scroll overflow-x-hidden ">
-          <div className=" bg-bg-gptdark border-solid p-4 mx-2 mb-48 pt-4 top-[20px] overflow-y-scroll border border-gray-600  rounded-xl">
-            <div className="border border-gray-600 rounded-xl pt-2">
+          <div className=" bg-bg-gptdark border-solid p-4 mx-2 mb-48 pt-4 top-[20px] overflow-y-scroll border border-gray-600  rounded-2xl">
+            <div className="border border-bg-pri rounded-xl pt-2">
             
             <PlaybackEditor recordingData={recordingData} />
             </div>
             <div className="w-full bg-bg-gpt-dark h-[400px] bottom-[20px] mt-[10px] rounded-lg mx-auto pr-10">
               <div className="bg-bg-gptdark flex flex-col md:flex-row h-full md:min-w-full text-center">
                 {/* small title */}
-                <div className="text-white text-3xl text-left pb-2 pt-4 px-6 mx-5 md:hidden ">
+                <div className="text-gray-200 text-3xl text-left pb-2 pt-4 px-6 mx-5 md:hidden ">
                   {recording.title}
                 </div>
-                {/* <div className="text-white text-3xl whitespace-nowrap pb-2 pt-4 max-w-[30ch] text-ellipsis overflow-hidden mx-auto md:hidden">{recording.title}</div> */}
+                {/* <div className="text-gray-200 text-3xl whitespace-nowrap pb-2 pt-4 max-w-[30ch] text-ellipsis overflow-hidden mx-auto md:hidden">{recording.title}</div> */}
                 <div className="flex md:flex-row">
                   <div className="bg-bg-gptdark w-[200px] md:min-h-[400px] rounded-lg ml-2 sm:h-[250px]">
                     <div
@@ -49,20 +49,20 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                         backgroundImage: `url(./../../public/avatar.webp)`,
                       }}
                     ></div>
-                    <div className=" h-fit p-3 py-4 w-full flex-shrink-0 rounded-lg text-white text-xl  flex justify-center items-center">
+                    <div className=" h-fit p-3 py-4 w-full flex-shrink-0 rounded-lg text-gray-200 text-xl  flex justify-center items-center">
                       {recording.creator}
                     </div>
                     <Stack className="mx-8" direction="column" spacing={2}>
                       <Button
                         variant="outlined"
                         size="small"
-                        className="!rounded-full !border-bg-alt !text-white"
+                        className="!rounded-full !border-bg-alt !text-gray-200"
                       >
                         <AddIcon />
                         Subscribe
                       </Button>
                       <Chip
-                        className="!bg-white/10 !text-white !text-sm !stroke-white !rounded-sm"
+                        className="!bg-white/10 !text-gray-200 !text-sm !stroke-white !rounded-sm"
                         label={`${recording.subs} Subscribers `}
                       />
                     </Stack>
@@ -72,15 +72,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                         <Button
                           variant="outlined"
                           size="small"
-                          className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
-                        >
-                          <FaceIcon />
-                          button
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
+                          className="!rounded-full !border-bg-alt !text-gray-200 whitespace-nowrap"
                         >
                           <ReplyIcon className="transform scale-x-[-1]" />
                           share
@@ -88,7 +80,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                         <Button
                           variant="outlined"
                           size="small"
-                          className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
+                          className="!rounded-full !border-bg-alt !text-gray-200 whitespace-nowrap"
                         >
                           <AddIcon />
                           add to list
@@ -102,15 +94,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                       <Button
                         variant="outlined"
                         size="small"
-                        className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
-                      >
-                        <FaceIcon />
-                        button
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
+                        className="!rounded-full !border-bg-alt !text-gray-200 whitespace-nowrap"
                       >
                         <ReplyIcon className="transform scale-x-[-1]" />
                         share
@@ -118,7 +102,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                       <Button
                         variant="outlined"
                         size="small"
-                        className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
+                        className="!rounded-full !border-bg-alt !text-gray-200 whitespace-nowrap"
                       >
                         <AddIcon />
                         add to list
@@ -134,25 +118,18 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                   <div className="flex flex-col w-full">
                     <div className="flex justify-between items-start">
                       <div className="flex flex-col">
-                        <div className="text-white lg:text-4xl md:text-3xl max-sm:hidden max-md:hidden  whitespace-nowrap p- max-w-[30ch] text-ellipsis overflow-hidden text-center">
+                        <div className="text-gray-200 lg:text-4xl md:text-3xl max-sm:hidden max-md:hidden  whitespace-nowrap p- max-w-[30ch] text-ellipsis overflow-hidden text-center">
                           {recording.title}
                         </div>
                       </div>
 {/* largest size */}
                       <div className="bg-bg-gptdark p-4 hidden xl:flex xl:items-center">
                         <Stack direction="row" spacing={1}>
+                         
                           <Button
                             variant="outlined"
                             size="small"
-                            className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
-                          >
-                            <FaceIcon />
-                            button
-                          </Button>
-                          <Button
-                            variant="outlined"
-                            size="small"
-                            className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
+                            className="!rounded-full !border-bg-alt !text-gray-200 whitespace-nowrap"
                           >
                             <ReplyIcon className="transform scale-x-[-1]" />
                             share
@@ -160,7 +137,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                           <Button
                             variant="outlined"
                             size="small"
-                            className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
+                            className="!rounded-full !border-bg-alt !text-gray-200 whitespace-nowrap"
                           >
                             <AddIcon />
                             add to list

@@ -16,3 +16,13 @@
   cursor: pointer;
   outline: none;
 } */
+
+terminal {
+  /* Your custom styles for the terminal component */
+  /* Example styles: */
+  background-color: red !important;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  font-family: monospace;
+}
