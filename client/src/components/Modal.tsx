@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 
 interface ModalProps {
-  handleClickYes: () => void;
+  handleClickYes?: () => void;
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
   title?: string;

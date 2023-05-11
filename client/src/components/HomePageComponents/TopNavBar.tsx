@@ -3,14 +3,9 @@ import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MoreIcon from '@mui/icons-material/MoreVert';
 import youcoderlogo from './youcoderlogo.png';
 import { Button } from '@mui/material';
 import { Link, Router, useNavigate } from 'react-router-dom';
@@ -121,60 +116,60 @@ function TopNavBar({
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Log In</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
+  // const menuId = 'primary-search-account-menu';
+  // const renderMenu = (
+  //   <Menu
+  //     anchorEl={anchorEl}
+  //     anchorOrigin={{
+  //       vertical: 'top',
+  //       horizontal: 'right',
+  //     }}
+  //     id={menuId}
+  //     keepMounted
+  //     transformOrigin={{
+  //       vertical: 'top',
+  //       horizontal: 'right',
+  //     }}
+  //     open={isMenuOpen}
+  //     onClose={handleMenuClose}
+  //   >
+  //     <MenuItem onClick={handleMenuClose}>Log In</MenuItem>
+  //     <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+  //   </Menu>
+  // );
 
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem></MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size='large'
-          aria-label='account of current user'
-          aria-controls='primary-search-account-menu'
-          aria-haspopup='true'
-          color='inherit'
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
+  // const mobileMenuId = 'primary-search-account-menu-mobile';
+  // const renderMobileMenu = (
+  //   <Menu
+  //     anchorEl={mobileMoreAnchorEl}
+  //     anchorOrigin={{
+  //       vertical: 'top',
+  //       horizontal: 'right',
+  //     }}
+  //     id={mobileMenuId}
+  //     keepMounted
+  //     transformOrigin={{
+  //       vertical: 'top',
+  //       horizontal: 'right',
+  //     }}
+  //     open={isMobileMenuOpen}
+  //     onClose={handleMobileMenuClose}
+  //   >
+  //     <MenuItem></MenuItem>
+  //     <MenuItem onClick={handleProfileMenuOpen}>
+  //       <IconButton
+  //         size='large'
+  //         aria-label='account of current user'
+  //         aria-controls='primary-search-account-menu'
+  //         aria-haspopup='true'
+  //         color='inherit'
+  //       >
+  //         <AccountCircle />
+  //       </IconButton>
+  //       <p>Profile</p>
+  //     </MenuItem>
+  //   </Menu>
+  // );
 
   return (
     <Box sx={{ flexGrow: 1, height: '60px' }}>
@@ -216,7 +211,7 @@ function TopNavBar({
             {/* Conditionally render the Create Recording button */}
             {showCreateRecording && (
               <Button
-                className='w-full h-full t-[10vw] border-solid !border-2 !border-red-700 hover:!bg-red-700/20 !text-white !rounded-full !text-l !mr-6'
+                className='w-full h-full t-[10vw] border-solid !border-2 !border-red-700 hover:!bg-red-700/20 !text-white !rounded-full !text-l !mr-6 whitespace-nowrap'
                 color='inherit'
                 variant='outlined'
               >
@@ -227,12 +222,14 @@ function TopNavBar({
 
             {/* Conditionally render the Dashboard button */}
             {showDashboard && (
+              <Link to='/dashboard'>
               <Button
                 className='hover:!underline'
                 color='inherit'
               >
                 Dashboard
               </Button>
+              </Link>
             )}
             {showFeatures && (
               <Button
@@ -250,18 +247,20 @@ function TopNavBar({
                 Examples
               </Button>
             )}
+            <Link to='/docs'>
             <Button
               className='hover:!underline hover:!underline-offset-8'
               color='inherit'
             >
               Docs
-            </Button>
+          </Button>
+          </Link>
           </Box>
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+          <Box>
             {loggedIn ? (
               <>
                 <Button
-                  className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto'
+                  className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto whitespace-nowrap'
                   variant='outlined'
                   onClick={logOut}
                 >
@@ -273,7 +272,7 @@ function TopNavBar({
                 <Link to='/login'>
                   <Button
                     // className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto'
-                    className='!border-bg-alt !text-bg-pri hover:!bg-bg-pri hover:!text-bg-alt !h-8 !my-auto !bg-bg-alt'
+                    className='!border-bg-alt !text-bg-pri hover:!bg-bg-pri hover:!text-bg-alt !h-8 !my-auto !bg-bg-alt '
                     variant='outlined'
                   >
                     Sign In
@@ -294,7 +293,7 @@ function TopNavBar({
               <AccountCircle />
             </IconButton> */}
           </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+          {/* <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size='large'
               aria-label='show more'
@@ -305,11 +304,11 @@ function TopNavBar({
             >
               <MoreIcon />
             </IconButton>
-          </Box>
+          </Box> */}
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
+      {/* {renderMobileMenu}
+      {renderMenu} */}
     </Box>
   );
 }
