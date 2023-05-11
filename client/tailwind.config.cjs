@@ -3,6 +3,14 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      screens: {
+        '720': '720px',
+      },
+      scale: {
+        '80': '.80',
+        '82': '82',
+        '85': '.85',
+      },
       colors: {
         bg: {
           pri: '#050505',
