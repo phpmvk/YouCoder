@@ -14,7 +14,6 @@ export function PlaybackEditor() {
   const [monacoInstance, setMonacoInstance] = useState<typeof monaco | null>(
     null
   );
-  const [output, setOutput] = useState<string[]>([]);
 
   const [consoleOutput, setConsoleOutput] = useState('');
   const [editorLanguage, setEditorLanguage] = useState('');
@@ -322,7 +321,7 @@ export function PlaybackEditor() {
         }}
       ></audio>
       <h1>{editorLanguage}</h1>
-      <div className='flex max-w-[80vw] h-[500px] px-40'>
+      <div className='flex w-full h-[500px] px-40'>
         <Allotment>
           <Allotment.Pane minSize={600}>
             <Editor
@@ -341,8 +340,14 @@ export function PlaybackEditor() {
             minSize={100}
             preferredSize={300}
           >
-            <div className='border w-full h-full border-[#1e1e1e]'>
-              <Terminal output={output} />
+            <div className='border w-full h-[50%] border-[#1e1e1e]'>
+              <Terminal
+                terminalName='Teachers output'
+                output={consoleOutput}
+              />
+            </div>
+            <div className='border w-full h-[50%] border-[#1e1e1e]'>
+              <Terminal output={'hello'} />
             </div>
           </Allotment.Pane>
         </Allotment>

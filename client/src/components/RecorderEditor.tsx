@@ -218,7 +218,7 @@ export function RecorderEditor() {
       const json = JSON.stringify(recorderActions.current);
       const jsonBlob = new Blob([json], { type: 'application/json' });
 
-      const ycrFileUrl = await saveYCRFile(jsonBlob, audioBlob, user.uid);
+      const ycrFileUrl = await saveYCRFile(jsonBlob, audioBlob, user.uid!);
       console.log(user);
       console.log(ycrFileUrl);
       const model = editorInstance!.getModel();
@@ -345,7 +345,10 @@ export function RecorderEditor() {
                 clear
               </button>
               {/* <h1 id='console'></h1> */}
-              <Terminal output={output} />
+              <button onClick={handleJudge0}>Compile & Execute</button>
+              <h1>{consoleOutput}</h1>
+
+              <Terminal output={consoleOutput} />
             </div>
           </Allotment.Pane>
         </Allotment>
