@@ -1,5 +1,5 @@
 import Editor from '@monaco-editor/react';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { editor } from 'monaco-editor';
 import * as monaco from 'monaco-editor';
 import RecordRTC from 'recordrtc';
@@ -14,7 +14,7 @@ import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
 import Terminal from './TerminalOutput';
 import recordingApi from '../services/recordingApi';
-import { formatLanguage } from '../utils/editorUtils';
+import { formatLanguage, formatTime } from '../utils/editorUtils';
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
@@ -33,6 +33,10 @@ export function RecorderEditor() {
   const [saveModalVisible, setSaveModalVisible] = useState(false);
   const [editorLanguage, setEditorLanguage] = useState('javascript');
 
+  const [elapsedTime, setElapsedTime] = useState<number>(0);
+  const [recordingIntervalId, setRecordingIntervalId] =
+    useState<NodeJS.Timeout | null>(null);
+
   const recorderActions = useRef<RecorderActions>({
     start: 0,
     end: 0,
@@ -42,6 +46,16 @@ export function RecorderEditor() {
     editorActions: [],
     consoleLogOutputs: [],
   });
+
+  useEffect(() => {
+    return () => {
+      if (recordingIntervalId) {
+        clearInterval(recordingIntervalId);
+      }
+    };
+  }, [recordingIntervalId]);
+
+  const user = useAppSelector((state) => state.user);
 
   function handleConsoleLogOutput(text: string, timestamp: number) {
     if (recorderState !== 'stopped') {
@@ -67,28 +81,18 @@ export function RecorderEditor() {
     return languageMapping[language];
   }
 
-  const user = useAppSelector((state) => state.user);
-  console.log('this is the user', user);
-
-  const handleLanguageChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  function handleLanguageChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const model = editorInstance!.getModel();
-    console.log('Selected language', event.target.value);
     monacoInstance!.editor.setModelLanguage(model!, event.target.value);
-    const language = model!.getLanguageId();
-    console.log('current ', language);
+  }
 
-    console.log(monacoInstance!.languages.getLanguages());
-  };
-
-  const handleEditorDidMount = (
+  function handleEditorDidMount(
     editor: editor.IStandaloneCodeEditor,
     monaco: typeof import('monaco-editor')
-  ) => {
+  ) {
     setEditorInstance(editor);
     setMonacoInstance(monaco);
-  };
+  }
 
   function handleEditorChange(
     value?: string,
@@ -109,7 +113,7 @@ export function RecorderEditor() {
 
   //recording handlers
   function handleStartRecording() {
-    // Start audio recording
+    //audio
     setRecorderLoading(true);
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       const options = { mimeType: 'audio/webm' as 'audio/webm' };
@@ -118,14 +122,24 @@ export function RecorderEditor() {
       recordRTC.startRecording();
       setRecorderLoading(false);
     });
+    //actions
     recorderActions.current.editorActions = [];
     editorInstance!.setValue('');
     recorderActions.current.start = Date.now();
     setRecorderState('recording');
     setConsoleOutput('');
+
+    //language
     const model = editorInstance!.getModel();
     const language = model!.getLanguageId();
     setEditorLanguage(formatLanguage(language));
+
+    //timer
+    setElapsedTime(0);
+    const intervalId = setInterval(() => {
+      setElapsedTime((prevTime) => prevTime + 1000);
+    }, 1000);
+    setRecordingIntervalId(intervalId);
   }
 
   function handlePauseRecording() {
@@ -135,6 +149,10 @@ export function RecorderEditor() {
     let timestamp = Date.now();
     recorderActions.current.pauseArray.push({ timestamp });
     setRecorderState('paused');
+    if (recordingIntervalId) {
+      clearInterval(recordingIntervalId);
+      setRecordingIntervalId(null);
+    }
   }
   function handleResumeRecording() {
     if (audioRecorder) {
@@ -143,6 +161,10 @@ export function RecorderEditor() {
     let timestamp = Date.now();
     recorderActions.current.resumeArray.push({ timestamp });
     setRecorderState('recording');
+    const intervalId = setInterval(() => {
+      setElapsedTime((prevTime) => prevTime + 1000);
+    }, 1000);
+    setRecordingIntervalId(intervalId);
   }
   function handleEndRecording() {
     const timestamp = Date.now();
@@ -211,6 +233,10 @@ export function RecorderEditor() {
       audioRecorder.stopRecording();
     }
     setRecorderState('stopped');
+    if (recordingIntervalId) {
+      clearInterval(recordingIntervalId);
+      setRecordingIntervalId(null);
+    }
     setSaveModalVisible(true);
   }
 
@@ -403,6 +429,11 @@ export function RecorderEditor() {
           <span>Loading...</span>
         </div>
       )}
+
+      {recorderState !== 'stopped' && (
+        <p className="p-2 text-white">{formatTime(elapsedTime)}</p>
+      )}
+
       {saveModalVisible && (
         <SaveRecordingModal
           onSave={handleSave}
