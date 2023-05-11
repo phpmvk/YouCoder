@@ -290,8 +290,6 @@ export function RecorderEditor() {
     consoleApi
       .getOutput(judge0)!
       .then((response) => {
-        console.log(response);
-        console.log(window.atob(response.data.output));
         const output = window.atob(response.data.output);
         setConsoleOutput(output);
         handleConsoleLogOutput(output, Date.now());
