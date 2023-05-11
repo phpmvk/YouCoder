@@ -7,6 +7,8 @@ import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
 import Terminal from './TerminalOutput';
 import { loadYCRFile } from '../utils/ycrUtils';
+import { CodeToExecute } from '../types/Console';
+import consoleApi from '../services/consoleApi';
 
 export function PlaybackEditor() {
   const [editorInstance, setEditorInstance] =
@@ -15,11 +17,10 @@ export function PlaybackEditor() {
     null
   );
 
-  const [consoleOutput, setConsoleOutput] = useState('');
-  const [editorLanguage, setEditorLanguage] = useState('');
+  const [TeacherConsoleOutput, setTeacherConsoleOutput] = useState('');
+  const [StudentConsoleOutput, setStudentConsoleOutput] = useState('');
 
-  const [currentTime, setCurrentTime] = useState('00:00');
-  const [totalTime, setTotalTime] = useState('00:00');
+  const [editorLanguage, setEditorLanguage] = useState('');
 
   //editor playback states
   const [importedActions, setImportedActions] =
@@ -53,10 +54,6 @@ export function PlaybackEditor() {
       audioElement.src = audioSource;
     }
   }, [audioSource, audioElement]);
-
-  useEffect(() => {
-    setCurrentTime(formatTime(sliderValue));
-  }, [sliderValue]);
 
   const handleEditorDidMount = (
     editor: editor.IStandaloneCodeEditor,
@@ -150,7 +147,7 @@ export function PlaybackEditor() {
       );
 
     consoleOutputsToApplyInstantly.forEach((output) => {
-      setConsoleOutput(output.text);
+      setTeacherConsoleOutput(output.text);
     });
 
     actionsToExecute.forEach((action: EditorAction) => {
@@ -171,7 +168,7 @@ export function PlaybackEditor() {
     consoleOutputsToExecute.forEach((output) => {
       const timeoutId = window.setTimeout(() => {
         if (playbackStateRef.current.status === 'playing') {
-          setConsoleOutput(output.text);
+          setTeacherConsoleOutput(output.text);
         }
       }, output.playbackTimestamp - baseTimestamp);
       consoleTimeoutIdsRef.current.push(timeoutId);
@@ -280,7 +277,6 @@ export function PlaybackEditor() {
         const arrayBuffer = await response.arrayBuffer();
         const decodedData = await audioContext.decodeAudioData(arrayBuffer);
         setAudioDuration(decodedData.duration * 1000);
-        setTotalTime(formatTime(decodedData.duration * 1000));
 
         // Set the audio source
         setAudioSource(recordedAudioURL);
@@ -342,6 +338,32 @@ export function PlaybackEditor() {
       : `${displayMinutesString}:${displaySecondsString}`;
   }
 
+  function handleJudge0() {
+    const model = editorInstance!.getModel();
+    const language = model!.getLanguageId() as Language;
+    const source_code = editorInstance!.getValue();
+    const language_id = getLanguageId(language)!;
+
+    const judge0: CodeToExecute = { language_id, source_code };
+    consoleApi.getOutput(judge0)!.then((response) => {
+      setStudentConsoleOutput(response.data.output);
+    });
+  }
+
+  function getLanguageId(language: Language): string | null {
+    const languageMapping: Record<Language, string> = {
+      javascript: '93',
+      python: '70',
+      java: '91',
+      csharp: '51',
+      cpp: '76',
+      ruby: '72',
+      go: '95',
+    };
+
+    return languageMapping[language];
+  }
+
   return (
     <>
       <audio
@@ -367,10 +389,16 @@ export function PlaybackEditor() {
           </Allotment.Pane>
           <Allotment.Pane minSize={100} preferredSize={300}>
             <div className="border w-full h-[50%] border-[#1e1e1e]">
-              <Terminal terminalName="Teachers output" output={consoleOutput} />
+              <Terminal
+                terminalName="Teachers output"
+                output={TeacherConsoleOutput}
+              />
             </div>
             <div className="border w-full h-[50%] border-[#1e1e1e]">
-              <Terminal output={'hello'} />
+              <button className="text-white" onClick={handleJudge0}>
+                Compile & Execute
+              </button>
+              <Terminal output={StudentConsoleOutput} />
             </div>
           </Allotment.Pane>
         </Allotment>
