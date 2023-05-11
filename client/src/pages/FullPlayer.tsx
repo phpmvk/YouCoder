@@ -29,20 +29,20 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
         <TopNavBar />
 
         <div className="bg-bg-pri relative flex justify-center items-center overflow-y-scroll overflow-x-hidden ">
-          <div className=" bg-bg-gptdark border-solid p-2 mx-auto  pt-20 top-[20px] mb-1 rounded-lg overflow-y-scroll pb-[10px]">
+          <div className=" bg-bg-gptdark border-solid p-4 mx-auto  pt-10 top-[20px] mb-1 rounded-lg overflow-y-scroll pb-[10px]">
             <PlaybackEditor recordingData={recordingData} />
 
             <div className="w-full bg-bg-gpt-dark h-[400px] bottom-[20px] mt-[10px] rounded-lg">
               <div className="bg-bg-gptdark flex flex-col md:flex-row h-full md:min-w-full text-center">
                 {/* small title */}
-                <div className="text-white text-3xl text-left pb-2 pt-4 px-6 mx-auto md:hidden ">
+                <div className="text-white text-3xl text-left pb-2 pt-4 px-6 mx-5 md:hidden ">
                   {recording.title}
                 </div>
                 {/* <div className="text-white text-3xl whitespace-nowrap pb-2 pt-4 max-w-[30ch] text-ellipsis overflow-hidden mx-auto md:hidden">{recording.title}</div> */}
                 <div className="flex md:flex-row">
                   <div className="bg-bg-gptdark w-[200px] md:min-h-[400px] rounded-lg ml-2 sm:h-[250px]">
                     <div
-                      className="h-[100px] w-[100px] flex-shrink-0 mt-1 md:ml-[50px] sm:ml-[25px] rounded-full border-2 border-bg-alt bg-cover bg-center bg-red-900"
+                      className="h-[100px] w-[100px] flex-shrink-0 mt-1 mx-auto rounded-full border-2 border-bg-alt bg-cover bg-center bg-red-900"
                       style={{
                         backgroundImage: `url(./../../public/avatar.webp)`,
                       }}
@@ -50,7 +50,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                     <div className=" h-fit p-3 py-4 w-full flex-shrink-0 rounded-lg text-white text-xl  flex justify-center items-center">
                       {recording.creator}
                     </div>
-                    <Stack className="px-auto" direction="column" spacing={2}>
+                    <Stack className="mx-8" direction="column" spacing={2}>
                       <Button
                         variant="outlined"
                         size="small"
@@ -65,7 +65,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                       />
                     </Stack>
 
-                    <div className="bg-bg-gptdark mt-6 mx-auto xl:hidden max-720:hidden max-md:hidden w-full max-h-[200px] ">
+                    <div className="bg-bg-gptdark mt-6 mx-8 xl:hidden max-720:hidden max-md:hidden  max-h-[200px] ">
                       <Stack direction="column" spacing={1}>
                         <Button
                           variant="outlined"
@@ -136,8 +136,8 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                           {recording.title}
                         </div>
                       </div>
-
-                      <div className="bg-bg-gptdark p-4 hidden xl:flex xl:items-center">
+{/* largest size */}
+                      <div className="bg-bg-gptdark p-4 pr-10 hidden xl:flex xl:items-center">
                         <Stack direction="row" spacing={1}>
                           <Button
                             variant="outlined"

@@ -13,6 +13,9 @@ import { CodeToExecute } from '../types/Console';
 import consoleApi from '../services/consoleApi';
 import { formatTime, getLanguageId } from '../utils/editorUtils';
 import { Recording } from '../types/Creator';
+import Button from '@mui/material/Button';
+import PauseIcon from '@mui/icons-material/Pause';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 export function PlaybackEditor({
   recordingData,
@@ -362,7 +365,7 @@ export function PlaybackEditor({
         }}
       ></audio>
       <h1>{editorLanguage}</h1>
-      <div className="flex w-full h-[500px] px-40">
+      <div className="bg-bg-gptdark flex w-full h-[400px] px-10">
         <Allotment>
           <Allotment.Pane minSize={600}>
             <Editor
@@ -396,42 +399,55 @@ export function PlaybackEditor({
 
       <br></br>
       <br></br>
+      <div className='w-auto flex items-center justify-start space-x-16 -mt-10 bg-bg-pri rounded-full mx-10 px-2 md:pax-auto'>
       {/* <input className="mx-4" type="file" onChange={handleFileInput} /> */}
       {playbackState.status === 'stopped' && (
-        <button
-          className="p-2 bg-slate-500 rounded-sm"
+        <Button
+          variant="outlined"
+          className=" !rounded-full !border-bg-alt !text-white"
           onClick={handleStartPlayback}
         >
-          Start Playback
-        </button>
+          <PlayArrowIcon/>
+        </Button>
       )}
 
       {playbackState.status === 'playing' && (
-        <button className="p-2 bg-slate-500 mx-4" onClick={handlePausePlayback}>
-          Pause Playback
-        </button>
+        <Button 
+        variant="outlined"
+        className="mx-4 !rounded-full !border-bg-alt !text-white" onClick={handlePausePlayback}>
+          <PauseIcon/>
+        </Button>
       )}
 
       {playbackState.status === 'paused' && (
-        <button className="p-2 bg-slate-500" onClick={handleResumePlayback}>
-          Resume Playback
-        </button>
+        <Button 
+        variant="outlined"
+        className="!rounded-full !border-bg-alt !text-white" onClick={handleResumePlayback}>
+          <PlayArrowIcon/>
+        </Button>
       )}
 
-      <br />
-      <br />
-      <div className="text-white">
+<div className="text-white mx-4 whitespace-nowrap">
         {formatTime(sliderValue)} / {formatTime(audioDuration)}
+
+
       </div>
 
-      <ReactSlider
-        className="horizontal-slider"
-        thumbClassName="slider-thumb"
+
+<ReactSlider
+        className="w-10/12 max-w-[800px] h-5 bg-bg-gptdark rounded-full mx-auto border-white border flex items-center pr-2"
+        thumbClassName="w-5 h-5 bg-white rounded-full cursor-pointer focus:outline-none active:h-7 active:w-7 transition"
         value={sliderValue}
         step={0.001}
         max={audioDuration}
         onChange={(value) => handleScrubberChange(value)}
       />
+      
+      
+</div>
+   <br></br>   
+      
+
     </>
   );
 }
