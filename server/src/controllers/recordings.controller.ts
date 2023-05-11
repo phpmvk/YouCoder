@@ -28,11 +28,12 @@ export async function getRecordingById(req: Request, res: Response) {
       return res.status(404).send({ message: 'Resource not found' })
     }
 
-    if (recording.published === false) {
-      return res.status(403).send({ message: 'Private' })
+    if (!recording.published) {
+      if (!req.body.user || recording.creator_uid !== req.body.user.uid) {
+        return res.status(403).send({ message: 'Private' })
+      }
     }
-
-    res.status(200).send(recording)
+    return res.status(200).send(recording)
 
   } catch (err) {
     if (err instanceof InvalidRecordingError) {
