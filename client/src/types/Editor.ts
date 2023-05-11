@@ -1,4 +1,4 @@
-type RecorderActions = {
+export type RecorderActions = {
   start: number;
   end: number;
   pauseArray: RecorderAction[];
@@ -8,24 +8,24 @@ type RecorderActions = {
   consoleLogOutputs: ConsoleLog[];
 };
 
-type ChangeRange = {
+export type ChangeRange = {
   startLineNumber: number;
   startColumn: number;
   endLineNumber: number;
   endColumn: number;
 };
 
-type EditorAction = ChangeRange & {
+export type EditorAction = ChangeRange & {
   actionCreationTimestamp: number;
   playbackTimestamp: number;
   text: string;
 };
 
-type RecorderAction = {
+export type RecorderAction = {
   timestamp: number;
 };
 
-type Language =
+export type Language =
   | 'javascript'
   | 'python'
   | 'java'
@@ -34,13 +34,13 @@ type Language =
   | 'ruby'
   | 'go';
 
-type ConsoleLog = {
+export type ConsoleLog = {
   text: string;
   timestamp: number;
   playbackTimestamp: number;
 };
 
-type EditorRecording = {
+export type EditorRecording = {
   title: string;
   description?: string;
   thumbnail_link?: string;

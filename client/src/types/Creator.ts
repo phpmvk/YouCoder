@@ -1,3 +1,5 @@
+import { RecorderAction } from "./Editor";
+
 export interface Creator {
   uid?: string;
   username?: string;
