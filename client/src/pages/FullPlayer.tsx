@@ -15,9 +15,9 @@ interface FullPlayerPageProps {
 }
 
 const recording = {
-  title: 'Javascript Functions Explained Longer Again AGAIN Pt. 2',
+  title: 'Javascript Functions Explained Pt. 2',
   description:
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    'Today we will continue our lesson to dive deeper into Javascript functions! 🔥🔥 We will cover different types of loops and different methods of reaching a solution. If you enjoy my series of videos please subscribe to my channel 😀',
   creator: 'Michael ',
   subs: '2.3K',
 };
@@ -32,7 +32,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
           <div className=" bg-bg-gptdark border-solid p-4 mx-auto  pt-10 top-[20px] mb-1 rounded-lg overflow-y-scroll pb-[10px]">
             <PlaybackEditor recordingData={recordingData} />
 
-            <div className="w-full bg-bg-gpt-dark h-[400px] bottom-[20px] mt-[10px] rounded-lg">
+            <div className="w-full bg-bg-gpt-dark h-[400px] bottom-[20px] mt-[10px] rounded-lg mx-auto pr-10">
               <div className="bg-bg-gptdark flex flex-col md:flex-row h-full md:min-w-full text-center">
                 {/* small title */}
                 <div className="text-white text-3xl text-left pb-2 pt-4 px-6 mx-5 md:hidden ">
@@ -42,7 +42,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                 <div className="flex md:flex-row">
                   <div className="bg-bg-gptdark w-[200px] md:min-h-[400px] rounded-lg ml-2 sm:h-[250px]">
                     <div
-                      className="h-[100px] w-[100px] flex-shrink-0 mt-1 mx-auto rounded-full border-2 border-bg-alt bg-cover bg-center bg-red-900"
+                      className="h-[80px] w-[80px] flex-shrink-0 mt-1 mx-auto rounded-full border-2 border-bg-alt bg-cover bg-center bg-red-900"
                       style={{
                         backgroundImage: `url(./../../public/avatar.webp)`,
                       }}
@@ -132,12 +132,12 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                   <div className="flex flex-col w-full">
                     <div className="flex justify-between items-start">
                       <div className="flex flex-col">
-                        <div className="text-white lg:text-4xl md:text-3xl max-sm:hidden max-md:hidden  whitespace-nowrap p-4 max-w-[30ch] text-ellipsis overflow-hidden text-center">
+                        <div className="text-white lg:text-4xl md:text-3xl max-sm:hidden max-md:hidden  whitespace-nowrap p- max-w-[30ch] text-ellipsis overflow-hidden text-center">
                           {recording.title}
                         </div>
                       </div>
 {/* largest size */}
-                      <div className="bg-bg-gptdark p-4 pr-10 hidden xl:flex xl:items-center">
+                      <div className="bg-bg-gptdark p-4 hidden xl:flex xl:items-center">
                         <Stack direction="row" spacing={1}>
                           <Button
                             variant="outlined"
