@@ -7,12 +7,16 @@ const NotFoundPage = () => {
       <TopNavBar/>
       <div className="flex items-start justify-center h-full">
         <div className="text-5xl bg-bg-gptdark text-white flex-col py-20 px-10 font-title">
-          <p className="mb-10">404</p>
+          <div className="flex items-center mb-10">
+            <p>404</p>
+            <div className="w-5 h-5 bg-red-700 rounded-full animate-slowblink ml-2" />
+          </div>
           <p>The page you are looking for could not be found.</p>
         </div>
       </div>
     </div>
 </>
+
 
   );
 };
