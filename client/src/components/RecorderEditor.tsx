@@ -34,6 +34,7 @@ export function RecorderEditor() {
   const [recorderLoading, setRecorderLoading] = useState(false);
 
   const [consoleOutput, setConsoleOutput] = useState('');
+  const [isConsoleLoading, setIsConsoleLoading] = useState(false);
   const [saveModalVisible, setSaveModalVisible] = useState(false);
   const [editorLanguage, setEditorLanguage] = useState('javascript');
 
@@ -266,15 +267,6 @@ export function RecorderEditor() {
       };
 
       recordingApi.postRecording(Recording);
-
-      //   title: title,
-      //   description: description,
-      // thumbnail_link: thumbnail_link,
-      //   language: language,
-      //   recording_link: recording_link,
-      //   created_at: (new Date(Date.now())).toString(),
-      //   full_link: full_link,
-      //   iframe_link: iframe_link,
     } catch (error) {
       console.error('Error saving recording', error);
     }
@@ -285,6 +277,7 @@ export function RecorderEditor() {
   }
 
   function handleJudge0() {
+    setIsConsoleLoading(true);
     const model = editorInstance!.getModel();
     const language = model!.getLanguageId() as Language;
     const source_code = editorInstance!.getValue();
@@ -295,11 +288,18 @@ export function RecorderEditor() {
       language_id,
       source_code: base64SourceCode,
     };
-    consoleApi.getOutput(judge0)!.then((response) => {
-      const output = decodeURIComponent(window.atob(response.data.output));
-      setConsoleOutput(output);
-      handleConsoleLogOutput(output, Date.now());
-    });
+    consoleApi
+      .getOutput(judge0)!
+      .then((response) => {
+        const output = decodeURIComponent(window.atob(response.data.output));
+        setConsoleOutput(output);
+        handleConsoleLogOutput(output, Date.now());
+        setIsConsoleLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error getting console output from Judge0', error);
+        setIsConsoleLoading(false);
+      });
   }
 
   return (
@@ -357,8 +357,9 @@ export function RecorderEditor() {
               <button
                 className="absolute bottom-2 right-2 border-white border rounded-sm p-2 bg-slate-500 hover:bg-slate-500/50 "
                 onClick={handleJudge0}
+                disabled={isConsoleLoading}
               >
-                Compile & Execute
+                {isConsoleLoading ? 'Loading...' : 'Compile & Execute'}
               </button>
               <button
                 className="absolute top-2 right-2 border-white border text-sm rounded-md px-1 bg-slate-500 hover:bg-slate-500/50"
