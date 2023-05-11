@@ -14,7 +14,7 @@ interface DocsPageProps {}
 const DocsPage: React.FC<DocsPageProps> = ({}) => {
   return (
     <div className="bg-bg-pri min-h-screen">
-    <TopNavBar/>
+    <TopNavBar showDashboard={true}/>
       <div className=" h-min-screen text-white flex flex-col items-start ">
         <div className="!font-title text-6xl ml-20 my-10 pb-10 flex items-center bg-gradient-to-r from-bg-sec via-white to-bg-alt text-transparent bg-clip-text">Getting Started</div>
         <div className="mx-20 !stroke-gray-200 !stroke-2 !text-gray-200">
@@ -77,7 +77,7 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography className="!text-2xl text-gray-200 h-20 flex items-center">Immersive Playback Experience</Typography>
+              <Typography className="!text-2xl text-gray-200 h-20 flex items-center">Using the Interactive Player</Typography>
             </AccordionSummary>
             <AccordionDetails>
             <Typography className="!font-title !font-medium">

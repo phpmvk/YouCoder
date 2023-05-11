@@ -95,7 +95,6 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
       {showLoading && <Loading />}
       <div className='bg-bg-pri h-screen w-full flex overflow-hidden'>
         <div className='bg-bg-pri w-1/3 min-w-[300px] h-full flex items-center justify-center mx-6'>
-          {/* <div className='bg-bg-alt w-[22vw] h-[50vh] max-w-l flex flex-col items-center justify-center rounded-lg'> */}
             <div className='absolute top-20 z-20 text-5xl max-lg:mx-auto ml:24 flex items-center mx-12 font-title'>
               <span className='text-white'>You</span>
               &nbsp;
@@ -128,7 +127,6 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
                 </span>
               </button>
             </div>
-          {/* </div> */}
         </div>
         <div className='w-2/3 min-w-[400px]'>
           <LoginArt />

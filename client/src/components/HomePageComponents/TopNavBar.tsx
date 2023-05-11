@@ -222,12 +222,14 @@ function TopNavBar({
 
             {/* Conditionally render the Dashboard button */}
             {showDashboard && (
+              <Link to='/dashboard'>
               <Button
                 className='hover:!underline'
                 color='inherit'
               >
                 Dashboard
               </Button>
+              </Link>
             )}
             {showFeatures && (
               <Button
@@ -245,12 +247,14 @@ function TopNavBar({
                 Examples
               </Button>
             )}
+            <Link to='/docs'>
             <Button
               className='hover:!underline hover:!underline-offset-8'
               color='inherit'
             >
               Docs
-            </Button>
+          </Button>
+          </Link>
           </Box>
           <Box>
             {loggedIn ? (
