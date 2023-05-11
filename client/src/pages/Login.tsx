@@ -80,7 +80,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
         //--------------------------------------[here]
         console.log(error);
         setShowError(true);
-        navigate('/*');
+        
       })
       .finally(() => {
         setAuthing(false);
@@ -91,7 +91,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
 
   return (
     <>
-    {showError && !showLoading && <ErrorBackend />}
+    {/* {showError && !showLoading && <ErrorBackend />} */}
       {showLoading && <Loading />}
       <div className='bg-bg-pri h-screen w-full flex overflow-hidden'>
         <div className='bg-bg-pri w-1/2 h-full flex items-center justify-center ml-3'>

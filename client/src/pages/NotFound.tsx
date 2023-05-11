@@ -1,5 +1,6 @@
 import TopNavBar from "../components/HomePageComponents/TopNavBar";
 import Footer from "../components/HomePageComponents/Footer";
+
 const NotFoundPage = () => {
   return (
     <>
