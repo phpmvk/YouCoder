@@ -75,6 +75,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
         navigate('/dashboard');
       })
       .catch((error) => {
+        // error handling
         console.log(error);
         setAuthing(false);
         setShowLoading(false);
