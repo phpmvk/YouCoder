@@ -6,9 +6,7 @@ dotenv.config()
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { PORT } from './config';
-import usersRouter from './routes/users.router'
-import codeExecutionRouter from './routes/code-execution.router'
-import recordingsRouter from './routes/recordings.router'
+import mainRouter from './routes/index'
 
 const app = express();
 
@@ -18,9 +16,7 @@ app
     origin: "*"
   }))
   .use(express.json())
-  .use(usersRouter)
-  .use(recordingsRouter)
-  .use(codeExecutionRouter)
+  .use(mainRouter)
   .use((_, res: Response) => {
     res.status(404).send({error: 'The endpoint requested does not exist'})
   })
