@@ -313,11 +313,17 @@ export function PlaybackEditor() {
     const model = editorInstance!.getModel();
     const language = model!.getLanguageId() as Language;
     const source_code = editorInstance!.getValue();
+    const base64SourceCode = window.btoa(encodeURIComponent(source_code));
     const language_id = getLanguageId(language)!;
 
-    const judge0: CodeToExecute = { language_id, source_code };
+    const judge0: CodeToExecute = {
+      language_id,
+      source_code: base64SourceCode,
+    };
     consoleApi.getOutput(judge0)!.then((response) => {
-      setStudentConsoleOutput(response.data.output);
+      const output = decodeURIComponent(window.atob(response.data.output));
+
+      setStudentConsoleOutput(output);
     });
   }
 
