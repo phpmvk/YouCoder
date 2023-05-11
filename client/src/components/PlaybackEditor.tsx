@@ -18,6 +18,9 @@ export function PlaybackEditor() {
   const [consoleOutput, setConsoleOutput] = useState('');
   const [editorLanguage, setEditorLanguage] = useState('');
 
+  const [currentTime, setCurrentTime] = useState('00:00');
+  const [totalTime, setTotalTime] = useState('00:00');
+
   //editor playback states
   const [importedActions, setImportedActions] =
     useState<RecorderActions | null>(null);
@@ -50,6 +53,10 @@ export function PlaybackEditor() {
       audioElement.src = audioSource;
     }
   }, [audioSource, audioElement]);
+
+  useEffect(() => {
+    setCurrentTime(formatTime(sliderValue));
+  }, [sliderValue]);
 
   const handleEditorDidMount = (
     editor: editor.IStandaloneCodeEditor,
@@ -273,6 +280,7 @@ export function PlaybackEditor() {
         const arrayBuffer = await response.arrayBuffer();
         const decodedData = await audioContext.decodeAudioData(arrayBuffer);
         setAudioDuration(decodedData.duration * 1000);
+        setTotalTime(formatTime(decodedData.duration * 1000));
 
         // Set the audio source
         setAudioSource(recordedAudioURL);
@@ -313,6 +321,27 @@ export function PlaybackEditor() {
     setEditorLanguage(language);
   }
 
+  function formatTime(ms: number): string {
+    const totalSeconds = Math.floor(ms / 1000);
+    const totalMinutes = Math.floor(totalSeconds / 60);
+    const totalHours = Math.floor(totalMinutes / 60);
+
+    const displaySeconds = totalSeconds % 60;
+    const displayMinutes = totalMinutes % 60;
+    const displayHours = totalHours;
+
+    const displaySecondsString =
+      displaySeconds < 10 ? `0${displaySeconds}` : `${displaySeconds}`;
+    const displayMinutesString =
+      displayMinutes < 10 ? `0${displayMinutes}` : `${displayMinutes}`;
+    const displayHoursString =
+      displayHours < 10 ? `0${displayHours}` : `${displayHours}`;
+
+    return displayHours > 0
+      ? `${displayHoursString}:${displayMinutesString}:${displaySecondsString}`
+      : `${displayMinutesString}:${displaySecondsString}`;
+  }
+
   return (
     <>
       <audio
@@ -321,14 +350,14 @@ export function PlaybackEditor() {
         }}
       ></audio>
       <h1>{editorLanguage}</h1>
-      <div className='flex w-full h-[500px] px-40'>
+      <div className="flex w-full h-[500px] px-40">
         <Allotment>
           <Allotment.Pane minSize={600}>
             <Editor
-              height='500px'
-              defaultLanguage='javascript'
-              defaultValue=''
-              theme='vs-dark'
+              height="500px"
+              defaultLanguage="javascript"
+              defaultValue=""
+              theme="vs-dark"
               options={{
                 wordWrap: 'on',
                 readOnly: ignoreUserInputs,
@@ -336,17 +365,11 @@ export function PlaybackEditor() {
               onMount={handleEditorDidMount}
             />
           </Allotment.Pane>
-          <Allotment.Pane
-            minSize={100}
-            preferredSize={300}
-          >
-            <div className='border w-full h-[50%] border-[#1e1e1e]'>
-              <Terminal
-                terminalName='Teachers output'
-                output={consoleOutput}
-              />
+          <Allotment.Pane minSize={100} preferredSize={300}>
+            <div className="border w-full h-[50%] border-[#1e1e1e]">
+              <Terminal terminalName="Teachers output" output={consoleOutput} />
             </div>
-            <div className='border w-full h-[50%] border-[#1e1e1e]'>
+            <div className="border w-full h-[50%] border-[#1e1e1e]">
               <Terminal output={'hello'} />
             </div>
           </Allotment.Pane>
@@ -355,14 +378,10 @@ export function PlaybackEditor() {
 
       <br></br>
       <br></br>
-      <input
-        className='mx-4'
-        type='file'
-        onChange={handleFileInput}
-      />
+      <input className="mx-4" type="file" onChange={handleFileInput} />
       {playbackState.status === 'stopped' && (
         <button
-          className='p-2 bg-slate-500 rounded-sm'
+          className="p-2 bg-slate-500 rounded-sm"
           onClick={handleStartPlayback}
         >
           Start Playback
@@ -370,29 +389,26 @@ export function PlaybackEditor() {
       )}
 
       {playbackState.status === 'playing' && (
-        <button
-          className='p-2 bg-slate-500 mx-4'
-          onClick={handlePausePlayback}
-        >
+        <button className="p-2 bg-slate-500 mx-4" onClick={handlePausePlayback}>
           Pause Playback
         </button>
       )}
 
       {playbackState.status === 'paused' && (
-        <button
-          className='p-2 bg-slate-500'
-          onClick={handleResumePlayback}
-        >
+        <button className="p-2 bg-slate-500" onClick={handleResumePlayback}>
           Resume Playback
         </button>
       )}
 
-      {/* <input className="mx-4" type="file" onChange={handleAudioFileInput} /> */}
       <br />
       <br />
+      <div className="text-white">
+        {formatTime(sliderValue)} / {formatTime(audioDuration)}
+      </div>
+
       <ReactSlider
-        className='horizontal-slider'
-        thumbClassName='slider-thumb'
+        className="horizontal-slider"
+        thumbClassName="slider-thumb"
         value={sliderValue}
         step={0.001}
         max={audioDuration}
