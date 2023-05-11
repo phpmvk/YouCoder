@@ -21,7 +21,6 @@ export function RecorderEditor() {
   const [monacoInstance, setMonacoInstance] = useState<typeof monaco | null>(
     null
   );
-  const [output, setOutput] = useState<string[]>([]);
 
   const [audioRecorder, setAudioRecorder] = useState<RecordRTC | null>(null);
   const [recorderState, setRecorderState] = useState<
@@ -43,11 +42,13 @@ export function RecorderEditor() {
   });
 
   function handleConsoleLogOutput(text: string, timestamp: number) {
-    recorderActions.current.consoleLogOutputs.push({
-      text,
-      timestamp,
-      playbackTimestamp: 0,
-    });
+    if (recorderState !== 'stopped') {
+      recorderActions.current.consoleLogOutputs.push({
+        text,
+        timestamp,
+        playbackTimestamp: 0,
+      });
+    }
   }
 
   function getLanguageId(language: Language): string | null {
@@ -280,12 +281,17 @@ export function RecorderEditor() {
     const model = editorInstance!.getModel();
     const language = model!.getLanguageId() as Language;
     const source_code = editorInstance!.getValue();
+    const base64SourceCode = window.btoa(encodeURIComponent(source_code));
     const language_id = getLanguageId(language)!;
 
-    const judge0: CodeToExecute = { language_id, source_code };
+    const judge0: CodeToExecute = {
+      language_id,
+      source_code: base64SourceCode,
+    };
     consoleApi.getOutput(judge0)!.then((response) => {
-      setConsoleOutput(response.data.output);
-      handleConsoleLogOutput(response.data.output, Date.now());
+      const output = decodeURIComponent(window.atob(response.data.output));
+      setConsoleOutput(output);
+      handleConsoleLogOutput(output, Date.now());
     });
   }
 
@@ -296,7 +302,7 @@ export function RecorderEditor() {
           className="block mb-2 text-sm font-medium text-white mr-3"
           htmlFor="language"
         >
-          Choose a language:
+          Choose a language to record in:
         </label>
         <select
           id="language"
@@ -339,12 +345,10 @@ export function RecorderEditor() {
               </button>
               <button
                 className="absolute top-2 right-2 border-white border text-sm rounded-md px-1 bg-slate-500 hover:bg-slate-500/50"
-                onClick={() => setOutput([])}
+                onClick={() => setConsoleOutput('')}
               >
                 clear
               </button>
-              <button onClick={handleJudge0}>Compile & Execute</button>
-              <h1>{consoleOutput}</h1>
 
               <Terminal output={consoleOutput} />
             </div>
