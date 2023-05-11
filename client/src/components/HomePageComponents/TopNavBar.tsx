@@ -211,7 +211,7 @@ function TopNavBar({
             {/* Conditionally render the Create Recording button */}
             {showCreateRecording && (
               <Button
-                className='w-full h-full t-[10vw] border-solid !border-2 !border-red-700 hover:!bg-red-700/20 !text-white !rounded-full !text-l !mr-6'
+                className='w-full h-full t-[10vw] border-solid !border-2 !border-red-700 hover:!bg-red-700/20 !text-white !rounded-full !text-l !mr-6 whitespace-nowrap'
                 color='inherit'
                 variant='outlined'
               >
@@ -256,7 +256,7 @@ function TopNavBar({
             {loggedIn ? (
               <>
                 <Button
-                  className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto'
+                  className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto whitespace-nowrap'
                   variant='outlined'
                   onClick={logOut}
                 >
@@ -268,7 +268,7 @@ function TopNavBar({
                 <Link to='/login'>
                   <Button
                     // className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto'
-                    className='!border-bg-alt !text-bg-pri hover:!bg-bg-pri hover:!text-bg-alt !h-8 !my-auto !bg-bg-alt'
+                    className='!border-bg-alt !text-bg-pri hover:!bg-bg-pri hover:!text-bg-alt !h-8 !my-auto !bg-bg-alt '
                     variant='outlined'
                   >
                     Sign In
