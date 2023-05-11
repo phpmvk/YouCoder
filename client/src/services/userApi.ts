@@ -38,6 +38,32 @@ class UserApiService {
     });
   }
 
+  // async creatorLogin2(): Promise<AxiosResponse<UserLogin>> {
+  //   try {
+  //     const response = await protectedHttp.post<UserLogin>(
+  //       `/users/creator/login`
+  //     );
+  //     return { response, error: null };
+  //   } catch (e) {
+  //     const error = e as AxiosError;
+  //     console.log(error);
+  //     return { response: null, error };
+  //   }
+  // }
+  /*
+  async function xxxxxx (){
+  const user = await creatorLogin2()
+  if (user.error) {
+
+  } else {
+
+  }
+
+
+  }
+
+
+  */
   creatorUpdate(
     data: typeof rootUser
   ): Promise<AxiosResponse<typeof rootUser>> | undefined {
