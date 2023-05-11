@@ -60,19 +60,19 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 interface TopNavBarProps {
-  showSearch: boolean;
-  showCreateRecording: boolean;
-  showDashboard: boolean;
-  showFeatures: boolean;
-  showExamples: boolean;
+  showSearch?: boolean;
+  showCreateRecording?: boolean;
+  showDashboard?: boolean;
+  showFeatures?: boolean;
+  showExamples?: boolean;
 }
 
 function TopNavBar({
-  showSearch,
-  showCreateRecording,
-  showDashboard,
-  showFeatures,
-  showExamples,
+  showSearch = false,
+  showCreateRecording = false,
+  showDashboard = false,
+  showFeatures = false,
+  showExamples = false,
 }: TopNavBarProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =

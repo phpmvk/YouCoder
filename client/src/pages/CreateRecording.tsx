@@ -4,7 +4,7 @@ import TopNavBar from '../components/HomePageComponents/TopNavBar';
 
 interface RecordingPageProps {}
 
-const RecordingPage: React.FC<RecordingPageProps> = ({}) => {
+const CreateRecordingPage: React.FC<RecordingPageProps> = ({}) => {
   // create a useEffect if there is a token in local storage and get the user data from the backend and update the store
   return (
     <>
@@ -26,4 +26,4 @@ const RecordingPage: React.FC<RecordingPageProps> = ({}) => {
   );
 };
 
-export default RecordingPage;
+export default CreateRecordingPage;
