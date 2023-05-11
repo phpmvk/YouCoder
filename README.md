@@ -32,11 +32,11 @@ Note: **Do not commit the `.env` file to version control!** It will likely conta
 
 `npm run start:dev`
 
-- an alternative is to run an optimized version of nodemon for typescript (this is the only command needed):
+- Runs npm run build then starts the application in development using nodemon and ts-node
 
-``tsnd --respawn index.ts`
+`tsnd --respawn index.ts`
 
-- Starts the application in development using nodemon and ts-node
+- an alternative is to run an optimized version of nodemon for typescript (this is the only command needed)
 
 `npm run start`
 

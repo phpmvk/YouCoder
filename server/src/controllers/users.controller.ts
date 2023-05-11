@@ -9,6 +9,20 @@ export async function creatorLogin(req: Request, res: Response) {
       where: {
         uid: req.body.user.uid,
       },
+      include: {
+        recordings: {
+          include: {
+            creator: {
+              select: {
+                picture: true
+              }
+            }
+          },
+          orderBy: {
+            created_at: 'desc'
+          }
+        }
+      }
     });
     if (user) {
       return res.status(200).send({ user: user });
@@ -18,8 +32,12 @@ export async function creatorLogin(req: Request, res: Response) {
           uid: req.body.user.uid,
           display_name: req.body.user.name,
           email: req.body.user.email!,
+          picture: req.body.user.picture,
           join_date: new Date(Date.now()),
         },
+        include: {
+          recordings: true
+        }
       });
       res.status(201).send({ user: newUser });
     }
@@ -35,22 +53,15 @@ export function updateCreator(req: Request, res: Response) {
 }
 
 export async function deleteCreator(req: Request, res: Response) {
+  console.log('Users - DELETE received - deleteCreator');
   try {
-    const { creatorid } = req.params;
-    if (!creatorid) res.status(400).send({ error: 'Bad request' });
-
-    try {
       await prisma.creator.delete({
-        where: {
-          uid: creatorid,
-        },
-      });
-      return res.status(204).send();
-    } catch (err) {
-      return res.status(400).send({ error: 'User not found' });
-    }
+      where: {
+        uid: req.body.user.uid,
+      },
+    });
+    return res.status(204).send();
   } catch (err) {
-    console.error(err);
-    res.status(500).send({ error: 'Internal server error' });
+    return res.status(400).send({ error: 'User not found' });
   }
 }

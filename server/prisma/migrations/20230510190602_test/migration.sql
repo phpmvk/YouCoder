@@ -4,6 +4,7 @@ CREATE TABLE "Creator" (
     "display_name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "join_date" TIMESTAMP(3) NOT NULL,
+    "picture" TEXT NOT NULL,
 
     CONSTRAINT "Creator_pkey" PRIMARY KEY ("uid")
 );
@@ -29,8 +30,7 @@ CREATE TABLE "Recording" (
     "description" TEXT,
     "published" BOOLEAN NOT NULL DEFAULT false,
     "language" TEXT NOT NULL,
-    "recorder_actions" JSONB NOT NULL,
-    "audio_link" TEXT NOT NULL,
+    "recording_link" TEXT NOT NULL,
     "created_at" TEXT NOT NULL,
     "full_link" TEXT,
     "iframe_link" TEXT,
@@ -42,4 +42,4 @@ CREATE TABLE "Recording" (
 CREATE UNIQUE INDEX "Creator_uid_key" ON "Creator"("uid");
 
 -- AddForeignKey
-ALTER TABLE "Recording" ADD CONSTRAINT "Recording_creator_uid_fkey" FOREIGN KEY ("creator_uid") REFERENCES "Creator"("uid") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Recording" ADD CONSTRAINT "Recording_creator_uid_fkey" FOREIGN KEY ("creator_uid") REFERENCES "Creator"("uid") ON DELETE CASCADE ON UPDATE CASCADE;

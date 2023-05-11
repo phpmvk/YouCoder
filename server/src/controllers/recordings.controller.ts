@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from '@prisma/client'
+import validator from 'validator'
+
 const prisma = new PrismaClient()
 
 export async function getRecordingById(req: Request, res: Response) {
@@ -7,9 +9,18 @@ export async function getRecordingById(req: Request, res: Response) {
   try {
     const recordingId = req.params.recordingid;
 
+    validateRecordingId(recordingId)
+
     const recording = await prisma.recording.findUnique({
       where: {
         recording_id: recordingId
+      },
+      include: {
+        creator: {
+          select: {
+            picture: true
+          }
+        }
       }
     })
 
@@ -20,8 +31,11 @@ export async function getRecordingById(req: Request, res: Response) {
     res.status(200).send(recording)
 
   } catch (err) {
-    console.error(err)
-    res.status(500).send({ message: 'Internal server error'})
+    if (err instanceof InvalidRecordingError) {
+      res.status(400).send({ message: err.message})
+    } else {
+      res.status(500).send({ message: 'Internal server error'})
+    }
   }
 }
 
@@ -32,9 +46,8 @@ export async function uploadRecording(req: Request, res: Response) {
     thumbnail_link,
     title,
     description,
-    published,
     language,
-    recorder_actions,
+    recording_link,
     audio_link,
     created_at,
     full_link,
@@ -46,9 +59,8 @@ export async function uploadRecording(req: Request, res: Response) {
     !thumbnail_link || typeof thumbnail_link !== 'string' ||
     !title || typeof title !== 'string' ||
     !description || typeof description !== 'string' ||
-    !published || typeof published !== 'boolean' ||
     !language || typeof language !== 'string' ||
-    !recorder_actions || typeof recorder_actions !== 'object' || typeof recorder_actions === null ||
+    !recording_link || typeof recording_link !== 'string' ||
     !audio_link || typeof audio_link !== 'string' ||
     !created_at || typeof created_at !== 'string' ||
     !full_link || typeof full_link !== 'string' ||
@@ -68,13 +80,18 @@ export async function uploadRecording(req: Request, res: Response) {
         thumbnail_link: thumbnail_link,
         title: title,
         description: description,
-        published: published,
         language: language,
-        recorder_actions: recorder_actions,
-        audio_link: audio_link,
+        recording_link: recording_link,
         created_at: (new Date(Date.now())).toString(),
         full_link: full_link,
         iframe_link: iframe_link,
+      },
+      include: {
+        creator: {
+          select: {
+            picture: true
+          }
+        }
       }
     })
     res.status(201).send(newRecording)
@@ -87,18 +104,27 @@ export async function uploadRecording(req: Request, res: Response) {
 export async function updateRecording(req: Request, res: Response) {
   console.log('Recordings - PATCH received - updateRecording')
   const recordingId = req.params.recordingid
-  if (!recordingId) {
-    return res.status(400).send({ message: 'Unable to update resource' })
-  }
-  
-  const dataToUpdate: Record<string, string> = {};
 
-  const fieldsToUpdate: string[] = ['recording_id', 'creator', 'creator_uid', 'thumbnail_link', 'title', 'description', 'published', 'language', 'recorder_actions', 'audio_link', 'created_at', 'full_link', 'iframe_link']
+  validateRecordingId(recordingId)
+  
+  const dataToUpdate: Record<string, string | boolean> = {};
+  
+  const fieldsToUpdate: string[] = ['thumbnail_link', 'title', 'description', 'published', 'language', 'full_link', 'iframe_link']
+  let invalidFields: string[] = [];
   fieldsToUpdate.forEach((field: string) => {
-    if (req.body[field]) {
+    if (req.body[field] !== undefined) {
+      if (field !== 'published' && typeof req.body[field] !== 'string') {
+        invalidFields.push(field)
+      }
+      if (field === 'published' && typeof req.body[field] !== 'boolean') {
+        invalidFields.push(field)
+      }
       dataToUpdate[field] = req.body[field]
     }
   })
+  if (invalidFields.length > 0) {
+    return res.status(400).send({ message: 'Type of field to update error'})
+  }
 
   if (Object.keys(dataToUpdate).length === 0) {
     return res.status(400).send({ message: 'Error updating resource: no fields to update provided' })
@@ -123,6 +149,13 @@ export async function updateRecording(req: Request, res: Response) {
       },
       orderBy: {
         created_at: 'desc'
+      },
+      include: {
+        creator: {
+          select: {
+            picture: true
+          }
+        }
       }
     })
     if (!allUserRecordings) {
@@ -130,8 +163,11 @@ export async function updateRecording(req: Request, res: Response) {
     }
     res.status(200).send(allUserRecordings)
   } catch (err) {
-    console.error(err);
-    res.status(500).send({ message: 'Internal server error'})
+    if (err instanceof InvalidRecordingError) {
+      res.status(400).send({ message: err.message})
+    } else {
+      res.status(500).send({ message: 'Internal server error' })
+    }
   }
 }
 
@@ -140,16 +176,41 @@ export async function deleteRecording(req: Request, res: Response) {
   try {
     const recordingId = req.params.recordingid;
   
+    validateRecordingId(recordingId);
+
+    const recording = await prisma.recording.findUnique({
+      where: {
+        recording_id: recordingId
+      }
+    })
+
+    if (!recording) {
+      return res.status(404).send({ message: 'Resource not found'})
+    }
+
+    if (recording.creator_uid !== req.body.user.uid) {
+      return res.status(403).send({ message: 'Not authorized'})
+    }
+
     const deletedRecording = await prisma.recording.delete({
       where: {
         recording_id: recordingId
       }
     })
-    console.log(deletedRecording)
-    res.status(204).send({deleteRecording})
+    res.status(204).send()
   } catch (err) {
-    console.error(err)
-    res.status(404).send({ message: 'Resource not found'})
+    if (err instanceof InvalidRecordingError) {
+      res.status(400).send({ message: err.message})
+    } else {
+      res.status(500).send({ message: 'Internal server error'})
+    }
   }
-
 }
+
+function validateRecordingId(recordingId: string) {
+  if (!validator.isUUID(recordingId)) {
+    throw new InvalidRecordingError('Invalid recording id parameter')
+  }
+}
+
+class InvalidRecordingError extends Error {}

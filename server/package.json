@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start:dev": "cd ./build && npx nodemon",
+    "start:dev": "npm run build && cd ./build && npx nodemon",
     "build": "rimraf ./build && cd src && npx tsc",
     "start": "npm run build && node build/index.js",
     "test": "jest"
@@ -8,6 +8,7 @@
   "dependencies": {
     "@prisma/client": "^4.13.0",
     "@types/jsonwebtoken": "^9.0.2",
+    "@types/validator": "^13.7.17",
     "axios": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
@@ -16,7 +17,8 @@
     "firebase-admin": "^11.8.0",
     "jsonwebtoken": "^9.0.0",
     "ts-node": "^10.9.1",
-    "ts-node-dev": "^2.0.0"
+    "ts-node-dev": "^2.0.0",
+    "validator": "^13.9.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
