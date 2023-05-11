@@ -5,10 +5,12 @@ import * as monaco from 'monaco-editor';
 import ReactSlider from 'react-slider';
 import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
+
 import Terminal from './TerminalOutput';
 import { loadYCRFile } from '../utils/ycrUtils';
 import { CodeToExecute } from '../types/Console';
 import consoleApi from '../services/consoleApi';
+import { formatTime, getLanguageId } from '../utils/editorUtils';
 
 export function PlaybackEditor() {
   const [editorInstance, setEditorInstance] =
@@ -62,16 +64,6 @@ export function PlaybackEditor() {
     setEditorInstance(editor);
     setMonacoInstance(monaco);
   };
-
-  // Set current theme based on if darkmode is on or not
-
-  // const toggleTheme = () => {
-  //   if (darkMode) {
-  //     monacoInstance!.editor.setTheme('vs-dark');
-  //   } else {
-  //     monacoInstance!.editor.setTheme('vs-light');
-  //   }
-  // };
 
   function applyChange(
     range: ChangeRange,
@@ -180,7 +172,6 @@ export function PlaybackEditor() {
   //playback handlers
   function handleStartPlayback() {
     if (importedActions) {
-      console.log(importedActions);
       getCurrentLanguage();
       editorInstance!.setValue('');
       startPlayback(importedActions.editorActions, editorInstance!);
@@ -235,7 +226,22 @@ export function PlaybackEditor() {
   function startSliderInterval() {
     const intervalId = setInterval(() => {
       if (playbackStateRef.current.status === 'playing') {
-        setSliderValue((prevSliderValue) => prevSliderValue + 100);
+        setSliderValue((prevSliderValue) => {
+          // Check if the value has reached audioDuration
+          if (prevSliderValue >= audioDuration) {
+            // When the maximum value is reached, stop the interval
+            clearInterval(intervalId);
+            // Stop audio playback
+            audioElement?.pause();
+            // Update the playback state
+            setPlaybackState({
+              status: 'stopped',
+              currentPosition: audioDuration,
+            });
+            return audioDuration; // Set sliderValue to audioDuration
+          }
+          return prevSliderValue + 100;
+        });
       } else {
         clearInterval(intervalId);
       }
@@ -244,30 +250,11 @@ export function PlaybackEditor() {
     return intervalId;
   }
 
-  // function handleFileInput(event: React.ChangeEvent<HTMLInputElement>) {
-  //   const file = event.target.files![0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = (e: ProgressEvent<FileReader>) => {
-  //       const fileContents = e.target!.result as string;
-  //       const importedRecorderActions = JSON.parse(fileContents);
-
-  //       setImportedActions(importedRecorderActions);
-
-  //       editorInstance!.setValue('');
-  //       // startPlayback(importedRecorderActions.editorActions, editorInstance!);
-  //     };
-  //     reader.readAsText(file);
-  //   }
-  // }
-
   async function handleFileInput(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files![0];
     if (file && file.name.endsWith('.ycr')) {
       try {
         const { recorderActions, recordedAudioURL } = await loadYCRFile(file);
-        // Use the extracted data (recorderActions and recordedAudioURL) as needed
-        console.log(recorderActions, recordedAudioURL);
 
         setImportedActions(recorderActions);
 
@@ -288,23 +275,6 @@ export function PlaybackEditor() {
     }
   }
 
-  // function handleAudioFileInput(event: React.ChangeEvent<HTMLInputElement>) {
-  //   const file = event.target.files![0];
-  //   if (file) {
-  //     const fileReader = new FileReader();
-  //     fileReader.onload = () => {
-  //       const arrayBuffer = fileReader.result as ArrayBuffer;
-  //       const audioContext = new AudioContext();
-  //       audioContext.decodeAudioData(arrayBuffer).then((decodedData) => {
-  //         setAudioDuration(decodedData.duration * 1000);
-  //       });
-  //     };
-  //     fileReader.readAsArrayBuffer(file);
-  //     const url = URL.createObjectURL(file);
-  //     setAudioSource(url);
-  //   }
-  // }
-
   function updateAudioCurrentTime(scrubberPosition: number) {
     if (audioElement) {
       audioElement.currentTime = scrubberPosition / 1000;
@@ -317,51 +287,22 @@ export function PlaybackEditor() {
     setEditorLanguage(language);
   }
 
-  function formatTime(ms: number): string {
-    const totalSeconds = Math.floor(ms / 1000);
-    const totalMinutes = Math.floor(totalSeconds / 60);
-    const totalHours = Math.floor(totalMinutes / 60);
-
-    const displaySeconds = totalSeconds % 60;
-    const displayMinutes = totalMinutes % 60;
-    const displayHours = totalHours;
-
-    const displaySecondsString =
-      displaySeconds < 10 ? `0${displaySeconds}` : `${displaySeconds}`;
-    const displayMinutesString =
-      displayMinutes < 10 ? `0${displayMinutes}` : `${displayMinutes}`;
-    const displayHoursString =
-      displayHours < 10 ? `0${displayHours}` : `${displayHours}`;
-
-    return displayHours > 0
-      ? `${displayHoursString}:${displayMinutesString}:${displaySecondsString}`
-      : `${displayMinutesString}:${displaySecondsString}`;
-  }
-
   function handleJudge0() {
     const model = editorInstance!.getModel();
     const language = model!.getLanguageId() as Language;
     const source_code = editorInstance!.getValue();
+    const base64SourceCode = window.btoa(source_code);
     const language_id = getLanguageId(language)!;
 
-    const judge0: CodeToExecute = { language_id, source_code };
-    consoleApi.getOutput(judge0)!.then((response) => {
-      setStudentConsoleOutput(response.data.output);
-    });
-  }
-
-  function getLanguageId(language: Language): string | null {
-    const languageMapping: Record<Language, string> = {
-      javascript: '93',
-      python: '70',
-      java: '91',
-      csharp: '51',
-      cpp: '76',
-      ruby: '72',
-      go: '95',
+    const judge0: CodeToExecute = {
+      language_id,
+      source_code: base64SourceCode,
     };
+    consoleApi.getOutput(judge0)!.then((response) => {
+      const output = window.atob(response.data.output);
 
-    return languageMapping[language];
+      setStudentConsoleOutput(output);
+    });
   }
 
   return (

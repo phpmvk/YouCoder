@@ -34,13 +34,13 @@ class RecordingApiService {
   // }
 
   postRecording(
-    data: string[]
+    data: EditorRecording
     // data: RecorderActions
   ): Promise<AxiosResponse<Recording[]>> | undefined {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await protectedHttp.post<Recording[]>(
-          `/recording/create`,
+          `/recording/upload`,
           data
         );
         resolve(response);

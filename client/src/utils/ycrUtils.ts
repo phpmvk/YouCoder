@@ -22,7 +22,7 @@ export async function saveYCRFile(
   const ycrBlob = await zip.generateAsync({ type: 'blob' });
   const fileRef = ref(
     storage,
-    `recordings/${userId}/recording_${new Date(Date.now())}`
+    `recordings/${userId}/recording_${new Date(Date.now()).toDateString()}.ycr`
   );
   await uploadBytes(fileRef, ycrBlob);
   const fileUrl = await getDownloadURL(fileRef);
