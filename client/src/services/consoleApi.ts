@@ -1,5 +1,5 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
-import { CodeToExecute } from '../types/Console';
+import { CodeToExecute } from '../types/console';
 import { protectedHttp } from './baseUrl';
 
 class ConsoleApiService {
