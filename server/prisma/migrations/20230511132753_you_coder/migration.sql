@@ -23,7 +23,7 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "Recording" (
-    "recording_id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
+    "recording_id" TEXT NOT NULL,
     "creator_uid" TEXT NOT NULL,
     "thumbnail_link" TEXT,
     "title" TEXT NOT NULL,

@@ -26,12 +26,12 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
   const [showLoading, setShowLoading] = useState(false);
   const [showError, setShowError] = useState(false)
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      login();
-    }
-  }, []);
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   if (token) {
+  //     login();
+  //   }
+  // }, []);
 
   const signInWithGoogle = async () => {
     setAuthing(true);
