@@ -321,14 +321,14 @@ export function PlaybackEditor() {
         }}
       ></audio>
       <h1>{editorLanguage}</h1>
-      <div className="flex max-w-[80vw] h-[500px] px-40">
+      <div className='flex w-full h-[500px] px-40'>
         <Allotment>
           <Allotment.Pane minSize={600}>
             <Editor
-              height="500px"
-              defaultLanguage="javascript"
-              defaultValue=""
-              theme="vs-dark"
+              height='500px'
+              defaultLanguage='javascript'
+              defaultValue=''
+              theme='vs-dark'
               options={{
                 wordWrap: 'on',
                 readOnly: ignoreUserInputs,
@@ -336,9 +336,18 @@ export function PlaybackEditor() {
               onMount={handleEditorDidMount}
             />
           </Allotment.Pane>
-          <Allotment.Pane minSize={100} preferredSize={300}>
-            <div className="border w-full h-full border-[#1e1e1e]">
-              <Terminal output={consoleOutput} />
+          <Allotment.Pane
+            minSize={100}
+            preferredSize={300}
+          >
+            <div className='border w-full h-[50%] border-[#1e1e1e]'>
+              <Terminal
+                terminalName='Teachers output'
+                output={consoleOutput}
+              />
+            </div>
+            <div className='border w-full h-[50%] border-[#1e1e1e]'>
+              <Terminal output={'hello'} />
             </div>
           </Allotment.Pane>
         </Allotment>
@@ -346,10 +355,14 @@ export function PlaybackEditor() {
 
       <br></br>
       <br></br>
-      <input className="mx-4" type="file" onChange={handleFileInput} />
+      <input
+        className='mx-4'
+        type='file'
+        onChange={handleFileInput}
+      />
       {playbackState.status === 'stopped' && (
         <button
-          className="p-2 bg-slate-500 rounded-sm"
+          className='p-2 bg-slate-500 rounded-sm'
           onClick={handleStartPlayback}
         >
           Start Playback
@@ -357,13 +370,19 @@ export function PlaybackEditor() {
       )}
 
       {playbackState.status === 'playing' && (
-        <button className="p-2 bg-slate-500 mx-4" onClick={handlePausePlayback}>
+        <button
+          className='p-2 bg-slate-500 mx-4'
+          onClick={handlePausePlayback}
+        >
           Pause Playback
         </button>
       )}
 
       {playbackState.status === 'paused' && (
-        <button className="p-2 bg-slate-500" onClick={handleResumePlayback}>
+        <button
+          className='p-2 bg-slate-500'
+          onClick={handleResumePlayback}
+        >
           Resume Playback
         </button>
       )}
@@ -372,8 +391,8 @@ export function PlaybackEditor() {
       <br />
       <br />
       <ReactSlider
-        className="horizontal-slider"
-        thumbClassName="slider-thumb"
+        className='horizontal-slider'
+        thumbClassName='slider-thumb'
         value={sliderValue}
         step={0.001}
         max={audioDuration}

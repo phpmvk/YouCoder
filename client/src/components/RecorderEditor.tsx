@@ -10,12 +10,17 @@ import { SaveRecordingModal } from './HomePageComponents/SaveRecordingModal';
 import { saveYCRFile } from '../utils/ycrUtils';
 import { useAppSelector } from '../redux/hooks';
 
+import { Allotment } from 'allotment';
+import 'allotment/dist/style.css';
+import Terminal from './TerminalOutput';
+
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
     useState<editor.IStandaloneCodeEditor | null>(null);
   const [monacoInstance, setMonacoInstance] = useState<typeof monaco | null>(
     null
   );
+  const [output, setOutput] = useState<string[]>([]);
 
   const [audioRecorder, setAudioRecorder] = useState<RecordRTC | null>(null);
   const [recorderState, setRecorderState] = useState<
@@ -213,7 +218,7 @@ export function RecorderEditor() {
       const json = JSON.stringify(recorderActions.current);
       const jsonBlob = new Blob([json], { type: 'application/json' });
 
-      const ycrFileUrl = await saveYCRFile(jsonBlob, audioBlob, user.uid);
+      const ycrFileUrl = await saveYCRFile(jsonBlob, audioBlob, user.uid!);
       console.log(user);
       console.log(ycrFileUrl);
       const model = editorInstance!.getModel();
@@ -279,47 +284,97 @@ export function RecorderEditor() {
 
   return (
     <>
-      <select onChange={handleLanguageChange}>
-        <option value="javascript">JavaScript</option>
-        <option value="python">Python</option>
-        <option value="java">Java</option>
-        <option value="csharp">C#</option>
-        <option value="cpp">C++</option>
-        <option value="ruby">Ruby</option>
-        <option value="go">Go</option>
-      </select>
-      <div className="flex max-w-full">
-        <div className="w-3/4">
-          <Editor
-            height="60vh"
-            defaultLanguage="javascript"
-            defaultValue=""
-            theme="vs-dark"
-            options={{
-              wordWrap: 'on',
-            }}
-            onChange={handleEditorChange}
-            onMount={handleEditorDidMount}
-          />
-        </div>
-        <div className="w-1/4">
-          <button onClick={handleJudge0}>Compile & Execute</button>
-          <h1>{consoleOutput}</h1>
-        </div>
+      <div className='flex items-center'>
+        <label
+          className='block mb-2 text-sm font-medium text-white mr-3'
+          htmlFor='language'
+        >
+          Choose a language:
+        </label>
+        <select
+          id='language'
+          onChange={handleLanguageChange}
+          className='border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3'
+        >
+          <option
+            selected
+            value='javascript'
+          >
+            JavaScript
+          </option>
+          <option value='python'>Python</option>
+          <option value='java'>Java</option>
+          <option value='csharp'>C#</option>
+          <option value='cpp'>C++</option>
+          <option value='ruby'>Ruby</option>
+          <option value='go'>Go</option>
+        </select>
+      </div>
+
+      <div className='flex w-full h-[500px] border border-white rounded-sm'>
+        <Allotment>
+          <Allotment.Pane minSize={500}>
+            <Editor
+              height='500px'
+              defaultLanguage='javascript'
+              defaultValue=''
+              theme='vs-dark'
+              options={{
+                wordWrap: 'on',
+                fontSize: 16,
+              }}
+              onChange={handleEditorChange}
+              onMount={handleEditorDidMount}
+            />
+          </Allotment.Pane>
+          <Allotment.Pane
+            minSize={180}
+            preferredSize={300}
+          >
+            <div className='border w-full h-full border-[#1e1e1e] text-white relative'>
+              <button
+                className='absolute bottom-2 right-2 border-white border rounded-sm p-2 bg-slate-500 hover:bg-slate-500/50 '
+                onClick={handleJudge0}
+              >
+                Compile & Execute
+              </button>
+              <button
+                className='absolute top-2 right-2 border-white border text-sm rounded-md px-1 bg-slate-500 hover:bg-slate-500/50'
+                onClick={() => setOutput([])}
+              >
+                clear
+              </button>
+              {/* <h1 id='console'></h1> */}
+              <button onClick={handleJudge0}>Compile & Execute</button>
+              <h1>{consoleOutput}</h1>
+
+              <Terminal output={consoleOutput} />
+            </div>
+          </Allotment.Pane>
+        </Allotment>
       </div>
 
       {recorderState === 'stopped' && (
-        <button className="p-2" onClick={handleStartRecording}>
+        <button
+          className='p-2'
+          onClick={handleStartRecording}
+        >
           Start Recording
         </button>
       )}
 
       {recorderState === 'recording' && (
         <>
-          <button className="p-2" onClick={handlePauseRecording}>
+          <button
+            className='p-2'
+            onClick={handlePauseRecording}
+          >
             Pause Recording
           </button>
-          <button className="p-2" onClick={handleEndRecording}>
+          <button
+            className='p-2'
+            onClick={handleEndRecording}
+          >
             End Recording
           </button>
         </>
@@ -327,16 +382,22 @@ export function RecorderEditor() {
 
       {recorderState === 'paused' && (
         <>
-          <button className="p-2" onClick={handleResumeRecording}>
+          <button
+            className='p-2'
+            onClick={handleResumeRecording}
+          >
             Resume Recording
           </button>
-          <button className="p-2" onClick={handleEndRecording}>
+          <button
+            className='p-2'
+            onClick={handleEndRecording}
+          >
             End Recording
           </button>
         </>
       )}
       {recorderLoading && (
-        <div className="p-2">
+        <div className='p-2'>
           <span>Loading...</span>
         </div>
       )}
