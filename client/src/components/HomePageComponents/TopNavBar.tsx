@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -13,6 +14,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { getAuth, signOut } from 'firebase/auth';
 import { removeUser } from '../../redux/userSlice';
 import { AiFillVideoCamera } from 'react-icons/ai';
+import { setSearchTerm } from '../../redux/searchSlice';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -69,18 +71,23 @@ function TopNavBar({
   showFeatures = false,
   showExamples = false,
 }: TopNavBarProps) {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState<null | HTMLElement>(null);
+    useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [term, setTerm] = useState('');
 
   // import the user from the reducer
   const { shortName } = useAppSelector((state) => state.user);
-  console.log('short name: ', shortName);
-  const [loggedIn, setLoggedIn] = React.useState(shortName ? true : false);
+  const [loggedIn, setLoggedIn] = useState(shortName ? true : false);
 
   const auth = getAuth();
+
+  function handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setTerm(e.target.value);
+    dispatch(setSearchTerm(e.target.value));
+  }
 
   function logOut() {
     signOut(auth)
@@ -96,12 +103,12 @@ function TopNavBar({
       });
   }
 
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  // const isMenuOpen = Boolean(anchorEl);
+  // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  // const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -193,6 +200,8 @@ function TopNavBar({
                 <SearchIcon />
               </SearchIconWrapper>
               <StyledInputBase
+                value={term}
+                onChange={handleSearchChange}
                 placeholder='Search…'
                 inputProps={{ 'aria-label': 'search' }}
               />
@@ -223,12 +232,12 @@ function TopNavBar({
             {/* Conditionally render the Dashboard button */}
             {showDashboard && (
               <Link to='/dashboard'>
-              <Button
-                className='hover:!underline'
-                color='inherit'
-              >
-                Dashboard
-              </Button>
+                <Button
+                  className='hover:!underline'
+                  color='inherit'
+                >
+                  Dashboard
+                </Button>
               </Link>
             )}
             {showFeatures && (
@@ -248,13 +257,13 @@ function TopNavBar({
               </Button>
             )}
             <Link to='/docs'>
-            <Button
-              className='hover:!underline hover:!underline-offset-8'
-              color='inherit'
-            >
-              Docs
-          </Button>
-          </Link>
+              <Button
+                className='hover:!underline hover:!underline-offset-8'
+                color='inherit'
+              >
+                Docs
+              </Button>
+            </Link>
           </Box>
           <Box>
             {loggedIn ? (

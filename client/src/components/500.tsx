@@ -6,13 +6,6 @@ export default function Page500() {
         <p className='mb-10'>Oops...</p>
         <p>Something happened. Maybe it&apos;s you, maybe it&apos;s us. </p>
         <p className='mt-20'>We will look into it</p>
-        {/* <iframe
-          src='http://localhost:5173/player/ca185fb8-e3aa-4bdd-a8a9-975818511981?embed=true'
-          width='1000'
-          height='480'
-          allowFullScreen
-          title='Youcoder Recording'
-        /> */}
       </div>
     </div>
   );
