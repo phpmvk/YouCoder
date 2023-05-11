@@ -5,7 +5,7 @@ import { http } from './baseUrl';
 class ConsoleApiService {
   getOutput(data: CodeToExecute): Promise<AxiosResponse> | undefined {
     try {
-      return http.post<{ stdout: string }>(`/console`, data);
+      return http.post<{ stdout: string }>(`/code-execution/console`, data);
     } catch (e) {
       const error = e as AxiosError;
       console.log(error);

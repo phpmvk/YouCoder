@@ -280,7 +280,7 @@ export function RecorderEditor() {
     const model = editorInstance!.getModel();
     const language = model!.getLanguageId() as Language;
     const source_code = editorInstance!.getValue();
-    const base64SourceCode = window.btoa(encodeURIComponent(source_code));
+    const base64SourceCode = window.btoa(source_code);
     const language_id = getLanguageId(language)!;
 
     const judge0: CodeToExecute = {
@@ -290,7 +290,9 @@ export function RecorderEditor() {
     consoleApi
       .getOutput(judge0)!
       .then((response) => {
-        const output = decodeURIComponent(window.atob(response.data.output));
+        console.log(response);
+        console.log(window.atob(response.data.output));
+        const output = window.atob(response.data.output);
         setConsoleOutput(output);
         handleConsoleLogOutput(output, Date.now());
         setIsConsoleLoading(false);
