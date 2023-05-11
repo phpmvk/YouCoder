@@ -6,14 +6,46 @@ import { initializeApp } from 'firebase/app';
 import { config } from './config/config';
 import AuthRoute from './components/AuthRoute';
 import DashboardPage from './pages/Dashboard';
-import RecordingPage from './pages/Recording';
+import CreateRecordingPage from './pages/CreateRecording';
 import DocsPage from './pages/Docs';
-import VideoPage from './pages/Video';
+import PlayerPage from './pages/Player';
 import NotFoundPage from './pages/NotFound';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser, editUser } from './redux/userSlice';
+import { useAppDispatch, useAppSelector } from './redux/hooks';
+import { getStorage } from 'firebase/storage';
+import { useEffect, useState } from 'react';
+import http from './services/userApi';
 
 export const Firebase = initializeApp(config.firebaseConfig);
+export const storage = getStorage(Firebase);
 
 function App() {
+  const dispatch = useAppDispatch();
+  // add a useEffect here to check if there is a token to get the user from the backend and upfate the store
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      login();
+    }
+  }, []);
+
+  async function login() {
+    await http
+      .creatorLogin()
+      .then((response) => {
+        console.log('user from backend response: ', response.data);
+        dispatch(setUser({ user: response.data.user }));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  // const user = useAppSelector((state) => state.user);
+  // console.log('user: ', user);
+  // const dispatch = useAppDispatch();
+  // dispatch(editUser({ avatar: ' ' }));
   return (
     <BrowserRouter>
       <Routes>
@@ -30,8 +62,8 @@ function App() {
           element={<DocsPage />}
         />
         <Route
-          path='/video'
-          element={<VideoPage />}
+          path='/player/:id'
+          element={<PlayerPage />}
         />
         <Route
           path='/dashboard'
@@ -45,13 +77,21 @@ function App() {
           path='/recording'
           element={
             <AuthRoute>
-              <RecordingPage />
+              <CreateRecordingPage />
             </AuthRoute>
           }
         />
         <Route
           path='*'
-          element={<NotFoundPage />}
+          element={<NotFoundPage type={'404'} />}
+        />
+        <Route
+          path='/404'
+          element={<NotFoundPage type={'404'} />}
+        />
+        <Route
+          path='/oops'
+          element={<NotFoundPage type={'500'} />}
         />
       </Routes>
     </BrowserRouter>

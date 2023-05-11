@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Creator {
+  uid          String      @id @unique
+  display_name String
+  email        String
+  join_date    DateTime
+  picture      String
+  recordings   Recording[]
+}
+
+model User {
+  user_id              Int      @id @default(autoincrement())
+  username             String
+  email                String
+  join_date            DateTime
+  favorited_recordings String[]
+  creators_followed    String[] //Is this a good way to go about this? Should this be creator IDs?
+}
+
+model Recording {
+  recording_id   String  @id @default(uuid())
+  creator        Creator @relation(fields: [creator_uid], references: [uid], onDelete: Cascade, onUpdate: Cascade)
+  creator_uid    String //primary key in Creator model
+  thumbnail_link String?
+  title          String
+  description    String?
+  published      Boolean @default(false)
+  language       String
+  recording_link String
+  created_at     String
+  full_link      String?
+  iframe_link    String?
+}
