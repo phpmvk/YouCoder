@@ -6,7 +6,7 @@ interface BallProps {
 }
 
 const TopBall: React.FC<BallProps> = ({ percentage }) => {
-  return <div 
+  return <div className="invisible 1140:visible"
   style={{
     width: percentage * 1000 - 220,
     height: percentage * 1000 - 220,

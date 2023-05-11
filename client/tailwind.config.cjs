@@ -5,11 +5,15 @@ module.exports = {
     extend: {
       screens: {
         '720': '720px',
+        '1140': '1140px',
       },
       scale: {
         '80': '.80',
         '82': '82',
         '85': '.85',
+      },
+      margin: {
+'-200': '-200px',
       },
       colors: {
         bg: {
@@ -33,7 +37,9 @@ module.exports = {
         turnYellow: 'toYellow 4s 1 forwards',
         expand: 'expand 3s forwards',
         'spin-slow': 'spin 5s linear infinite',
+        'spin-med': 'spin 10s linear infinite',
         'spin-xslow': 'spin 20s linear infinite',
+        'spin-xxslow': 'spin 25s linear infinite'
       },
       keyframes: {
         blinking: {

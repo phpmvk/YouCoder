@@ -30,7 +30,7 @@ const VideoPage: React.FC<VideoPageProps> = ({}) => {
 
 
     <div className="bg-bg-pri relative flex justify-center items-center overflow-y-scroll overflow-x-hidden ">
-      <div className=" bg-white border-solid p-2 mx-auto  pt-20 top-[20px] mb-1 rounded-lg overflow-y-scroll pb-[10px]">
+      <div className=" bg-bg-gptdark border-solid p-2 mx-auto  pt-20 top-[20px] mb-1 rounded-lg overflow-y-scroll pb-[10px]">
         <PlaybackEditor />
         
         <div className="w-full bg-bg-gpt-dark h-[400px] bottom-[20px] mt-[10px] rounded-lg">
@@ -80,7 +80,7 @@ const VideoPage: React.FC<VideoPageProps> = ({}) => {
 
 
 
-<div className="bg-bg-gptdark px-4 pt-2 md:hidden w-full max-h-[200px] ">
+<div className="bg-bg-gptdark px-4 pt-2 md:hidden w-full  ">
         <Stack className="px-8" direction="row" spacing={1}>
           <Button variant="outlined" size="small" className="!rounded-full !border-bg-alt !text-white whitespace-nowrap">
             <FaceIcon />
