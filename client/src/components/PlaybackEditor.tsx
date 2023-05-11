@@ -226,7 +226,22 @@ export function PlaybackEditor() {
   function startSliderInterval() {
     const intervalId = setInterval(() => {
       if (playbackStateRef.current.status === 'playing') {
-        setSliderValue((prevSliderValue) => prevSliderValue + 100);
+        setSliderValue((prevSliderValue) => {
+          // Check if the value has reached audioDuration
+          if (prevSliderValue >= audioDuration) {
+            // When the maximum value is reached, stop the interval
+            clearInterval(intervalId);
+            // Stop audio playback
+            audioElement?.pause();
+            // Update the playback state
+            setPlaybackState({
+              status: 'stopped',
+              currentPosition: audioDuration,
+            });
+            return audioDuration; // Set sliderValue to audioDuration
+          }
+          return prevSliderValue + 100;
+        });
       } else {
         clearInterval(intervalId);
       }
