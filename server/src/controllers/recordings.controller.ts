@@ -28,6 +28,10 @@ export async function getRecordingById(req: Request, res: Response) {
       return res.status(404).send({ message: 'Resource not found' })
     }
 
+    if (recording.published === false) {
+      return res.status(403).send({ message: 'Private' })
+    }
+
     res.status(200).send(recording)
 
   } catch (err) {
@@ -48,23 +52,12 @@ export async function uploadRecording(req: Request, res: Response) {
     description,
     language,
     recording_link,
-    audio_link,
-    created_at,
-    full_link,
-    iframe_link
   } = req.body
 
   if (
-    !user.uid || typeof user.uid !== 'string' ||
-    !thumbnail_link || typeof thumbnail_link !== 'string' ||
     !title || typeof title !== 'string' ||
-    !description || typeof description !== 'string' ||
     !language || typeof language !== 'string' ||
-    !recording_link || typeof recording_link !== 'string' ||
-    !audio_link || typeof audio_link !== 'string' ||
-    !created_at || typeof created_at !== 'string' ||
-    !full_link || typeof full_link !== 'string' ||
-    !iframe_link || typeof iframe_link !== 'string'
+    !recording_link || typeof recording_link !== 'string'
   ) {
     return res.status(400).send({ message: 'Bad request' })
   }
@@ -77,14 +70,14 @@ export async function uploadRecording(req: Request, res: Response) {
             uid: user.uid
           }
         },
-        thumbnail_link: thumbnail_link,
+        thumbnail_link: thumbnail_link?thumbnail_link:'',
         title: title,
-        description: description,
+        description: description?description:'',
         language: language,
         recording_link: recording_link,
         created_at: (new Date(Date.now())).toString(),
-        full_link: full_link,
-        iframe_link: iframe_link,
+        full_link: 'to be created in backend',
+        iframe_link: 'to be created in backend',
       },
       include: {
         creator: {
