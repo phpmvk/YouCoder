@@ -19,19 +19,18 @@ export const rootUser: Creator = {
 };
 
 export interface Recording {
-  recording_id: string;
-  creator: Creator;
-  creator_uid: string;
-  thumbnail_link: string;
-  title: string;
-  description: string;
-  published: boolean;
-  language: string;
-  recorder_actions: RecorderAction[];
-  audio_link: string;
   created_at: string;
+  creator: { picture: string };
+  creator_uid: string;
+  description: string;
   full_link: string;
   iframe_link: string;
+  language: string;
+  published: boolean;
+  recording_id: string;
+  recording_link: string;
+  thumbnail_link: string;
+  title: string;
 }
 
 export interface updateRecording {

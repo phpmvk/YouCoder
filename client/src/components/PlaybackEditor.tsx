@@ -5,14 +5,20 @@ import * as monaco from 'monaco-editor';
 import ReactSlider from 'react-slider';
 import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 import Terminal from './TerminalOutput';
 import { loadYCRFile } from '../utils/ycrUtils';
 import { CodeToExecute } from '../types/Console';
 import consoleApi from '../services/consoleApi';
 import { formatTime, getLanguageId } from '../utils/editorUtils';
+import { Recording } from '../types/Creator';
 
-export function PlaybackEditor() {
+export function PlaybackEditor({
+  recordingData,
+}: {
+  recordingData: Recording;
+}) {
   const [editorInstance, setEditorInstance] =
     useState<editor.IStandaloneCodeEditor | null>(null);
   const [monacoInstance, setMonacoInstance] = useState<typeof monaco | null>(
@@ -56,6 +62,10 @@ export function PlaybackEditor() {
       audioElement.src = audioSource;
     }
   }, [audioSource, audioElement]);
+
+  useEffect(() => {
+    handleFirebaseURL(recordingData.recording_link);
+  }, []);
 
   const handleEditorDidMount = (
     editor: editor.IStandaloneCodeEditor,
@@ -275,6 +285,45 @@ export function PlaybackEditor() {
     }
   }
 
+  async function handleFirebaseURL(firebaseURL: string) {
+    if (firebaseURL) {
+      try {
+        const storage = getStorage();
+        const storageRef = ref(storage, firebaseURL);
+
+        getDownloadURL(storageRef)
+          .then(async (url) => {
+            const response = await fetch(url);
+            const blob = await response.blob();
+
+            const file = new File([blob], 'filename.ycr', { type: blob.type });
+
+            const { recorderActions, recordedAudioURL } = await loadYCRFile(
+              file
+            );
+            setImportedActions(recorderActions);
+
+            // Decode audio data and set audio duration
+            const audioContext = new AudioContext();
+            const responseAudio = await fetch(recordedAudioURL);
+            const arrayBuffer = await responseAudio.arrayBuffer();
+            const decodedData = await audioContext.decodeAudioData(arrayBuffer);
+            setAudioDuration(decodedData.duration * 1000);
+
+            // Set the audio source
+            setAudioSource(recordedAudioURL);
+          })
+          .catch((error) => {
+            console.error('Error loading .ycr file:', error);
+          });
+      } catch (error) {
+        console.error('Error loading .ycr file:', error);
+      }
+    } else {
+      console.error('Please select a valid .ycr file');
+    }
+  }
+
   function updateAudioCurrentTime(scrubberPosition: number) {
     if (audioElement) {
       audioElement.currentTime = scrubberPosition / 1000;
@@ -352,11 +401,15 @@ export function PlaybackEditor() {
       </div>
       <br></br>
       <br></br>
+
       <input
         className='mx-4'
         type='file'
         onChange={handleFileInput}
       />
+
+      {/* <input className="mx-4" type="file" onChange={handleFileInput} /> */}
+
       {playbackState.status === 'stopped' && (
         <button
           className='p-2 bg-slate-500 rounded-sm'

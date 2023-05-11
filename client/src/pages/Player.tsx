@@ -30,10 +30,10 @@ const PlayerPage: React.FC<PlayerPageProps> = ({}) => {
         console.log('recording: ', response.data);
         if (embed && embed === 'true') {
           // show the embed player
-          setToRender(<PlaybackEditor />);
+          setToRender(<PlaybackEditor recordingData={response.data} />);
         } else {
           // show the full player
-          setToRender(<FullPlayerPage />);
+          setToRender(<FullPlayerPage recordingData={response.data} />);
         }
       })
       .catch((error) => {
