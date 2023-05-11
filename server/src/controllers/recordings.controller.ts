@@ -91,8 +91,8 @@ export async function uploadRecording(req: Request, res: Response) {
         recording_id: newRecording.recording_id
       },
       data: {
-        full_link: `https://645d2dfc99772b16711cd6ea--gleaming-pastelito-554f17.netlify.app/player/${newRecording.recording_id}`,
-        iframe_link: `<iframe src='https://645d2dfc99772b16711cd6ea--gleaming-pastelito-554f17.netlify.app/player/${newRecording.recording_id}?embed=true' width='1000' height='480' allowFullScreentitle='${newRecording.title}'/>`
+        full_link: `https://youcoder.io/player/${newRecording.recording_id}`,
+        iframe_link: `<iframe src='https://youcoder.io/player/${newRecording.recording_id}?embed=true' width='1000' height='480' allowFullScreentitle='${newRecording.title}'/>`
       }
     })
     res.status(201).send(updatedNewRecording)
