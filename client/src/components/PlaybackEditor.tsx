@@ -172,7 +172,6 @@ export function PlaybackEditor() {
   //playback handlers
   function handleStartPlayback() {
     if (importedActions) {
-      console.log(importedActions);
       getCurrentLanguage();
       editorInstance!.setValue('');
       startPlayback(importedActions.editorActions, editorInstance!);
@@ -236,30 +235,11 @@ export function PlaybackEditor() {
     return intervalId;
   }
 
-  // function handleFileInput(event: React.ChangeEvent<HTMLInputElement>) {
-  //   const file = event.target.files![0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = (e: ProgressEvent<FileReader>) => {
-  //       const fileContents = e.target!.result as string;
-  //       const importedRecorderActions = JSON.parse(fileContents);
-
-  //       setImportedActions(importedRecorderActions);
-
-  //       editorInstance!.setValue('');
-  //       // startPlayback(importedRecorderActions.editorActions, editorInstance!);
-  //     };
-  //     reader.readAsText(file);
-  //   }
-  // }
-
   async function handleFileInput(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files![0];
     if (file && file.name.endsWith('.ycr')) {
       try {
         const { recorderActions, recordedAudioURL } = await loadYCRFile(file);
-        // Use the extracted data (recorderActions and recordedAudioURL) as needed
-        console.log(recorderActions, recordedAudioURL);
 
         setImportedActions(recorderActions);
 
@@ -279,23 +259,6 @@ export function PlaybackEditor() {
       console.error('Please select a valid .ycr file');
     }
   }
-
-  // function handleAudioFileInput(event: React.ChangeEvent<HTMLInputElement>) {
-  //   const file = event.target.files![0];
-  //   if (file) {
-  //     const fileReader = new FileReader();
-  //     fileReader.onload = () => {
-  //       const arrayBuffer = fileReader.result as ArrayBuffer;
-  //       const audioContext = new AudioContext();
-  //       audioContext.decodeAudioData(arrayBuffer).then((decodedData) => {
-  //         setAudioDuration(decodedData.duration * 1000);
-  //       });
-  //     };
-  //     fileReader.readAsArrayBuffer(file);
-  //     const url = URL.createObjectURL(file);
-  //     setAudioSource(url);
-  //   }
-  // }
 
   function updateAudioCurrentTime(scrubberPosition: number) {
     if (audioElement) {

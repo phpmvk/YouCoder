@@ -253,7 +253,6 @@ export function RecorderEditor() {
       const jsonBlob = new Blob([json], { type: 'application/json' });
 
       const ycrFileUrl = await saveYCRFile(jsonBlob, audioBlob, user.uid!);
-      console.log(user);
       console.log(ycrFileUrl);
       const model = editorInstance!.getModel();
       const language = model!.getLanguageId();
