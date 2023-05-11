@@ -364,8 +364,9 @@ export function PlaybackEditor({
           setAudioElement(audio);
         }}
       ></audio>
-      <h1>{editorLanguage}</h1>
-      <div className="bg-bg-gptdark flex w-full h-[400px] px-10">
+      
+      <h1 className="ml-10 text-white uppercase bg-bg-pri w-[20ch] text-center rounded-t-full mt-2">{editorLanguage}blah</h1>
+      <div className="bg-bg-gptdark flex w-full h-[400px] px-10 ">
         <Allotment>
           <Allotment.Pane minSize={600}>
             <Editor
@@ -383,7 +384,7 @@ export function PlaybackEditor({
           <Allotment.Pane minSize={100} preferredSize={300}>
             <div className="border w-full h-[50%] border-[#1e1e1e]">
               <Terminal
-                terminalName="Teachers output"
+                terminalName="output"
                 output={TeacherConsoleOutput}
               />
             </div>
@@ -391,7 +392,9 @@ export function PlaybackEditor({
               <button className="text-white" onClick={handleJudge0}>
                 Compile & Execute
               </button>
-              <Terminal output={StudentConsoleOutput} />
+              <Terminal 
+              terminalName="your output"
+              output={StudentConsoleOutput} />
             </div>
           </Allotment.Pane>
         </Allotment>
@@ -399,7 +402,7 @@ export function PlaybackEditor({
 
       <br></br>
       <br></br>
-      <div className='w-auto flex items-center justify-start space-x-16 -mt-10 bg-bg-pri rounded-full mx-10 px-2 md:pax-auto'>
+      <div className='w-auto flex items-center justify-start space-x-16 -mt-12 bg-bg-pri rounded-b-full mx-10 px-2 md:pax-auto'>
       {/* <input className="mx-4" type="file" onChange={handleFileInput} /> */}
       {playbackState.status === 'stopped' && (
         <Button
@@ -442,9 +445,9 @@ export function PlaybackEditor({
         max={audioDuration}
         onChange={(value) => handleScrubberChange(value)}
       />
+      </div>
       
-      
-</div>
+
    <br></br>   
       
 

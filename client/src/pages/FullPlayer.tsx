@@ -29,9 +29,11 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
         <TopNavBar />
 
         <div className="bg-bg-pri relative flex justify-center items-center overflow-y-scroll overflow-x-hidden ">
-          <div className=" bg-bg-gptdark border-solid p-4 mx-auto  pt-10 top-[20px] mb-1 rounded-lg overflow-y-scroll pb-[10px]">
+          <div className=" bg-bg-gptdark border-solid p-4 mx-2 mb-48 pt-4 top-[20px] overflow-y-scroll border border-gray-600  rounded-xl">
+            <div className="border border-gray-600 rounded-xl pt-2">
+            
             <PlaybackEditor recordingData={recordingData} />
-
+            </div>
             <div className="w-full bg-bg-gpt-dark h-[400px] bottom-[20px] mt-[10px] rounded-lg mx-auto pr-10">
               <div className="bg-bg-gptdark flex flex-col md:flex-row h-full md:min-w-full text-center">
                 {/* small title */}
