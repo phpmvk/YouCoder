@@ -284,18 +284,19 @@ export function RecorderEditor() {
 
   return (
     <>
-      <div className='flex items-center'>
+      <div className="flex items-center">
         <label
-          className='block mb-2 text-sm font-medium text-white mr-3'
-          htmlFor='language'
+          className="block mb-2 text-sm font-medium text-white mr-3"
+          htmlFor="language"
         >
           Choose a language:
         </label>
         <select
-          id='language'
+          id="language"
           onChange={handleLanguageChange}
-          className='border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3'
+          className="border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3"
         >
+
           <option defaultValue='javascript'>JavaScript</option>
           <option value='python'>Python</option>
           <option value='java'>Java</option>
@@ -306,14 +307,14 @@ export function RecorderEditor() {
         </select>
       </div>
 
-      <div className='flex w-full h-[500px] border border-white rounded-sm'>
+      <div className="flex w-full h-[500px] border border-white rounded-sm">
         <Allotment>
           <Allotment.Pane minSize={500}>
             <Editor
-              height='500px'
-              defaultLanguage='javascript'
-              defaultValue=''
-              theme='vs-dark'
+              height="500px"
+              defaultLanguage="javascript"
+              defaultValue=""
+              theme="vs-dark"
               options={{
                 wordWrap: 'on',
                 fontSize: 16,
@@ -322,24 +323,20 @@ export function RecorderEditor() {
               onMount={handleEditorDidMount}
             />
           </Allotment.Pane>
-          <Allotment.Pane
-            minSize={180}
-            preferredSize={300}
-          >
-            <div className='border w-full h-full border-[#1e1e1e] text-white relative'>
+          <Allotment.Pane minSize={180} preferredSize={300}>
+            <div className="border w-full h-full border-[#1e1e1e] text-white relative">
               <button
-                className='absolute bottom-2 right-2 border-white border rounded-sm p-2 bg-slate-500 hover:bg-slate-500/50 '
+                className="absolute bottom-2 right-2 border-white border rounded-sm p-2 bg-slate-500 hover:bg-slate-500/50 "
                 onClick={handleJudge0}
               >
                 Compile & Execute
               </button>
               <button
-                className='absolute top-2 right-2 border-white border text-sm rounded-md px-1 bg-slate-500 hover:bg-slate-500/50'
+                className="absolute top-2 right-2 border-white border text-sm rounded-md px-1 bg-slate-500 hover:bg-slate-500/50"
                 onClick={() => setOutput([])}
               >
                 clear
               </button>
-              {/* <h1 id='console'></h1> */}
               <button onClick={handleJudge0}>Compile & Execute</button>
               <h1>{consoleOutput}</h1>
 
@@ -350,26 +347,17 @@ export function RecorderEditor() {
       </div>
 
       {recorderState === 'stopped' && (
-        <button
-          className='p-2'
-          onClick={handleStartRecording}
-        >
+        <button className="p-2" onClick={handleStartRecording}>
           Start Recording
         </button>
       )}
 
       {recorderState === 'recording' && (
         <>
-          <button
-            className='p-2'
-            onClick={handlePauseRecording}
-          >
+          <button className="p-2" onClick={handlePauseRecording}>
             Pause Recording
           </button>
-          <button
-            className='p-2'
-            onClick={handleEndRecording}
-          >
+          <button className="p-2" onClick={handleEndRecording}>
             End Recording
           </button>
         </>
@@ -377,22 +365,16 @@ export function RecorderEditor() {
 
       {recorderState === 'paused' && (
         <>
-          <button
-            className='p-2'
-            onClick={handleResumeRecording}
-          >
+          <button className="p-2" onClick={handleResumeRecording}>
             Resume Recording
           </button>
-          <button
-            className='p-2'
-            onClick={handleEndRecording}
-          >
+          <button className="p-2" onClick={handleEndRecording}>
             End Recording
           </button>
         </>
       )}
       {recorderLoading && (
-        <div className='p-2'>
+        <div className="p-2">
           <span>Loading...</span>
         </div>
       )}
