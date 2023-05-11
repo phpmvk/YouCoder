@@ -2,9 +2,11 @@ import { configureStore, combineReducers, Action } from '@reduxjs/toolkit';
 import { persistStore, persistReducer, PersistConfig } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import userReducer from './userSlice';
+import searchReducer from './searchSlice';
 
 const rootReducer = combineReducers({
   user: userReducer,
+  search: searchReducer,
   // add other reducers here
 });
 
