@@ -11,6 +11,7 @@ const NotFoundPage = ({ type }: NotFoundPageProps) => {
       <TopNavBar />
       {type === '404' ? <Page404 /> : <Page500 />}
     </>
+
   );
 };
 
