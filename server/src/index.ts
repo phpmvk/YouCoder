@@ -13,7 +13,10 @@ import recordingsRouter from './routes/recordings.router'
 const app = express();
 
 app
-  .use(cors())
+  .use(cors({
+    allowedHeaders: "*",
+    origin: "*"
+  }))
   .use(express.json())
   .use(usersRouter)
   .use(recordingsRouter)

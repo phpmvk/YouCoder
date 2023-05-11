@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import http from '../services/recordingApi';
 import Page404 from '../components/404';
@@ -13,6 +13,8 @@ const PlayerPage: React.FC<PlayerPageProps> = ({}) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const embed = searchParams.get('embed');
+  const [toRender, setToRender] = useState<JSX.Element | null>(null)
+
 
   useEffect(() => {
     if (!id) {
@@ -29,10 +31,10 @@ const PlayerPage: React.FC<PlayerPageProps> = ({}) => {
         console.log('recording: ', response.data);
         if (embed && embed === 'true') {
           // show the embed player
-          return <PlaybackEditor />;
+          setToRender(<PlaybackEditor />);
         } else {
           // show the full player
-          return <FullPlayerPage />;
+          setToRender(<FullPlayerPage />);
         }
       })
       .catch((error) => {
@@ -88,7 +90,7 @@ const PlayerPage: React.FC<PlayerPageProps> = ({}) => {
         }
       });
   }
-  return <div></div>;
+  return <>{toRender}</>;
 };
 
 export default PlayerPage;

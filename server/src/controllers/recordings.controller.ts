@@ -186,7 +186,7 @@ export async function deleteRecording(req: Request, res: Response) {
       return res.status(403).send({ message: 'Not authorized'})
     }
 
-    const deletedRecording = await prisma.recording.delete({
+    await prisma.recording.delete({
       where: {
         recording_id: recordingId
       }
