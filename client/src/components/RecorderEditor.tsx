@@ -13,6 +13,7 @@ import { useAppSelector } from '../redux/hooks';
 import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
 import Terminal from './TerminalOutput';
+import recordingApi from '../services/recordingApi';
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
@@ -210,7 +211,7 @@ export function RecorderEditor() {
   async function handleSave(
     title: string,
     description: string,
-    thumbnail: string | null
+    thumbnail_link: string
   ) {
     try {
       const audioBlob = audioRecorder!.getBlob();
@@ -224,18 +225,24 @@ export function RecorderEditor() {
       const model = editorInstance!.getModel();
       const language = model!.getLanguageId();
 
-      const Recording = {
+      const Recording: EditorRecording = {
         title,
         description,
-        thumbnail,
-        recording_link: ycrFileUrl,
+        thumbnail_link,
         language,
+        recording_link: ycrFileUrl,
       };
 
-      //send recording object to backend
-      console.log('Title:', title);
-      console.log('Description:', description);
-      console.log('Thumbnail:', thumbnail);
+      recordingApi.postRecording(Recording);
+
+      //   title: title,
+      //   description: description,
+      // thumbnail_link: thumbnail_link,
+      //   language: language,
+      //   recording_link: recording_link,
+      //   created_at: (new Date(Date.now())).toString(),
+      //   full_link: full_link,
+      //   iframe_link: iframe_link,
     } catch (error) {
       console.error('Error saving recording', error);
     }
@@ -296,14 +303,13 @@ export function RecorderEditor() {
           onChange={handleLanguageChange}
           className="border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3"
         >
-
-          <option defaultValue='javascript'>JavaScript</option>
-          <option value='python'>Python</option>
-          <option value='java'>Java</option>
-          <option value='csharp'>C#</option>
-          <option value='cpp'>C++</option>
-          <option value='ruby'>Ruby</option>
-          <option value='go'>Go</option>
+          <option defaultValue="javascript">JavaScript</option>
+          <option value="python">Python</option>
+          <option value="java">Java</option>
+          <option value="csharp">C#</option>
+          <option value="cpp">C++</option>
+          <option value="ruby">Ruby</option>
+          <option value="go">Go</option>
         </select>
       </div>
 
@@ -347,17 +353,17 @@ export function RecorderEditor() {
       </div>
 
       {recorderState === 'stopped' && (
-        <button className="p-2" onClick={handleStartRecording}>
+        <button className="p-2 text-white" onClick={handleStartRecording}>
           Start Recording
         </button>
       )}
 
       {recorderState === 'recording' && (
         <>
-          <button className="p-2" onClick={handlePauseRecording}>
+          <button className="p-2 text-white" onClick={handlePauseRecording}>
             Pause Recording
           </button>
-          <button className="p-2" onClick={handleEndRecording}>
+          <button className="p-2 text-white" onClick={handleEndRecording}>
             End Recording
           </button>
         </>
@@ -365,10 +371,10 @@ export function RecorderEditor() {
 
       {recorderState === 'paused' && (
         <>
-          <button className="p-2" onClick={handleResumeRecording}>
+          <button className="p-2 text-white" onClick={handleResumeRecording}>
             Resume Recording
           </button>
-          <button className="p-2" onClick={handleEndRecording}>
+          <button className="p-2 text-white" onClick={handleEndRecording}>
             End Recording
           </button>
         </>

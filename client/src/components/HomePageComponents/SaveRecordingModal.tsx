@@ -4,11 +4,7 @@ import { storage } from '../../App';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 interface SaveRecordingModalProps {
-  onSave: (
-    title: string,
-    description: string,
-    thumbnail: string | null
-  ) => void;
+  onSave: (title: string, description: string, thumbnail: string) => void;
   onDiscard: () => void;
   onClose: () => void;
 }
@@ -20,7 +16,7 @@ export const SaveRecordingModal: React.FC<SaveRecordingModalProps> = ({
 }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [thumbnail, setThumbnail] = useState<string | null>(null);
+  const [thumbnail, setThumbnail] = useState('');
   const [showDiscardModal, setShowDiscardModal] = useState(false);
 
   const handleSave = () => {
@@ -53,7 +49,7 @@ export const SaveRecordingModal: React.FC<SaveRecordingModalProps> = ({
         console.error('Error uploading thumbnail:', error);
       }
     } else {
-      setThumbnail(null);
+      setThumbnail('');
     }
   }
 
