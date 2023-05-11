@@ -26,7 +26,6 @@ const DashboardPage: React.FC<DashboardPageProps> = ({}) => {
   );
 
   useEffect(() => {
-    console.log('search term: ', searchTerm);
     if (searchTerm === '') {
       setDisplayRecordings(user.recordings!);
     } else {
@@ -37,12 +36,6 @@ const DashboardPage: React.FC<DashboardPageProps> = ({}) => {
       );
     }
   }, [searchTerm]);
-  // console.log('user id from DashboardPage: ', user.uid);
-  // useEffect(() => {
-  //   if (!user.uid) {
-  //     navigate('/login');
-  //   }
-  // }, []);
 
   const observerCallback = (entries: any, observer: any) => {
     entries.forEach((entry: any) => {
