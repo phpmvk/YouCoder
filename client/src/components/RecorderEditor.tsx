@@ -36,6 +36,7 @@ export function RecorderEditor() {
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [recordingIntervalId, setRecordingIntervalId] =
     useState<NodeJS.Timeout | null>(null);
+  const [pauseAction, setPauseAction] = useState(false);
 
   const recorderActions = useRef<RecorderActions>({
     start: 0,
@@ -109,6 +110,9 @@ export function RecorderEditor() {
         text,
       });
     });
+    if (recorderState === 'paused') {
+      setPauseAction(true);
+    }
   }
 
   //recording handlers
@@ -153,6 +157,7 @@ export function RecorderEditor() {
       clearInterval(recordingIntervalId);
       setRecordingIntervalId(null);
     }
+    setPauseAction(false);
   }
   function handleResumeRecording() {
     if (audioRecorder) {
@@ -165,8 +170,18 @@ export function RecorderEditor() {
       setElapsedTime((prevTime) => prevTime + 1000);
     }, 1000);
     setRecordingIntervalId(intervalId);
+    setPauseAction(false);
   }
   function handleEndRecording() {
+    if (pauseAction) {
+      if (
+        !window.confirm(
+          'You have unsaved changes from when the recording was paused. These changes will be discarded. Are you sure you want to end the recording?'
+        )
+      ) {
+        return;
+      }
+    }
     const timestamp = Date.now();
     recorderActions.current.end = timestamp;
 
