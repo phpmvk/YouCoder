@@ -45,20 +45,20 @@ const PlayerPage: React.FC<PlayerPageProps> = ({}) => {
 
             switch (error.response.status) {
               case 400:
-                return <Page404 />;
+                setToRender(<Page404 />);
               case 403:
-                return <Page404 />;
+                setToRender(<Page404 />);
               case 500:
-                return <Page500 />;
+                setToRender(<Page500 />);
               default:
-                return <Page500 />;
+                setToRender(<Page500 />);
             }
           } else if (error.request) {
             console.log(error.request);
-            return <Page500 />;
+            setToRender(<Page500 />);
           } else {
             console.log('Error', error.message);
-            return <Page500 />;
+            setToRender(<Page500 />);
           }
         } else {
           if (error.response) {

@@ -355,21 +355,21 @@ export function PlaybackEditor({
   }
 
   return (
-    <>
+    <div className='border-2 border-red-600'>
       <audio
         ref={(audio) => {
           setAudioElement(audio);
         }}
       ></audio>
       <h1>{editorLanguage}</h1>
-      <div className="flex w-full h-[500px] px-40">
+      <div className='flex w-full h-[300px] '>
         <Allotment>
           <Allotment.Pane minSize={600}>
             <Editor
-              height="500px"
-              defaultLanguage="javascript"
-              defaultValue=""
-              theme="vs-dark"
+              height='500px'
+              defaultLanguage='javascript'
+              defaultValue=''
+              theme='vs-dark'
               options={{
                 wordWrap: 'on',
                 readOnly: ignoreUserInputs,
@@ -377,15 +377,21 @@ export function PlaybackEditor({
               onMount={handleEditorDidMount}
             />
           </Allotment.Pane>
-          <Allotment.Pane minSize={100} preferredSize={300}>
-            <div className="border w-full h-[50%] border-[#1e1e1e]">
+          <Allotment.Pane
+            minSize={100}
+            preferredSize={300}
+          >
+            <div className='border w-full h-[50%] border-[#1e1e1e]'>
               <Terminal
-                terminalName="Teachers output"
+                terminalName='Teachers output'
                 output={TeacherConsoleOutput}
               />
             </div>
-            <div className="border w-full h-[50%] border-[#1e1e1e]">
-              <button className="text-white" onClick={handleJudge0}>
+            <div className='border w-full h-[50%] border-[#1e1e1e]'>
+              <button
+                className='text-white'
+                onClick={handleJudge0}
+              >
                 Compile & Execute
               </button>
               <Terminal output={StudentConsoleOutput} />
@@ -393,45 +399,54 @@ export function PlaybackEditor({
           </Allotment.Pane>
         </Allotment>
       </div>
+      <br></br>
+      <br></br>
 
-      <br></br>
-      <br></br>
+      <input
+        className='mx-4'
+        type='file'
+        onChange={handleFileInput}
+      />
+
       {/* <input className="mx-4" type="file" onChange={handleFileInput} /> */}
+
       {playbackState.status === 'stopped' && (
         <button
-          className="p-2 bg-slate-500 rounded-sm"
+          className='p-2 bg-slate-500 rounded-sm'
           onClick={handleStartPlayback}
         >
           Start Playback
         </button>
       )}
-
       {playbackState.status === 'playing' && (
-        <button className="p-2 bg-slate-500 mx-4" onClick={handlePausePlayback}>
+        <button
+          className='p-2 bg-slate-500 mx-4'
+          onClick={handlePausePlayback}
+        >
           Pause Playback
         </button>
       )}
-
       {playbackState.status === 'paused' && (
-        <button className="p-2 bg-slate-500" onClick={handleResumePlayback}>
+        <button
+          className='p-2 bg-slate-500'
+          onClick={handleResumePlayback}
+        >
           Resume Playback
         </button>
       )}
-
       <br />
       <br />
-      <div className="text-white">
+      <div className='text-white'>
         {formatTime(sliderValue)} / {formatTime(audioDuration)}
       </div>
-
       <ReactSlider
-        className="horizontal-slider"
-        thumbClassName="slider-thumb"
+        className='horizontal-slider'
+        thumbClassName='slider-thumb'
         value={sliderValue}
         step={0.001}
         max={audioDuration}
         onChange={(value) => handleScrubberChange(value)}
       />
-    </>
+    </div>
   );
 }
