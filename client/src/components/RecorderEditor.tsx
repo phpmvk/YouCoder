@@ -1,18 +1,24 @@
 import Editor from '@monaco-editor/react';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { editor } from 'monaco-editor';
 import * as monaco from 'monaco-editor';
 import RecordRTC from 'recordrtc';
+import { Allotment } from 'allotment';
+import 'allotment/dist/style.css';
 
 import consoleApi from '../services/consoleApi';
 import { CodeToExecute } from '../types/Console';
 import { SaveRecordingModal } from './HomePageComponents/SaveRecordingModal';
 import { saveYCRFile } from '../utils/ycrUtils';
 import { useAppSelector } from '../redux/hooks';
-
-import { Allotment } from 'allotment';
-import 'allotment/dist/style.css';
 import Terminal from './TerminalOutput';
+import recordingApi from '../services/recordingApi';
+import {
+  formatLanguage,
+  formatTime,
+  getLanguageId,
+  calculateTotalPauseTime,
+} from '../utils/editorUtils';
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
@@ -20,7 +26,6 @@ export function RecorderEditor() {
   const [monacoInstance, setMonacoInstance] = useState<typeof monaco | null>(
     null
   );
-  const [output, setOutput] = useState<string[]>([]);
 
   const [audioRecorder, setAudioRecorder] = useState<RecordRTC | null>(null);
   const [recorderState, setRecorderState] = useState<
@@ -29,7 +34,14 @@ export function RecorderEditor() {
   const [recorderLoading, setRecorderLoading] = useState(false);
 
   const [consoleOutput, setConsoleOutput] = useState('');
+  const [isConsoleLoading, setIsConsoleLoading] = useState(false);
   const [saveModalVisible, setSaveModalVisible] = useState(false);
+  const [editorLanguage, setEditorLanguage] = useState('javascript');
+
+  const [elapsedTime, setElapsedTime] = useState<number>(0);
+  const [recordingIntervalId, setRecordingIntervalId] =
+    useState<NodeJS.Timeout | null>(null);
+  const [pauseAction, setPauseAction] = useState(false);
 
   const recorderActions = useRef<RecorderActions>({
     start: 0,
@@ -41,50 +53,38 @@ export function RecorderEditor() {
     consoleLogOutputs: [],
   });
 
-  function handleConsoleLogOutput(text: string, timestamp: number) {
-    recorderActions.current.consoleLogOutputs.push({
-      text,
-      timestamp,
-      playbackTimestamp: 0,
-    });
-  }
-
-  function getLanguageId(language: Language): string | null {
-    const languageMapping: Record<Language, string> = {
-      javascript: '93',
-      python: '70',
-      java: '91',
-      csharp: '51',
-      cpp: '76',
-      ruby: '72',
-      go: '95',
+  useEffect(() => {
+    return () => {
+      if (recordingIntervalId) {
+        clearInterval(recordingIntervalId);
+      }
     };
-
-    return languageMapping[language];
-  }
+  }, [recordingIntervalId]);
 
   const user = useAppSelector((state) => state.user);
-  console.log('this is the user', user);
 
-  const handleLanguageChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  function handleConsoleLogOutput(text: string, timestamp: number) {
+    if (recorderState !== 'stopped') {
+      recorderActions.current.consoleLogOutputs.push({
+        text,
+        timestamp,
+        playbackTimestamp: 0,
+      });
+    }
+  }
+
+  function handleLanguageChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const model = editorInstance!.getModel();
-    console.log('Selected language', event.target.value);
     monacoInstance!.editor.setModelLanguage(model!, event.target.value);
-    const language = model!.getLanguageId();
-    console.log('current ', language);
+  }
 
-    console.log(monacoInstance!.languages.getLanguages());
-  };
-
-  const handleEditorDidMount = (
+  function handleEditorDidMount(
     editor: editor.IStandaloneCodeEditor,
     monaco: typeof import('monaco-editor')
-  ) => {
+  ) {
     setEditorInstance(editor);
     setMonacoInstance(monaco);
-  };
+  }
 
   function handleEditorChange(
     value?: string,
@@ -101,11 +101,14 @@ export function RecorderEditor() {
         text,
       });
     });
+    if (recorderState === 'paused') {
+      setPauseAction(true);
+    }
   }
 
   //recording handlers
   function handleStartRecording() {
-    // Start audio recording
+    //audio
     setRecorderLoading(true);
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       const options = { mimeType: 'audio/webm' as 'audio/webm' };
@@ -114,11 +117,24 @@ export function RecorderEditor() {
       recordRTC.startRecording();
       setRecorderLoading(false);
     });
+    //actions
     recorderActions.current.editorActions = [];
     editorInstance!.setValue('');
     recorderActions.current.start = Date.now();
     setRecorderState('recording');
     setConsoleOutput('');
+
+    //language
+    const model = editorInstance!.getModel();
+    const language = model!.getLanguageId();
+    setEditorLanguage(formatLanguage(language));
+
+    //timer
+    setElapsedTime(0);
+    const intervalId = setInterval(() => {
+      setElapsedTime((prevTime) => prevTime + 1000);
+    }, 1000);
+    setRecordingIntervalId(intervalId);
   }
 
   function handlePauseRecording() {
@@ -128,6 +144,11 @@ export function RecorderEditor() {
     let timestamp = Date.now();
     recorderActions.current.pauseArray.push({ timestamp });
     setRecorderState('paused');
+    if (recordingIntervalId) {
+      clearInterval(recordingIntervalId);
+      setRecordingIntervalId(null);
+    }
+    setPauseAction(false);
   }
   function handleResumeRecording() {
     if (audioRecorder) {
@@ -136,8 +157,23 @@ export function RecorderEditor() {
     let timestamp = Date.now();
     recorderActions.current.resumeArray.push({ timestamp });
     setRecorderState('recording');
+    const intervalId = setInterval(() => {
+      setElapsedTime((prevTime) => prevTime + 1000);
+    }, 1000);
+    setRecordingIntervalId(intervalId);
+    setPauseAction(false);
   }
   function handleEndRecording() {
+    if (pauseAction) {
+      if (
+        !window.confirm(
+          'You have unsaved changes from when the recording was paused. These changes will be discarded. Are you sure you want to end the recording?'
+        )
+      ) {
+        //If they press cancel on the prompt, don't run the rest of the handleEndRecording Function
+        return;
+      }
+    }
     const timestamp = Date.now();
     recorderActions.current.end = timestamp;
 
@@ -169,7 +205,8 @@ export function RecorderEditor() {
       recorderActions.current.editorActions.map((action: EditorAction) => {
         let totalPauseTime = calculateTotalPauseTime(
           action.actionCreationTimestamp,
-          timestamp
+          timestamp,
+          recorderActions.current
         );
 
         const adjustedTimestamp =
@@ -184,7 +221,8 @@ export function RecorderEditor() {
       recorderActions.current.consoleLogOutputs.map((change) => {
         let totalPauseTime = calculateTotalPauseTime(
           change.timestamp,
-          timestamp
+          timestamp,
+          recorderActions.current
         );
 
         const adjustedTimestamp =
@@ -192,25 +230,21 @@ export function RecorderEditor() {
         return { ...change, playbackTimestamp: adjustedTimestamp };
       });
 
-    //Get current editor language
-
-    // if (window.confirm('Would you like to save or discard your recording?')) {
-    //   //save recording logic
-    // } else {
-    //   //discard recording logic
-    // }
-
     if (audioRecorder) {
       audioRecorder.stopRecording();
     }
     setRecorderState('stopped');
+    if (recordingIntervalId) {
+      clearInterval(recordingIntervalId);
+      setRecordingIntervalId(null);
+    }
     setSaveModalVisible(true);
   }
 
   async function handleSave(
     title: string,
     description: string,
-    thumbnail: string | null
+    thumbnail_link: string
   ) {
     try {
       const audioBlob = audioRecorder!.getBlob();
@@ -219,23 +253,19 @@ export function RecorderEditor() {
       const jsonBlob = new Blob([json], { type: 'application/json' });
 
       const ycrFileUrl = await saveYCRFile(jsonBlob, audioBlob, user.uid!);
-      console.log(user);
       console.log(ycrFileUrl);
       const model = editorInstance!.getModel();
       const language = model!.getLanguageId();
 
-      const Recording = {
+      const Recording: EditorRecording = {
         title,
         description,
-        thumbnail,
-        recording_link: ycrFileUrl,
+        thumbnail_link,
         language,
+        recording_link: ycrFileUrl,
       };
 
-      //send recording object to backend
-      console.log('Title:', title);
-      console.log('Description:', description);
-      console.log('Thumbnail:', thumbnail);
+      recordingApi.postRecording(Recording);
     } catch (error) {
       console.error('Error saving recording', error);
     }
@@ -245,67 +275,67 @@ export function RecorderEditor() {
     // Implement the logic to discard the recording
   }
 
-  function calculateTotalPauseTime(
-    actionTimestamp: number,
-    endTimestamp: number
-  ) {
-    let totalPauseTime = 0;
-    for (let i = 0; i < recorderActions.current.pauseArray.length; i++) {
-      const pauseTimestamp = recorderActions.current.pauseArray[i].timestamp;
-      const resumeTimestamp = recorderActions.current.resumeArray[i]
-        ? recorderActions.current.resumeArray[i].timestamp
-        : endTimestamp;
-
-      if (actionTimestamp < pauseTimestamp) {
-        break;
-      }
-
-      if (actionTimestamp > resumeTimestamp) {
-        totalPauseTime += resumeTimestamp - pauseTimestamp;
-      } else {
-        totalPauseTime += actionTimestamp - pauseTimestamp;
-      }
-    }
-    return totalPauseTime;
-  }
-
   function handleJudge0() {
+    setIsConsoleLoading(true);
     const model = editorInstance!.getModel();
     const language = model!.getLanguageId() as Language;
     const source_code = editorInstance!.getValue();
+    const base64SourceCode = window.btoa(source_code);
     const language_id = getLanguageId(language)!;
 
-    const judge0: CodeToExecute = { language_id, source_code };
-    consoleApi.getOutput(judge0)!.then((response) => {
-      setConsoleOutput(response.data.output);
-      handleConsoleLogOutput(response.data.output, Date.now());
-    });
+    const judge0: CodeToExecute = {
+      language_id,
+      source_code: base64SourceCode,
+    };
+    consoleApi
+      .getOutput(judge0)!
+      .then((response) => {
+        console.log(response);
+        console.log(window.atob(response.data.output));
+        const output = window.atob(response.data.output);
+        setConsoleOutput(output);
+        handleConsoleLogOutput(output, Date.now());
+        setIsConsoleLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error getting console output from Judge0', error);
+        setIsConsoleLoading(false);
+      });
   }
 
   return (
     <>
-      <div className="flex items-center">
-        <label
-          className="block mb-2 text-sm font-medium text-white mr-3"
-          htmlFor="language"
-        >
-          Choose a language:
-        </label>
-        <select
-          id="language"
-          onChange={handleLanguageChange}
-          className="border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3"
-        >
-
-          <option defaultValue='javascript'>JavaScript</option>
-          <option value='python'>Python</option>
-          <option value='java'>Java</option>
-          <option value='csharp'>C#</option>
-          <option value='cpp'>C++</option>
-          <option value='ruby'>Ruby</option>
-          <option value='go'>Go</option>
-        </select>
-      </div>
+      {recorderState === 'stopped' && (
+        <>
+          <div className="flex items-center">
+            <label
+              className="block mb-2 text-sm font-medium text-white mr-3"
+              htmlFor="language"
+            >
+              Choose a language to record in:
+            </label>
+            <select
+              id="language"
+              onChange={handleLanguageChange}
+              className="border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3"
+            >
+              <option defaultValue="javascript">JavaScript</option>
+              <option value="typescript">TypeScript</option>
+              <option value="python">Python</option>
+              <option value="java">Java</option>
+              <option value="csharp">C#</option>
+              <option value="cpp">C++</option>
+              <option value="ruby">Ruby</option>
+              <option value="go">Go</option>
+            </select>
+          </div>
+        </>
+      )}
+      {recorderState !== 'stopped' && (
+        <div className="border text-sm rounded-lg w-48 bg-gray-700 border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mb-3 flex items-center justify-center">
+          {editorLanguage}
+        </div>
+      )}
 
       <div className="flex w-full h-[500px] border border-white rounded-sm">
         <Allotment>
@@ -328,17 +358,16 @@ export function RecorderEditor() {
               <button
                 className="absolute bottom-2 right-2 border-white border rounded-sm p-2 bg-slate-500 hover:bg-slate-500/50 "
                 onClick={handleJudge0}
+                disabled={isConsoleLoading}
               >
-                Compile & Execute
+                {isConsoleLoading ? 'Loading...' : 'Compile & Execute'}
               </button>
               <button
                 className="absolute top-2 right-2 border-white border text-sm rounded-md px-1 bg-slate-500 hover:bg-slate-500/50"
-                onClick={() => setOutput([])}
+                onClick={() => setConsoleOutput('')}
               >
                 clear
               </button>
-              <button onClick={handleJudge0}>Compile & Execute</button>
-              <h1>{consoleOutput}</h1>
 
               <Terminal output={consoleOutput} />
             </div>
@@ -347,17 +376,17 @@ export function RecorderEditor() {
       </div>
 
       {recorderState === 'stopped' && (
-        <button className="p-2" onClick={handleStartRecording}>
+        <button className="p-2 text-white" onClick={handleStartRecording}>
           Start Recording
         </button>
       )}
 
       {recorderState === 'recording' && (
         <>
-          <button className="p-2" onClick={handlePauseRecording}>
+          <button className="p-2 text-white" onClick={handlePauseRecording}>
             Pause Recording
           </button>
-          <button className="p-2" onClick={handleEndRecording}>
+          <button className="p-2 text-white" onClick={handleEndRecording}>
             End Recording
           </button>
         </>
@@ -365,10 +394,10 @@ export function RecorderEditor() {
 
       {recorderState === 'paused' && (
         <>
-          <button className="p-2" onClick={handleResumeRecording}>
+          <button className="p-2 text-white" onClick={handleResumeRecording}>
             Resume Recording
           </button>
-          <button className="p-2" onClick={handleEndRecording}>
+          <button className="p-2 text-white" onClick={handleEndRecording}>
             End Recording
           </button>
         </>
@@ -378,6 +407,11 @@ export function RecorderEditor() {
           <span>Loading...</span>
         </div>
       )}
+
+      {recorderState !== 'stopped' && (
+        <p className="p-2 text-white">{formatTime(elapsedTime)}</p>
+      )}
+
       {saveModalVisible && (
         <SaveRecordingModal
           onSave={handleSave}

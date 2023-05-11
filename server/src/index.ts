@@ -6,14 +6,17 @@ dotenv.config()
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { PORT } from './config';
-import { default as usersRouter}  from './routes/users.router'
-import { default as codeExecutionRouter}  from './routes/code-execution.router'
-import { default as recordingsRouter}  from './routes/recordings.router'
+import usersRouter from './routes/users.router'
+import codeExecutionRouter from './routes/code-execution.router'
+import recordingsRouter from './routes/recordings.router'
 
 const app = express();
 
 app
-  .use(cors())
+  .use(cors({
+    allowedHeaders: "*",
+    origin: "*"
+  }))
   .use(express.json())
   .use(usersRouter)
   .use(recordingsRouter)

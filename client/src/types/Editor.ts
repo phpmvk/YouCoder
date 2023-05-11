@@ -39,3 +39,11 @@ type ConsoleLog = {
   timestamp: number;
   playbackTimestamp: number;
 };
+
+type EditorRecording = {
+  title: string;
+  description?: string;
+  thumbnail_link?: string;
+  language: string;
+  recording_link: string;
+};
