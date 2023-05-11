@@ -12,6 +12,7 @@ const debounce = <T extends (...args: any[]) => void>(func: T, wait: number) => 
   };
 };
 
+
 const ExampleFrame: React.FC = () => {
   const [scrollPosition, setScrollPosition] = useState<number>(0);
   const [percentage, setPercentage] = useState<number>(0);

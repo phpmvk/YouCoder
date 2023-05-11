@@ -19,7 +19,9 @@ import {
   getLanguageId,
   calculateTotalPauseTime,
 } from '../utils/editorUtils';
+
 import { RecorderActions, EditorAction, ConsoleLog, EditorRecording, Language } from '../types/Editor';
+
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =

@@ -12,6 +12,7 @@ import { loadYCRFile } from '../utils/ycrUtils';
 import { CodeToExecute } from '../types/console';
 import consoleApi from '../services/consoleApi';
 import { formatTime, getLanguageId } from '../utils/editorUtils';
+
 import { Recording } from '../types/Creator';
 import { RecorderActions, ChangeRange, EditorAction, Language } from '../types/Editor';
 
@@ -20,6 +21,7 @@ export function PlaybackEditor({
 }: {
   recordingData: Recording;
 }) {
+
   const [editorInstance, setEditorInstance] =
     useState<editor.IStandaloneCodeEditor | null>(null);
   const [monacoInstance, setMonacoInstance] = useState<typeof monaco | null>(
