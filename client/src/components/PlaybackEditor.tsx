@@ -5,10 +5,12 @@ import * as monaco from 'monaco-editor';
 import ReactSlider from 'react-slider';
 import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
+
 import Terminal from './TerminalOutput';
 import { loadYCRFile } from '../utils/ycrUtils';
 import { CodeToExecute } from '../types/Console';
 import consoleApi from '../services/consoleApi';
+import { formatTime, getLanguageId } from '../utils/editorUtils';
 
 export function PlaybackEditor() {
   const [editorInstance, setEditorInstance] =
@@ -62,16 +64,6 @@ export function PlaybackEditor() {
     setEditorInstance(editor);
     setMonacoInstance(monaco);
   };
-
-  // Set current theme based on if darkmode is on or not
-
-  // const toggleTheme = () => {
-  //   if (darkMode) {
-  //     monacoInstance!.editor.setTheme('vs-dark');
-  //   } else {
-  //     monacoInstance!.editor.setTheme('vs-light');
-  //   }
-  // };
 
   function applyChange(
     range: ChangeRange,
@@ -317,27 +309,6 @@ export function PlaybackEditor() {
     setEditorLanguage(language);
   }
 
-  function formatTime(ms: number): string {
-    const totalSeconds = Math.floor(ms / 1000);
-    const totalMinutes = Math.floor(totalSeconds / 60);
-    const totalHours = Math.floor(totalMinutes / 60);
-
-    const displaySeconds = totalSeconds % 60;
-    const displayMinutes = totalMinutes % 60;
-    const displayHours = totalHours;
-
-    const displaySecondsString =
-      displaySeconds < 10 ? `0${displaySeconds}` : `${displaySeconds}`;
-    const displayMinutesString =
-      displayMinutes < 10 ? `0${displayMinutes}` : `${displayMinutes}`;
-    const displayHoursString =
-      displayHours < 10 ? `0${displayHours}` : `${displayHours}`;
-
-    return displayHours > 0
-      ? `${displayHoursString}:${displayMinutesString}:${displaySecondsString}`
-      : `${displayMinutesString}:${displaySecondsString}`;
-  }
-
   function handleJudge0() {
     const model = editorInstance!.getModel();
     const language = model!.getLanguageId() as Language;
@@ -348,20 +319,6 @@ export function PlaybackEditor() {
     consoleApi.getOutput(judge0)!.then((response) => {
       setStudentConsoleOutput(response.data.output);
     });
-  }
-
-  function getLanguageId(language: Language): string | null {
-    const languageMapping: Record<Language, string> = {
-      javascript: '93',
-      python: '70',
-      java: '91',
-      csharp: '51',
-      cpp: '76',
-      ruby: '72',
-      go: '95',
-    };
-
-    return languageMapping[language];
   }
 
   return (

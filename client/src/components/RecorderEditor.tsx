@@ -3,18 +3,22 @@ import React, { useState, useRef, useEffect } from 'react';
 import { editor } from 'monaco-editor';
 import * as monaco from 'monaco-editor';
 import RecordRTC from 'recordrtc';
+import { Allotment } from 'allotment';
+import 'allotment/dist/style.css';
 
 import consoleApi from '../services/consoleApi';
 import { CodeToExecute } from '../types/Console';
 import { SaveRecordingModal } from './HomePageComponents/SaveRecordingModal';
 import { saveYCRFile } from '../utils/ycrUtils';
 import { useAppSelector } from '../redux/hooks';
-
-import { Allotment } from 'allotment';
-import 'allotment/dist/style.css';
 import Terminal from './TerminalOutput';
 import recordingApi from '../services/recordingApi';
-import { formatLanguage, formatTime } from '../utils/editorUtils';
+import {
+  formatLanguage,
+  formatTime,
+  getLanguageId,
+  calculateTotalPauseTime,
+} from '../utils/editorUtils';
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
@@ -66,20 +70,6 @@ export function RecorderEditor() {
         playbackTimestamp: 0,
       });
     }
-  }
-
-  function getLanguageId(language: Language): string | null {
-    const languageMapping: Record<Language, string> = {
-      javascript: '93',
-      python: '70',
-      java: '91',
-      csharp: '51',
-      cpp: '76',
-      ruby: '72',
-      go: '95',
-    };
-
-    return languageMapping[language];
   }
 
   function handleLanguageChange(event: React.ChangeEvent<HTMLSelectElement>) {
@@ -179,6 +169,7 @@ export function RecorderEditor() {
           'You have unsaved changes from when the recording was paused. These changes will be discarded. Are you sure you want to end the recording?'
         )
       ) {
+        //If they press cancel on the prompt, don't run the rest of the handleEndRecording Function
         return;
       }
     }
@@ -213,7 +204,8 @@ export function RecorderEditor() {
       recorderActions.current.editorActions.map((action: EditorAction) => {
         let totalPauseTime = calculateTotalPauseTime(
           action.actionCreationTimestamp,
-          timestamp
+          timestamp,
+          recorderActions.current
         );
 
         const adjustedTimestamp =
@@ -228,21 +220,14 @@ export function RecorderEditor() {
       recorderActions.current.consoleLogOutputs.map((change) => {
         let totalPauseTime = calculateTotalPauseTime(
           change.timestamp,
-          timestamp
+          timestamp,
+          recorderActions.current
         );
 
         const adjustedTimestamp =
           change.timestamp - recorderActions.current.start - totalPauseTime;
         return { ...change, playbackTimestamp: adjustedTimestamp };
       });
-
-    //Get current editor language
-
-    // if (window.confirm('Would you like to save or discard your recording?')) {
-    //   //save recording logic
-    // } else {
-    //   //discard recording logic
-    // }
 
     if (audioRecorder) {
       audioRecorder.stopRecording();
@@ -297,30 +282,6 @@ export function RecorderEditor() {
 
   function handleDiscard() {
     // Implement the logic to discard the recording
-  }
-
-  function calculateTotalPauseTime(
-    actionTimestamp: number,
-    endTimestamp: number
-  ) {
-    let totalPauseTime = 0;
-    for (let i = 0; i < recorderActions.current.pauseArray.length; i++) {
-      const pauseTimestamp = recorderActions.current.pauseArray[i].timestamp;
-      const resumeTimestamp = recorderActions.current.resumeArray[i]
-        ? recorderActions.current.resumeArray[i].timestamp
-        : endTimestamp;
-
-      if (actionTimestamp < pauseTimestamp) {
-        break;
-      }
-
-      if (actionTimestamp > resumeTimestamp) {
-        totalPauseTime += resumeTimestamp - pauseTimestamp;
-      } else {
-        totalPauseTime += actionTimestamp - pauseTimestamp;
-      }
-    }
-    return totalPauseTime;
   }
 
   function handleJudge0() {
