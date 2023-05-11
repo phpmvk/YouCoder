@@ -296,15 +296,14 @@ export function RecorderEditor() {
           onChange={handleLanguageChange}
           className="border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3"
         >
-          <option selected value="javascript">
-            JavaScript
-          </option>
-          <option value="python">Python</option>
-          <option value="java">Java</option>
-          <option value="csharp">C#</option>
-          <option value="cpp">C++</option>
-          <option value="ruby">Ruby</option>
-          <option value="go">Go</option>
+
+          <option defaultValue='javascript'>JavaScript</option>
+          <option value='python'>Python</option>
+          <option value='java'>Java</option>
+          <option value='csharp'>C#</option>
+          <option value='cpp'>C++</option>
+          <option value='ruby'>Ruby</option>
+          <option value='go'>Go</option>
         </select>
       </div>
 
