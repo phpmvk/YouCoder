@@ -9,10 +9,11 @@ import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 import Terminal from './TerminalOutput';
 import { loadYCRFile } from '../utils/ycrUtils';
-import { CodeToExecute } from '../types/Console';
+import { CodeToExecute } from '../types/console';
 import consoleApi from '../services/consoleApi';
 import { formatTime, getLanguageId } from '../utils/editorUtils';
 import { Recording } from '../types/Creator';
+import { RecorderActions, ChangeRange, EditorAction, Language } from '../types/Editor';
 
 export function PlaybackEditor({
   recordingData,

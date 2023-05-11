@@ -2,6 +2,7 @@ import axios, { AxiosResponse, AxiosError } from 'axios';
 import baseURL from './baseUrl';
 import { protectedHttp } from './baseUrl';
 import { Recording, updateRecording } from '../types/Creator';
+import { EditorRecording } from '../types/Editor';
 
 class RecordingApiService {
   getRecording(id: string): Promise<AxiosResponse<Recording>> {

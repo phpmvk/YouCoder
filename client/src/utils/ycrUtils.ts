@@ -1,6 +1,7 @@
 import JSZip from 'jszip';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../App';
+import { RecorderActions } from '../types/Editor';
 
 export function str2ab(str: string): ArrayBuffer {
   const buf = new ArrayBuffer(str.length * 2);
