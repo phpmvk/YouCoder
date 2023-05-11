@@ -5,15 +5,23 @@ import * as monaco from 'monaco-editor';
 import ReactSlider from 'react-slider';
 import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 import Terminal from './TerminalOutput';
 import { loadYCRFile } from '../utils/ycrUtils';
 import { CodeToExecute } from '../types/console';
 import consoleApi from '../services/consoleApi';
 import { formatTime, getLanguageId } from '../utils/editorUtils';
+
+import { Recording } from '../types/Creator';
 import { RecorderActions, ChangeRange, EditorAction, Language } from '../types/Editor';
 
-export function PlaybackEditor() {
+export function PlaybackEditor({
+  recordingData,
+}: {
+  recordingData: Recording;
+}) {
+
   const [editorInstance, setEditorInstance] =
     useState<editor.IStandaloneCodeEditor | null>(null);
   const [monacoInstance, setMonacoInstance] = useState<typeof monaco | null>(
@@ -57,6 +65,10 @@ export function PlaybackEditor() {
       audioElement.src = audioSource;
     }
   }, [audioSource, audioElement]);
+
+  useEffect(() => {
+    handleFirebaseURL(recordingData.recording_link);
+  }, []);
 
   const handleEditorDidMount = (
     editor: editor.IStandaloneCodeEditor,
@@ -276,6 +288,45 @@ export function PlaybackEditor() {
     }
   }
 
+  async function handleFirebaseURL(firebaseURL: string) {
+    if (firebaseURL) {
+      try {
+        const storage = getStorage();
+        const storageRef = ref(storage, firebaseURL);
+
+        getDownloadURL(storageRef)
+          .then(async (url) => {
+            const response = await fetch(url);
+            const blob = await response.blob();
+
+            const file = new File([blob], 'filename.ycr', { type: blob.type });
+
+            const { recorderActions, recordedAudioURL } = await loadYCRFile(
+              file
+            );
+            setImportedActions(recorderActions);
+
+            // Decode audio data and set audio duration
+            const audioContext = new AudioContext();
+            const responseAudio = await fetch(recordedAudioURL);
+            const arrayBuffer = await responseAudio.arrayBuffer();
+            const decodedData = await audioContext.decodeAudioData(arrayBuffer);
+            setAudioDuration(decodedData.duration * 1000);
+
+            // Set the audio source
+            setAudioSource(recordedAudioURL);
+          })
+          .catch((error) => {
+            console.error('Error loading .ycr file:', error);
+          });
+      } catch (error) {
+        console.error('Error loading .ycr file:', error);
+      }
+    } else {
+      console.error('Please select a valid .ycr file');
+    }
+  }
+
   function updateAudioCurrentTime(scrubberPosition: number) {
     if (audioElement) {
       audioElement.currentTime = scrubberPosition / 1000;
@@ -307,21 +358,21 @@ export function PlaybackEditor() {
   }
 
   return (
-    <>
+    <div className='border-2 border-red-600'>
       <audio
         ref={(audio) => {
           setAudioElement(audio);
         }}
       ></audio>
       <h1>{editorLanguage}</h1>
-      <div className="flex w-full h-[500px] px-40">
+      <div className='flex w-full h-[300px] '>
         <Allotment>
           <Allotment.Pane minSize={600}>
             <Editor
-              height="500px"
-              defaultLanguage="javascript"
-              defaultValue=""
-              theme="vs-dark"
+              height='500px'
+              defaultLanguage='javascript'
+              defaultValue=''
+              theme='vs-dark'
               options={{
                 wordWrap: 'on',
                 readOnly: ignoreUserInputs,
@@ -329,15 +380,21 @@ export function PlaybackEditor() {
               onMount={handleEditorDidMount}
             />
           </Allotment.Pane>
-          <Allotment.Pane minSize={100} preferredSize={300}>
-            <div className="border w-full h-[50%] border-[#1e1e1e]">
+          <Allotment.Pane
+            minSize={100}
+            preferredSize={300}
+          >
+            <div className='border w-full h-[50%] border-[#1e1e1e]'>
               <Terminal
-                terminalName="Teachers output"
+                terminalName='Teachers output'
                 output={TeacherConsoleOutput}
               />
             </div>
-            <div className="border w-full h-[50%] border-[#1e1e1e]">
-              <button className="text-white" onClick={handleJudge0}>
+            <div className='border w-full h-[50%] border-[#1e1e1e]'>
+              <button
+                className='text-white'
+                onClick={handleJudge0}
+              >
                 Compile & Execute
               </button>
               <Terminal output={StudentConsoleOutput} />
@@ -345,45 +402,54 @@ export function PlaybackEditor() {
           </Allotment.Pane>
         </Allotment>
       </div>
+      <br></br>
+      <br></br>
 
-      <br></br>
-      <br></br>
-      <input className="mx-4" type="file" onChange={handleFileInput} />
+      <input
+        className='mx-4'
+        type='file'
+        onChange={handleFileInput}
+      />
+
+      {/* <input className="mx-4" type="file" onChange={handleFileInput} /> */}
+
       {playbackState.status === 'stopped' && (
         <button
-          className="p-2 bg-slate-500 rounded-sm"
+          className='p-2 bg-slate-500 rounded-sm'
           onClick={handleStartPlayback}
         >
           Start Playback
         </button>
       )}
-
       {playbackState.status === 'playing' && (
-        <button className="p-2 bg-slate-500 mx-4" onClick={handlePausePlayback}>
+        <button
+          className='p-2 bg-slate-500 mx-4'
+          onClick={handlePausePlayback}
+        >
           Pause Playback
         </button>
       )}
-
       {playbackState.status === 'paused' && (
-        <button className="p-2 bg-slate-500" onClick={handleResumePlayback}>
+        <button
+          className='p-2 bg-slate-500'
+          onClick={handleResumePlayback}
+        >
           Resume Playback
         </button>
       )}
-
       <br />
       <br />
-      <div className="text-white">
+      <div className='text-white'>
         {formatTime(sliderValue)} / {formatTime(audioDuration)}
       </div>
-
       <ReactSlider
-        className="horizontal-slider"
-        thumbClassName="slider-thumb"
+        className='horizontal-slider'
+        thumbClassName='slider-thumb'
         value={sliderValue}
         step={0.001}
         max={audioDuration}
         onChange={(value) => handleScrubberChange(value)}
       />
-    </>
+    </div>
   );
 }

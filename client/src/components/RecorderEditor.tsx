@@ -19,7 +19,9 @@ import {
   getLanguageId,
   calculateTotalPauseTime,
 } from '../utils/editorUtils';
-import { ConsoleLog, EditorAction, EditorRecording, Language, RecorderActions } from '../types/Editor';
+
+import { RecorderActions, EditorAction, ConsoleLog, EditorRecording, Language } from '../types/Editor';
+
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
@@ -291,8 +293,6 @@ export function RecorderEditor() {
     consoleApi
       .getOutput(judge0)!
       .then((response) => {
-        console.log(response);
-        console.log(window.atob(response.data.output));
         const output = window.atob(response.data.output);
         setConsoleOutput(output);
         handleConsoleLogOutput(output, Date.now());

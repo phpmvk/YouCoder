@@ -1,16 +1,30 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, combineReducers, Action } from '@reduxjs/toolkit';
+import { persistStore, persistReducer, PersistConfig } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import userReducer from './userSlice';
+import searchReducer from './searchSlice';
 
-const store = configureStore({
-  reducer: {
-    user: userReducer,
-  },
+const rootReducer = combineReducers({
+  user: userReducer,
+  search: searchReducer,
+  // add other reducers here
 });
 
-// initialize the store with the user's data if they are logged in
+export type RootState = ReturnType<typeof rootReducer>;
 
-export default store;
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+const persistConfig: PersistConfig<RootState> = {
+  key: 'root',
+  storage,
+  whitelist: ['user'], // only user will be persisted, add other reducers if needed
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+const store = configureStore({
+  reducer: persistedReducer,
+});
+
+let persistor = persistStore(store);
+
+export { store, persistor };
 export type AppDispatch = typeof store.dispatch;

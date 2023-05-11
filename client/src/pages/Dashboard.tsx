@@ -6,23 +6,36 @@ import CreateRecordingButton from '../components/DashboardComponents/CreateRecor
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import NoRecordings from '../components/DashboardComponents/NoRecordings';
 import { useNavigate } from 'react-router-dom';
+import { Recording } from '../types/Creator';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 interface DashboardPageProps {}
 
 const DashboardPage: React.FC<DashboardPageProps> = ({}) => {
   const [showCreateRecording, setShowCreateRecording] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const searchTerm = useSelector((state: RootState) => state.search.searchTerm);
 
   const createRecordingButtonRef = useRef(null);
 
   // import the user from the reducer
   const user = useAppSelector((state) => state.user);
-  console.log('user id from DashboardPage: ', user.uid);
+  const [displayRecordings, setDisplayRecordings] = useState<Recording[]>(
+    user.recordings!
+  );
+
   useEffect(() => {
-    if (!user.uid) {
-      navigate('/login');
+    if (searchTerm === '') {
+      setDisplayRecordings(user.recordings!);
+    } else {
+      setDisplayRecordings(
+        user.recordings!.filter((recording) =>
+          recording.title.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
     }
-  }, []);
+  }, [searchTerm]);
 
   const observerCallback = (entries: any, observer: any) => {
     entries.forEach((entry: any) => {
@@ -64,7 +77,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({}) => {
           <CreateRecordingButton />
         </div>
         {user.recordings!.length > 0 ? (
-          <RecordingsList recordings={user.recordings || []} />
+          <RecordingsList recordings={displayRecordings} />
         ) : (
           <NoRecordings />
         )}

@@ -76,9 +76,7 @@ export async function uploadRecording(req: Request, res: Response) {
         description: description?description:'',
         language: language,
         recording_link: recording_link,
-        created_at: (new Date(Date.now())).toString(),
-        full_link: 'to be created in backend',
-        iframe_link: 'to be created in backend',
+        created_at: (new Date(Date.now())).toString()
       },
       include: {
         creator: {
@@ -88,7 +86,16 @@ export async function uploadRecording(req: Request, res: Response) {
         }
       }
     })
-    res.status(201).send(newRecording)
+    const updatedNewRecording = await prisma.recording.update({
+      where: {
+        recording_id: newRecording.recording_id
+      },
+      data: {
+        full_link: `https://youcoder.io/player/${newRecording.recording_id}`,
+        iframe_link: `<iframe src='https://youcoder.io/player/${newRecording.recording_id}?embed=true' width='1000' height='480' allowFullScreentitle='${newRecording.title}'/>`
+      }
+    })
+    res.status(201).send(updatedNewRecording)
   } catch (err) {
     console.error(err);
     res.status(409).send({ message: 'Unable to create resource' })

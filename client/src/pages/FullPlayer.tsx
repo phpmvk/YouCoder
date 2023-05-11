@@ -8,8 +8,11 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import { Chip } from '@mui/material';
 import ReplyIcon from '@mui/icons-material/Reply';
+import { Recording } from '../types/Creator';
 
-interface FullPlayerPageProps {}
+interface FullPlayerPageProps {
+  recordingData: Recording;
+}
 
 const recording = {
   title: 'Javascript Functions Explained Longer Again AGAIN Pt. 2',
@@ -19,78 +22,71 @@ const recording = {
   subs: '2.3K',
 };
 
-const FullPlayerPage: React.FC<FullPlayerPageProps> = ({}) => {
+const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
   return (
-    <div className='min-h-screen bg-bg-pri min-w-[720px]'>
+    <div className="min-h-screen bg-bg-pri min-w-[720px]">
       <div>
         <TopNavBar />
 
-        <div className='bg-bg-pri relative flex justify-center items-center overflow-y-scroll overflow-x-hidden '>
-          <div className=' bg-bg-gptdark border-solid p-2 mx-auto  pt-20 top-[20px] mb-1 rounded-lg overflow-y-scroll pb-[10px]'>
-            <PlaybackEditor />
+        <div className="bg-bg-pri relative flex justify-center items-center overflow-y-scroll overflow-x-hidden ">
+          <div className=" bg-bg-gptdark border-solid p-2 mx-auto  pt-20 top-[20px] mb-1 rounded-lg overflow-y-scroll pb-[10px]">
+            <PlaybackEditor recordingData={recordingData} />
 
-            <div className='w-full bg-bg-gpt-dark h-[400px] bottom-[20px] mt-[10px] rounded-lg'>
-              <div className='bg-bg-gptdark flex flex-col md:flex-row h-full md:min-w-full text-center'>
+            <div className="w-full bg-bg-gpt-dark h-[400px] bottom-[20px] mt-[10px] rounded-lg">
+              <div className="bg-bg-gptdark flex flex-col md:flex-row h-full md:min-w-full text-center">
                 {/* small title */}
-                <div className='text-white text-3xl text-left pb-2 pt-4 px-6 mx-auto md:hidden '>
+                <div className="text-white text-3xl text-left pb-2 pt-4 px-6 mx-auto md:hidden ">
                   {recording.title}
                 </div>
                 {/* <div className="text-white text-3xl whitespace-nowrap pb-2 pt-4 max-w-[30ch] text-ellipsis overflow-hidden mx-auto md:hidden">{recording.title}</div> */}
-                <div className='flex md:flex-row'>
-                  <div className='bg-bg-gptdark w-[200px] md:min-h-[400px] rounded-lg ml-2 sm:h-[250px]'>
+                <div className="flex md:flex-row">
+                  <div className="bg-bg-gptdark w-[200px] md:min-h-[400px] rounded-lg ml-2 sm:h-[250px]">
                     <div
-                      className='h-[100px] w-[100px] flex-shrink-0 mt-1 md:ml-[50px] sm:ml-[25px] rounded-full border-2 border-bg-alt bg-cover bg-center bg-red-900'
+                      className="h-[100px] w-[100px] flex-shrink-0 mt-1 md:ml-[50px] sm:ml-[25px] rounded-full border-2 border-bg-alt bg-cover bg-center bg-red-900"
                       style={{
                         backgroundImage: `url(./../../public/avatar.webp)`,
                       }}
                     ></div>
-                    <div className=' h-fit p-3 py-4 w-full flex-shrink-0 rounded-lg text-white text-xl  flex justify-center items-center'>
+                    <div className=" h-fit p-3 py-4 w-full flex-shrink-0 rounded-lg text-white text-xl  flex justify-center items-center">
                       {recording.creator}
                     </div>
-                    <Stack
-                      className='px-auto'
-                      direction='column'
-                      spacing={2}
-                    >
+                    <Stack className="px-auto" direction="column" spacing={2}>
                       <Button
-                        variant='outlined'
-                        size='small'
-                        className='!rounded-full !border-bg-alt !text-white'
+                        variant="outlined"
+                        size="small"
+                        className="!rounded-full !border-bg-alt !text-white"
                       >
                         <AddIcon />
                         Subscribe
                       </Button>
                       <Chip
-                        className='!bg-white/10 !text-white !text-sm !stroke-white !rounded-sm'
+                        className="!bg-white/10 !text-white !text-sm !stroke-white !rounded-sm"
                         label={`${recording.subs} Subscribers `}
                       />
                     </Stack>
 
-                    <div className='bg-bg-gptdark mt-6 mx-auto xl:hidden max-720:hidden max-md:hidden w-full max-h-[200px] '>
-                      <Stack
-                        direction='column'
-                        spacing={1}
-                      >
+                    <div className="bg-bg-gptdark mt-6 mx-auto xl:hidden max-720:hidden max-md:hidden w-full max-h-[200px] ">
+                      <Stack direction="column" spacing={1}>
                         <Button
-                          variant='outlined'
-                          size='small'
-                          className='!rounded-full !border-bg-alt !text-white whitespace-nowrap'
+                          variant="outlined"
+                          size="small"
+                          className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
                         >
                           <FaceIcon />
                           button
                         </Button>
                         <Button
-                          variant='outlined'
-                          size='small'
-                          className='!rounded-full !border-bg-alt !text-white whitespace-nowrap'
+                          variant="outlined"
+                          size="small"
+                          className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
                         >
-                          <ReplyIcon className='transform scale-x-[-1]' />
+                          <ReplyIcon className="transform scale-x-[-1]" />
                           share
                         </Button>
                         <Button
-                          variant='outlined'
-                          size='small'
-                          className='!rounded-full !border-bg-alt !text-white whitespace-nowrap'
+                          variant="outlined"
+                          size="small"
+                          className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
                         >
                           <AddIcon />
                           add to list
@@ -99,77 +95,70 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({}) => {
                     </div>
                   </div>
 
-                  <div className='bg-bg-gptdark px-4 pt-2 md:hidden w-full  '>
-                    <Stack
-                      className='px-8'
-                      direction='row'
-                      spacing={1}
-                    >
+                  <div className="bg-bg-gptdark px-4 pt-2 md:hidden w-full  ">
+                    <Stack className="px-8" direction="row" spacing={1}>
                       <Button
-                        variant='outlined'
-                        size='small'
-                        className='!rounded-full !border-bg-alt !text-white whitespace-nowrap'
+                        variant="outlined"
+                        size="small"
+                        className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
                       >
                         <FaceIcon />
                         button
                       </Button>
                       <Button
-                        variant='outlined'
-                        size='small'
-                        className='!rounded-full !border-bg-alt !text-white whitespace-nowrap'
+                        variant="outlined"
+                        size="small"
+                        className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
                       >
-                        <ReplyIcon className='transform scale-x-[-1]' />
+                        <ReplyIcon className="transform scale-x-[-1]" />
                         share
                       </Button>
                       <Button
-                        variant='outlined'
-                        size='small'
-                        className='!rounded-full !border-bg-alt !text-white whitespace-nowrap'
+                        variant="outlined"
+                        size="small"
+                        className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
                       >
                         <AddIcon />
                         add to list
                       </Button>
                     </Stack>
-                    <div className='bg-bg-gptdark text-gray-200 text-l text-left pt-6 px-6 w-full'>
+                    <div className="bg-bg-gptdark text-gray-200 text-l text-left pt-6 px-6 w-full">
                       {recording.description}
                     </div>
                   </div>
                 </div>
 
-                <div className='ml-6 bg-bg-gptdark '>
-                  <div className='flex flex-col w-full'>
-                    <div className='flex justify-between items-start'>
-                      <div className='flex flex-col'>
-                        <div className='text-white lg:text-4xl md:text-3xl max-sm:hidden max-md:hidden  whitespace-nowrap p-4 max-w-[30ch] text-ellipsis overflow-hidden text-center'>
+                <div className="ml-6 bg-bg-gptdark ">
+                  <div className="flex flex-col w-full">
+                    <div className="flex justify-between items-start">
+                      <div className="flex flex-col">
+                        <div className="text-white lg:text-4xl md:text-3xl max-sm:hidden max-md:hidden  whitespace-nowrap p-4 max-w-[30ch] text-ellipsis overflow-hidden text-center">
                           {recording.title}
                         </div>
                       </div>
 
-                      <div className='bg-bg-gptdark p-4 hidden xl:flex xl:items-center'>
-                        <Stack
-                          direction='row'
-                          spacing={1}
-                        >
+                      <div className="bg-bg-gptdark p-4 hidden xl:flex xl:items-center">
+                        <Stack direction="row" spacing={1}>
                           <Button
-                            variant='outlined'
-                            size='small'
-                            className='!rounded-full !border-bg-alt !text-white whitespace-nowrap'
+                            variant="outlined"
+                            size="small"
+                            className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
                           >
                             <FaceIcon />
                             button
                           </Button>
                           <Button
-                            variant='outlined'
-                            size='small'
-                            className='!rounded-full !border-bg-alt !text-white whitespace-nowrap'
+                            variant="outlined"
+                            size="small"
+                            className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
                           >
-                            <ReplyIcon className='transform scale-x-[-1]' />
+                            <ReplyIcon className="transform scale-x-[-1]" />
                             share
                           </Button>
                           <Button
-                            variant='outlined'
-                            size='small'
-                            className='!rounded-full !border-bg-alt !text-white whitespace-nowrap'
+                            variant="outlined"
+                            size="small"
+                            className="!rounded-full !border-bg-alt !text-white whitespace-nowrap"
                           >
                             <AddIcon />
                             add to list
@@ -180,10 +169,10 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({}) => {
                   </div>
 
                   <div>
-                    <div className='max-md:hidden bg-bg-gptdark text-gray-200 text-l text-left p-4 w-full'>
+                    <div className="max-md:hidden bg-bg-gptdark text-gray-200 text-l text-left p-4 w-full">
                       {recording.description}
                     </div>
-                    <div className='h-[50px] w-1/3 rounded-lg p-2'></div>
+                    <div className="h-[50px] w-1/3 rounded-lg p-2"></div>
                   </div>
                 </div>
               </div>
