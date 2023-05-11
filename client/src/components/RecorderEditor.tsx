@@ -7,7 +7,7 @@ import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
 
 import consoleApi from '../services/consoleApi';
-import { CodeToExecute } from '../types/Console';
+import { CodeToExecute } from '../types/console';
 import { SaveRecordingModal } from './HomePageComponents/SaveRecordingModal';
 import { saveYCRFile } from '../utils/ycrUtils';
 import { useAppSelector } from '../redux/hooks';
@@ -19,6 +19,7 @@ import {
   getLanguageId,
   calculateTotalPauseTime,
 } from '../utils/editorUtils';
+import { ConsoleLog, EditorAction, EditorRecording, Language, RecorderActions } from '../types/Editor';
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =

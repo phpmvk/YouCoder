@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { getAuth, signOut } from 'firebase/auth';
-import './../components/HomePageComponents/Home.css';
 import { Parallax } from 'react-parallax';
 import TopNavBar from './../components/HomePageComponents/TopNavBar';
 import TeachInteractively from './../components/HomePageComponents/TeachInteractively';
