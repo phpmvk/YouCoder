@@ -13,8 +13,7 @@ const PlayerPage: React.FC<PlayerPageProps> = ({}) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const embed = searchParams.get('embed');
-  const [toRender, setToRender] = useState<JSX.Element | null>(null)
-
+  const [toRender, setToRender] = useState<JSX.Element | null>(null);
 
   useEffect(() => {
     if (!id) {
@@ -46,20 +45,20 @@ const PlayerPage: React.FC<PlayerPageProps> = ({}) => {
 
             switch (error.response.status) {
               case 400:
-                return <Page404 />;
+                setToRender(<Page404 />);
               case 403:
-                return <Page404 />;
+                setToRender(<Page404 />);
               case 500:
-                return <Page500 />;
+                setToRender(<Page500 />);
               default:
-                return <Page500 />;
+                setToRender(<Page500 />);
             }
           } else if (error.request) {
             console.log(error.request);
-            return <Page500 />;
+            setToRender(<Page500 />);
           } else {
             console.log('Error', error.message);
-            return <Page500 />;
+            setToRender(<Page500 />);
           }
         } else {
           if (error.response) {
