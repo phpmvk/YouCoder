@@ -11,13 +11,15 @@ import Terminal from './TerminalOutput';
 import { loadYCRFile } from '../utils/ycrUtils';
 import { CodeToExecute } from '../types/Console';
 import consoleApi from '../services/consoleApi';
-import { formatTime, getLanguageId } from '../utils/editorUtils';
+import { formatTime, getLanguageId, formatLanguage } from '../utils/editorUtils';
 import { Recording } from '../types/Creator';
 import Button from '@mui/material/Button';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import Slider from '@mui/material/Slider';
+
+
 
 export function PlaybackEditor({
   recordingData,
@@ -367,7 +369,9 @@ export function PlaybackEditor({
         }}
       ></audio>
       
-      <h1 className="ml-10 text-gray-200 uppercase bg-bg-pri w-[20ch] text-center rounded-t-full mt-2">{editorLanguage}</h1>
+      <h1 className={`ml-10 bg-bg-pri w-[20ch] text-center rounded-t-full mt-2 pt-1 ${editorLanguage ? 'text-gray-200' : 'text-transparent'}`}>
+    {editorLanguage ? formatLanguage(editorLanguage) : '·'}
+</h1>
       <div className="">
       <div className="bg-bg-gptdark flex w-full h-[400px] px-10  ">
         <Allotment>
@@ -385,28 +389,55 @@ export function PlaybackEditor({
               onMount={handleEditorDidMount}
             />
           </Allotment.Pane>
-          <Allotment.Pane minSize={100} preferredSize={300}>
+          <Allotment.Pane minSize={200} preferredSize={400}>
             <div className=" w-full h-[50%] border-r-8 border-t-8 border-l-2 border-bg-pri ">
               <Terminal
                 terminalName="output"
                 output={TeacherConsoleOutput}
               />
             </div>
-            <div className="w-full h-[50%]  border-t-6 border-l-2 border-r-8 border-bg-pri">
+            <div className="relative w-full h-[50%] border-t-6 border-l-2 border-r-8 border-bg-pri">
               <div className='flex justify-center items-center'>
 
               <button 
               
-              className=" w-3/4 items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700" onClick={handleJudge0}>
-                COMPILE & EXECUTE
+              className="font-extralight absolute bottom-2 right-2 w-fit items-center px-2 py-1 text-sm text-gray-900 bg-transparent border border-gray-900 rounded-lg hover:bg-gray-900 hover:text-gray-200 focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-gray-200 dark:border-white dark:text-gray-200 dark:hover:text-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-700 uppercase" onClick={handleJudge0}>
+                compile & execute
               </button>
+              <button 
+              
+              className="absolute top-0 right-2 w-fit items-center px-1 text-sm font-light text-gray-900 bg-transparent border border-gray-900 rounded-md hover:bg-gray-900 hover:text-gray-200 focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-gray-200 dark:border-white dark:text-gray-200 dark:hover:text-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-700 uppercase" onClick={()=>{}}>
+                clear
+              </button>
+
+
+{/* <div className="inline-flex rounded-md shadow-sm" role="group">
+  <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-l-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700" onClick={handleJudge0}>
+   
+    COMPILE & EXECUTE
+  </button>
+  
+  <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-r-md hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+    
+    CLEAR
+  </button>
+
+</div> */}
+
+
 
               </div>
               <Terminal 
               terminalName="your output"
               output={StudentConsoleOutput} />
+
+
+              
             </div>
+
+
           </Allotment.Pane>
+          
         </Allotment>
       </div>
 
@@ -417,7 +448,7 @@ export function PlaybackEditor({
       {playbackState.status === 'stopped' && (
         <Button
           variant="outlined"
-          className="!rounded-full !border-bg-alt !text-gray-200"
+          className="!rounded-full !bg-bg-alt !text-bg-pri"
           onClick={handleStartPlayback}
         >
           <PlayArrowIcon/>
@@ -427,7 +458,7 @@ export function PlaybackEditor({
       {playbackState.status === 'playing' && (
         <Button 
         variant="outlined"
-        className="!rounded-full !border-bg-alt !text-gray-200" onClick={handlePausePlayback}>
+        className="!rounded-full !bg-bg-alt !text-bg-pri" onClick={handlePausePlayback}>
           <PauseIcon/>
         </Button>
       )}
@@ -435,7 +466,7 @@ export function PlaybackEditor({
       {playbackState.status === 'paused' && (
         <Button 
         variant="outlined"
-        className="!rounded-full !border-bg-alt !text-gray-200" onClick={handleResumePlayback}>
+        className="!rounded-full !bg-bg-alt !text-bg-pri" onClick={handleResumePlayback}>
           <PlayArrowIcon/>
         </Button>
       )}
