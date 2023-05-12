@@ -369,7 +369,7 @@ export function PlaybackEditor({
 
   return (
     
-    <div className="border-2 border-red-600">
+    <div>
       <audio
         ref={(audio) => {
           setAudioElement(audio);
