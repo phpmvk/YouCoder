@@ -394,7 +394,7 @@ export function PlaybackEditor({
               <div className='flex'>
               <Button 
               variant="outlined"
-              className="!text-gray-200 w-full !rounded-full !border-bg-alt" onClick={handleJudge0}>
+              className="!text-gray-200 w-full !rounded-full !border-bg-alt whitespace-nowrap" onClick={handleJudge0}>
                 Compile & Execute
               </Button>
               </div>
