@@ -380,7 +380,7 @@ export function PlaybackEditor({
     {editorLanguage ? formatLanguage(editorLanguage) : '·'}
 </h1>
       <div className="">
-      <div className="bg-bg-gptdark flex w-full h-[400px] px-10  ">
+      <div className="bg-bg-pri flex w-full h-[400px] px-10  ">
         <Allotment>
           <Allotment.Pane minSize={600}>
             <Editor
