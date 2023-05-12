@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-const debounce = (func, wait) => {
-  let timeout;
-  return function executedFunction(...args) {
+const debounce = <T extends (...args: any[]) => void>(func: T, wait: number) => {
+  let timeout: ReturnType<typeof setTimeout>;
+  return function executedFunction(...args: Parameters<T>) {
     const later = () => {
       clearTimeout(timeout);
       func(...args);
@@ -11,6 +11,7 @@ const debounce = (func, wait) => {
     timeout = setTimeout(later, wait);
   };
 };
+
 
 const ExampleFrame: React.FC = () => {
   const [scrollPosition, setScrollPosition] = useState<number>(0);

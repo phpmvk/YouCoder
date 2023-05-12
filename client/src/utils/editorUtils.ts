@@ -1,4 +1,5 @@
 import * as monaco from 'monaco-editor';
+import { Language, RecorderActions } from '../types/Editor';
 
 export function formatLanguage(language: string) {
   switch (language) {

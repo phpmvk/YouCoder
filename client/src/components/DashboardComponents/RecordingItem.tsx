@@ -230,7 +230,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
                 COPY LINK
               </Button>
             </div>
-            <div className='bg-bg-pri w-10/12 h-10 px-4 z-10 m-1 rounded-md flex items-center text-white/80 font-console overflow-hidden hover:underline hover:cursor-pointer'>
+            <div className='bg-bg-pri w-10/12 h-10 px-4 z-10 m-1 rounded-md flex items-center text-white/80 font-console overflow-hidden whitespace-nowrap hover:underline hover:cursor-pointer'>
               <a
                 className='no-underline text-white/80'
                 href={recording.full_link}

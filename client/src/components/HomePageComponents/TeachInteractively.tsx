@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 const TeachInteractively = () => {
   const [isActive, setIsActive] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null); // explicitly specify the type of the ref
 
   useEffect(() => {
     const handleScroll = () => {

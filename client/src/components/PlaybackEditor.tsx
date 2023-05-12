@@ -354,15 +354,16 @@ export function PlaybackEditor({
       language_id,
       source_code: base64SourceCode,
     };
+    console.log('judge0 before sending', judge0);
     consoleApi.getOutput(judge0)!.then((response) => {
       const output = window.atob(response.data.output);
-
+      console.log('output in judge0', output);
       setStudentConsoleOutput(output);
     });
   }
 
   return (
-    <>
+    <div className="border-2 border-red-600">
       <audio
         ref={(audio) => {
           setAudioElement(audio);
@@ -440,11 +441,11 @@ export function PlaybackEditor({
           
         </Allotment>
       </div>
-
       <br></br>
       <br></br>
       <div className='w-auto flex items-center justify-evenly space-x-16 -mt-12 bg-bg-pri mx-10 px-2 md:pax-auto'>
       {/* <input className="mx-4" type="file" onChange={handleFileInput} /> */}
+
       {playbackState.status === 'stopped' && (
         <Button
           variant="outlined"
@@ -454,7 +455,6 @@ export function PlaybackEditor({
           <PlayArrowIcon/>
         </Button>
       )}
-
       {playbackState.status === 'playing' && (
         <Button 
         variant="outlined"
@@ -462,7 +462,6 @@ export function PlaybackEditor({
           <PauseIcon/>
         </Button>
       )}
-
       {playbackState.status === 'paused' && (
         <Button 
         variant="outlined"

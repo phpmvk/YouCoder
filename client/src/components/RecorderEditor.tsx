@@ -20,6 +20,14 @@ import {
   calculateTotalPauseTime,
 } from '../utils/editorUtils';
 
+import {
+  RecorderActions,
+  EditorAction,
+  ConsoleLog,
+  EditorRecording,
+  Language,
+} from '../types/Editor';
+
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
     useState<editor.IStandaloneCodeEditor | null>(null);
@@ -119,6 +127,11 @@ export function RecorderEditor() {
     });
     //actions
     recorderActions.current.editorActions = [];
+    recorderActions.current.consoleLogOutputs = [];
+    recorderActions.current.pauseArray = [];
+    recorderActions.current.pauseLengthArray = [];
+    recorderActions.current.resumeArray = [];
+
     editorInstance!.setValue('');
     recorderActions.current.start = Date.now();
     setRecorderState('recording');

@@ -10,42 +10,12 @@ import CreateRecordingPage from './pages/CreateRecording';
 import DocsPage from './pages/Docs';
 import PlayerPage from './pages/Player';
 import NotFoundPage from './pages/NotFound';
-import { useSelector, useDispatch } from 'react-redux';
-import { setUser, editUser } from './redux/userSlice';
-import { useAppDispatch, useAppSelector } from './redux/hooks';
 import { getStorage } from 'firebase/storage';
-import { useEffect, useState } from 'react';
-import http from './services/userApi';
 
 export const Firebase = initializeApp(config.firebaseConfig);
 export const storage = getStorage(Firebase);
 
 function App() {
-  const dispatch = useAppDispatch();
-  // add a useEffect here to check if there is a token to get the user from the backend and upfate the store
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      login();
-    }
-  }, []);
-
-  async function login() {
-    await http
-      .creatorLogin()
-      .then((response) => {
-        console.log('user from backend response: ', response.data);
-        dispatch(setUser({ user: response.data.user }));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  // const user = useAppSelector((state) => state.user);
-  // console.log('user: ', user);
-  // const dispatch = useAppDispatch();
-  // dispatch(editUser({ avatar: ' ' }));
   return (
     <BrowserRouter>
       <Routes>
