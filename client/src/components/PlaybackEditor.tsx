@@ -17,8 +17,13 @@ import Button from '@mui/material/Button';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import Slider from '@mui/material/Slider';
 
+import {
+  RecorderActions,
+  ChangeRange,
+  EditorAction,
+  Language,
+} from '../types/Editor';
 
 
 export function PlaybackEditor({
@@ -363,6 +368,7 @@ export function PlaybackEditor({
   }
 
   return (
+    
     <div className="border-2 border-red-600">
       <audio
         ref={(audio) => {
@@ -407,23 +413,12 @@ export function PlaybackEditor({
               </button>
               <button 
               
-              className="absolute top-0 right-2 w-fit items-center px-1 text-sm font-light text-gray-900 bg-transparent border border-gray-900 rounded-md hover:bg-gray-900 hover:text-gray-200 focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-gray-200 dark:border-white dark:text-gray-200 dark:hover:text-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-700 uppercase" onClick={()=>{}}>
+              className="absolute top-0 right-2 w-fit items-center px-1 text-sm font-light text-gray-900 bg-transparent border border-gray-900 rounded-md hover:bg-gray-900 hover:text-gray-200 focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-gray-200 dark:border-white dark:text-gray-200 dark:hover:text-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-700 uppercase" onClick={() => setStudentConsoleOutput('')}>
                 clear
               </button>
 
 
-{/* <div className="inline-flex rounded-md shadow-sm" role="group">
-  <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-l-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700" onClick={handleJudge0}>
-   
-    COMPILE & EXECUTE
-  </button>
-  
-  <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-r-md hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
-    
-    CLEAR
-  </button>
 
-</div> */}
 
 
 
@@ -492,7 +487,7 @@ export function PlaybackEditor({
    <br></br>   
       
 </div>
-    </>
+    </div>
     
   );
 }
