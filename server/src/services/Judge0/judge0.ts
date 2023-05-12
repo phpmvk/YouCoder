@@ -7,7 +7,7 @@ export async function sendCode(codeToExecute: CodeToExecute) {
   const codeSubmissionReq = {
     url: 'https://' + apiHost + '/submissions',
     params: {
-      base64_encoded: 'true', //<-- update this when we set up encoding in frontend
+      base64_encoded: 'true',
       fields: '*'
     },
     method: 'POST',
@@ -34,33 +34,48 @@ export async function sendCode(codeToExecute: CodeToExecute) {
     return 'External error' + err
   }
 
-  
-  const submissionResultReq = {
-    url: 'https://' + apiHost + '/submissions/' + submissionToken,
-    params: {
-      base64_encoded: 'true',  //<-- update this when we set up encoding in frontend
-      fields: '*' //might be able to remove this entirely
-    },
-    method: 'GET',
-    headers: {
-      'X-RapidAPI-Key':apiKey,
-      'X-RapidAPI-Host':apiHost,
+  const checkStatus = async (token: string): Promise<any> => {
+    const submissionResultReq = {
+      url: 'https://' + apiHost + '/submissions/' + token,
+      params: {
+        base64_encoded: 'true',
+        fields: '*'
+      },
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key':apiKey,
+        'X-RapidAPI-Host':apiHost,
+      }
+    }
+
+    try {
+      const response = await axios.request(submissionResultReq);
+      const statusId = response.data.status?.id;
+
+      if (statusId === 1 || statusId === 2) {
+        setTimeout(() => {
+          checkStatus(token).then(result => {
+            return result;
+          });
+        }, 2000)
+      } else {
+        if (response.data.stdout === null) {
+          return response.data.stderr;
+        } else {
+          return response.data.stdout;
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      return 'External error' + err;
     }
   }
 
-
-  let submissionResultRes;
   try {
-    const response = await axios.request(submissionResultReq)
-    submissionResultRes = response.data
+    const submissionResult = await checkStatus(submissionToken);
+    return submissionResult;
   } catch (err) {
-    console.error(err)
-    return 'External error' + err
-  }
-
-  if (submissionResultRes.stdout === null) {
-    return submissionResultRes.stderr
-  } else {
-    return submissionResultRes.stdout
+    console.error(err);
+    return 'External error' + err;
   }
 }
