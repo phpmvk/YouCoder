@@ -7,7 +7,7 @@ import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
 
 import consoleApi from '../services/consoleApi';
-import { CodeToExecute } from '../types/console';
+import { CodeToExecute } from '../types/Console';
 import { SaveRecordingModal } from './HomePageComponents/SaveRecordingModal';
 import { saveYCRFile } from '../utils/ycrUtils';
 import { useAppSelector } from '../redux/hooks';
@@ -20,8 +20,13 @@ import {
   calculateTotalPauseTime,
 } from '../utils/editorUtils';
 
-import { RecorderActions, EditorAction, ConsoleLog, EditorRecording, Language } from '../types/Editor';
-
+import {
+  RecorderActions,
+  EditorAction,
+  ConsoleLog,
+  EditorRecording,
+  Language,
+} from '../types/Editor';
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
@@ -122,6 +127,11 @@ export function RecorderEditor() {
     });
     //actions
     recorderActions.current.editorActions = [];
+    recorderActions.current.consoleLogOutputs = [];
+    recorderActions.current.pauseArray = [];
+    recorderActions.current.pauseLengthArray = [];
+    recorderActions.current.resumeArray = [];
+
     editorInstance!.setValue('');
     recorderActions.current.start = Date.now();
     setRecorderState('recording');

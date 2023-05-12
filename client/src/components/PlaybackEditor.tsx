@@ -9,19 +9,23 @@ import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 import Terminal from './TerminalOutput';
 import { loadYCRFile } from '../utils/ycrUtils';
-import { CodeToExecute } from '../types/console';
+import { CodeToExecute } from '../types/Console';
 import consoleApi from '../services/consoleApi';
 import { formatTime, getLanguageId } from '../utils/editorUtils';
 
 import { Recording } from '../types/Creator';
-import { RecorderActions, ChangeRange, EditorAction, Language } from '../types/Editor';
+import {
+  RecorderActions,
+  ChangeRange,
+  EditorAction,
+  Language,
+} from '../types/Editor';
 
 export function PlaybackEditor({
   recordingData,
 }: {
   recordingData: Recording;
 }) {
-
   const [editorInstance, setEditorInstance] =
     useState<editor.IStandaloneCodeEditor | null>(null);
   const [monacoInstance, setMonacoInstance] = useState<typeof monaco | null>(
@@ -350,29 +354,30 @@ export function PlaybackEditor({
       language_id,
       source_code: base64SourceCode,
     };
+    console.log('judge0 before sending', judge0);
     consoleApi.getOutput(judge0)!.then((response) => {
       const output = window.atob(response.data.output);
-
+      console.log('output in judge0', output);
       setStudentConsoleOutput(output);
     });
   }
 
   return (
-    <div className='border-2 border-red-600'>
+    <div className="border-2 border-red-600">
       <audio
         ref={(audio) => {
           setAudioElement(audio);
         }}
       ></audio>
       <h1>{editorLanguage}</h1>
-      <div className='flex w-full h-[300px] '>
+      <div className="flex w-full h-[300px] ">
         <Allotment>
           <Allotment.Pane minSize={600}>
             <Editor
-              height='500px'
-              defaultLanguage='javascript'
-              defaultValue=''
-              theme='vs-dark'
+              height="500px"
+              defaultLanguage="javascript"
+              defaultValue=""
+              theme="vs-dark"
               options={{
                 wordWrap: 'on',
                 readOnly: ignoreUserInputs,
@@ -380,21 +385,15 @@ export function PlaybackEditor({
               onMount={handleEditorDidMount}
             />
           </Allotment.Pane>
-          <Allotment.Pane
-            minSize={100}
-            preferredSize={300}
-          >
-            <div className='border w-full h-[50%] border-[#1e1e1e]'>
+          <Allotment.Pane minSize={100} preferredSize={300}>
+            <div className="border w-full h-[50%] border-[#1e1e1e]">
               <Terminal
-                terminalName='Teachers output'
+                terminalName="Teachers output"
                 output={TeacherConsoleOutput}
               />
             </div>
-            <div className='border w-full h-[50%] border-[#1e1e1e]'>
-              <button
-                className='text-white'
-                onClick={handleJudge0}
-              >
+            <div className="border w-full h-[50%] border-[#1e1e1e]">
+              <button className="text-white" onClick={handleJudge0}>
                 Compile & Execute
               </button>
               <Terminal output={StudentConsoleOutput} />
@@ -405,46 +404,36 @@ export function PlaybackEditor({
       <br></br>
       <br></br>
 
-      <input
-        className='mx-4'
-        type='file'
-        onChange={handleFileInput}
-      />
+      <input className="mx-4" type="file" onChange={handleFileInput} />
 
       {/* <input className="mx-4" type="file" onChange={handleFileInput} /> */}
 
       {playbackState.status === 'stopped' && (
         <button
-          className='p-2 bg-slate-500 rounded-sm'
+          className="p-2 bg-slate-500 rounded-sm"
           onClick={handleStartPlayback}
         >
           Start Playback
         </button>
       )}
       {playbackState.status === 'playing' && (
-        <button
-          className='p-2 bg-slate-500 mx-4'
-          onClick={handlePausePlayback}
-        >
+        <button className="p-2 bg-slate-500 mx-4" onClick={handlePausePlayback}>
           Pause Playback
         </button>
       )}
       {playbackState.status === 'paused' && (
-        <button
-          className='p-2 bg-slate-500'
-          onClick={handleResumePlayback}
-        >
+        <button className="p-2 bg-slate-500" onClick={handleResumePlayback}>
           Resume Playback
         </button>
       )}
       <br />
       <br />
-      <div className='text-white'>
+      <div className="text-white">
         {formatTime(sliderValue)} / {formatTime(audioDuration)}
       </div>
       <ReactSlider
-        className='horizontal-slider'
-        thumbClassName='slider-thumb'
+        className="horizontal-slider"
+        thumbClassName="slider-thumb"
         value={sliderValue}
         step={0.001}
         max={audioDuration}
