@@ -34,6 +34,7 @@
     "react-router-dom": "^6.11.1",
     "react-slider": "^2.0.4",
     "recordrtc": "^5.6.2",
+    "redux-persist": "^6.0.0",
     "typewriter-effect": "^2.19.0"
   },
   "devDependencies": {

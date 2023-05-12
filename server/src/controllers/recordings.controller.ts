@@ -44,6 +44,36 @@ export async function getRecordingById(req: Request, res: Response) {
   }
 }
 
+export async function getAllUserRecordings(req: Request, res: Response) {
+  console.log('Recordings - GET received - getAllUserRecordings')
+  try {
+
+    const user = await prisma.creator.findUnique({
+      where: {
+        uid: req.body.user.uid
+      }
+    })
+
+    if (!user) {
+      return res.status(403).send({ message: 'User does not exist'})
+    }
+
+    const allUserRecordings = await prisma.recording.findMany({
+      where: {
+        creator_uid: user.uid
+      },
+      orderBy: {
+        created_at: 'desc'
+      }
+    })
+    res.status(200).send(allUserRecordings)
+
+  } catch (err) {
+    console.error(err)
+    res.status(500).send({ message: 'Internal server error'})
+  }
+}
+
 export async function uploadRecording(req: Request, res: Response) {
   console.log('Recordings - POST received - uploadRecording')
   const {

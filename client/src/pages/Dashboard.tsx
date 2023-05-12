@@ -37,6 +37,10 @@ const DashboardPage: React.FC<DashboardPageProps> = ({}) => {
     }
   }, [searchTerm]);
 
+  useEffect(() => {
+    setDisplayRecordings(user.recordings!);
+  }, [user.recordings]);
+
   const observerCallback = (entries: any, observer: any) => {
     entries.forEach((entry: any) => {
       if (entry.intersectionRatio !== 1) {

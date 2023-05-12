@@ -40,6 +40,7 @@ const PublishModal: React.FC<PublishModalProps> = ({
         console.log('res from unpublishing: ', res);
         dispatch(editUser({ ...user, recordings: res.data }));
         setIsModalOpen(false);
+        setPublished(false);
       })
       .catch((err) => {
         console.log('err from unpublishing: ', err);
