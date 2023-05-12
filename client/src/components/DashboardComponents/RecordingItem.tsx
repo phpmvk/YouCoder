@@ -2,7 +2,7 @@ import { Button, FormControlLabel, FormGroup, Switch } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import { Recording } from '../../types/Creator';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Toast from '../Toast';
 import http from '../../services/recordingApi';
 import { createTheme } from '@mui/material/styles';
@@ -12,6 +12,9 @@ import MoreOptionsToggle from './MoreOptionsToggle';
 import Modal from '../Modal';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { editUser } from '../../redux/userSlice';
+import { BsCheckLg } from 'react-icons/bs';
+import { CiEdit } from 'react-icons/ci';
+import { MdOutlineEdit } from 'react-icons/md';
 
 interface RecordingItemProps {
   recording: Recording;
@@ -28,14 +31,18 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
   const [showToast, setShowToast] = useState(false);
   const [showdeleteModal, setShowdeleteModal] = useState(false);
   const [published, setPublished] = useState(recording.published);
+  const [fieldValue, setFieldValue] = useState('');
+  const [toastText, setToastText] = useState('');
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
 
   const editTitle = () => {
+    setFieldValue(recording.title);
     setShowEditTitle(true);
   };
 
   const editDescription = () => {
+    setFieldValue(recording.description);
     setShowEditDescription(true);
   };
 
@@ -52,43 +59,51 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
   };
 
   const updateRecording = (field: Field, value: string): Promise<void> => {
+    console.log('field: ', field, 'value: ', value);
     return http
       .patchRecording(recording.recording_id, { [field]: value })
       .then((res) => {
-        console.log(`res from updating ${field}: `, res);
-        dispatch(editUser({ ...user, recordings: res.data }));
+        console.log(`res from updating ${field}: `, res.data);
+        // dispatch(editUser({ ...user, recordings: res.data }));
+        const updatedRecording = res.data.find(
+          (recording) => recording.recording_id === recording.recording_id
+        );
+        updateUserRecording(updatedRecording!);
+        setToastText('updated');
+        showMiniToast();
+
+        if (field === 'title') {
+          setShowEditTitle(false);
+        } else if (field === 'description') {
+          setShowEditDescription(false);
+        }
       })
       .catch((err) => {
         console.log(`err from updating ${field}`, err);
       });
   };
 
-  const handleEnter = (field: Field, value: string): void => {
-    updateRecording(field, value);
-
-    if (field === 'title') {
-      setShowEditTitle(false);
-    } else if (field === 'description') {
-      setShowEditDescription(false);
-    }
+  const updateUserRecording = (updatedRecording: Recording) => {
+    const updatedRecordings = user.recordings!.map((recording) =>
+      recording.recording_id === updatedRecording.recording_id
+        ? updatedRecording
+        : recording
+    );
+    dispatch(editUser({ ...user, recordings: updatedRecordings }));
   };
 
-  const handleKeyDown = <T extends HTMLInputElement | HTMLTextAreaElement>(
-    event: React.KeyboardEvent<T>
-  ): void => {
-    if (event.key === 'Enter') {
-      const field = event.currentTarget.id as Field;
+  const handleSubmit = (field: Field): any => {
+    // const handleSubmit = (field: Field, value: string): void => {
+    console.log('HANDLE SUBMIT:\nfield: ', field, 'value: ', fieldValue);
 
-      if (field === 'title' || field === 'description') {
-        handleEnter(field, event.currentTarget.value);
-      }
-    }
+    updateRecording(field, fieldValue);
   };
 
-  const showCopied = (text: string) => {
+  const showMiniToast = () => {
     setShowToast(true);
     setTimeout(() => {
       setShowToast(false);
+      setToastText('');
     }, 1000);
   };
 
@@ -138,8 +153,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
                       type='text'
                       className='text-4xl w-full mx-4 bg-transparent'
                       defaultValue={recording.title}
-                      onBlur={() => setShowEditTitle(false)}
-                      onKeyDown={handleKeyDown}
+                      onKeyUp={(e) => setFieldValue(e.currentTarget.value)}
                       autoFocus
                     />
                   </div>
@@ -155,10 +169,9 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
                   <div className='relative'>
                     <textarea
                       id='description'
-                      className='text-base w-full m-4 h-full bg-transparent'
+                      className='text-base w-full m-4 h-full bg-transparent resize-none'
                       defaultValue={recording.description}
-                      onBlur={() => setShowEditDescription(false)}
-                      onKeyDown={handleKeyDown}
+                      onKeyUp={(e) => setFieldValue(e.currentTarget.value)}
                       rows={5}
                       autoFocus
                     />
@@ -195,22 +208,44 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
 
           <div className='ml-10 h-60 z-10 text-white/80 rounded-md flex flex-col justify-between'>
             <div>
-              <div>
-                <IconButton
-                  aria-label='edit image'
-                  onClick={editTitle}
-                >
-                  <EditIcon className='stroke-white' />
-                </IconButton>
+              <div className='h-10'>
+                {showEditTitle ? (
+                  <button
+                    id='titleCheckmark'
+                    onClick={() => {
+                      handleSubmit('title');
+                    }}
+                    className=' rounded-md flex items-center justify-around h-10 w-10 hover:bg-green-500/5 active:bg-green-500/20'
+                  >
+                    <BsCheckLg className='text-green-500 text-[34px] ' />
+                  </button>
+                ) : (
+                  <button
+                    onClick={editTitle}
+                    className='hover:bg-white/5 rounded-md flex items-center justify-around h-10 w-10'
+                  >
+                    <MdOutlineEdit className='text-white text-[28px]' />
+                  </button>
+                )}
               </div>
               <div className='h-2'></div>
-              <div>
-                <IconButton
-                  aria-label='edit image'
-                  onClick={editDescription}
-                >
-                  <EditIcon className='stroke-white' />
-                </IconButton>
+              <div className='h-10'>
+                {showEditDescription ? (
+                  <button
+                    id='descriptionCheckmark'
+                    onClick={() => handleSubmit('description')}
+                    className=' rounded-md flex items-center justify-around h-10 w-10 hover:bg-green-500/5'
+                  >
+                    <BsCheckLg className='text-green-500 text-[34px]' />
+                  </button>
+                ) : (
+                  <button
+                    onClick={editDescription}
+                    className='hover:bg-white/5 rounded-md flex items-center justify-around h-10 w-10'
+                  >
+                    <MdOutlineEdit className='text-white text-[28px]' />
+                  </button>
+                )}
               </div>
             </div>
             <MoreOptionsToggle recording_id={recording.recording_id} />
@@ -223,14 +258,15 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
                 variant='outlined'
                 className='!w-full !h-full !border-bg-alt !text-white/80 hover:!bg-bg-alt hover:!bg-opacity-10'
                 onClick={() => {
-                  showCopied('copied');
+                  setToastText('copied');
+                  showMiniToast();
                   navigator.clipboard.writeText(recording.full_link);
                 }}
               >
                 COPY LINK
               </Button>
             </div>
-            <div className='bg-bg-pri w-10/12 h-10 px-4 z-10 m-1 rounded-md flex items-center text-white/80 font-console overflow-hidden hover:underline hover:cursor-pointer'>
+            <div className='bg-bg-pri w-10/12 h-10 px-4 z-10 m-1 rounded-md flex items-center text-white/80 font-console overflow-hidden whitespace-nowrap hover:underline hover:cursor-pointer'>
               <a
                 className='no-underline text-white/80'
                 href={recording.full_link}
@@ -247,7 +283,9 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
                 variant='outlined'
                 className='w-full h-full !border-bg-sec !text-white/80 hover:!bg-bg-sec hover:!bg-opacity-10'
                 onClick={() => {
-                  showCopied('copied');
+                  setToastText('copied');
+
+                  showMiniToast();
                   navigator.clipboard.writeText(recording.iframe_link);
                 }}
               >
@@ -260,7 +298,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
           </div>
         </div>
       </div>
-      {showToast && <Toast text={'copied'} />}
+      {showToast && <Toast text={toastText} />}
       <PublishModal
         recording={recording}
         isModalOpen={showModal}

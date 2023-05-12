@@ -42,7 +42,7 @@ protectedHttp.interceptors.request.use(
     if (token) {
       console.log('******* auth ********', auth);
       console.log('isTokenExpired(token)', isTokenExpired(token));
-      console.log('auth.currentUser)', auth.currentUser);
+      console.log('auth.currentUser', auth.currentUser);
       if (isTokenExpired(token) && auth.currentUser) {
         console.log('we are here !!!!!!');
         const refreshedToken = await auth.currentUser.getIdToken(true);
