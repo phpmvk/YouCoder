@@ -16,6 +16,8 @@ import { Recording } from '../types/Creator';
 import Button from '@mui/material/Button';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import Slider from '@mui/material/Slider';
 
 export function PlaybackEditor({
   recordingData,
@@ -439,6 +441,7 @@ export function PlaybackEditor({
       )}
 
 <div className="text-gray-200 mx-4 whitespace-nowrap">
+  <button className="mr-8"><VolumeUpIcon/></button>
         {formatTime(sliderValue)} / {formatTime(audioDuration)}
 
 
