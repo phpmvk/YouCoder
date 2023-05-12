@@ -9,19 +9,28 @@ import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 import Terminal from './TerminalOutput';
 import { loadYCRFile } from '../utils/ycrUtils';
-import { CodeToExecute } from '../types/console';
+import { CodeToExecute } from '../types/Console';
 import consoleApi from '../services/consoleApi';
-import { formatTime, getLanguageId } from '../utils/editorUtils';
-
+import { formatTime, getLanguageId, formatLanguage } from '../utils/editorUtils';
 import { Recording } from '../types/Creator';
-import { RecorderActions, ChangeRange, EditorAction, Language } from '../types/Editor';
+import Button from '@mui/material/Button';
+import PauseIcon from '@mui/icons-material/Pause';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+
+import {
+  RecorderActions,
+  ChangeRange,
+  EditorAction,
+  Language,
+} from '../types/Editor';
+
 
 export function PlaybackEditor({
   recordingData,
 }: {
   recordingData: Recording;
 }) {
-
   const [editorInstance, setEditorInstance] =
     useState<editor.IStandaloneCodeEditor | null>(null);
   const [monacoInstance, setMonacoInstance] = useState<typeof monaco | null>(
@@ -350,29 +359,36 @@ export function PlaybackEditor({
       language_id,
       source_code: base64SourceCode,
     };
+    console.log('judge0 before sending', judge0);
     consoleApi.getOutput(judge0)!.then((response) => {
       const output = window.atob(response.data.output);
-
+      console.log('output in judge0', output);
       setStudentConsoleOutput(output);
     });
   }
 
   return (
-    <div className='border-2 border-red-600'>
+    
+    <div>
       <audio
         ref={(audio) => {
           setAudioElement(audio);
         }}
       ></audio>
-      <h1>{editorLanguage}</h1>
-      <div className='flex w-full h-[300px] '>
+      
+      <h1 className={`ml-10 bg-bg-pri w-[20ch] text-center rounded-t-full mt-2 pt-1 ${editorLanguage ? 'text-gray-200' : 'text-transparent'}`}>
+    {editorLanguage ? formatLanguage(editorLanguage) : '·'}
+</h1>
+      <div className="">
+      <div className="bg-bg-pri flex w-full h-[400px] px-10  ">
         <Allotment>
           <Allotment.Pane minSize={600}>
             <Editor
-              height='500px'
-              defaultLanguage='javascript'
-              defaultValue=''
-              theme='vs-dark'
+            className=" border-bg-pri border-8 border-r-6 "
+              height="500px"
+              defaultLanguage="javascript"
+              defaultValue=""
+              theme="vs-dark"
               options={{
                 wordWrap: 'on',
                 readOnly: ignoreUserInputs,
@@ -380,76 +396,98 @@ export function PlaybackEditor({
               onMount={handleEditorDidMount}
             />
           </Allotment.Pane>
-          <Allotment.Pane
-            minSize={100}
-            preferredSize={300}
-          >
-            <div className='border w-full h-[50%] border-[#1e1e1e]'>
+          <Allotment.Pane minSize={200} preferredSize={400}>
+            <div className=" w-full h-[50%] border-r-8 border-t-8 border-l-2 border-bg-pri ">
               <Terminal
-                terminalName='Teachers output'
+                terminalName="output"
                 output={TeacherConsoleOutput}
               />
             </div>
-            <div className='border w-full h-[50%] border-[#1e1e1e]'>
-              <button
-                className='text-white'
-                onClick={handleJudge0}
-              >
-                Compile & Execute
+            <div className="relative w-full h-[50%] border-t-6 border-l-2 border-r-8 border-bg-pri">
+              <div className='flex justify-center items-center'>
+
+              <button 
+              
+              className="font-extralight absolute bottom-2 right-2 w-fit items-center px-2 py-1 text-sm text-gray-900 bg-transparent border border-gray-900 rounded-lg hover:bg-gray-900 hover:text-gray-200 focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-gray-200 dark:border-white dark:text-gray-200 dark:hover:text-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-700 uppercase" onClick={handleJudge0}>
+                compile & execute
               </button>
-              <Terminal output={StudentConsoleOutput} />
+              <button 
+              
+              className="absolute top-0 right-2 w-fit items-center px-1 text-sm font-light text-gray-900 bg-transparent border border-gray-900 rounded-md hover:bg-gray-900 hover:text-gray-200 focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-gray-200 dark:border-white dark:text-gray-200 dark:hover:text-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-700 uppercase" onClick={() => setStudentConsoleOutput('')}>
+                clear
+              </button>
+
+
+
+
+
+
+              </div>
+              <Terminal 
+              terminalName="your output"
+              output={StudentConsoleOutput} />
+
+
+              
             </div>
+
+
           </Allotment.Pane>
+          
         </Allotment>
       </div>
       <br></br>
       <br></br>
-
-      <input
-        className='mx-4'
-        type='file'
-        onChange={handleFileInput}
-      />
-
+      <div className='w-auto flex items-center justify-evenly space-x-16 -mt-12 bg-bg-pri mx-10 px-2 md:pax-auto'>
       {/* <input className="mx-4" type="file" onChange={handleFileInput} /> */}
 
       {playbackState.status === 'stopped' && (
-        <button
-          className='p-2 bg-slate-500 rounded-sm'
+        <Button
+          variant="outlined"
+          className="!rounded-full !bg-bg-alt !text-bg-pri"
           onClick={handleStartPlayback}
         >
-          Start Playback
-        </button>
+          <PlayArrowIcon/>
+        </Button>
       )}
       {playbackState.status === 'playing' && (
-        <button
-          className='p-2 bg-slate-500 mx-4'
-          onClick={handlePausePlayback}
-        >
-          Pause Playback
-        </button>
+        <Button 
+        variant="outlined"
+        className="!rounded-full !bg-bg-alt !text-bg-pri" onClick={handlePausePlayback}>
+          <PauseIcon/>
+        </Button>
       )}
       {playbackState.status === 'paused' && (
-        <button
-          className='p-2 bg-slate-500'
-          onClick={handleResumePlayback}
-        >
-          Resume Playback
-        </button>
+        <Button 
+        variant="outlined"
+        className="!rounded-full !bg-bg-alt !text-bg-pri" onClick={handleResumePlayback}>
+          <PlayArrowIcon/>
+        </Button>
       )}
-      <br />
-      <br />
-      <div className='text-white'>
+
+<div className="text-gray-200 mx-4 whitespace-nowrap">
+  <button className="mr-8"><VolumeUpIcon/></button>
         {formatTime(sliderValue)} / {formatTime(audioDuration)}
+
+
       </div>
-      <ReactSlider
-        className='horizontal-slider'
-        thumbClassName='slider-thumb'
+
+
+<ReactSlider
+        className="w-10/12 max-w-[800px] h-5 bg-bg-gptdark rounded-full mx-auto border-white border flex items-center pr-2"
+        thumbClassName="w-5 h-5 bg-white rounded-full cursor-pointer focus:outline-none active:h-7 active:w-7 transition"
         value={sliderValue}
         step={0.001}
         max={audioDuration}
         onChange={(value) => handleScrubberChange(value)}
       />
+      </div>
+      
+
+   <br></br>   
+      
+</div>
     </div>
+    
   );
 }

@@ -7,7 +7,7 @@ import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
 
 import consoleApi from '../services/consoleApi';
-import { CodeToExecute } from '../types/console';
+import { CodeToExecute } from '../types/Console';
 import { SaveRecordingModal } from './HomePageComponents/SaveRecordingModal';
 import { saveYCRFile } from '../utils/ycrUtils';
 import { useAppSelector } from '../redux/hooks';
@@ -20,8 +20,13 @@ import {
   calculateTotalPauseTime,
 } from '../utils/editorUtils';
 
-import { RecorderActions, EditorAction, ConsoleLog, EditorRecording, Language } from '../types/Editor';
-
+import {
+  RecorderActions,
+  EditorAction,
+  ConsoleLog,
+  EditorRecording,
+  Language,
+} from '../types/Editor';
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
@@ -30,7 +35,7 @@ export function RecorderEditor() {
     null
   );
 
-  const [audioRecorder, setAudioRecorder] = useState<RecordRTC | null>(null);
+  // const [audioRecorder, setAudioRecorder] = useState<RecordRTC | null>(null);
   const [recorderState, setRecorderState] = useState<
     'stopped' | 'recording' | 'paused'
   >('stopped');
@@ -55,6 +60,33 @@ export function RecorderEditor() {
     editorActions: [],
     consoleLogOutputs: [],
   });
+
+  const [isRecording, setIsRecording] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recordedChunksRef = useRef<Blob[]>([]);
+  const audioRecordingBlobRef = useRef<Blob | null>(null);
+
+  useEffect(() => {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      mediaRecorderRef.current = new MediaRecorder(stream, {
+        mimeType: 'audio/webm;codecs=opus',
+      });
+
+      mediaRecorderRef.current.ondataavailable = function (e) {
+        if (e.data.size > 0) {
+          recordedChunksRef.current.push(e.data);
+        }
+
+        if (mediaRecorderRef.current!.state === 'inactive') {
+          // Check if the recorder is stopped
+          audioRecordingBlobRef.current = new Blob(recordedChunksRef.current, {
+            type: 'audio/webm',
+          });
+          recordedChunksRef.current = [];
+        }
+      };
+    });
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -113,15 +145,16 @@ export function RecorderEditor() {
   function handleStartRecording() {
     //audio
     setRecorderLoading(true);
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      const options = { mimeType: 'audio/webm' as 'audio/webm' };
-      const recordRTC = new RecordRTC(stream, options);
-      setAudioRecorder(recordRTC);
-      recordRTC.startRecording();
-      setRecorderLoading(false);
-    });
+    setIsRecording(true);
+    mediaRecorderRef.current!.start();
+    setRecorderLoading(false);
     //actions
     recorderActions.current.editorActions = [];
+    recorderActions.current.consoleLogOutputs = [];
+    recorderActions.current.pauseArray = [];
+    recorderActions.current.pauseLengthArray = [];
+    recorderActions.current.resumeArray = [];
+
     editorInstance!.setValue('');
     recorderActions.current.start = Date.now();
     setRecorderState('recording');
@@ -141,9 +174,8 @@ export function RecorderEditor() {
   }
 
   function handlePauseRecording() {
-    if (audioRecorder) {
-      audioRecorder.pauseRecording();
-    }
+    mediaRecorderRef.current!.requestData();
+    mediaRecorderRef.current!.pause();
     let timestamp = Date.now();
     recorderActions.current.pauseArray.push({ timestamp });
     setRecorderState('paused');
@@ -154,9 +186,7 @@ export function RecorderEditor() {
     setPauseAction(false);
   }
   function handleResumeRecording() {
-    if (audioRecorder) {
-      audioRecorder.resumeRecording();
-    }
+    mediaRecorderRef.current!.resume();
     let timestamp = Date.now();
     recorderActions.current.resumeArray.push({ timestamp });
     setRecorderState('recording');
@@ -167,16 +197,16 @@ export function RecorderEditor() {
     setPauseAction(false);
   }
   function handleEndRecording() {
-    if (pauseAction) {
-      if (
-        !window.confirm(
-          'You have unsaved changes from when the recording was paused. These changes will be discarded. Are you sure you want to end the recording?'
-        )
-      ) {
-        //If they press cancel on the prompt, don't run the rest of the handleEndRecording Function
-        return;
-      }
-    }
+    // if (pauseAction) {
+    //   if (
+    //     !window.confirm(
+    //       'You have unsaved changes from when the recording was paused. These changes will be discarded. Are you sure you want to end the recording?'
+    //     )
+    //   ) {
+    //     //If they press cancel on the prompt, don't run the rest of the handleEndRecording Function
+    //     return;
+    //   }
+    // }
     const timestamp = Date.now();
     recorderActions.current.end = timestamp;
 
@@ -233,8 +263,18 @@ export function RecorderEditor() {
         return { ...change, playbackTimestamp: adjustedTimestamp };
       });
 
-    if (audioRecorder) {
-      audioRecorder.stopRecording();
+    console.log(recorderState);
+    if (recorderState === 'paused') {
+      mediaRecorderRef.current!.resume(); // Resume recording
+      mediaRecorderRef.current!.onresume = () => {
+        setIsRecording(false);
+        setTimeout(() => {
+          mediaRecorderRef.current!.stop();
+        }, 1000);
+      };
+    } else {
+      setIsRecording(false);
+      mediaRecorderRef.current!.stop();
     }
     setRecorderState('stopped');
     if (recordingIntervalId) {
@@ -250,12 +290,14 @@ export function RecorderEditor() {
     thumbnail_link: string
   ) {
     try {
-      const audioBlob = audioRecorder!.getBlob();
-
       const json = JSON.stringify(recorderActions.current);
       const jsonBlob = new Blob([json], { type: 'application/json' });
 
-      const ycrFileUrl = await saveYCRFile(jsonBlob, audioBlob, user.uid!);
+      const ycrFileUrl = await saveYCRFile(
+        jsonBlob,
+        audioRecordingBlobRef.current!,
+        user.uid!
+      );
       console.log(ycrFileUrl);
       const model = editorInstance!.getModel();
       const language = model!.getLanguageId();
