@@ -391,12 +391,14 @@ export function PlaybackEditor({
               />
             </div>
             <div className="w-full h-[50%]  border-t-6 border-l-2 border-r-8 border-bg-pri">
-              <div className='flex-row'>
-              <Button 
-              variant="outlined"
-              className="!text-gray-200 w-2/3 !rounded-full !border-bg-alt whitespace-nowrap mx-auto" onClick={handleJudge0}>
-                Compile & Execute
-              </Button>
+              <div className='flex justify-center items-center'>
+
+              <button 
+              
+              className=" w-3/4 items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700" onClick={handleJudge0}>
+                COMPILE & EXECUTE
+              </button>
+
               </div>
               <Terminal 
               terminalName="your output"
@@ -408,7 +410,7 @@ export function PlaybackEditor({
 
       <br></br>
       <br></br>
-      <div className='w-auto flex items-center justify-evenly space-x-16 -mt-12 bg-bg-pri rounded-b-full mx-10 px-2 md:pax-auto'>
+      <div className='w-auto flex items-center justify-evenly space-x-16 -mt-12 bg-bg-pri mx-10 px-2 md:pax-auto'>
       {/* <input className="mx-4" type="file" onChange={handleFileInput} /> */}
       {playbackState.status === 'stopped' && (
         <Button
