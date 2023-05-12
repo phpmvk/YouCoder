@@ -1,6 +1,7 @@
 import JSZip from 'jszip';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../App';
+import { RecorderActions } from '../types/Editor';
 
 export function str2ab(str: string): ArrayBuffer {
   const buf = new ArrayBuffer(str.length * 2);
@@ -16,13 +17,14 @@ export async function saveYCRFile(
   audioBlob: Blob,
   userId: string
 ) {
+  console.log(audioBlob);
   const zip = new JSZip();
   zip.file('recorderActions.json', jsonBlob);
   zip.file('recordedAudio.webm', audioBlob);
   const ycrBlob = await zip.generateAsync({ type: 'blob' });
   const fileRef = ref(
     storage,
-    `recordings/${userId}/recording_${new Date(Date.now()).toDateString()}.ycr`
+    `recordings/${userId}/recording_${Date.now()}.ycr`
   );
   await uploadBytes(fileRef, ycrBlob);
   const fileUrl = await getDownloadURL(fileRef);
@@ -54,6 +56,7 @@ export async function loadYCRFile(
                 string,
                 Blob
               ];
+              console.log('audioblob in loadYCR', recordedAudioBlob);
               const recorderActions = JSON.parse(recorderActionsJSON);
               const recordedAudioURL = URL.createObjectURL(recordedAudioBlob);
               resolve({ recorderActions, recordedAudioURL });
