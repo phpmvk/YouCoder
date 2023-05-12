@@ -168,7 +168,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                  </div>
 <div className="w-full h-[200px] bg-bg-gptdark">
 
-<div className=" bg-bg-gptdark text-gray-200 text-l text-left p-4 mx-10">
+<div className=" bg-bg-pri text-gray-200 text-l text-left p-4 ml-10 mt-4 rounded-xl">
                       {recording.description}
                     </div>
 </div>
