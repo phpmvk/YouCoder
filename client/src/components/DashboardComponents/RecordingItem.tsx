@@ -179,7 +179,7 @@ const RecordingItem = ({ recording }: RecordingItemProps) => {
                 </>
               ) : (
                 <>
-                  <div className='text-base text-white/80 w-full m-4 multiline-ellipsis6'>
+                  <div className='text-base text-white/80 w-full m-4 line-clamp-5'>
                     {recording.description || '... add a description'}
                   </div>
                 </>

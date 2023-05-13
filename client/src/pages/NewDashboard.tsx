@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Recording } from '../types/Creator';
 import http from '../services/recordingApi';
 import { useAppDispatch } from '../redux/hooks';
-import { setLoadingSpinner } from '../redux/spinnerSlice';
+import { setLoadingPage, setLoadingSpinner } from '../redux/spinnerSlice';
 import TopNavBar from '../components/HomePageComponents/TopNavBar';
 import CreateRecordingButton from '../components/DashboardComponents/CreateRecordingButton';
-import RecordingsList from '../components/DashboardComponents/RecordingsList';
+import RecordingsList from '../components/NewDashboardComponents/RecordingsList';
 import NoRecordings from '../components/DashboardComponents/NoRecordings';
 
 interface NewDashboardPageProps {}
@@ -61,13 +61,14 @@ const NewDashboardPage = ({}: NewDashboardPageProps) => {
 
   // fetch recordings from the backend
   useEffect(() => {
-    dispatch(setLoadingSpinner(true));
+    dispatch(setLoadingPage(true));
+
     http
       .getAllUserRecordings()
       .then((response) => {
         console.log(response.data);
         setDisplayRecordings(response.data);
-        dispatch(setLoadingSpinner(false));
+        dispatch(setLoadingPage(false));
       })
       .catch((error) => {
         console.log(error);
@@ -80,8 +81,11 @@ const NewDashboardPage = ({}: NewDashboardPageProps) => {
       <div ref={createRecordingButtonRef}>
         <CreateRecordingButton />
       </div>
-      {displayRecordings.length > 1000 ? (
-        <RecordingsList recordings={displayRecordings} />
+      {displayRecordings.length > 0 ? (
+        <RecordingsList
+          recordings={displayRecordings}
+          edit={true}
+        />
       ) : (
         <NoRecordings />
       )}

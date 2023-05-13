@@ -82,13 +82,6 @@ button:focus-visible {
   }
 } */
 
-.multiline-ellipsis6 {
-  display: -webkit-box;
-  -webkit-line-clamp: 5;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
 .blinking-cursor::after {
   content: '|';
   animation: blink 1s step-end infinite;
