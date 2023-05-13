@@ -299,11 +299,22 @@ export function PlaybackEditor({
         scrubberPosition
       );
       setSliderValue(scrubberPosition);
+      if (importedActions!.consoleLogOutputs[0]) {
+        if (
+          scrubberPosition <
+          importedActions!.consoleLogOutputs[0].playbackTimestamp
+        ) {
+          setTeacherConsoleOutput('');
+        }
+      }
     }
-    if (
-      scrubberPosition < importedActions!.consoleLogOutputs[0].playbackTimestamp
-    ) {
-      setTeacherConsoleOutput('');
+    if (importedActions!.consoleLogOutputs[0]) {
+      if (
+        scrubberPosition <
+        importedActions!.consoleLogOutputs[0].playbackTimestamp
+      ) {
+        setTeacherConsoleOutput('');
+      }
     }
   }
 
@@ -327,10 +338,13 @@ export function PlaybackEditor({
       setTeacherConsoleOutput(output.text);
     });
 
-    if (
-      scrubberPosition < importedActions!.consoleLogOutputs[0].playbackTimestamp
-    ) {
-      setTeacherConsoleOutput('');
+    if (importedActions!.consoleLogOutputs[0]) {
+      if (
+        scrubberPosition <
+        importedActions!.consoleLogOutputs[0].playbackTimestamp
+      ) {
+        setTeacherConsoleOutput('');
+      }
     }
   }
 
