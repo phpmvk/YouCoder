@@ -126,7 +126,6 @@ export function PlaybackEditor({
     } else {
       baseTimestamp = sliderValue;
     }
-    console.log('basetimestamp', baseTimestamp);
     // Filter out actions that have already been executed based on the scrubber position
     const actionsToExecute = editorActions.filter(
       (action) => action.playbackTimestamp >= baseTimestamp
@@ -205,6 +204,7 @@ export function PlaybackEditor({
     if (importedActions) {
       getCurrentLanguage();
       editorInstance!.setValue('');
+      setTeacherConsoleOutput('');
       startPlayback(importedActions.editorActions, editorInstance!);
     }
   }
@@ -234,9 +234,7 @@ export function PlaybackEditor({
     audioElement?.play();
 
     clearInterval(sliderIntervalIdRef.current!);
-    console.log('slidervalue before', sliderValue);
     setSliderValue(scrubberPosition);
-    console.log('slidervalue after', sliderValue);
 
     setPlaybackState((prevState) => ({
       ...prevState,
@@ -259,7 +257,11 @@ export function PlaybackEditor({
       scrubberPosition
     );
     setSliderValue(scrubberPosition);
-    console.log('slidervalue after after', sliderValue);
+    if (
+      scrubberPosition < importedActions!.consoleLogOutputs[0].playbackTimestamp
+    ) {
+      setTeacherConsoleOutput('');
+    }
   }
 
   function startSliderInterval() {
@@ -275,9 +277,9 @@ export function PlaybackEditor({
             // Update the playback state
             setPlaybackState({
               status: 'stopped',
-              currentPosition: audioDuration,
+              currentPosition: 0,
             });
-            return audioDuration; // Set sliderValue to audioDuration
+            return 0; // Set sliderValue to audioDuration
           }
           return prevSliderValue + 100;
         });
@@ -351,10 +353,8 @@ export function PlaybackEditor({
       language_id,
       source_code: base64SourceCode,
     };
-    console.log('judge0 before sending', judge0);
     consoleApi.getOutput(judge0)!.then((response) => {
       const output = window.atob(response.data.output);
-      console.log('output in judge0', output);
       setStudentConsoleOutput(output);
     });
   }
