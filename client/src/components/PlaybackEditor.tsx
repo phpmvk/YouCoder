@@ -11,7 +11,11 @@ import Terminal from './TerminalOutput';
 import { loadYCRFile } from '../utils/ycrUtils';
 import { CodeToExecute } from '../types/Console';
 import consoleApi from '../services/consoleApi';
-import { formatTime, getLanguageId, formatLanguage } from '../utils/editorUtils';
+import {
+  formatTime,
+  getLanguageId,
+  formatLanguage,
+} from '../utils/editorUtils';
 import { Recording } from '../types/Creator';
 import Button from '@mui/material/Button';
 import PauseIcon from '@mui/icons-material/Pause';
@@ -24,7 +28,6 @@ import {
   EditorAction,
   Language,
 } from '../types/Editor';
-
 
 export function PlaybackEditor({
   recordingData,
@@ -114,10 +117,16 @@ export function PlaybackEditor({
 
   function startPlayback(
     editorActions: EditorAction[],
-    editor: editor.IStandaloneCodeEditor
+    editor: editor.IStandaloneCodeEditor,
+    scrubberPosition?: number
   ) {
-    const baseTimestamp = sliderValue;
-
+    let baseTimestamp: number;
+    if (scrubberPosition) {
+      baseTimestamp = scrubberPosition;
+    } else {
+      baseTimestamp = sliderValue;
+    }
+    console.log('basetimestamp', baseTimestamp);
     // Filter out actions that have already been executed based on the scrubber position
     const actionsToExecute = editorActions.filter(
       (action) => action.playbackTimestamp >= baseTimestamp
@@ -225,7 +234,10 @@ export function PlaybackEditor({
     audioElement?.play();
 
     clearInterval(sliderIntervalIdRef.current!);
+    console.log('slidervalue before', sliderValue);
     setSliderValue(scrubberPosition);
+    console.log('slidervalue after', sliderValue);
+
     setPlaybackState((prevState) => ({
       ...prevState,
       currentPosition: scrubberPosition,
@@ -241,8 +253,13 @@ export function PlaybackEditor({
 
     editorInstance!.setValue('');
 
-    startPlayback(importedActions!.editorActions, editorInstance!);
+    startPlayback(
+      importedActions!.editorActions,
+      editorInstance!,
+      scrubberPosition
+    );
     setSliderValue(scrubberPosition);
+    console.log('slidervalue after after', sliderValue);
   }
 
   function startSliderInterval() {
@@ -270,31 +287,6 @@ export function PlaybackEditor({
     }, 100);
 
     return intervalId;
-  }
-
-  async function handleFileInput(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files![0];
-    if (file && file.name.endsWith('.ycr')) {
-      try {
-        const { recorderActions, recordedAudioURL } = await loadYCRFile(file);
-
-        setImportedActions(recorderActions);
-
-        // Decode audio data and set audio duration
-        const audioContext = new AudioContext();
-        const response = await fetch(recordedAudioURL);
-        const arrayBuffer = await response.arrayBuffer();
-        const decodedData = await audioContext.decodeAudioData(arrayBuffer);
-        setAudioDuration(decodedData.duration * 1000);
-
-        // Set the audio source
-        setAudioSource(recordedAudioURL);
-      } catch (error) {
-        console.error('Error loading .ycr file:', error);
-      }
-    } else {
-      console.error('Please select a valid .ycr file');
-    }
   }
 
   async function handleFirebaseURL(firebaseURL: string) {
@@ -368,126 +360,114 @@ export function PlaybackEditor({
   }
 
   return (
-    
     <div>
       <audio
         ref={(audio) => {
           setAudioElement(audio);
         }}
       ></audio>
-      
-      <h1 className={`ml-10 bg-bg-pri w-[20ch] text-center rounded-t-full mt-2 pt-1 ${editorLanguage ? 'text-gray-200' : 'text-transparent'}`}>
-    {editorLanguage ? formatLanguage(editorLanguage) : '·'}
-</h1>
+
+      <h1
+        className={`ml-10 bg-bg-pri w-[20ch] text-center rounded-t-full mt-2 pt-1 ${
+          editorLanguage ? 'text-gray-200' : 'text-transparent'
+        }`}
+      >
+        {editorLanguage ? formatLanguage(editorLanguage) : '·'}
+      </h1>
       <div className="">
-      <div className="bg-bg-pri flex w-full h-[400px] px-10  ">
-        <Allotment>
-          <Allotment.Pane minSize={600}>
-            <Editor
-            className=" border-bg-pri border-8 border-r-6 "
-              height="500px"
-              defaultLanguage="javascript"
-              defaultValue=""
-              theme="vs-dark"
-              options={{
-                wordWrap: 'on',
-                readOnly: ignoreUserInputs,
-              }}
-              onMount={handleEditorDidMount}
-            />
-          </Allotment.Pane>
-          <Allotment.Pane minSize={200} preferredSize={400}>
-            <div className=" w-full h-[50%] border-r-8 border-t-8 border-l-2 border-bg-pri ">
-              <Terminal
-                terminalName="output"
-                output={TeacherConsoleOutput}
+        <div className="bg-bg-pri flex w-full h-[400px] px-10  ">
+          <Allotment>
+            <Allotment.Pane minSize={600}>
+              <Editor
+                className=" border-bg-pri border-8 border-r-6 "
+                height="500px"
+                defaultLanguage="javascript"
+                defaultValue=""
+                theme="vs-dark"
+                options={{
+                  wordWrap: 'on',
+                  readOnly: ignoreUserInputs,
+                }}
+                onMount={handleEditorDidMount}
               />
-            </div>
-            <div className="relative w-full h-[50%] border-t-6 border-l-2 border-r-8 border-bg-pri">
-              <div className='flex justify-center items-center'>
-
-              <button 
-              
-              className="font-extralight absolute bottom-2 right-2 w-fit items-center px-2 py-1 text-sm text-gray-900 bg-transparent border border-gray-900 rounded-lg hover:bg-gray-900 hover:text-gray-200 focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-gray-200 dark:border-white dark:text-gray-200 dark:hover:text-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-700 uppercase" onClick={handleJudge0}>
-                compile & execute
-              </button>
-              <button 
-              
-              className="absolute top-0 right-2 w-fit items-center px-1 text-sm font-light text-gray-900 bg-transparent border border-gray-900 rounded-md hover:bg-gray-900 hover:text-gray-200 focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-gray-200 dark:border-white dark:text-gray-200 dark:hover:text-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-700 uppercase" onClick={() => setStudentConsoleOutput('')}>
-                clear
-              </button>
-
-
-
-
-
-
+            </Allotment.Pane>
+            <Allotment.Pane minSize={200} preferredSize={400}>
+              <div className=" w-full h-[50%] border-r-8 border-t-8 border-l-2 border-bg-pri ">
+                <Terminal terminalName="output" output={TeacherConsoleOutput} />
               </div>
-              <Terminal 
-              terminalName="your output"
-              output={StudentConsoleOutput} />
+              <div className="relative w-full h-[50%] border-t-6 border-l-2 border-r-8 border-bg-pri">
+                <div className="flex justify-center items-center">
+                  <button
+                    className="font-extralight absolute bottom-2 right-2 w-fit items-center px-2 py-1 text-sm text-gray-900 bg-transparent border border-gray-900 rounded-lg hover:bg-gray-900 hover:text-gray-200 focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-gray-200 dark:border-white dark:text-gray-200 dark:hover:text-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-700 uppercase"
+                    onClick={handleJudge0}
+                  >
+                    compile & execute
+                  </button>
+                  <button
+                    className="absolute top-0 right-2 w-fit items-center px-1 text-sm font-light text-gray-900 bg-transparent border border-gray-900 rounded-md hover:bg-gray-900 hover:text-gray-200 focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-gray-200 dark:border-white dark:text-gray-200 dark:hover:text-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-700 uppercase"
+                    onClick={() => setStudentConsoleOutput('')}
+                  >
+                    clear
+                  </button>
+                </div>
+                <Terminal
+                  terminalName="your output"
+                  output={StudentConsoleOutput}
+                />
+              </div>
+            </Allotment.Pane>
+          </Allotment>
+        </div>
+        <br></br>
+        <br></br>
+        <div className="w-auto flex items-center justify-evenly space-x-16 -mt-12 bg-bg-pri mx-10 px-2 md:pax-auto">
+          {playbackState.status === 'stopped' && (
+            <Button
+              variant="outlined"
+              className="!rounded-full !bg-bg-alt !text-bg-pri"
+              onClick={handleStartPlayback}
+            >
+              <PlayArrowIcon />
+            </Button>
+          )}
+          {playbackState.status === 'playing' && (
+            <Button
+              variant="outlined"
+              className="!rounded-full !bg-bg-alt !text-bg-pri"
+              onClick={handlePausePlayback}
+            >
+              <PauseIcon />
+            </Button>
+          )}
+          {playbackState.status === 'paused' && (
+            <Button
+              variant="outlined"
+              className="!rounded-full !bg-bg-alt !text-bg-pri"
+              onClick={handleResumePlayback}
+            >
+              <PlayArrowIcon />
+            </Button>
+          )}
 
+          <div className="text-gray-200 mx-4 whitespace-nowrap">
+            <button className="mr-8">
+              <VolumeUpIcon />
+            </button>
+            {formatTime(sliderValue)} / {formatTime(audioDuration)}
+          </div>
 
-              
-            </div>
+          <ReactSlider
+            className="w-10/12 max-w-[800px] h-5 bg-bg-gptdark rounded-full mx-auto border-white border flex items-center pr-2"
+            thumbClassName="w-5 h-5 bg-white rounded-full cursor-pointer focus:outline-none active:h-7 active:w-7 transition"
+            value={sliderValue}
+            step={0.001}
+            max={audioDuration}
+            onChange={(value) => handleScrubberChange(value)}
+          />
+        </div>
 
-
-          </Allotment.Pane>
-          
-        </Allotment>
+        <br></br>
       </div>
-      <br></br>
-      <br></br>
-      <div className='w-auto flex items-center justify-evenly space-x-16 -mt-12 bg-bg-pri mx-10 px-2 md:pax-auto'>
-      {/* <input className="mx-4" type="file" onChange={handleFileInput} /> */}
-
-      {playbackState.status === 'stopped' && (
-        <Button
-          variant="outlined"
-          className="!rounded-full !bg-bg-alt !text-bg-pri"
-          onClick={handleStartPlayback}
-        >
-          <PlayArrowIcon/>
-        </Button>
-      )}
-      {playbackState.status === 'playing' && (
-        <Button 
-        variant="outlined"
-        className="!rounded-full !bg-bg-alt !text-bg-pri" onClick={handlePausePlayback}>
-          <PauseIcon/>
-        </Button>
-      )}
-      {playbackState.status === 'paused' && (
-        <Button 
-        variant="outlined"
-        className="!rounded-full !bg-bg-alt !text-bg-pri" onClick={handleResumePlayback}>
-          <PlayArrowIcon/>
-        </Button>
-      )}
-
-<div className="text-gray-200 mx-4 whitespace-nowrap">
-  <button className="mr-8"><VolumeUpIcon/></button>
-        {formatTime(sliderValue)} / {formatTime(audioDuration)}
-
-
-      </div>
-
-
-<ReactSlider
-        className="w-10/12 max-w-[800px] h-5 bg-bg-gptdark rounded-full mx-auto border-white border flex items-center pr-2"
-        thumbClassName="w-5 h-5 bg-white rounded-full cursor-pointer focus:outline-none active:h-7 active:w-7 transition"
-        value={sliderValue}
-        step={0.001}
-        max={audioDuration}
-        onChange={(value) => handleScrubberChange(value)}
-      />
-      </div>
-      
-
-   <br></br>   
-      
-</div>
     </div>
-    
   );
 }
