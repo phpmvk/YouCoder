@@ -1,4 +1,4 @@
-import { RecorderAction } from "./Editor";
+import { RecorderAction } from './Editor';
 
 export interface Creator {
   uid?: string;
@@ -22,7 +22,7 @@ export const rootUser: Creator = {
 
 export interface Recording {
   created_at: string;
-  creator: { picture: string };
+  creator?: { picture: string };
   creator_uid: string;
   description: string;
   full_link: string;
@@ -33,6 +33,10 @@ export interface Recording {
   recording_link: string;
   thumbnail_link: string;
   title: string;
+  duration: number;
+  like_count: number;
+  tags: string[];
+  view_count: number;
 }
 
 export interface updateRecording {

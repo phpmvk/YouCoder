@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 interface DotsMenuProps {
   activeMenu: string | null;
   setActiveMenu: React.Dispatch<React.SetStateAction<string | null>>;
@@ -16,9 +14,9 @@ const DotsMenu = ({ activeMenu, setActiveMenu, id }: DotsMenuProps) => {
   return (
     <>
       <button
-        id='dropdownMenuIconButton'
+        id={`dropdownMenuIconButton${id}`}
         data-dropdown-toggle='dropdownDots'
-        className='inline-flex items-center text-sm font-medium text-center text-bg-pri/60  '
+        className='inline-flex items-center text-sm font-medium text-center text-gray-200 '
         type='button'
         onClick={handleClick}
       >
@@ -36,9 +34,9 @@ const DotsMenu = ({ activeMenu, setActiveMenu, id }: DotsMenuProps) => {
       {/* <!-- Dropdown menu --> */}
       <div
         id={`dropdownDots${id}`}
-        className={`z-10 ${
+        className={`${
           isOpen ? 'block' : 'hidden'
-        } bg-white divide-y divide-gray-100 rounded-lg shadow w-44 z-[9999999] absolute right-10 top-0 border-green-600 border`}
+        } bg-white divide-y divide-gray-100 rounded-lg shadow w-44 z-30 absolute right-10 top-0 border-green-600 border`}
       >
         <ul
           className='py-2 text-sm text-gray-700 '
@@ -49,32 +47,32 @@ const DotsMenu = ({ activeMenu, setActiveMenu, id }: DotsMenuProps) => {
               href='#'
               className='block px-4 py-2 hover:bg-gray-100 '
             >
-              Dashboard
+              Edit Details
             </a>
           </li>
-          <li>
+          {/* <li>
             <a
               href='#'
               className='block px-4 py-2 hover:bg-gray-100 '
             >
               Settings
             </a>
-          </li>
-          <li>
+          </li> */}
+          {/* <li>
             <a
               href='#'
               className='block px-4 py-2 hover:bg-gray-100 '
             >
               Earnings
             </a>
-          </li>
+          </li> */}
         </ul>
         <div className='py-2'>
           <a
             href='#'
             className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
           >
-            Separated link
+            Delete Recording
           </a>
         </div>
       </div>

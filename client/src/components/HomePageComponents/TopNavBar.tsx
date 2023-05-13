@@ -183,7 +183,13 @@ function TopNavBar({
   return (
     <div className='sticky top-0 z-40'>
       <Box sx={{ flexGrow: 1, height: '60px' }}>
-        <AppBar sx={{ backgroundColor: '#050505', maxHeight: '60px' }}>
+        <AppBar
+          sx={{
+            backgroundColor: '#050505',
+            maxHeight: '60px',
+            boxShadow: '0 4px 2px -2px #2a2a2a ',
+          }}
+        >
           <Toolbar>
             <Link to='/'>
               <Typography

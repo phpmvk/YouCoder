@@ -15,8 +15,8 @@ const FilterRecordings = ({
     <>
       <div className='text-white text-2xl flex items-center'>
         <button
-          className={`rounded-full p-1 active:bg-bg-sec/40 ${
-            showsearch ? '' : 'border-bg-sec w-20 border '
+          className={`rounded-full p-1 active:bg-bg-sec/20 ${
+            showsearch ? '' : 'border-bg-sec w-20 border hover:bg-bg-sec/20 '
           } `}
           onClick={() => setShowSearch(!showsearch)}
         >

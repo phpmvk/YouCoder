@@ -13,6 +13,7 @@ const RecordingsList = ({ recordings, edit }: RecordingsListProps) => {
   const [filterTerm, setFilterTerm] = useState<string>('');
   const [displayRecordings, setDisplayRecordings] =
     useState<Recording[]>(recordings);
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
   useEffect(() => {
     if (filterTerm === '') {
@@ -21,7 +22,8 @@ const RecordingsList = ({ recordings, edit }: RecordingsListProps) => {
       setDisplayRecordings(
         recordings.filter(
           (recording) =>
-            recording.title.toLowerCase().includes(filterTerm.toLowerCase())
+            recording.title.toLowerCase().includes(filterTerm.toLowerCase()) ||
+            recording.language.toLowerCase().includes(filterTerm.toLowerCase())
           // add more filters here
         )
       );
@@ -42,6 +44,8 @@ const RecordingsList = ({ recordings, edit }: RecordingsListProps) => {
             key={recording.recording_id}
             recording={recording}
             edit={edit}
+            activeMenu={activeMenu}
+            setActiveMenu={setActiveMenu}
           />
         ))}
       </section>
