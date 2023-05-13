@@ -5,20 +5,10 @@ CREATE TABLE "Creator" (
     "email" TEXT NOT NULL,
     "join_date" TIMESTAMP(3) NOT NULL,
     "picture" TEXT NOT NULL,
+    "login_count" INTEGER NOT NULL,
+    "last_login_datetime" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Creator_pkey" PRIMARY KEY ("uid")
-);
-
--- CreateTable
-CREATE TABLE "User" (
-    "user_id" SERIAL NOT NULL,
-    "username" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "join_date" TIMESTAMP(3) NOT NULL,
-    "favorited_recordings" TEXT[],
-    "creators_followed" TEXT[],
-
-    CONSTRAINT "User_pkey" PRIMARY KEY ("user_id")
 );
 
 -- CreateTable
@@ -34,8 +24,24 @@ CREATE TABLE "Recording" (
     "created_at" TEXT NOT NULL,
     "full_link" TEXT,
     "iframe_link" TEXT,
+    "view_count" INTEGER NOT NULL,
+    "like_count" INTEGER NOT NULL,
+    "duration" INTEGER NOT NULL,
+    "tags" TEXT[],
 
     CONSTRAINT "Recording_pkey" PRIMARY KEY ("recording_id")
+);
+
+-- CreateTable
+CREATE TABLE "User" (
+    "user_id" SERIAL NOT NULL,
+    "username" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "join_date" TIMESTAMP(3) NOT NULL,
+    "favorited_recordings" TEXT[],
+    "creators_followed" TEXT[],
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("user_id")
 );
 
 -- CreateIndex

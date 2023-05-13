@@ -11,12 +11,33 @@ datasource db {
 }
 
 model Creator {
-  uid          String      @id @unique
-  display_name String
-  email        String
-  join_date    DateTime
-  picture      String
-  recordings   Recording[]
+  uid                 String      @id @unique
+  display_name        String
+  email               String
+  join_date           DateTime
+  picture             String
+  recordings          Recording[]
+  login_count         Int
+  last_login_datetime DateTime
+}
+
+model Recording {
+  recording_id   String   @id @default(uuid())
+  creator        Creator  @relation(fields: [creator_uid], references: [uid], onDelete: Cascade, onUpdate: Cascade)
+  creator_uid    String //primary key in Creator model
+  thumbnail_link String?
+  title          String
+  description    String?
+  published      Boolean  @default(false)
+  language       String
+  recording_link String
+  created_at     String
+  full_link      String?
+  iframe_link    String?
+  view_count     Int
+  like_count     Int
+  duration       Int
+  tags           String[] //remove '?' when frontend is ready
 }
 
 model User {
@@ -26,19 +47,4 @@ model User {
   join_date            DateTime
   favorited_recordings String[]
   creators_followed    String[] //Is this a good way to go about this? Should this be creator IDs?
-}
-
-model Recording {
-  recording_id   String  @id @default(uuid())
-  creator        Creator @relation(fields: [creator_uid], references: [uid], onDelete: Cascade, onUpdate: Cascade)
-  creator_uid    String //primary key in Creator model
-  thumbnail_link String?
-  title          String
-  description    String?
-  published      Boolean @default(false)
-  language       String
-  recording_link String
-  created_at     String
-  full_link      String?
-  iframe_link    String?
 }

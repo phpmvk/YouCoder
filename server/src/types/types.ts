@@ -11,6 +11,7 @@ export interface FrontendRecording {
   description?: string;
   language: string;
   recording_link: string;
+  duration: number;
 }
 
 export interface FirebaseUser {
