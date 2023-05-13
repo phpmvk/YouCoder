@@ -40,6 +40,8 @@ export function PlaybackEditor({
     null
   );
 
+  const [fontSize, setFontSize] = useState(14);
+
   const [TeacherConsoleOutput, setTeacherConsoleOutput] = useState('');
   const [StudentConsoleOutput, setStudentConsoleOutput] = useState('');
 
@@ -85,6 +87,39 @@ export function PlaybackEditor({
   useEffect(() => {
     handleFirebaseURL(recordingData.recording_link);
   }, []);
+
+  useEffect(() => {
+    const defaultFontSize = getDefaultFontSize();
+    setFontSize(defaultFontSize);
+
+    // Listen to resize event
+    const handleResize = () => {
+      const newDefaultFontSize = getDefaultFontSize();
+      if (newDefaultFontSize !== defaultFontSize) {
+        setFontSize(newDefaultFontSize);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (editorInstance) {
+      editorInstance!.updateOptions({ fontSize });
+    }
+  }, [fontSize]);
+
+  const getDefaultFontSize = () => {
+    let div = document.createElement('div');
+    div.style.fontSize = 'initial';
+    div = document.body.appendChild(div);
+    const defaultFontSize = parseFloat(
+      window.getComputedStyle(div, null).fontSize
+    );
+    document.body.removeChild(div);
+    return defaultFontSize;
+  };
 
   const handleEditorDidMount = (
     editor: editor.IStandaloneCodeEditor,
@@ -422,6 +457,7 @@ export function PlaybackEditor({
                 options={{
                   wordWrap: 'on',
                   readOnly: ignoreUserInputs,
+                  fontSize: fontSize,
                 }}
                 onMount={handleEditorDidMount}
               />

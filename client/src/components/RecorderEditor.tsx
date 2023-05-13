@@ -35,6 +35,8 @@ export function RecorderEditor() {
     null
   );
 
+  const [fontSize, setFontSize] = useState(14);
+
   // const [audioRecorder, setAudioRecorder] = useState<RecordRTC | null>(null);
   const [recorderState, setRecorderState] = useState<
     'stopped' | 'recording' | 'paused'
@@ -95,6 +97,39 @@ export function RecorderEditor() {
       }
     };
   }, [recordingIntervalId]);
+
+  useEffect(() => {
+    const defaultFontSize = getDefaultFontSize();
+    setFontSize(defaultFontSize);
+
+    // Listen to resize event
+    const handleResize = () => {
+      const newDefaultFontSize = getDefaultFontSize();
+      if (newDefaultFontSize !== defaultFontSize) {
+        setFontSize(newDefaultFontSize);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (editorInstance) {
+      editorInstance!.updateOptions({ fontSize });
+    }
+  }, [fontSize]);
+
+  const getDefaultFontSize = () => {
+    let div = document.createElement('div');
+    div.style.fontSize = 'initial';
+    div = document.body.appendChild(div);
+    const defaultFontSize = parseFloat(
+      window.getComputedStyle(div, null).fontSize
+    );
+    document.body.removeChild(div);
+    return defaultFontSize;
+  };
 
   const user = useAppSelector((state) => state.user);
 
@@ -393,7 +428,7 @@ export function RecorderEditor() {
               theme='vs-dark'
               options={{
                 wordWrap: 'on',
-                fontSize: 16,
+                fontSize: fontSize,
               }}
               onChange={handleEditorChange}
               onMount={handleEditorDidMount}
