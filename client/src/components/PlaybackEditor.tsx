@@ -40,6 +40,8 @@ export function PlaybackEditor({
     null
   );
 
+  const [fontSize, setFontSize] = useState(14);
+
   const [TeacherConsoleOutput, setTeacherConsoleOutput] = useState('');
   const [StudentConsoleOutput, setStudentConsoleOutput] = useState('');
 
@@ -61,6 +63,10 @@ export function PlaybackEditor({
   const [sliderValue, setSliderValue] = useState<number>(0);
   const sliderIntervalIdRef = useRef<NodeJS.Timeout | null>(null);
 
+  const [previousPlaybackState, setPreviousPlaybackState] = useState<
+    'playing' | 'paused' | 'stopped'
+  >('paused');
+
   //audio states
   const [audioSource, setAudioSource] = useState<string>('');
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(
@@ -81,6 +87,39 @@ export function PlaybackEditor({
   useEffect(() => {
     handleFirebaseURL(recordingData.recording_link);
   }, []);
+
+  useEffect(() => {
+    const defaultFontSize = getDefaultFontSize();
+    setFontSize(defaultFontSize);
+
+    // Listen to resize event
+    const handleResize = () => {
+      const newDefaultFontSize = getDefaultFontSize();
+      if (newDefaultFontSize !== defaultFontSize) {
+        setFontSize(newDefaultFontSize);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (editorInstance) {
+      editorInstance!.updateOptions({ fontSize });
+    }
+  }, [fontSize]);
+
+  const getDefaultFontSize = () => {
+    let div = document.createElement('div');
+    div.style.fontSize = 'initial';
+    div = document.body.appendChild(div);
+    const defaultFontSize = parseFloat(
+      window.getComputedStyle(div, null).fontSize
+    );
+    document.body.removeChild(div);
+    return defaultFontSize;
+  };
 
   const handleEditorDidMount = (
     editor: editor.IStandaloneCodeEditor,
@@ -117,10 +156,15 @@ export function PlaybackEditor({
 
   function startPlayback(
     editorActions: EditorAction[],
-    editor: editor.IStandaloneCodeEditor
+    editor: editor.IStandaloneCodeEditor,
+    scrubberPosition?: number
   ) {
-    const baseTimestamp = sliderValue;
-
+    let baseTimestamp: number;
+    if (scrubberPosition) {
+      baseTimestamp = scrubberPosition;
+    } else {
+      baseTimestamp = sliderValue;
+    }
     // Filter out actions that have already been executed based on the scrubber position
     const actionsToExecute = editorActions.filter(
       (action) => action.playbackTimestamp >= baseTimestamp
@@ -199,6 +243,7 @@ export function PlaybackEditor({
     if (importedActions) {
       getCurrentLanguage();
       editorInstance!.setValue('');
+      setTeacherConsoleOutput('');
       startPlayback(importedActions.editorActions, editorInstance!);
     }
   }
@@ -225,27 +270,82 @@ export function PlaybackEditor({
 
   function handleScrubberChange(scrubberPosition: number) {
     updateAudioCurrentTime(scrubberPosition);
-    audioElement?.play();
+    if (previousPlaybackState === 'playing') {
+      audioElement!.play();
 
-    clearInterval(sliderIntervalIdRef.current!);
-    setSliderValue(scrubberPosition);
-    setPlaybackState((prevState) => ({
-      ...prevState,
-      currentPosition: scrubberPosition,
-    }));
+      clearInterval(sliderIntervalIdRef.current!);
+      setSliderValue(scrubberPosition);
 
-    // Clear existing timeouts if any
-    actionTimeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
-    actionTimeoutIdsRef.current = [];
-    consoleTimeoutIdsRef.current.forEach((timeoutId) =>
-      clearTimeout(timeoutId)
-    );
-    consoleTimeoutIdsRef.current = [];
+      setPlaybackState((prevState) => ({
+        ...prevState,
+        currentPosition: scrubberPosition,
+      }));
 
+      // Clear existing timeouts if any
+      actionTimeoutIdsRef.current.forEach((timeoutId) =>
+        clearTimeout(timeoutId)
+      );
+      actionTimeoutIdsRef.current = [];
+      consoleTimeoutIdsRef.current.forEach((timeoutId) =>
+        clearTimeout(timeoutId)
+      );
+      consoleTimeoutIdsRef.current = [];
+
+      editorInstance!.setValue('');
+
+      startPlayback(
+        importedActions!.editorActions,
+        editorInstance!,
+        scrubberPosition
+      );
+      setSliderValue(scrubberPosition);
+      if (importedActions!.consoleLogOutputs[0]) {
+        if (
+          scrubberPosition <
+          importedActions!.consoleLogOutputs[0].playbackTimestamp
+        ) {
+          setTeacherConsoleOutput('');
+        }
+      }
+    }
+    if (importedActions!.consoleLogOutputs[0]) {
+      if (
+        scrubberPosition <
+        importedActions!.consoleLogOutputs[0].playbackTimestamp
+      ) {
+        setTeacherConsoleOutput('');
+      }
+    }
+  }
+
+  function applyChangesUntilScrubber(scrubberPosition: number) {
     editorInstance!.setValue('');
+    // Apply all changes up to the scrubber position instantly
+    const actionsToApplyInstantly = importedActions!.editorActions.filter(
+      (action) => action.playbackTimestamp < scrubberPosition
+    );
 
-    startPlayback(importedActions!.editorActions, editorInstance!);
-    setSliderValue(scrubberPosition);
+    actionsToApplyInstantly.forEach((action: EditorAction) => {
+      applyChange(action, editorInstance!, action.text);
+    });
+
+    const consoleOutputsToApplyInstantly =
+      importedActions!.consoleLogOutputs.filter(
+        (output) => output.playbackTimestamp < scrubberPosition
+      );
+
+    consoleOutputsToApplyInstantly.forEach((output) => {
+      setTeacherConsoleOutput(output.text);
+    });
+
+    if (importedActions!.consoleLogOutputs[0]) {
+      if (
+        scrubberPosition <
+        importedActions!.consoleLogOutputs[0].playbackTimestamp
+      ) {
+        setTeacherConsoleOutput('');
+      }
+    }
   }
 
   function startSliderInterval() {
@@ -261,9 +361,9 @@ export function PlaybackEditor({
             // Update the playback state
             setPlaybackState({
               status: 'stopped',
-              currentPosition: audioDuration,
+              currentPosition: 0,
             });
-            return audioDuration; // Set sliderValue to audioDuration
+            return 0; // Set sliderValue to audioDuration
           }
           return prevSliderValue + 100;
         });
@@ -273,31 +373,6 @@ export function PlaybackEditor({
     }, 100);
 
     return intervalId;
-  }
-
-  async function handleFileInput(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files![0];
-    if (file && file.name.endsWith('.ycr')) {
-      try {
-        const { recorderActions, recordedAudioURL } = await loadYCRFile(file);
-
-        setImportedActions(recorderActions);
-
-        // Decode audio data and set audio duration
-        const audioContext = new AudioContext();
-        const response = await fetch(recordedAudioURL);
-        const arrayBuffer = await response.arrayBuffer();
-        const decodedData = await audioContext.decodeAudioData(arrayBuffer);
-        setAudioDuration(decodedData.duration * 1000);
-
-        // Set the audio source
-        setAudioSource(recordedAudioURL);
-      } catch (error) {
-        console.error('Error loading .ycr file:', error);
-      }
-    } else {
-      console.error('Please select a valid .ycr file');
-    }
   }
 
   async function handleFirebaseURL(firebaseURL: string) {
@@ -362,10 +437,8 @@ export function PlaybackEditor({
       language_id,
       source_code: base64SourceCode,
     };
-    console.log('judge0 before sending', judge0);
     consoleApi.getOutput(judge0)!.then((response) => {
       const output = window.atob(response.data.output);
-      console.log('output in judge0', output);
       setStudentConsoleOutput(output);
     });
   }
@@ -398,19 +471,14 @@ export function PlaybackEditor({
                 options={{
                   wordWrap: 'on',
                   readOnly: ignoreUserInputs,
+                  fontSize: fontSize,
                 }}
                 onMount={handleEditorDidMount}
               />
             </Allotment.Pane>
-            <Allotment.Pane
-              minSize={200}
-              preferredSize={400}
-            >
+            <Allotment.Pane minSize={200} preferredSize={400}>
               <div className=' w-full h-[50%] border-r-8 border-t-8 border-l-2 border-bg-pri '>
-                <Terminal
-                  terminalName='output'
-                  output={TeacherConsoleOutput}
-                />
+                <Terminal terminalName='output' output={TeacherConsoleOutput} />
               </div>
               <div className='relative w-full h-[50%] border-t-6 border-l-2 border-r-8 border-bg-pri'>
                 <div className='flex justify-center items-center'>
@@ -474,14 +542,24 @@ export function PlaybackEditor({
             </button>
             {formatTime(sliderValue)} / {formatTime(audioDuration)}
           </div>
-
           <ReactSlider
             className='w-10/12 max-w-[800px] h-5 bg-bg-gptdark rounded-full mx-auto border-white border flex items-center pr-2'
             thumbClassName='w-5 h-5 bg-white rounded-full cursor-pointer focus:outline-none active:h-7 active:w-7 transition'
             value={sliderValue}
             step={0.001}
             max={audioDuration}
-            onChange={(value) => handleScrubberChange(value)}
+            onBeforeChange={() => {
+              setPreviousPlaybackState(playbackStateRef.current.status);
+              audioElement!.muted = true;
+            }}
+            onChange={(value) => {
+              setSliderValue(value);
+              applyChangesUntilScrubber(value);
+            }}
+            onAfterChange={(value) => {
+              handleScrubberChange(value);
+              audioElement!.muted = false;
+            }}
           />
         </div>
 
