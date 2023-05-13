@@ -235,32 +235,36 @@ export function PlaybackEditor({
 
   function handleScrubberChange(scrubberPosition: number) {
     updateAudioCurrentTime(scrubberPosition);
-    audioElement!.play();
+    if (previousPlaybackState === 'playing') {
+      audioElement!.play();
 
-    clearInterval(sliderIntervalIdRef.current!);
-    setSliderValue(scrubberPosition);
+      clearInterval(sliderIntervalIdRef.current!);
+      setSliderValue(scrubberPosition);
 
-    setPlaybackState((prevState) => ({
-      ...prevState,
-      currentPosition: scrubberPosition,
-    }));
+      setPlaybackState((prevState) => ({
+        ...prevState,
+        currentPosition: scrubberPosition,
+      }));
 
-    // Clear existing timeouts if any
-    actionTimeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
-    actionTimeoutIdsRef.current = [];
-    consoleTimeoutIdsRef.current.forEach((timeoutId) =>
-      clearTimeout(timeoutId)
-    );
-    consoleTimeoutIdsRef.current = [];
+      // Clear existing timeouts if any
+      actionTimeoutIdsRef.current.forEach((timeoutId) =>
+        clearTimeout(timeoutId)
+      );
+      actionTimeoutIdsRef.current = [];
+      consoleTimeoutIdsRef.current.forEach((timeoutId) =>
+        clearTimeout(timeoutId)
+      );
+      consoleTimeoutIdsRef.current = [];
 
-    editorInstance!.setValue('');
+      editorInstance!.setValue('');
 
-    startPlayback(
-      importedActions!.editorActions,
-      editorInstance!,
-      scrubberPosition
-    );
-    setSliderValue(scrubberPosition);
+      startPlayback(
+        importedActions!.editorActions,
+        editorInstance!,
+        scrubberPosition
+      );
+      setSliderValue(scrubberPosition);
+    }
     if (
       scrubberPosition < importedActions!.consoleLogOutputs[0].playbackTimestamp
     ) {
@@ -503,9 +507,7 @@ export function PlaybackEditor({
               applyChangesUntilScrubber(value);
             }}
             onAfterChange={(value) => {
-              if (previousPlaybackState === 'playing') {
-                handleScrubberChange(value);
-              }
+              handleScrubberChange(value);
               audioElement!.muted = false;
             }}
           />
