@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from '@prisma/client'
-import { getRecordingById, createNewRecording } from "../models/recordings.model";
+import { getRecordingById, createNewRecording, findUser, fetchAllUserRecordings, updateRecording, deleteRecording } from "../models/recordings.model";
 
 const prisma = new PrismaClient()
 
@@ -9,16 +9,17 @@ export async function getRecordingByIdController(req: Request, res: Response) {
   try {
     const recordingId = req.params.recordingid;
     const { user }  = req.body
+
     validateRecordingId(recordingId)
 
-    const recording = await getRecordingById(recordingId, user)
+    const recording = await getRecordingById(recordingId)
 
     if (!recording){
       return res.status(404).send({ message: 'Resource not found' })
     }
 
     if (!recording.published) {
-      if (!req.body.user || recording.creator_uid !== req.body.user.uid) {
+      if (!user || recording.creator_uid !== user.uid) {
         return res.status(403).send({ message: 'Private' })
       }
     }
@@ -33,37 +34,22 @@ export async function getRecordingByIdController(req: Request, res: Response) {
   }
 }
 
-export async function getAllUserRecordings(req: Request, res: Response) {
+export async function getAllUserRecordingsController(req: Request, res: Response) {
   console.log('Recordings - GET received - getAllUserRecordings')
   try {
-
-    const user = await prisma.creator.findUnique({
-      where: {
-        uid: req.body.user.uid
-      }
-    })
-
+    const user = await findUser(req.body.user)
     if (!user) {
       return res.status(403).send({ message: 'User does not exist'})
     }
-
-    const allUserRecordings = await prisma.recording.findMany({
-      where: {
-        creator_uid: user.uid
-      },
-      orderBy: {
-        created_at: 'desc'
-      }
-    })
+    const allUserRecordings = await fetchAllUserRecordings(user.uid)
     res.status(200).send(allUserRecordings)
-
   } catch (err) {
     console.error(err)
     res.status(500).send({ message: 'Internal server error'})
   }
 }
 
-export async function uploadRecording(req: Request, res: Response) {
+export async function uploadRecordingController(req: Request, res: Response) {
   console.log('Recordings - POST received - uploadRecording')
   try {
     const newRecording = await createNewRecording(req.body);
@@ -74,12 +60,8 @@ export async function uploadRecording(req: Request, res: Response) {
   }
 }
 
-export async function updateRecording(req: Request, res: Response) {
-  console.log('Recordings - PATCH received - updateRecording')
-  const recordingId = req.params.recordingid
-
-  validateRecordingId(recordingId)
-  
+export async function updateRecordingController(req: Request, res: Response) {
+  console.log('Recordings - PATCH received - updateRecording') 
   const dataToUpdate: Record<string, string | boolean> = {};
   
   const fieldsToUpdate: string[] = ['thumbnail_link', 'title', 'description', 'published', 'language', 'full_link', 'iframe_link']
@@ -95,6 +77,7 @@ export async function updateRecording(req: Request, res: Response) {
       dataToUpdate[field] = req.body[field]
     }
   })
+
   if (invalidFields.length > 0) {
     return res.status(400).send({ message: 'Type of field to update error'})
   }
@@ -103,38 +86,23 @@ export async function updateRecording(req: Request, res: Response) {
     return res.status(400).send({ message: 'Error updating resource: no fields to update provided' })
   }
 
-  const searchConditions = {
-    recording_id: req.params.recordingid,
-    creator_uid: req.body.user.id
-  }
   try {
-    const updatedRecording = await prisma.recording.update({
-      where: searchConditions, 
-      data: dataToUpdate
-    })
-    if (!updatedRecording) {
-      return res.status(400).send({ message: 'Could not find recording to update'})
-    };
+    const recordingId = req.params.recordingid
+    validateRecordingId(recordingId)
+
+    const recordingToUpdate = await getRecordingById(recordingId)
     
-    const allUserRecordings = await prisma.recording.findMany({
-      where: {
-        creator_uid: req.body.user.uid
-      },
-      orderBy: {
-        created_at: 'desc'
-      },
-      include: {
-        creator: {
-          select: {
-            picture: true
-          }
-        }
-      }
-    })
-    if (!allUserRecordings) {
-      return res.status(206).send({ message: 'Resource updated, but unable to return all resources for this user' })
+    if (!recordingToUpdate) {
+      return res.status(400).send({ message: 'Resource not found'})
     }
-    res.status(200).send(allUserRecordings)
+
+    if (recordingToUpdate.creator_uid !== req.body.user.uid) {
+      return res.status(403).send({ message: 'Not authorized' })
+    }
+
+    const updatedRecording = await updateRecording(recordingId, dataToUpdate);
+
+    res.status(200).send(updatedRecording)
   } catch (err) {
     if (err instanceof InvalidRecordingError) {
       res.status(400).send({ message: err.message})
@@ -144,18 +112,14 @@ export async function updateRecording(req: Request, res: Response) {
   }
 }
 
-export async function deleteRecording(req: Request, res: Response) {
+export async function deleteRecordingController(req: Request, res: Response) {
   console.log('Recordings - DELETE received - deleteRecording')
   try {
     const recordingId = req.params.recordingid;
   
     validateRecordingId(recordingId);
 
-    const recording = await prisma.recording.findUnique({
-      where: {
-        recording_id: recordingId
-      }
-    })
+    const recording = await getRecordingById(recordingId);
 
     if (!recording) {
       return res.status(404).send({ message: 'Resource not found'})
@@ -165,11 +129,11 @@ export async function deleteRecording(req: Request, res: Response) {
       return res.status(403).send({ message: 'Not authorized'})
     }
 
-    await prisma.recording.delete({
-      where: {
-        recording_id: recordingId
-      }
-    })
+    const deletedRecording = await deleteRecording(recordingId)
+    if (!deletedRecording) {
+      return res.status(500).send({ message: 'Internal server error'})
+    }
+
     res.status(204).send()
   } catch (err) {
     if (err instanceof InvalidRecordingError) {

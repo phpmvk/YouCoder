@@ -13,23 +13,6 @@ export interface FrontendRecording {
   recording_link: string;
 }
 
-export interface SavedRecording {
-  recording_id: string;
-  creator?: {
-    picture: string;
-  };
-  creator_uid: string,
-  thumbnail_link: string | null;
-  title: string;
-  description?: string | null;
-  published: boolean;
-  language: string;
-  recording_link: string;
-  full_link: string | null;
-  iframe_link: string | null;
-  created_at: string;
-}
-
 export interface FirebaseUser {
   name: string,
   picture: string,

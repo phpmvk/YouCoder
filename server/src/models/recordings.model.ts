@@ -1,10 +1,10 @@
-import { PrismaClient } from '@prisma/client'
+import { Creator, PrismaClient, Recording } from '@prisma/client'
 import { randomBytes } from 'crypto';
-import { FirebaseUser, FrontendRecording, SavedRecording } from "../types/types";
+import { FirebaseUser, FrontendRecording } from "../types/types";
 
 const prisma = new PrismaClient()
 
-export async function getRecordingById(recordingId: string, user: FirebaseUser) {
+export async function getRecordingById(recordingId: string): Promise<Recording | null> {
   const recording = await prisma.recording.findUnique({
     where: {
       recording_id: recordingId
@@ -20,9 +20,38 @@ export async function getRecordingById(recordingId: string, user: FirebaseUser) 
   return recording
 }
 
+export async function findUser(user: FirebaseUser): Promise<Creator | null>{
+  const storedUser = await prisma.creator.findUnique({
+    where: {
+      uid: user.uid
+    }
+  })
+  return storedUser
+}
 
+export async function fetchAllUserRecordings(uid: string): Promise<Recording[] | null>{
+  const allUserRecordings = await prisma.recording.findMany({
+    where: {
+      creator_uid: uid
+    },
+    orderBy: {
+      created_at: 'desc'
+    }
+  })
+  return allUserRecordings
+}
 
-export async function createNewRecording(frontendRecording: FrontendRecording): Promise<SavedRecording> {
+export async function updateRecording(recordingId: string , dataToUpdate: Record<string, string | boolean>) {
+  const updatedRecording = await prisma.recording.update({
+    where: {
+      recording_id: recordingId
+    }, 
+    data: dataToUpdate
+  })
+  return updatedRecording
+}
+
+export async function createNewRecording(frontendRecording: FrontendRecording): Promise<Recording> {
   const {
     user,
     thumbnail_link,
@@ -81,4 +110,11 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
   return updatedNewRecording
 }
 
-
+export async function deleteRecording(recordingId: string): Promise<Recording>{
+  const deletedRecording = await prisma.recording.delete({
+    where: {
+      recording_id: recordingId
+    }
+  })
+  return deletedRecording
+}
