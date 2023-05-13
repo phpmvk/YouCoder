@@ -117,10 +117,16 @@ export function PlaybackEditor({
 
   function startPlayback(
     editorActions: EditorAction[],
-    editor: editor.IStandaloneCodeEditor
+    editor: editor.IStandaloneCodeEditor,
+    scrubberPosition?: number
   ) {
-    const baseTimestamp = sliderValue;
-
+    let baseTimestamp: number;
+    if (scrubberPosition) {
+      baseTimestamp = scrubberPosition;
+    } else {
+      baseTimestamp = sliderValue;
+    }
+    console.log('basetimestamp', baseTimestamp);
     // Filter out actions that have already been executed based on the scrubber position
     const actionsToExecute = editorActions.filter(
       (action) => action.playbackTimestamp >= baseTimestamp
@@ -228,7 +234,10 @@ export function PlaybackEditor({
     audioElement?.play();
 
     clearInterval(sliderIntervalIdRef.current!);
+    console.log('slidervalue before', sliderValue);
     setSliderValue(scrubberPosition);
+    console.log('slidervalue after', sliderValue);
+
     setPlaybackState((prevState) => ({
       ...prevState,
       currentPosition: scrubberPosition,
@@ -244,8 +253,13 @@ export function PlaybackEditor({
 
     editorInstance!.setValue('');
 
-    startPlayback(importedActions!.editorActions, editorInstance!);
+    startPlayback(
+      importedActions!.editorActions,
+      editorInstance!,
+      scrubberPosition
+    );
     setSliderValue(scrubberPosition);
+    console.log('slidervalue after after', sliderValue);
   }
 
   function startSliderInterval() {
@@ -273,31 +287,6 @@ export function PlaybackEditor({
     }, 100);
 
     return intervalId;
-  }
-
-  async function handleFileInput(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files![0];
-    if (file && file.name.endsWith('.ycr')) {
-      try {
-        const { recorderActions, recordedAudioURL } = await loadYCRFile(file);
-
-        setImportedActions(recorderActions);
-
-        // Decode audio data and set audio duration
-        const audioContext = new AudioContext();
-        const response = await fetch(recordedAudioURL);
-        const arrayBuffer = await response.arrayBuffer();
-        const decodedData = await audioContext.decodeAudioData(arrayBuffer);
-        setAudioDuration(decodedData.duration * 1000);
-
-        // Set the audio source
-        setAudioSource(recordedAudioURL);
-      } catch (error) {
-        console.error('Error loading .ycr file:', error);
-      }
-    } else {
-      console.error('Please select a valid .ycr file');
-    }
   }
 
   async function handleFirebaseURL(firebaseURL: string) {
@@ -402,15 +391,9 @@ export function PlaybackEditor({
                 onMount={handleEditorDidMount}
               />
             </Allotment.Pane>
-            <Allotment.Pane
-              minSize={200}
-              preferredSize={400}
-            >
+            <Allotment.Pane minSize={200} preferredSize={400}>
               <div className=' w-full h-[50%] border-r-8 border-t-8 border-l-2 border-bg-pri '>
-                <Terminal
-                  terminalName='output'
-                  output={TeacherConsoleOutput}
-                />
+                <Terminal terminalName='output' output={TeacherConsoleOutput} />
               </div>
               <div className='relative w-full h-[50%] border-t-6 border-l-2 border-r-8 border-bg-pri'>
                 <div className='flex justify-center items-center'>
