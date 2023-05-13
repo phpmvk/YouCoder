@@ -61,6 +61,10 @@ export function PlaybackEditor({
   const [sliderValue, setSliderValue] = useState<number>(0);
   const sliderIntervalIdRef = useRef<NodeJS.Timeout | null>(null);
 
+  const [previousPlaybackState, setPreviousPlaybackState] = useState<
+    'playing' | 'paused' | 'stopped'
+  >('paused');
+
   //audio states
   const [audioSource, setAudioSource] = useState<string>('');
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(
@@ -126,7 +130,6 @@ export function PlaybackEditor({
     } else {
       baseTimestamp = sliderValue;
     }
-    console.log('basetimestamp', baseTimestamp);
     // Filter out actions that have already been executed based on the scrubber position
     const actionsToExecute = editorActions.filter(
       (action) => action.playbackTimestamp >= baseTimestamp
@@ -205,6 +208,7 @@ export function PlaybackEditor({
     if (importedActions) {
       getCurrentLanguage();
       editorInstance!.setValue('');
+      setTeacherConsoleOutput('');
       startPlayback(importedActions.editorActions, editorInstance!);
     }
   }
@@ -231,35 +235,68 @@ export function PlaybackEditor({
 
   function handleScrubberChange(scrubberPosition: number) {
     updateAudioCurrentTime(scrubberPosition);
-    audioElement?.play();
+    if (previousPlaybackState === 'playing') {
+      audioElement!.play();
 
-    clearInterval(sliderIntervalIdRef.current!);
-    console.log('slidervalue before', sliderValue);
-    setSliderValue(scrubberPosition);
-    console.log('slidervalue after', sliderValue);
+      clearInterval(sliderIntervalIdRef.current!);
+      setSliderValue(scrubberPosition);
 
-    setPlaybackState((prevState) => ({
-      ...prevState,
-      currentPosition: scrubberPosition,
-    }));
+      setPlaybackState((prevState) => ({
+        ...prevState,
+        currentPosition: scrubberPosition,
+      }));
 
-    // Clear existing timeouts if any
-    actionTimeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
-    actionTimeoutIdsRef.current = [];
-    consoleTimeoutIdsRef.current.forEach((timeoutId) =>
-      clearTimeout(timeoutId)
-    );
-    consoleTimeoutIdsRef.current = [];
+      // Clear existing timeouts if any
+      actionTimeoutIdsRef.current.forEach((timeoutId) =>
+        clearTimeout(timeoutId)
+      );
+      actionTimeoutIdsRef.current = [];
+      consoleTimeoutIdsRef.current.forEach((timeoutId) =>
+        clearTimeout(timeoutId)
+      );
+      consoleTimeoutIdsRef.current = [];
 
+      editorInstance!.setValue('');
+
+      startPlayback(
+        importedActions!.editorActions,
+        editorInstance!,
+        scrubberPosition
+      );
+      setSliderValue(scrubberPosition);
+    }
+    if (
+      scrubberPosition < importedActions!.consoleLogOutputs[0].playbackTimestamp
+    ) {
+      setTeacherConsoleOutput('');
+    }
+  }
+
+  function applyChangesUntilScrubber(scrubberPosition: number) {
     editorInstance!.setValue('');
-
-    startPlayback(
-      importedActions!.editorActions,
-      editorInstance!,
-      scrubberPosition
+    // Apply all changes up to the scrubber position instantly
+    const actionsToApplyInstantly = importedActions!.editorActions.filter(
+      (action) => action.playbackTimestamp < scrubberPosition
     );
-    setSliderValue(scrubberPosition);
-    console.log('slidervalue after after', sliderValue);
+
+    actionsToApplyInstantly.forEach((action: EditorAction) => {
+      applyChange(action, editorInstance!, action.text);
+    });
+
+    const consoleOutputsToApplyInstantly =
+      importedActions!.consoleLogOutputs.filter(
+        (output) => output.playbackTimestamp < scrubberPosition
+      );
+
+    consoleOutputsToApplyInstantly.forEach((output) => {
+      setTeacherConsoleOutput(output.text);
+    });
+
+    if (
+      scrubberPosition < importedActions!.consoleLogOutputs[0].playbackTimestamp
+    ) {
+      setTeacherConsoleOutput('');
+    }
   }
 
   function startSliderInterval() {
@@ -275,9 +312,9 @@ export function PlaybackEditor({
             // Update the playback state
             setPlaybackState({
               status: 'stopped',
-              currentPosition: audioDuration,
+              currentPosition: 0,
             });
-            return audioDuration; // Set sliderValue to audioDuration
+            return 0; // Set sliderValue to audioDuration
           }
           return prevSliderValue + 100;
         });
@@ -351,10 +388,8 @@ export function PlaybackEditor({
       language_id,
       source_code: base64SourceCode,
     };
-    console.log('judge0 before sending', judge0);
     consoleApi.getOutput(judge0)!.then((response) => {
       const output = window.atob(response.data.output);
-      console.log('output in judge0', output);
       setStudentConsoleOutput(output);
     });
   }
@@ -457,14 +492,24 @@ export function PlaybackEditor({
             </button>
             {formatTime(sliderValue)} / {formatTime(audioDuration)}
           </div>
-
           <ReactSlider
             className='w-10/12 max-w-[800px] h-5 bg-bg-gptdark rounded-full mx-auto border-white border flex items-center pr-2'
             thumbClassName='w-5 h-5 bg-white rounded-full cursor-pointer focus:outline-none active:h-7 active:w-7 transition'
             value={sliderValue}
             step={0.001}
             max={audioDuration}
-            onChange={(value) => handleScrubberChange(value)}
+            onBeforeChange={() => {
+              setPreviousPlaybackState(playbackStateRef.current.status);
+              audioElement!.muted = true;
+            }}
+            onChange={(value) => {
+              setSliderValue(value);
+              applyChangesUntilScrubber(value);
+            }}
+            onAfterChange={(value) => {
+              handleScrubberChange(value);
+              audioElement!.muted = false;
+            }}
           />
         </div>
 
