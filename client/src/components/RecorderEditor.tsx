@@ -511,7 +511,14 @@ export function RecorderEditor() {
       )}
 
       {recorderState !== 'stopped' && (
-        <p className='p-2 text-white'>{formatTime(elapsedTime)}</p>
+        <p className='p-2 text-white'>
+          {formatTime(elapsedTime)}
+          {recorderState === 'recording' && (
+            <span className='text-red-700 animate-[blinking_1s_infinite] text-4xl'>
+              •
+            </span>
+          )}
+        </p>
       )}
 
       {saveModalVisible && (
