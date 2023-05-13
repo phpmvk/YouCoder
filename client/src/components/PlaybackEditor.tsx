@@ -230,7 +230,6 @@ export function PlaybackEditor({
   }
 
   function handleScrubberChange(scrubberPosition: number) {
-    audioElement!.muted = true;
     updateAudioCurrentTime(scrubberPosition);
     audioElement!.play();
 
@@ -263,7 +262,33 @@ export function PlaybackEditor({
     ) {
       setTeacherConsoleOutput('');
     }
-    audioElement!.muted = false;
+  }
+
+  function applyChangesUntilScrubber(scrubberPosition: number) {
+    editorInstance!.setValue('');
+    // Apply all changes up to the scrubber position instantly
+    const actionsToApplyInstantly = importedActions!.editorActions.filter(
+      (action) => action.playbackTimestamp < scrubberPosition
+    );
+
+    actionsToApplyInstantly.forEach((action: EditorAction) => {
+      applyChange(action, editorInstance!, action.text);
+    });
+
+    const consoleOutputsToApplyInstantly =
+      importedActions!.consoleLogOutputs.filter(
+        (output) => output.playbackTimestamp < scrubberPosition
+      );
+
+    consoleOutputsToApplyInstantly.forEach((output) => {
+      setTeacherConsoleOutput(output.text);
+    });
+
+    if (
+      scrubberPosition < importedActions!.consoleLogOutputs[0].playbackTimestamp
+    ) {
+      setTeacherConsoleOutput('');
+    }
   }
 
   function startSliderInterval() {
@@ -459,14 +484,23 @@ export function PlaybackEditor({
             </button>
             {formatTime(sliderValue)} / {formatTime(audioDuration)}
           </div>
-
           <ReactSlider
             className='w-10/12 max-w-[800px] h-5 bg-bg-gptdark rounded-full mx-auto border-white border flex items-center pr-2'
             thumbClassName='w-5 h-5 bg-white rounded-full cursor-pointer focus:outline-none active:h-7 active:w-7 transition'
             value={sliderValue}
             step={0.001}
             max={audioDuration}
-            onChange={(value) => handleScrubberChange(value)}
+            onBeforeChange={() => {
+              audioElement!.muted = true;
+            }}
+            onChange={(value) => {
+              setSliderValue(value);
+              applyChangesUntilScrubber(value);
+            }}
+            onAfterChange={(value) => {
+              handleScrubberChange(value);
+              audioElement!.muted = false;
+            }}
           />
         </div>
 
