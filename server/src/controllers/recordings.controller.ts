@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from '@prisma/client'
 import validator from 'validator'
+import { randomBytes } from 'crypto';
 
 const prisma = new PrismaClient()
 
@@ -93,6 +94,8 @@ export async function uploadRecording(req: Request, res: Response) {
     return res.status(400).send({ message: 'Bad request' })
   }
 
+  const random36CharStringId = randomBytes(18).toString('hex');
+
   try {
     const newRecording = await prisma.recording.create({
       data: {
@@ -101,6 +104,7 @@ export async function uploadRecording(req: Request, res: Response) {
             uid: user.uid
           }
         },
+        recording_id: random36CharStringId,
         thumbnail_link: thumbnail_link?thumbnail_link:'',
         title: title,
         description: description?description:'',
