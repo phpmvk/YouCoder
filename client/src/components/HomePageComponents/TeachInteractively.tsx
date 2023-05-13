@@ -20,7 +20,6 @@ const TeachInteractively = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        console.log('entries: ', entries);
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setIsActive(true);
@@ -48,10 +47,13 @@ const TeachInteractively = () => {
   const marginLeft = scrollPosition * 0.08;
 
   return (
-    <div ref={ref} className="whitespace-nowrap z-50 xl:text-[5rem] lg:text-6xl md:text-6xl md:visible sm:visible text-4xl ">
+    <div
+      ref={ref}
+      className='whitespace-nowrap z-50 xl:text-[5rem] lg:text-6xl md:text-6xl md:visible sm:visible text-4xl '
+    >
       <div
         className='text-white'
-        style={{  marginLeft: `${marginLeft}vw` }}
+        style={{ marginLeft: `${marginLeft}vw` }}
       >
         <span className='text-white'>Teach Inter</span>
         <span
