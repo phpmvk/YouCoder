@@ -1,23 +1,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface LoadingSpinnerState {
-  showLoadingSpinner: boolean;
+  loadingSpinner: boolean;
 }
 
 const initialState: LoadingSpinnerState = {
-  showLoadingSpinner: false,
+  loadingSpinner: false,
 };
 
 const loadingSpinnerSlice = createSlice({
   name: 'loadingSpinner',
   initialState,
   reducers: {
-    setShowLoadingSpinner: (state, action: PayloadAction<boolean>) => {
-      state.showLoadingSpinner = action.payload;
+    setLoadingSpinner: (state, action: PayloadAction<boolean>) => {
+      state.loadingSpinner = action.payload;
     },
   },
 });
 
-export const { setShowLoadingSpinner } = loadingSpinnerSlice.actions;
+export const { setLoadingSpinner } = loadingSpinnerSlice.actions;
 
 export default loadingSpinnerSlice.reducer;

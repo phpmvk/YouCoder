@@ -181,118 +181,119 @@ function TopNavBar({
   // );
 
   return (
-    <Box sx={{ flexGrow: 1, height: '60px' }}>
-      <AppBar sx={{ backgroundColor: '#050505', maxHeight: '60px' }}>
-        <Toolbar>
-          <Link to='/'>
-            <Typography
-              variant='h6'
-              noWrap
-              component='div'
-              sx={{ display: { xs: 'none', sm: 'block' } }}
-            >
-              {' '}
-              LOGO
-              {/* <img src={youcoderlogo} style={{width: '80px', height: '80px'}}></img>  */}
-            </Typography>
-          </Link>
-          {showSearch && (
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                value={term}
-                onChange={handleSearchChange}
-                placeholder='Search…'
-                inputProps={{ 'aria-label': 'search' }}
-              />
-            </Search>
-          )}
-          <Box sx={{ flexGrow: 1 }} />
-          <Box
-            sx={{
-              display: 'flex',
-              // justifyContent: 'space-between',
-              alignItems: 'center',
-              // width: '25%',
-              marginRight: 2,
-            }}
-          >
-            {/* Conditionally render the Create Recording button */}
-            {showCreateRecording && (
-              <Button
-                className='w-full h-full t-[10vw] border-solid !border-2 !border-red-700 hover:!bg-red-700/20 !text-white !rounded-full !text-l !mr-6 whitespace-nowrap'
-                color='inherit'
-                variant='outlined'
+    <div className='sticky top-0 z-40'>
+      <Box sx={{ flexGrow: 1, height: '60px' }}>
+        <AppBar sx={{ backgroundColor: '#050505', maxHeight: '60px' }}>
+          <Toolbar>
+            <Link to='/'>
+              <Typography
+                variant='h6'
+                noWrap
+                component='div'
+                sx={{ display: { xs: 'none', sm: 'block' } }}
               >
-                <AiFillVideoCamera className='text-red-700 mr-2 text-lg' />
-                Create Recording
-              </Button>
-            )}
-
-            {/* Conditionally render the Dashboard button */}
-            {showDashboard && (
-              <Link to='/dashboard'>
-                <Button
-                  className='hover:!underline'
-                  color='inherit'
-                >
-                  Dashboard
-                </Button>
-              </Link>
-            )}
-            {showFeatures && (
-              <Button
-                className='hover:!underline hover:!underline-offset-8'
-                color='inherit'
-              >
-                Features
-              </Button>
-            )}
-            {showExamples && (
-              <Button
-                className='hover:!underline hover:!underline-offset-8'
-                color='inherit'
-              >
-                Examples
-              </Button>
-            )}
-            <Link to='/docs'>
-              <Button
-                className='hover:!underline hover:!underline-offset-8'
-                color='inherit'
-              >
-                Docs
-              </Button>
+                {' '}
+                LOGO
+                {/* <img src={youcoderlogo} style={{width: '80px', height: '80px'}}></img>  */}
+              </Typography>
             </Link>
-          </Box>
-          <Box>
-            {loggedIn ? (
-              <>
+            {showSearch && (
+              <Search>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  value={term}
+                  onChange={handleSearchChange}
+                  placeholder='Search…'
+                  inputProps={{ 'aria-label': 'search' }}
+                />
+              </Search>
+            )}
+            <Box sx={{ flexGrow: 1 }} />
+            <Box
+              sx={{
+                display: 'flex',
+                // justifyContent: 'space-between',
+                alignItems: 'center',
+                // width: '25%',
+                marginRight: 2,
+              }}
+            >
+              {/* Conditionally render the Create Recording button */}
+              {showCreateRecording && (
                 <Button
-                  className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto whitespace-nowrap'
+                  className='w-full h-full t-[10vw] border-solid !border-2 !border-red-700 hover:!bg-red-700/20 !text-white !rounded-full !text-l !mr-6 whitespace-nowrap'
+                  color='inherit'
                   variant='outlined'
-                  onClick={logOut}
                 >
-                  Log Out
+                  <AiFillVideoCamera className='text-red-700 mr-2 text-lg' />
+                  Create Recording
                 </Button>
-              </>
-            ) : (
-              <>
-                <Link to='/login'>
+              )}
+
+              {/* Conditionally render the Dashboard button */}
+              {showDashboard && (
+                <Link to='/dashboard'>
                   <Button
-                    // className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto'
-                    className='!border-bg-alt !text-bg-pri hover:!bg-bg-pri hover:!text-bg-alt !h-8 !my-auto !bg-bg-alt '
-                    variant='outlined'
+                    className='hover:!underline'
+                    color='inherit'
                   >
-                    Sign In
+                    Dashboard
                   </Button>
                 </Link>
-              </>
-            )}
+              )}
+              {showFeatures && (
+                <Button
+                  className='hover:!underline hover:!underline-offset-8'
+                  color='inherit'
+                >
+                  Features
+                </Button>
+              )}
+              {showExamples && (
+                <Button
+                  className='hover:!underline hover:!underline-offset-8'
+                  color='inherit'
+                >
+                  Examples
+                </Button>
+              )}
+              <Link to='/docs'>
+                <Button
+                  className='hover:!underline hover:!underline-offset-8'
+                  color='inherit'
+                >
+                  Docs
+                </Button>
+              </Link>
+            </Box>
+            <Box>
+              {loggedIn ? (
+                <>
+                  <Button
+                    className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto whitespace-nowrap'
+                    variant='outlined'
+                    onClick={logOut}
+                  >
+                    Log Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link to='/login'>
+                    <Button
+                      // className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto'
+                      className='!border-bg-alt !text-bg-pri hover:!bg-bg-pri hover:!text-bg-alt !h-8 !my-auto !bg-bg-alt '
+                      variant='outlined'
+                    >
+                      Sign In
+                    </Button>
+                  </Link>
+                </>
+              )}
 
-            {/* <IconButton
+              {/* <IconButton
               size="large"
               edge="end"
               aria-label="account of current user"
@@ -303,8 +304,8 @@ function TopNavBar({
             >
               <AccountCircle />
             </IconButton> */}
-          </Box>
-          {/* <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+            </Box>
+            {/* <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size='large'
               aria-label='show more'
@@ -316,11 +317,12 @@ function TopNavBar({
               <MoreIcon />
             </IconButton>
           </Box> */}
-        </Toolbar>
-      </AppBar>
-      {/* {renderMobileMenu}
+          </Toolbar>
+        </AppBar>
+        {/* {renderMobileMenu}
       {renderMenu} */}
-    </Box>
+      </Box>
+    </div>
   );
 }
 

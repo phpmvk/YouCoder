@@ -12,15 +12,17 @@ import PlayerPage from './pages/Player';
 import NotFoundPage from './pages/NotFound';
 import { getStorage } from 'firebase/storage';
 import LoadingSpinner from './components/LoadingSpinner';
+import { useAppSelector } from './redux/hooks';
 
 export const Firebase = initializeApp(config.firebaseConfig);
 export const storage = getStorage(Firebase);
 
 function App() {
+  const { loadingSpinner } = useAppSelector((state) => state.loadingSpinner);
+
   return (
     <>
-      <LoadingSpinner show={true} />
-
+      <LoadingSpinner show={loadingSpinner} />
       <BrowserRouter>
         <Routes>
           <Route
