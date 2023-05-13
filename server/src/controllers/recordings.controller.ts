@@ -1,29 +1,17 @@
 import { Request, Response } from "express";
 import { PrismaClient } from '@prisma/client'
-import validator from 'validator'
-import { randomBytes } from 'crypto';
+import { getRecordingById, createNewRecording } from "../models/recordings.model";
 
 const prisma = new PrismaClient()
 
-export async function getRecordingById(req: Request, res: Response) {
+export async function getRecordingByIdController(req: Request, res: Response) {
   console.log('Recordings - GET received - getRecordingById')
   try {
     const recordingId = req.params.recordingid;
-
+    const { user }  = req.body
     validateRecordingId(recordingId)
 
-    const recording = await prisma.recording.findUnique({
-      where: {
-        recording_id: recordingId
-      },
-      include: {
-        creator: {
-          select: {
-            picture: true
-          }
-        }
-      }
-    })
+    const recording = await getRecordingById(recordingId, user)
 
     if (!recording){
       return res.status(404).send({ message: 'Resource not found' })
@@ -77,59 +65,9 @@ export async function getAllUserRecordings(req: Request, res: Response) {
 
 export async function uploadRecording(req: Request, res: Response) {
   console.log('Recordings - POST received - uploadRecording')
-  const {
-    user,
-    thumbnail_link,
-    title,
-    description,
-    language,
-    recording_link,
-  } = req.body
-
-  if (
-    !title || typeof title !== 'string' ||
-    !language || typeof language !== 'string' ||
-    !recording_link || typeof recording_link !== 'string'
-  ) {
-    return res.status(400).send({ message: 'Bad request' })
-  }
-
-  const random36CharStringId = randomBytes(18).toString('hex');
-
   try {
-    const newRecording = await prisma.recording.create({
-      data: {
-        creator: {
-          connect: {
-            uid: user.uid
-          }
-        },
-        recording_id: random36CharStringId,
-        thumbnail_link: thumbnail_link?thumbnail_link:'',
-        title: title,
-        description: description?description:'',
-        language: language,
-        recording_link: recording_link,
-        created_at: (new Date(Date.now())).toString()
-      },
-      include: {
-        creator: {
-          select: {
-            picture: true
-          }
-        }
-      }
-    })
-    const updatedNewRecording = await prisma.recording.update({
-      where: {
-        recording_id: newRecording.recording_id
-      },
-      data: {
-        full_link: `https://youcoder.io/player/${newRecording.recording_id}`,
-        iframe_link: `<iframe src='https://youcoder.io/player/${newRecording.recording_id}?embed=true' width='1000' height='480' allowFullScreentitle='${newRecording.title}'/>`
-      }
-    })
-    res.status(201).send(updatedNewRecording)
+    const newRecording = await createNewRecording(req.body);
+    res.status(201).send(newRecording)
   } catch (err) {
     console.error(err);
     res.status(409).send({ message: 'Unable to create resource' })
@@ -242,8 +180,9 @@ export async function deleteRecording(req: Request, res: Response) {
   }
 }
 
+
 function validateRecordingId(recordingId: string) {
-  if (!validator.isUUID(recordingId)) {
+  if (!/^[a-f0-9]{36}$/i.test(recordingId)) {
     throw new InvalidRecordingError('Invalid recording id parameter')
   }
 }
