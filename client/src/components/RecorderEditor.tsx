@@ -2,7 +2,6 @@ import Editor from '@monaco-editor/react';
 import React, { useState, useRef, useEffect } from 'react';
 import { editor } from 'monaco-editor';
 import * as monaco from 'monaco-editor';
-import RecordRTC from 'recordrtc';
 import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
 
@@ -232,16 +231,16 @@ export function RecorderEditor() {
     setPauseAction(false);
   }
   function handleEndRecording() {
-    // if (pauseAction) {
-    //   if (
-    //     !window.confirm(
-    //       'You have unsaved changes from when the recording was paused. These changes will be discarded. Are you sure you want to end the recording?'
-    //     )
-    //   ) {
-    //     //If they press cancel on the prompt, don't run the rest of the handleEndRecording Function
-    //     return;
-    //   }
-    // }
+    if (pauseAction) {
+      if (
+        !window.confirm(
+          'You have unsaved changes from when the recording was paused. These changes will be discarded. Are you sure you want to end the recording?'
+        )
+      ) {
+        //If they press cancel on the prompt, don't run the rest of the handleEndRecording Function
+        return;
+      }
+    }
     const timestamp = Date.now();
     recorderActions.current.end = timestamp;
 
