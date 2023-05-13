@@ -70,31 +70,37 @@ export function RecorderEditor() {
   const audioDurationRef = useRef(0);
 
   useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      mediaRecorderRef.current = new MediaRecorder(stream, {
-        mimeType: 'audio/webm;codecs=opus',
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        mediaRecorderRef.current = new MediaRecorder(stream, {
+          mimeType: 'audio/webm;codecs=opus',
+        });
+
+        mediaRecorderRef.current.ondataavailable = function (e) {
+          if (e.data.size > 0) {
+            recordedChunksRef.current.push(e.data);
+          }
+
+          if (mediaRecorderRef.current!.state === 'inactive') {
+            // Check if the recorder is stopped
+            audioRecordingBlobRef.current = new Blob(
+              recordedChunksRef.current,
+              {
+                type: 'audio/webm',
+              }
+            );
+            recordedChunksRef.current = [];
+          }
+        };
+      })
+      .catch((error) => {
+        console.error('Could not get user media', error);
+        // Display message to user
+        alert(
+          'Permission for microphone is required to record. Please enable access and refresh the page.'
+        );
       });
-
-      mediaRecorderRef.current.ondataavailable = async function (e) {
-        if (e.data.size > 0) {
-          recordedChunksRef.current.push(e.data);
-        }
-
-        if (mediaRecorderRef.current!.state === 'inactive') {
-          audioRecordingBlobRef.current = new Blob(recordedChunksRef.current, {
-            type: 'audio/webm',
-          });
-
-          // Decode audio data and set audio duration
-          const audioContext = new AudioContext();
-          const arrayBuffer = await audioRecordingBlobRef.current.arrayBuffer();
-          const decodedData = await audioContext.decodeAudioData(arrayBuffer);
-          audioDurationRef.current = decodedData.duration * 1000;
-
-          recordedChunksRef.current = [];
-        }
-      };
-    });
   }, []);
 
   useEffect(() => {
@@ -185,6 +191,12 @@ export function RecorderEditor() {
 
   //recording handlers
   function handleStartRecording() {
+    if (!mediaRecorderRef.current) {
+      alert(
+        'Permission for microphone is required to record. Please enable access and refresh the page.'
+      );
+      return;
+    }
     //audio
     setRecorderLoading(true);
     setIsRecording(true);
