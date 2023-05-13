@@ -322,6 +322,8 @@ export function RecorderEditor() {
 
   function handleJudge0() {
     setIsConsoleLoading(true);
+    handleConsoleLogOutput('...', Date.now());
+
     const model = editorInstance!.getModel();
     const language = model!.getLanguageId() as Language;
     const source_code = editorInstance!.getValue();
@@ -332,6 +334,7 @@ export function RecorderEditor() {
       language_id,
       source_code: base64SourceCode,
     };
+
     consoleApi
       .getOutput(judge0)!
       .then((response) => {
@@ -396,10 +399,7 @@ export function RecorderEditor() {
               onMount={handleEditorDidMount}
             />
           </Allotment.Pane>
-          <Allotment.Pane
-            minSize={180}
-            preferredSize={300}
-          >
+          <Allotment.Pane minSize={180} preferredSize={300}>
             <div className='border w-full h-full border-[#1e1e1e] text-white relative'>
               <button
                 className='absolute bottom-2 right-2 border-white border rounded-sm p-2 bg-slate-500 hover:bg-slate-500/50 '
@@ -422,26 +422,17 @@ export function RecorderEditor() {
       </div>
 
       {recorderState === 'stopped' && (
-        <button
-          className='p-2 text-white'
-          onClick={handleStartRecording}
-        >
+        <button className='p-2 text-white' onClick={handleStartRecording}>
           Start Recording
         </button>
       )}
 
       {recorderState === 'recording' && (
         <>
-          <button
-            className='p-2 text-white'
-            onClick={handlePauseRecording}
-          >
+          <button className='p-2 text-white' onClick={handlePauseRecording}>
             Pause Recording
           </button>
-          <button
-            className='p-2 text-white'
-            onClick={handleEndRecording}
-          >
+          <button className='p-2 text-white' onClick={handleEndRecording}>
             End Recording
           </button>
         </>
@@ -449,16 +440,10 @@ export function RecorderEditor() {
 
       {recorderState === 'paused' && (
         <>
-          <button
-            className='p-2 text-white'
-            onClick={handleResumeRecording}
-          >
+          <button className='p-2 text-white' onClick={handleResumeRecording}>
             Resume Recording
           </button>
-          <button
-            className='p-2 text-white'
-            onClick={handleEndRecording}
-          >
+          <button className='p-2 text-white' onClick={handleEndRecording}>
             End Recording
           </button>
         </>
