@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Recording } from '../types/Creator';
 import http from '../services/recordingApi';
 import { useAppDispatch } from '../redux/hooks';
-import { setLoadingPage, setLoadingSpinner } from '../redux/spinnerSlice';
+import { setLoadingPage } from '../redux/spinnerSlice';
 import TopNavBar from '../components/HomePageComponents/TopNavBar';
 import CreateRecordingButton from '../components/DashboardComponents/CreateRecordingButton';
 import RecordingsList from '../components/NewDashboardComponents/RecordingsList';

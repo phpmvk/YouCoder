@@ -36,41 +36,41 @@ const DotsMenu = ({ activeMenu, setActiveMenu, id }: DotsMenuProps) => {
         id={`dropdownDots${id}`}
         className={`${
           isOpen ? 'block' : 'hidden'
-        } bg-white divide-y divide-gray-100 rounded-lg shadow w-44 z-30 absolute right-10 top-0 border-green-600 border`}
+        } bg-gray-600 divide-y divide-gray-100 rounded-lg shadow w-44 z-30 absolute right-10 top-0 border-bg-alt border text-gray-100`}
       >
         <ul
-          className='py-2 text-sm text-gray-700 '
+          className='py-2 text-sm text-gray-100 '
           aria-labelledby={`dropdownMenuIconButton${id}`}
         >
           <li>
             <a
               href='#'
-              className='block px-4 py-2 hover:bg-gray-100 '
+              className='block px-4 py-2 hover:bg-bg-muigrey '
             >
               Edit Details
             </a>
           </li>
-          {/* <li>
+          <li>
             <a
               href='#'
-              className='block px-4 py-2 hover:bg-gray-100 '
+              className='block px-4 py-2 hover:bg-bg-muigrey '
             >
-              Settings
+              Copy Link
             </a>
-          </li> */}
-          {/* <li>
+          </li>
+          <li>
             <a
               href='#'
-              className='block px-4 py-2 hover:bg-gray-100 '
+              className='block px-4 py-2 hover:bg-bg-muigrey '
             >
-              Earnings
+              Copy Embed Link
             </a>
-          </li> */}
+          </li>
         </ul>
         <div className='py-2'>
           <a
             href='#'
-            className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+            className='block px-4 py-2 text-sm hover:bg-bg-muigrey'
           >
             Delete Recording
           </a>
