@@ -230,8 +230,9 @@ export function PlaybackEditor({
   }
 
   function handleScrubberChange(scrubberPosition: number) {
+    audioElement!.muted = true;
     updateAudioCurrentTime(scrubberPosition);
-    audioElement?.play();
+    audioElement!.play();
 
     clearInterval(sliderIntervalIdRef.current!);
     setSliderValue(scrubberPosition);
@@ -262,6 +263,7 @@ export function PlaybackEditor({
     ) {
       setTeacherConsoleOutput('');
     }
+    audioElement!.muted = false;
   }
 
   function startSliderInterval() {
