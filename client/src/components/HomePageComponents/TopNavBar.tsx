@@ -15,6 +15,7 @@ import { getAuth, signOut } from 'firebase/auth';
 import { removeUser } from '../../redux/userSlice';
 import { AiFillVideoCamera } from 'react-icons/ai';
 import { setSearchTerm } from '../../redux/searchSlice';
+import { persistor } from '../../redux/store';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -94,6 +95,7 @@ function TopNavBar({
       .then(() => {
         localStorage.removeItem('token');
         dispatch(removeUser({}));
+        persistor.purge();
         console.log('signed out');
         setLoggedIn(false);
         navigate('/');
