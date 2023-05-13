@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { Recording } from '../types/Creator';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 interface DashboardPageProps {}
 
@@ -68,26 +69,28 @@ const DashboardPage: React.FC<DashboardPageProps> = ({}) => {
   }, [createRecordingButtonRef]);
 
   return (
-    <div className='bg-bg-pri h-screen overflow-auto'>
-      <TopNavBar
-        showSearch={true}
-        showCreateRecording={showCreateRecording}
-        showDashboard={false}
-        showFeatures={false}
-        showExamples={false}
-      />
-      <div>
-        <div ref={createRecordingButtonRef}>
-          <CreateRecordingButton />
+    <>
+      <div className='bg-bg-pri h-screen overflow-auto'>
+        <TopNavBar
+          showSearch={true}
+          showCreateRecording={showCreateRecording}
+          showDashboard={false}
+          showFeatures={false}
+          showExamples={false}
+        />
+        <div>
+          <div ref={createRecordingButtonRef}>
+            <CreateRecordingButton />
+          </div>
+          {user.recordings!.length > 0 ? (
+            <RecordingsList recordings={displayRecordings} />
+          ) : (
+            <NoRecordings />
+          )}
         </div>
-        {user.recordings!.length > 0 ? (
-          <RecordingsList recordings={displayRecordings} />
-        ) : (
-          <NoRecordings />
-        )}
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </>
   );
 };
 

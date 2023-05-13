@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { Creator } from '../types/Creator';
+import { PURGE } from 'redux-persist';
 
 type UserState = Creator & { shortName: string };
 export const rootUser: UserState = {
@@ -28,6 +29,11 @@ export const userSlice = createSlice({
         ...action.payload,
       };
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(PURGE, (state) => {
+      Object.assign(state, rootUser);
+    });
   },
 });
 

@@ -421,6 +421,8 @@ export function PlaybackEditor({
         <br></br>
         <br></br>
         <div className='w-auto flex items-center justify-evenly space-x-16 -mt-12 bg-bg-pri mx-10 px-2 md:pax-auto'>
+          {/* <input className="mx-4" type="file" onChange={handleFileInput} /> */}
+
           {playbackState.status === 'stopped' && (
             <Button
               variant='outlined'
