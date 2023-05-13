@@ -61,6 +61,10 @@ export function PlaybackEditor({
   const [sliderValue, setSliderValue] = useState<number>(0);
   const sliderIntervalIdRef = useRef<NodeJS.Timeout | null>(null);
 
+  const [previousPlaybackState, setPreviousPlaybackState] = useState<
+    'playing' | 'paused' | 'stopped'
+  >('paused');
+
   //audio states
   const [audioSource, setAudioSource] = useState<string>('');
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(
@@ -491,6 +495,7 @@ export function PlaybackEditor({
             step={0.001}
             max={audioDuration}
             onBeforeChange={() => {
+              setPreviousPlaybackState(playbackStateRef.current.status);
               audioElement!.muted = true;
             }}
             onChange={(value) => {
@@ -498,7 +503,9 @@ export function PlaybackEditor({
               applyChangesUntilScrubber(value);
             }}
             onAfterChange={(value) => {
-              handleScrubberChange(value);
+              if (previousPlaybackState === 'playing') {
+                handleScrubberChange(value);
+              }
               audioElement!.muted = false;
             }}
           />
