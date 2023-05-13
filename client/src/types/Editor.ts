@@ -46,4 +46,5 @@ export type EditorRecording = {
   thumbnail_link?: string;
   language: string;
   recording_link: string;
+  duration: number;
 };

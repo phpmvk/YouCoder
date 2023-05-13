@@ -2,7 +2,6 @@ import Editor from '@monaco-editor/react';
 import React, { useState, useRef, useEffect } from 'react';
 import { editor } from 'monaco-editor';
 import * as monaco from 'monaco-editor';
-import RecordRTC from 'recordrtc';
 import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
 
@@ -35,6 +34,8 @@ export function RecorderEditor() {
     null
   );
 
+  const [fontSize, setFontSize] = useState(14);
+
   // const [audioRecorder, setAudioRecorder] = useState<RecordRTC | null>(null);
   const [recorderState, setRecorderState] = useState<
     'stopped' | 'recording' | 'paused'
@@ -66,22 +67,30 @@ export function RecorderEditor() {
   const recordedChunksRef = useRef<Blob[]>([]);
   const audioRecordingBlobRef = useRef<Blob | null>(null);
 
+  const audioDurationRef = useRef(0);
+
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       mediaRecorderRef.current = new MediaRecorder(stream, {
         mimeType: 'audio/webm;codecs=opus',
       });
 
-      mediaRecorderRef.current.ondataavailable = function (e) {
+      mediaRecorderRef.current.ondataavailable = async function (e) {
         if (e.data.size > 0) {
           recordedChunksRef.current.push(e.data);
         }
 
         if (mediaRecorderRef.current!.state === 'inactive') {
-          // Check if the recorder is stopped
           audioRecordingBlobRef.current = new Blob(recordedChunksRef.current, {
             type: 'audio/webm',
           });
+
+          // Decode audio data and set audio duration
+          const audioContext = new AudioContext();
+          const arrayBuffer = await audioRecordingBlobRef.current.arrayBuffer();
+          const decodedData = await audioContext.decodeAudioData(arrayBuffer);
+          audioDurationRef.current = decodedData.duration * 1000;
+
           recordedChunksRef.current = [];
         }
       };
@@ -95,6 +104,39 @@ export function RecorderEditor() {
       }
     };
   }, [recordingIntervalId]);
+
+  useEffect(() => {
+    const defaultFontSize = getDefaultFontSize();
+    setFontSize(defaultFontSize);
+
+    // Listen to resize event
+    const handleResize = () => {
+      const newDefaultFontSize = getDefaultFontSize();
+      if (newDefaultFontSize !== defaultFontSize) {
+        setFontSize(newDefaultFontSize);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (editorInstance) {
+      editorInstance!.updateOptions({ fontSize });
+    }
+  }, [fontSize]);
+
+  const getDefaultFontSize = () => {
+    let div = document.createElement('div');
+    div.style.fontSize = 'initial';
+    div = document.body.appendChild(div);
+    const defaultFontSize = parseFloat(
+      window.getComputedStyle(div, null).fontSize
+    );
+    document.body.removeChild(div);
+    return defaultFontSize;
+  };
 
   const user = useAppSelector((state) => state.user);
 
@@ -197,16 +239,16 @@ export function RecorderEditor() {
     setPauseAction(false);
   }
   function handleEndRecording() {
-    // if (pauseAction) {
-    //   if (
-    //     !window.confirm(
-    //       'You have unsaved changes from when the recording was paused. These changes will be discarded. Are you sure you want to end the recording?'
-    //     )
-    //   ) {
-    //     //If they press cancel on the prompt, don't run the rest of the handleEndRecording Function
-    //     return;
-    //   }
-    // }
+    if (pauseAction) {
+      if (
+        !window.confirm(
+          'You have unsaved changes from when the recording was paused. These changes will be discarded. Are you sure you want to end the recording?'
+        )
+      ) {
+        //If they press cancel on the prompt, don't run the rest of the handleEndRecording Function
+        return;
+      }
+    }
     const timestamp = Date.now();
     recorderActions.current.end = timestamp;
 
@@ -302,12 +344,14 @@ export function RecorderEditor() {
       const model = editorInstance!.getModel();
       const language = model!.getLanguageId();
 
+      console.log('duration', audioDurationRef.current);
       const Recording: EditorRecording = {
         title,
         description,
         thumbnail_link,
         language,
         recording_link: ycrFileUrl,
+        duration: audioDurationRef.current,
       };
 
       recordingApi.postRecording(Recording);
@@ -322,6 +366,8 @@ export function RecorderEditor() {
 
   function handleJudge0() {
     setIsConsoleLoading(true);
+    handleConsoleLogOutput('...', Date.now());
+
     const model = editorInstance!.getModel();
     const language = model!.getLanguageId() as Language;
     const source_code = editorInstance!.getValue();
@@ -332,6 +378,7 @@ export function RecorderEditor() {
       language_id,
       source_code: base64SourceCode,
     };
+
     consoleApi
       .getOutput(judge0)!
       .then((response) => {
@@ -390,16 +437,13 @@ export function RecorderEditor() {
               theme='vs-dark'
               options={{
                 wordWrap: 'on',
-                fontSize: 16,
+                fontSize: fontSize,
               }}
               onChange={handleEditorChange}
               onMount={handleEditorDidMount}
             />
           </Allotment.Pane>
-          <Allotment.Pane
-            minSize={180}
-            preferredSize={300}
-          >
+          <Allotment.Pane minSize={180} preferredSize={300}>
             <div className='border w-full h-full border-[#1e1e1e] text-white relative'>
               <button
                 className='absolute bottom-2 right-2 border-white border rounded-sm p-2 bg-slate-500 hover:bg-slate-500/50 '
@@ -422,26 +466,17 @@ export function RecorderEditor() {
       </div>
 
       {recorderState === 'stopped' && (
-        <button
-          className='p-2 text-white'
-          onClick={handleStartRecording}
-        >
+        <button className='p-2 text-white' onClick={handleStartRecording}>
           Start Recording
         </button>
       )}
 
       {recorderState === 'recording' && (
         <>
-          <button
-            className='p-2 text-white'
-            onClick={handlePauseRecording}
-          >
+          <button className='p-2 text-white' onClick={handlePauseRecording}>
             Pause Recording
           </button>
-          <button
-            className='p-2 text-white'
-            onClick={handleEndRecording}
-          >
+          <button className='p-2 text-white' onClick={handleEndRecording}>
             End Recording
           </button>
         </>
@@ -449,16 +484,10 @@ export function RecorderEditor() {
 
       {recorderState === 'paused' && (
         <>
-          <button
-            className='p-2 text-white'
-            onClick={handleResumeRecording}
-          >
+          <button className='p-2 text-white' onClick={handleResumeRecording}>
             Resume Recording
           </button>
-          <button
-            className='p-2 text-white'
-            onClick={handleEndRecording}
-          >
+          <button className='p-2 text-white' onClick={handleEndRecording}>
             End Recording
           </button>
         </>
