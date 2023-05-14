@@ -60,6 +60,7 @@ export function RecorderEditor() {
     pauseLengthArray: [],
     editorActions: [],
     consoleLogOutputs: [],
+    htmlOutputArray: [],
   });
 
   const [isRecording, setIsRecording] = useState(false);

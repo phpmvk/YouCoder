@@ -35,7 +35,6 @@ export function MultiEditorRecorder() {
   const [recorderLoading, setRecorderLoading] = useState(false);
 
   const [consoleOutput, setConsoleOutput] = useState('');
-  const [isConsoleLoading, setIsConsoleLoading] = useState(false);
   const [saveModalVisible, setSaveModalVisible] = useState(false);
 
   const [elapsedTime, setElapsedTime] = useState<number>(0);
@@ -57,8 +56,6 @@ export function MultiEditorRecorder() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordedChunksRef = useRef<Blob[]>([]);
   const audioRecordingBlobRef = useRef<Blob | null>(null);
-
-  const audioDurationRef = useRef(0);
 
   useEffect(() => {
     navigator.mediaDevices
@@ -193,6 +190,11 @@ export function MultiEditorRecorder() {
     </body>
   </html>`;
 
+    recorderActions.current.htmlOutputArray.push({
+      output: output,
+      timestamp: Date.now(),
+      playbackTimestamp: 0,
+    });
     setHtmlOutput(output);
   }
 
@@ -255,6 +257,7 @@ export function MultiEditorRecorder() {
     setPauseAction(false);
   }
   function handleEndRecording() {
+    console.log(recorderActions);
     if (pauseAction) {
       if (
         !window.confirm(

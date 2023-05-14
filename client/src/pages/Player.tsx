@@ -5,6 +5,7 @@ import Page404 from '../components/404';
 import Page500 from '../components/500';
 import { PlaybackEditor } from '../components/PlaybackEditor';
 import FullPlayerPage from './FullPlayer';
+import { MultiEditorPlayback } from '../components/MultiEditorPlayback';
 
 interface PlayerPageProps {}
 
@@ -30,7 +31,7 @@ const PlayerPage: React.FC<PlayerPageProps> = ({}) => {
         console.log('recording: ', response.data);
         if (embed && embed === 'true') {
           // show the embed player
-          setToRender(<PlaybackEditor recordingData={response.data} />);
+          setToRender(<MultiEditorPlayback recordingData={response.data} />);
         } else {
           // show the full player
           setToRender(<FullPlayerPage recordingData={response.data} />);

@@ -6,6 +6,13 @@ export type RecorderActions = {
   pauseLengthArray: number[];
   editorActions: EditorAction[];
   consoleLogOutputs: ConsoleLog[];
+  htmlOutputArray: htmlOutput[];
+};
+
+export type htmlOutput = {
+  output: string;
+  timestamp: number;
+  playbackTimestamp: number;
 };
 
 export type ChangeRange = {

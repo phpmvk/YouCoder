@@ -28,7 +28,7 @@ export type RecorderAction = {
 };
 
 export type htmlOutput = {
-  output: 'string';
+  output: string;
   timestamp: number;
   playbackTimestamp: number;
 };
