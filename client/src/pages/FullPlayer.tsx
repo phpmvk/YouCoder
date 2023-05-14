@@ -109,12 +109,12 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
             {/* className="border border-bg-pri rounded-xl pt-2 */}
             <PlaybackEditor recordingData={recordingData} />
 
-            <div className="w-full bg-bg-pri bottom-[20px] mt-[10px] rounded-lg mx-auto px-5 pr-10">
-              <div className="bg-bg-pri ml-5 pt-4 -mt-10 pl">
-                <div className="text-center">
-                  {/* small title */}
+            <div className="w-full bg-bg-pri h-auto mt-[15px] mx-auto ">
+              <div className="bg-bg-pri mx-4 pt-2 -mt-10">
+                <div className="">
+                  {/* title */}
 
-                  <div className="text-gray-200 text-4xl text-left pb-6 px-4 mx-5 mt-5 ">
+                  <div className="text-gray-200 text-4xl text-left pb-6 mx-2 mt-5 ">
                     {recording.title}
                   </div>
                   <div className="bg-bg-pri flex flex-row">
@@ -149,7 +149,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                       </div>
                       {/* Middle Card -----------------------------------   */}
 
-                      <div className="flex mx-2 w-full py-4 h-56 left bg-white border border-gray-200 rounded-xl shadow dark:bg-bg-pri dark:border-gray-700 overflow-hidden text-white">
+                      <div className="flex mx-2 w-full py-4 h-56 text-left bg-white border border-gray-200 rounded-xl shadow dark:bg-bg-pri dark:border-gray-700 overflow-hidden text-white">
                         <div className="flex justify-end px-4 pt-4">
                           <p className="overflow-ellipsis ">
                             {recording.description}
@@ -184,115 +184,22 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                               <AddIcon />
                               add to list
                             </Button>
-                            <Button
-                              variant="outlined"
-                              size="small"
-                              className="!rounded-xl !border-bg-alt !text-gray-200 whitespace-nowrap h-1/2"
-                            >
-                              <AddIcon />
-                              add to list
-                            </Button>
-                            <Button
-                              variant="outlined"
-                              size="small"
-                              className="!rounded-xl !border-bg-alt !text-gray-200 whitespace-nowrap h-1/2"
-                            >
-                              <AddIcon />
-                              add to list
-                            </Button>
+                            
                           </Stack>
                         </div>
                       </div>
-
-                      {/* <div className=" mx-10 w-full px-10 h-56 max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-red-800 dark:border-gray-700">
-    <div className="flex justify-end px-4 pt-4">
-        
-        
-      
-    </div>
-    <div className="flex flex-col items-center pb-10">
-        <img className="w-20 h-20 mb-3 rounded-xl shadow-lg" src="./../../public/avatar.webp" alt=""/>
-        <h5 className=" text-xl font-medium text-gray-900 dark:text-white">{recording.creator}</h5>
-        <Chip
-                          className="!bg-white/10 !text-gray-200 !text-sm !stroke-white !rounded-none"
-                          label={`${recording.subs} Subscribers `}
-                        />
-        <div className="flex space-x-3 mt-2">
-        <Button
-                          variant="outlined"
-                          size="small"
-                          className="!rounded-xl !border-bg-alt !text-gray-200 align-middle h-1/2"
-                        >
-                          <AddIcon />
-                          Subscribe
-                        </Button>
-            
-        </div>
-    </div>
-</div> */}
-
-                      {/* <div className=" bg-bg-sec text-gray-200 text-l text-left p-4  pb-10 mt-4 rounded-b-xl w-full">
-                      {recording.description}
-                    </div> */}
-
-                      {/* <div
-                        className="ml-16 mr-5 pic h-[80px] w-[80px] flex-shrink-0 rounded-3xl border-2 border-bg-alt bg-cover bg-center bg-red-900"
-                        style={{
-                          backgroundImage: `url(./../../public/avatar.webp)`,
-                        }}
-                      ></div>
-
-                      <div className=" h-fit py-1 flex-shrink-0 rounded-lg text-gray-200 text-xl  flex flex-col justify-left  align-middle mx-5">
-                        {recording.creator}
-                        <Chip
-                          className="!bg-white/10 !text-gray-200 !text-sm !stroke-white !rounded-sm"
-                          label={`${recording.subs} Subscribers `}
-                        />
-                      </div>
-
-                      <div className="my-auto">
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          className="!rounded-xl !border-bg-alt !text-gray-200 align-middle h-1/2"
-                        >
-                          <AddIcon />
-                          Subscribe
-                        </Button>
-                      </div> */}
-
-                      {/* <div className="my-auto justify-end pl-10">
-                        <Stack className="mx-10" direction="column" spacing={3}>
-                          <Button
-                            variant="outlined"
-                            size="small"
-                            className="!rounded-xl !border-bg-alt !text-gray-200 whitespace-nowrap h-1/2 align-middle"
-                          >
-                            <ReplyIcon className="transform scale-x-[-1]" />
-                            share
-                          </Button>
-
-                          <Button
-                            variant="outlined"
-                            size="small"
-                            className="!rounded-xl !border-bg-alt !text-gray-200 whitespace-nowrap h-1/2"
-                          >
-                            <AddIcon />
-                            add to list
-                          </Button>
-                        </Stack>
-                      </div> */}
+                      
                     </div>
                   </div>
-                  <div className="flex  w-full  px-4 text-left  bg-bg-pri  overflow-hidden overflow-y-scroll text-3xl text-gray-200">
-                    <div className="flex justify-end px-4 py-2">
+                  <div className="flex  w-1/4 text-left mx-2  bg-bg-pri  text-3xl text-gray-200">
+                    <div className="flex justify-end py-1">
                       Code
                       <p className="overflow-ellipsis "></p>
                     </div>
                   </div>
                   {/* code block------ */}
-                  <div className="flex  w-4/5 mx-2  h-full text-left bg-white border border-gray-200 rounded-xl shadow dark:bg-bg-pri dark:border-gray-700 overflow-hidden overflow-y-scroll text-white">
-                    <div className="flex justify-end px-4 pt-4">
+                  <div className="flex  max-w-full mx-2 h-full text-left bg-white border border-gray-200 rounded-xl shadow dark:bg-bg-pri dark:border-gray-700 overflow-hidden overflow-y-scroll text-white">
+                    <div className="flex justify-end mx-2 pt-4">
                       <p className="overflow-ellipsis ">
                         <div>
                           <pre>
