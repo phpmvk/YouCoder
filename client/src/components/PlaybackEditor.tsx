@@ -21,6 +21,9 @@ import Button from '@mui/material/Button';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import ClearIcon from '@mui/icons-material/Clear';
+import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
+import { default as TooltipMUI } from '@mui/material/Tooltip';
 
 import {
   RecorderActions,
@@ -461,14 +464,14 @@ export function PlaybackEditor({
       ></audio>
 
       <h1
-        className={`ml-10 bg-bg-pri w-[20ch] text-center rounded-t-full mt-2 pt-1 ${
+        className={`ml-6 bg-bg-pri w-[20ch] text-center rounded-t-md mt-2  ${
           editorLanguage ? 'text-gray-200' : 'text-transparent'
         }`}
       >
         {editorLanguage ? formatLanguage(editorLanguage) : '·'}
       </h1>
       <div className=''>
-        <div className='bg-bg-pri flex w-full h-[400px] px-10  '>
+        <div className='bg-bg-pri flex w-full h-[400px] px-4 mb-2 '>
           <Allotment>
             <Allotment.Pane minSize={600}>
               <Editor
@@ -491,18 +494,23 @@ export function PlaybackEditor({
               </div>
               <div className='relative w-full h-[50%] border-t-6 border-l-2 border-r-8 border-bg-pri'>
                 <div className='flex justify-center items-center'>
+
+<TooltipMUI title="Execute & Compile">
                   <button
-                    className='font-extralight absolute bottom-2 right-2 w-fit items-center px-2 py-1 text-sm text-gray-900 bg-transparent border border-gray-900 rounded-lg hover:bg-gray-900 hover:text-gray-200 focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-gray-200 dark:border-white dark:text-gray-200 dark:hover:text-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-700 uppercase'
+                    className='font-extralight absolute top-0 right-14 w-fit items-center px-2 text-sm  text-gray-200 rounded !bg-green-900/20 border !border-gray-700 uppercase'
                     onClick={handleJudge0}
                   >
-                    compile & execute
+                  <PlayArrowOutlinedIcon/> 
                   </button>
+                  </TooltipMUI>
+                  <TooltipMUI title="Clear Console">
                   <button
-                    className='absolute top-0 right-2 w-fit items-center px-1 text-sm font-light text-gray-900 bg-transparent border border-gray-900 rounded-md hover:bg-gray-900 hover:text-gray-200 focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-gray-200 dark:border-white dark:text-gray-200 dark:hover:text-gray-200 dark:hover:bg-gray-700 dark:focus:bg-gray-700 uppercase'
+                    className='absolute top-0 right-2 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-red-900/20 border !border-gray-700 uppercase'
                     onClick={() => setStudentConsoleOutput('')}
                   >
-                    clear
+                    <ClearIcon/>
                   </button>
+                  </TooltipMUI>
                 </div>
                 <Terminal
                   terminalName='your output'
@@ -514,8 +522,9 @@ export function PlaybackEditor({
         </div>
         <br></br>
         <br></br>
-        <div className='w-auto flex items-center justify-evenly space-x-16 -mt-12 bg-bg-pri mx-10 px-2 md:pax-auto'>
+        <div className='w-auto flex items-center justify-start space-x-10 -mt-12 bg-bg-pri mx-6 px-1 md:pax-auto'>
           {playbackState.status === 'stopped' && (
+            
             <Button
               variant='outlined'
               className='!rounded-full !bg-bg-alt !text-bg-pri'
