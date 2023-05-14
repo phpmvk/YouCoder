@@ -46,7 +46,7 @@ export function PlaybackEditor({
   const [TeacherConsoleOutput, setTeacherConsoleOutput] = useState('');
   const [StudentConsoleOutput, setStudentConsoleOutput] = useState('');
 
-  const [editorLanguage, setEditorLanguage] = useState('');
+  const [editorLanguage, setEditorLanguage] = useState('javascript');
 
   //editor playback states
   const [importedActions, setImportedActions] =
@@ -87,6 +87,14 @@ export function PlaybackEditor({
 
   useEffect(() => {
     handleFirebaseURL(recordingData.recording_link);
+    setEditorLanguage(recordingData.language);
+    let model;
+    if (editorInstance) {
+      model = editorInstance.getModel();
+    }
+    if (monacoInstance && model) {
+      monacoInstance.editor.setModelLanguage(model!, editorLanguage);
+    }
   }, []);
 
   useEffect(() => {
@@ -466,7 +474,7 @@ export function PlaybackEditor({
               <Editor
                 className=' border-bg-pri border-8 border-r-6 '
                 height='500px'
-                defaultLanguage='javascript'
+                defaultLanguage={editorLanguage}
                 defaultValue=''
                 theme='vs-dark'
                 options={{

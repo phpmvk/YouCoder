@@ -390,7 +390,6 @@ export function RecorderEditor() {
       language_id,
       source_code: base64SourceCode,
     };
-
     consoleApi
       .getOutput(judge0)!
       .then((response) => {
