@@ -506,7 +506,7 @@ export function PlaybackEditor({
         </div>
         <br></br>
         <br></br>
-        <div className='w-auto flex items-center justify-evenly space-x-16 -mt-12 bg-bg-pri mx-10 px-2 md:pax-auto'>
+        <div className='w-auto flex items-center justify-start space-x-10 -mt-12 bg-bg-pri mx-10 px-2 md:pax-auto'>
           {playbackState.status === 'stopped' && (
             <Button
               variant='outlined'
