@@ -105,7 +105,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
         <TopNavBar />
 
         <div className="bg-bg-pri relative flex justify-center items-center overflow-y-scroll overflow-x-hidden ">
-          <div className=" bg-bg-pri border-solid mx-2 pt-4 top-[20px] overflow-y-scroll border border-gray-600  rounded-2xl">
+          <div className=" bg-bg-pri border-solid mx-2 pt-4 top-[20px] mb-20 pb-0 overflow-y-scroll border border-gray-600  rounded-2xl">
             {/* className="border border-bg-pri rounded-xl pt-2 */}
             <PlaybackEditor recordingData={recordingData} />
 
@@ -226,7 +226,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                     </div>
                   </div>
                   {/* code block------ */}
-                  <div className="flex  max-w-full mx-2 px-2 h-full text-left bg-white border border-gray-200 rounded-xl shadow dark:bg-bg-pri dark:border-gray-700 overflow-hidden overflow-y-scroll overflow-x-scroll text-white">
+                  <div className="flex max-w-full mx-2 px-2 mb-6 h-full text-left bg-white border border-gray-200 rounded-xl shadow dark:bg-bg-pri dark:border-gray-700 overflow-hidden overflow-y-scroll overflow-x-scroll text-white">
                     <div className="flex justify-end mx-2 pt-4">
                       <p className="overflow-ellipsis ">
                         <div>
@@ -237,11 +237,11 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                       </p>
                     </div>
                   </div>
-                  <div className="w-full h-[150px] bg-bg-pri">
-                    {/* <div className="w-full bg-bg-sec text-gray-200 text-l text-left p-4 pl-10  pb-10 mt-4 rounded-b-xl">
+                 {/* <div className="w-full h-[150px] bg-bg-pri">
+                     <div className="w-full bg-bg-sec text-gray-200 text-l text-left p-4 pl-10  pb-10 mt-4 rounded-b-xl">
                       {recording.description}
-                    </div> */}
-                  </div>
+                    </div> 
+                  </div>*/}
                 </div>
 
                 <div className="flex md:flex-row"></div>
