@@ -48,6 +48,7 @@ export function formatTime(ms: number): string {
 export function getLanguageId(language: Language): string | null {
   const languageMapping: Record<Language, string> = {
     javascript: '63',
+    typescript: '74',
     python: '70',
     java: '62',
     csharp: '51',
