@@ -1,6 +1,7 @@
 import React from 'react';
 import { RecorderEditor } from '../components/RecorderEditor';
 import TopNavBar from '../components/HomePageComponents/TopNavBar';
+import { MultiEditorRecorder } from '../components/MultiEditorRecorder';
 
 interface RecordingPageProps {}
 
@@ -19,7 +20,7 @@ const CreateRecordingPage: React.FC<RecordingPageProps> = ({}) => {
         />
         <div>Recording Page</div>
         <div className='w-full px-10 mx-auto'>
-          <RecorderEditor />
+          <MultiEditorRecorder />
         </div>
       </div>
     </>
