@@ -16,7 +16,7 @@ const DotsMenu = ({ activeMenu, setActiveMenu, id }: DotsMenuProps) => {
       <button
         id={`dropdownMenuIconButton${id}`}
         data-dropdown-toggle='dropdownDots'
-        className='inline-flex items-center text-sm font-medium text-center text-gray-200 '
+        className='inline-flex items-center text-sm font-medium text-center text-gray-200 hover:bg-gray-300/20 rounded-md p-1 '
         type='button'
         onClick={handleClick}
       >
@@ -64,6 +64,14 @@ const DotsMenu = ({ activeMenu, setActiveMenu, id }: DotsMenuProps) => {
               className='block px-4 py-2 hover:bg-bg-muigrey '
             >
               Copy Embed Link
+            </a>
+          </li>
+          <li>
+            <a
+              href='#'
+              className='block px-4 py-2 hover:bg-bg-muigrey '
+            >
+              {}
             </a>
           </li>
         </ul>

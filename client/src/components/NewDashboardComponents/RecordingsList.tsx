@@ -6,10 +6,10 @@ import RecordingCard from './RecordingCard';
 
 interface RecordingsListProps {
   recordings: Recording[];
-  edit: boolean;
+  allowEdit: boolean;
 }
 
-const RecordingsList = ({ recordings, edit }: RecordingsListProps) => {
+const RecordingsList = ({ recordings, allowEdit }: RecordingsListProps) => {
   const [filterTerm, setFilterTerm] = useState<string>('');
   const [displayRecordings, setDisplayRecordings] =
     useState<Recording[]>(recordings);
@@ -38,12 +38,13 @@ const RecordingsList = ({ recordings, edit }: RecordingsListProps) => {
           setFilterTerm={setFilterTerm}
         />
       </div>
-      <section className='flex flex-wrap w-full justify-evenly'>
+
+      <section className='flex flex-wrap gap-10 justify-around'>
         {displayRecordings.map((recording) => (
           <RecordingCard
             key={recording.recording_id}
             recording={recording}
-            edit={edit}
+            allowEdit={allowEdit}
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
           />

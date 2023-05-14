@@ -84,7 +84,7 @@ const NewDashboardPage = ({}: NewDashboardPageProps) => {
       {displayRecordings.length > 0 ? (
         <RecordingsList
           recordings={displayRecordings}
-          edit={true}
+          allowEdit={true}
         />
       ) : (
         <NoRecordings />
