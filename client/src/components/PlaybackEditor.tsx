@@ -453,14 +453,14 @@ export function PlaybackEditor({
       ></audio>
 
       <h1
-        className={`ml-10 bg-bg-pri w-[20ch] text-center rounded-t-full mt-2 pt-1 ${
+        className={`ml-6 bg-bg-pri w-[20ch] text-center rounded-t-md mt-2  ${
           editorLanguage ? 'text-gray-200' : 'text-transparent'
         }`}
       >
         {editorLanguage ? formatLanguage(editorLanguage) : '·'}
       </h1>
       <div className=''>
-        <div className='bg-bg-pri flex w-full h-[400px] px-10  '>
+        <div className='bg-bg-pri flex w-full h-[400px] px-4 mb-2 '>
           <Allotment>
             <Allotment.Pane minSize={600}>
               <Editor
@@ -506,7 +506,7 @@ export function PlaybackEditor({
         </div>
         <br></br>
         <br></br>
-        <div className='w-auto flex items-center justify-start space-x-10 -mt-12 bg-bg-pri mx-10 px-2 md:pax-auto'>
+        <div className='w-auto flex items-center justify-start space-x-10 -mt-12 bg-bg-pri mx-6 px-1 md:pax-auto'>
           {playbackState.status === 'stopped' && (
             <Button
               variant='outlined'
