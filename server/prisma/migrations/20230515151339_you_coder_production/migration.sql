@@ -46,6 +46,22 @@ CREATE TABLE "User" (
     CONSTRAINT "User_pkey" PRIMARY KEY ("user_id")
 );
 
+-- CreateTable
+CREATE TABLE "Analytics" (
+    "id" SERIAL NOT NULL,
+    "userAgent" TEXT,
+    "referer" TEXT,
+    "country" TEXT,
+    "city" TEXT,
+    "url" TEXT NOT NULL,
+    "method" TEXT NOT NULL,
+    "timestamp" TIMESTAMP(3) NOT NULL,
+    "responseTime" DOUBLE PRECISION,
+    "status_code" INTEGER NOT NULL,
+
+    CONSTRAINT "Analytics_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Creator_uid_key" ON "Creator"("uid");
 

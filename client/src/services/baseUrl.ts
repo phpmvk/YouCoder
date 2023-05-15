@@ -1,9 +1,7 @@
 import axios from 'axios';
 import { auth } from '../config/firebase';
 
-// const baseURL = 'http://localhost:3000';
-const baseURL = 'https://serv-yc.fly.dev';
-
+const baseURL = 'https://youc-server.fly.dev';
 
 export const protectedHttp = axios.create({
   baseURL,
