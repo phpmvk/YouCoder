@@ -42,16 +42,19 @@ export const Footer: FC = (): ReactElement => {
     //   </Container>
     // </Box>
 
-<footer className="bg-bg-pri m-4 ">
-    <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
-      <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2023 <a href="https://youcoder.io/" className="hover:underline">YouCoder</a>. All Rights Reserved.
-    </span>
-    <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
-        <li>
-            <a href="#" className="hover:underline">Contact</a>
-        </li>
-    </ul>
+<footer className="bg-bg-pri m-1">
+  <div className="w-full mx-auto max-w-screen-xl p-4 flex flex-wrap justify-between items-center text-sm">
+    <div className="flex items-center text-gray-300 mb-2 sm:mb-0">
+      <span>© 2023 </span>
+      <a href="https://youcoder.io/" className="hover:underline">YouCoder</a>
+      <span>. All Rights Reserved.</span>
     </div>
+    <ul className="flex items-center text-sm font-medium text-gray-200">
+      <li>
+        <a href="#" className="hover:underline">Team</a>
+      </li>
+    </ul>
+  </div>
 </footer>
 
   );

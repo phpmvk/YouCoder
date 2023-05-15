@@ -75,7 +75,7 @@ import { motion, useTransform, useScroll } from 'framer-motion';
 
 const ExampleFrame: React.FC = () => {
   const { scrollYProgress } = useScroll();
-  const scale = useTransform(scrollYProgress, [0.9, 1], [0, 3]);
+  const scale = useTransform(scrollYProgress, [0.6, 1], [0, 3]);
   const width = useTransform(scrollYProgress, [0, 1], [0, 160]);
   const height = useTransform(scrollYProgress, [0, 1], [0, 80]);
 
@@ -85,7 +85,7 @@ const ExampleFrame: React.FC = () => {
         className={`rectangle`}
         style={{
           position: 'absolute',
-          left: '43%',
+          left: '38%',
           top: '580vh',
           scale: scale,
           width: `${width}px`,

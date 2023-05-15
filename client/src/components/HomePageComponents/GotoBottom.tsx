@@ -42,7 +42,7 @@ const GotoBottom: React.FC = () => {
         padding: '5px',
         backgroundColor: 'white',
         opacity: '70%',
-        borderRadius: '5%',
+        borderRadius: '50%',
       }}>
       
       <KeyboardDoubleArrowDownIcon/>
