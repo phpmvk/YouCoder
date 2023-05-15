@@ -1,51 +1,41 @@
 import Editor from '@monaco-editor/react';
 import React, { useState, useRef, useEffect } from 'react';
 import { editor } from 'monaco-editor';
-import * as monaco from 'monaco-editor';
 import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
 
-import consoleApi from '../services/consoleApi';
-import { CodeToExecute } from '../types/Console';
 import { SaveRecordingModal } from './HomePageComponents/SaveRecordingModal';
 import { saveYCRFile } from '../utils/ycrUtils';
 import { useAppSelector } from '../redux/hooks';
-import Terminal from './TerminalOutput';
 import recordingApi from '../services/recordingApi';
-import {
-  formatLanguage,
-  formatTime,
-  getLanguageId,
-  calculateTotalPauseTime,
-} from '../utils/editorUtils';
+import { formatTime, calculateTotalPauseTime } from '../utils/editorUtils';
 
 import {
   RecorderActions,
   EditorAction,
-  ConsoleLog,
   EditorRecording,
-  Language,
-} from '../types/Editor';
+  htmlOutput,
+} from '../types/MultiEditor';
 
-export function RecorderEditor() {
-  const [editorInstance, setEditorInstance] =
+export function MultiEditorRecorder() {
+  //Multi states
+  const [htmlEditorInstance, setHtmlEditorInstance] =
     useState<editor.IStandaloneCodeEditor | null>(null);
-  const [monacoInstance, setMonacoInstance] = useState<typeof monaco | null>(
-    null
-  );
+  const [cssEditorInstance, setCssEditorInstance] =
+    useState<editor.IStandaloneCodeEditor | null>(null);
+  const [jsEditorInstance, setJsEditorInstance] =
+    useState<editor.IStandaloneCodeEditor | null>(null);
+  const [htmlOutput, setHtmlOutput] = useState<string>('');
 
   const [fontSize, setFontSize] = useState(14);
 
-  // const [audioRecorder, setAudioRecorder] = useState<RecordRTC | null>(null);
   const [recorderState, setRecorderState] = useState<
     'stopped' | 'recording' | 'paused'
   >('stopped');
   const [recorderLoading, setRecorderLoading] = useState(false);
 
   const [consoleOutput, setConsoleOutput] = useState('');
-  const [isConsoleLoading, setIsConsoleLoading] = useState(false);
   const [saveModalVisible, setSaveModalVisible] = useState(false);
-  const [editorLanguage, setEditorLanguage] = useState('javascript');
 
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [recordingIntervalId, setRecordingIntervalId] =
@@ -63,12 +53,9 @@ export function RecorderEditor() {
     htmlOutputArray: [],
   });
 
-  const [isRecording, setIsRecording] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordedChunksRef = useRef<Blob[]>([]);
   const audioRecordingBlobRef = useRef<Blob | null>(null);
-
-  const audioDurationRef = useRef(0);
 
   useEffect(() => {
     navigator.mediaDevices
@@ -129,8 +116,10 @@ export function RecorderEditor() {
   }, []);
 
   useEffect(() => {
-    if (editorInstance) {
-      editorInstance!.updateOptions({ fontSize });
+    if (htmlEditorInstance && cssEditorInstance && jsEditorInstance) {
+      htmlEditorInstance!.updateOptions({ fontSize });
+      cssEditorInstance!.updateOptions({ fontSize });
+      jsEditorInstance!.updateOptions({ fontSize });
     }
   }, [fontSize]);
 
@@ -147,32 +136,28 @@ export function RecorderEditor() {
 
   const user = useAppSelector((state) => state.user);
 
-  function handleConsoleLogOutput(text: string, timestamp: number) {
-    if (recorderState !== 'stopped') {
-      recorderActions.current.consoleLogOutputs.push({
-        text,
-        timestamp,
-        playbackTimestamp: 0,
-      });
-    }
-  }
-
-  function handleLanguageChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const model = editorInstance!.getModel();
-    monacoInstance!.editor.setModelLanguage(model!, event.target.value);
-  }
-
   function handleEditorDidMount(
     editor: editor.IStandaloneCodeEditor,
-    monaco: typeof import('monaco-editor')
+    monaco: typeof import('monaco-editor'),
+    fileType: 'html' | 'css' | 'javascript'
   ) {
-    setEditorInstance(editor);
-    setMonacoInstance(monaco);
+    switch (fileType) {
+      case 'html':
+        setHtmlEditorInstance(editor);
+        break;
+      case 'css':
+        setCssEditorInstance(editor);
+        break;
+      case 'javascript':
+        setJsEditorInstance(editor);
+        break;
+    }
   }
 
   function handleEditorChange(
     value?: string,
-    event?: editor.IModelContentChangedEvent
+    event?: editor.IModelContentChangedEvent,
+    fileType?: 'html' | 'css' | 'javascript'
   ) {
     const actionCreationTimestamp = Date.now();
     event!.changes.forEach((change: editor.IModelContentChange) => {
@@ -183,11 +168,34 @@ export function RecorderEditor() {
         actionCreationTimestamp,
         playbackTimestamp: 0,
         text,
+        fileType,
       });
     });
     if (recorderState === 'paused') {
       setPauseAction(true);
     }
+  }
+
+  function handleRenderOutput() {
+    const html = htmlEditorInstance?.getValue() ?? '<h1>hello</h1>';
+    const css = cssEditorInstance?.getValue() ?? '';
+    const js = jsEditorInstance?.getValue() ?? '';
+    const output = `<html>
+    <head>
+      <style>${css}</style>
+    </head>
+    <body>
+      ${html}
+      <script>${js}</script>
+    </body>
+  </html>`;
+
+    recorderActions.current.htmlOutputArray.push({
+      output: output,
+      timestamp: Date.now(),
+      playbackTimestamp: 0,
+    });
+    setHtmlOutput(output);
   }
 
   //recording handlers
@@ -200,25 +208,22 @@ export function RecorderEditor() {
     }
     //audio
     setRecorderLoading(true);
-    setIsRecording(true);
     mediaRecorderRef.current!.start();
     setRecorderLoading(false);
     //actions
     recorderActions.current.editorActions = [];
-    recorderActions.current.consoleLogOutputs = [];
+    recorderActions.current.htmlOutputArray = [];
     recorderActions.current.pauseArray = [];
     recorderActions.current.pauseLengthArray = [];
     recorderActions.current.resumeArray = [];
 
-    editorInstance!.setValue('');
+    htmlEditorInstance!.setValue('');
+    cssEditorInstance!.setValue('');
+    jsEditorInstance!.setValue('');
+    setHtmlOutput('');
     recorderActions.current.start = Date.now();
     setRecorderState('recording');
     setConsoleOutput('');
-
-    //language
-    const model = editorInstance!.getModel();
-    const language = model!.getLanguageId();
-    setEditorLanguage(formatLanguage(language));
 
     //timer
     setElapsedTime(0);
@@ -252,6 +257,7 @@ export function RecorderEditor() {
     setPauseAction(false);
   }
   function handleEndRecording() {
+    console.log(recorderActions);
     if (pauseAction) {
       if (
         !window.confirm(
@@ -280,12 +286,10 @@ export function RecorderEditor() {
           return action.actionCreationTimestamp < lastPauseTimestamp;
         });
 
-      recorderActions.current.consoleLogOutputs =
-        recorderActions.current.consoleLogOutputs.filter(
-          (change: ConsoleLog) => {
-            return change.timestamp < lastPauseTimestamp;
-          }
-        );
+      recorderActions.current.htmlOutputArray =
+        recorderActions.current.htmlOutputArray.filter((change: htmlOutput) => {
+          return change.timestamp < lastPauseTimestamp;
+        });
     }
 
     // Calculate playbackTimestamp for each editor action
@@ -305,8 +309,8 @@ export function RecorderEditor() {
       });
 
     // Calculate playbackTimestamp for each console log change
-    recorderActions.current.consoleLogOutputs =
-      recorderActions.current.consoleLogOutputs.map((change) => {
+    recorderActions.current.htmlOutputArray =
+      recorderActions.current.htmlOutputArray.map((change) => {
         let totalPauseTime = calculateTotalPauseTime(
           change.timestamp,
           timestamp,
@@ -322,13 +326,11 @@ export function RecorderEditor() {
     if (recorderState === 'paused') {
       mediaRecorderRef.current!.resume(); // Resume recording
       mediaRecorderRef.current!.onresume = () => {
-        setIsRecording(false);
         setTimeout(() => {
           mediaRecorderRef.current!.stop();
         }, 1000);
       };
     } else {
-      setIsRecording(false);
       mediaRecorderRef.current!.stop();
     }
     setRecorderState('stopped');
@@ -354,17 +356,15 @@ export function RecorderEditor() {
         user.uid!
       );
       console.log(ycrFileUrl);
-      const model = editorInstance!.getModel();
-      const language = model!.getLanguageId();
+      const language = 'multi';
 
-      console.log('duration', audioDurationRef.current);
       const Recording: EditorRecording = {
         title,
         description,
         thumbnail_link,
         language,
         recording_link: ycrFileUrl,
-        duration: audioDurationRef.current,
+        duration: elapsedTime,
       };
 
       recordingApi.postRecording(Recording);
@@ -373,73 +373,51 @@ export function RecorderEditor() {
     }
   }
 
-  function handleDiscard() {
-    // Implement the logic to discard the recording
-  }
-
-  function handleJudge0() {
-    setIsConsoleLoading(true);
-    handleConsoleLogOutput('...', Date.now());
-
-    const model = editorInstance!.getModel();
-    const language = model!.getLanguageId() as Language;
-    const source_code = editorInstance!.getValue();
-    const base64SourceCode = window.btoa(source_code);
-    const language_id = getLanguageId(language)!;
-
-    const judge0: CodeToExecute = {
-      language_id,
-      source_code: base64SourceCode,
-    };
-    consoleApi
-      .getOutput(judge0)!
-      .then((response) => {
-        const output = window.atob(response.data.output);
-        setConsoleOutput(output);
-        handleConsoleLogOutput(output, Date.now());
-        setIsConsoleLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error getting console output from Judge0', error);
-        setIsConsoleLoading(false);
-      });
-  }
+  function handleDiscard() {}
 
   return (
     <>
-      {recorderState === 'stopped' && (
-        <>
-          <div className='flex items-center'>
-            <label
-              className='block mb-2 text-sm font-medium text-white mr-3'
-              htmlFor='language'
-            >
-              Choose a language to record in:
-            </label>
-            <select
-              id='language'
-              onChange={handleLanguageChange}
-              className='border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3'
-            >
-              <option defaultValue='javascript'>JavaScript</option>
-              <option value='typescript'>TypeScript</option>
-              <option value='python'>Python</option>
-              <option value='java'>Java</option>
-              <option value='csharp'>C#</option>
-              <option value='cpp'>C++</option>
-              <option value='ruby'>Ruby</option>
-              <option value='go'>Go</option>
-            </select>
-          </div>
-        </>
-      )}
-      {recorderState !== 'stopped' && (
-        <div className='border text-sm rounded-lg w-48 bg-gray-700 border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mb-3 flex items-center justify-center'>
-          {editorLanguage}
-        </div>
-      )}
-
       <div className='flex w-full h-[500px] border border-white rounded-sm'>
+        <Allotment>
+          <Allotment.Pane minSize={500}>
+            <Editor
+              height='500px'
+              defaultLanguage='html'
+              defaultValue=''
+              theme='vs-dark'
+              options={{
+                wordWrap: 'on',
+                fontSize: fontSize,
+              }}
+              onChange={(value, event) =>
+                handleEditorChange(value, event, 'html')
+              }
+              onMount={(editor, monaco) =>
+                handleEditorDidMount(editor, monaco, 'html')
+              }
+            />
+          </Allotment.Pane>
+        </Allotment>
+        <Allotment>
+          <Allotment.Pane minSize={500}>
+            <Editor
+              height='500px'
+              defaultLanguage='css'
+              defaultValue=''
+              theme='vs-dark'
+              options={{
+                wordWrap: 'on',
+                fontSize: fontSize,
+              }}
+              onChange={(value, event) =>
+                handleEditorChange(value, event, 'css')
+              }
+              onMount={(editor, monaco) =>
+                handleEditorDidMount(editor, monaco, 'css')
+              }
+            />
+          </Allotment.Pane>
+        </Allotment>
         <Allotment>
           <Allotment.Pane minSize={500}>
             <Editor
@@ -451,28 +429,13 @@ export function RecorderEditor() {
                 wordWrap: 'on',
                 fontSize: fontSize,
               }}
-              onChange={handleEditorChange}
-              onMount={handleEditorDidMount}
+              onChange={(value, event) =>
+                handleEditorChange(value, event, 'javascript')
+              }
+              onMount={(editor, monaco) =>
+                handleEditorDidMount(editor, monaco, 'javascript')
+              }
             />
-          </Allotment.Pane>
-          <Allotment.Pane minSize={180} preferredSize={300}>
-            <div className='border w-full h-full border-[#1e1e1e] text-white relative'>
-              <button
-                className='absolute bottom-2 right-2 border-white border rounded-sm p-2 bg-slate-500 hover:bg-slate-500/50 '
-                onClick={handleJudge0}
-                disabled={isConsoleLoading}
-              >
-                {isConsoleLoading ? 'Loading...' : 'Compile & Execute'}
-              </button>
-              <button
-                className='absolute top-2 right-2 border-white border text-sm rounded-md px-1 bg-slate-500 hover:bg-slate-500/50'
-                onClick={() => setConsoleOutput('')}
-              >
-                clear
-              </button>
-
-              <Terminal output={consoleOutput} />
-            </div>
           </Allotment.Pane>
         </Allotment>
       </div>
@@ -504,6 +467,11 @@ export function RecorderEditor() {
           </button>
         </>
       )}
+
+      <button className='p-2 text-white' onClick={handleRenderOutput}>
+        Render HTML
+      </button>
+
       {recorderLoading && (
         <div className='p-2'>
           <span>Loading...</span>
@@ -528,6 +496,12 @@ export function RecorderEditor() {
           onClose={() => setSaveModalVisible(false)}
         />
       )}
+
+      <iframe
+        srcDoc={htmlOutput}
+        title='Output'
+        sandbox='allow-scripts'
+      ></iframe>
     </>
   );
 }
