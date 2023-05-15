@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+
 interface DotsMenuProps {
   activeMenu: string | null;
   setActiveMenu: React.Dispatch<React.SetStateAction<string | null>>;
@@ -5,10 +7,26 @@ interface DotsMenuProps {
 }
 
 const DotsMenu = ({ activeMenu, setActiveMenu, id }: DotsMenuProps) => {
-  const isOpen = activeMenu === id;
+  const optionsMenu = useRef<HTMLDivElement | null>(null);
+
+  const closeOpenMenus = (e: MouseEvent) => {
+    if (
+      optionsMenu.current &&
+      !optionsMenu.current.contains(e.target as Node)
+    ) {
+      setActiveMenu(null);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', closeOpenMenus);
+    return () => {
+      document.removeEventListener('mousedown', closeOpenMenus);
+    };
+  }, []);
 
   const handleClick = () => {
-    setActiveMenu(isOpen ? null : id);
+    setActiveMenu(activeMenu === id ? null : id);
   };
 
   return (
@@ -33,9 +51,10 @@ const DotsMenu = ({ activeMenu, setActiveMenu, id }: DotsMenuProps) => {
 
       {/* <!-- Dropdown menu --> */}
       <div
+        ref={optionsMenu}
         id={`dropdownDots${id}`}
         className={`${
-          isOpen ? 'block' : 'hidden'
+          activeMenu === id ? 'block' : 'hidden'
         } bg-gray-600 divide-y divide-gray-100 rounded-lg shadow w-44 z-30 absolute right-10 top-0 border-bg-alt border text-gray-100`}
       >
         <ul
@@ -64,14 +83,6 @@ const DotsMenu = ({ activeMenu, setActiveMenu, id }: DotsMenuProps) => {
               className='block px-4 py-2 hover:bg-bg-muigrey '
             >
               Copy Embed Link
-            </a>
-          </li>
-          <li>
-            <a
-              href='#'
-              className='block px-4 py-2 hover:bg-bg-muigrey '
-            >
-              {}
             </a>
           </li>
         </ul>

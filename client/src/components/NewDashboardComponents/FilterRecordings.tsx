@@ -24,9 +24,9 @@ const FilterRecordings = ({
         </button>
         {showsearch && (
           <input
-            className='bg-transparent text-white text-lg border-b border-b-bg-sec'
+            className='bg-transparent text-white text-lg border-b border-b-bg-sec pl-1 focus:outline-none'
             type='text'
-            placeholder='Filter'
+            placeholder='Search'
             value={filterTerm}
             onChange={(e) => setFilterTerm(e.target.value)}
             autoFocus
