@@ -44,7 +44,7 @@ export function RecorderEditor() {
 
   const [consoleOutput, setConsoleOutput] = useState('');
   const [isConsoleLoading, setIsConsoleLoading] = useState(false);
-  const [saveModalVisible, setSaveModalVisible] = useState(true);
+  const [saveModalVisible, setSaveModalVisible] = useState(false);
   const [editorLanguage, setEditorLanguage] = useState('javascript');
 
   const [elapsedTime, setElapsedTime] = useState<number>(0);
