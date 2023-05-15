@@ -18,13 +18,13 @@ export async function existingCreatorLogin(userData: FirebaseUser){
           }
         },
         orderBy: {
-          created_at: 'desc'
+          created_at_datetime: 'desc'
         }
       }
     }
   });
   user?.recordings.forEach(recording => {
-    recording.time_since_creation = moment(recording.created_at).fromNow()
+    recording.time_since_creation = moment(recording.created_at_datetime).fromNow()
   })
   return user
 };
@@ -46,6 +46,29 @@ export async function createCreatorAccount(userData: FirebaseUser){
   });
   return newUser;
 }
+
+export async function incrementLoginCount(uid: string) {
+  const updatedCreator = prisma.creator.update({
+    where: {
+      uid: uid
+    },
+    data: {
+      login_count: { increment: 1}
+    }
+  })
+  return updatedCreator
+}
+
+export async function updateField(uid: string, dataToUpdate: Record<string, string | Date>) {
+  const updatedCreator = prisma.creator.update({
+    where: {
+      uid: uid
+    },
+    data: dataToUpdate
+  })
+  return updatedCreator;
+}
+
 
 export async function deleteCreator(userId: string){
   const deletedCreator = await prisma.creator.delete({

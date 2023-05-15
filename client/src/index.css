@@ -5,6 +5,7 @@
 
 
 
+
 body {
   overflow-x: hidden;
   background-color: #050505;
@@ -12,6 +13,9 @@ body {
 
 html {
   overflow-x: hidden;
+
+:root {
+
   background-color: #050505;
 }
 
@@ -93,13 +97,6 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 } */
-
-.multiline-ellipsis6 {
-  display: -webkit-box;
-  -webkit-line-clamp: 5;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
 
 .blinking-cursor::after {
   content: '|';

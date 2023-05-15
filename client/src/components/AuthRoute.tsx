@@ -1,16 +1,17 @@
-import React, { useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import Loading from './Loading';
+import LoadingPage from './LoadingPage';
 
 interface AuthRouteProps {
   children: React.ReactNode;
 }
 
-const AuthRoute: React.FC<AuthRouteProps> = ({ children }) => {
+const AuthRoute: FC<AuthRouteProps> = ({ children }) => {
   const auth = getAuth();
   const navigate = useNavigate();
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const AuthCheck = onAuthStateChanged(auth, (user) => {
@@ -27,9 +28,9 @@ const AuthRoute: React.FC<AuthRouteProps> = ({ children }) => {
     return () => AuthCheck();
   }, [auth]);
 
-  if (loading) {
-    return <Loading />;
-  }
+  // if (loading) {
+  //   return <LoadingPage show={true} />;
+  // }
 
   return <>{children}</>;
 };
