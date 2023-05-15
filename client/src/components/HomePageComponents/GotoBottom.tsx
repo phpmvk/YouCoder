@@ -1,10 +1,9 @@
 import React from 'react'
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
-import { Tooltip, styled } from '@mui/material';
+import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
 
-
-
-const StyledTooltip = styled(({ className, ...props }) => (
+const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }} />
   ))({
     '& .MuiTooltip-tooltip': {
@@ -24,7 +23,7 @@ const GotoBottom: React.FC = () => {
   }
 
   return (
-    <StyledTooltip title="See it in Action" placement="top-start" 
+    <StyledTooltip title="See it in action" placement="top-start" 
       sx={{
         '.MuiTooltip-tooltip': {
           backgroundColor: '#b4b4b4', 
