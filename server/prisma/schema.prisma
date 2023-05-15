@@ -50,3 +50,15 @@ model User {
   favorited_recordings String[]
   creators_followed    String[] //Is this a good way to go about this? Should this be creator IDs?
 }
+
+model Analytics {
+  id           Int      @id @default(autoincrement())
+  userAgent    String?
+  referer      String?
+  country      String?
+  city         String?
+  url          String
+  method       String
+  timestamp    DateTime
+  responseTime Float?
+}

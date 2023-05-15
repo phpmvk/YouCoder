@@ -7,6 +7,7 @@ import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { PORT } from './config';
 import mainRouter from './routes/index'
+import { analyticsMiddleware } from './middleware/analytics'
 
 const app = express();
 
@@ -16,6 +17,7 @@ app
     origin: "*"
   }))
   .use(express.json())
+  .use(analyticsMiddleware)
   .use(mainRouter)
   .use((_, res: Response) => {
     res.status(404).send({error: 'The endpoint requested does not exist'})
