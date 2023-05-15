@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Recording } from '../types/Creator';
+import { editUser } from '../redux/userSlice';
 import http from '../services/recordingApi';
-import { useAppDispatch } from '../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setLoadingPage } from '../redux/spinnerSlice';
 import TopNavBar from '../components/HomePageComponents/TopNavBar';
-import CreateRecordingButton from '../components/DashboardComponents/CreateRecordingButton';
+import CreateRecordingButton from '../components/NewDashboardComponents/CreateRecordingButton';
 import RecordingsList from '../components/NewDashboardComponents/RecordingsList';
-import NoRecordings from '../components/DashboardComponents/NoRecordings';
+import NoRecordings from '../components/NewDashboardComponents/NoRecordings';
 
 interface NewDashboardPageProps {}
 
@@ -14,6 +15,7 @@ const NewDashboardPage = ({}: NewDashboardPageProps) => {
   const [showCreateRecording, setShowCreateRecording] = useState(false);
   const [displayRecordings, setDisplayRecordings] = useState<Recording[]>([]);
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
 
   // // this is how to use the search term from the navbar (uses redux)
   // const searchTerm = useAppSelector((state: RootState) => state.search.searchTerm);
@@ -67,7 +69,7 @@ const NewDashboardPage = ({}: NewDashboardPageProps) => {
       .getAllUserRecordings()
       .then((response) => {
         console.log(response.data);
-        setDisplayRecordings(response.data);
+        dispatch(editUser({ ...user, recordings: response.data }));
         dispatch(setLoadingPage(false));
       })
       .catch((error) => {
@@ -81,11 +83,8 @@ const NewDashboardPage = ({}: NewDashboardPageProps) => {
       <div ref={createRecordingButtonRef}>
         <CreateRecordingButton />
       </div>
-      {displayRecordings && displayRecordings.length > 0 ? (
-        <RecordingsList
-          recordings={displayRecordings}
-          allowEdit={true}
-        />
+      {user.recordings && user.recordings.length > 0 ? (
+        <RecordingsList allowEdit={true} />
       ) : (
         <NoRecordings />
       )}
