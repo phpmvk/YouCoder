@@ -176,7 +176,7 @@ const DotsMenu = ({
               }}
               className='block px-4 py-2 hover:bg-bg-muigrey w-full text-left active:bg-bg-sec/20'
             >
-              Copy Embed Link
+              Copy {'<iframe>'}
             </button>
           </li>
         </ul>

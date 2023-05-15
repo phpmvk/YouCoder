@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import http from '../services/recordingApi';
 import Page404 from '../components/404';
@@ -9,12 +9,20 @@ import { MultiEditorPlayback } from '../components/MultiEditorPlayback';
 
 interface PlayerPageProps {}
 
-const PlayerPage: React.FC<PlayerPageProps> = ({}) => {
+const PlayerPage: FC<PlayerPageProps> = ({}) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const embed = searchParams.get('embed');
+  const showMultiEditor = searchParams.get('multi');
+  const showTitle = searchParams.get('title');
+  const showCover = searchParams.get('cover');
   const [toRender, setToRender] = useState<JSX.Element | null>(null);
+  const [displayCover, setDisplayCover] = useState<boolean>(
+    showCover === 'true' || showTitle === 'true' ? true : false
+  );
+
+  const [coverClicked, setCoverClicked] = useState<boolean>(false);
 
   useEffect(() => {
     if (!id) {
@@ -31,7 +39,20 @@ const PlayerPage: React.FC<PlayerPageProps> = ({}) => {
         console.log('recording: ', response.data);
         if (embed && embed === 'true') {
           // show the embed player
-          setToRender(<PlaybackEditor recordingData={response.data} />);
+          setToRender(
+            <>
+              {displayCover && !coverClicked ? (
+                <div
+                  className='w-full h-full bg-bg-pri text-white flex justify-center items-center cursor-pointer'
+                  onClick={() => setCoverClicked(true)}
+                >
+                  {showTitle ? <h1>{response.data.title}</h1> : <h1>Cover</h1>}
+                </div>
+              ) : (
+                <PlaybackEditor recordingData={response.data} />
+              )}
+            </>
+          );
         } else {
           // show the full player
           setToRender(<FullPlayerPage recordingData={response.data} />);

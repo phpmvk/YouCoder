@@ -165,7 +165,7 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
             Title:
             <input
               className={`w-full p-2 border-2 rounded-md bg-bg-muigrey/80 mb-4 ${
-                titleError && 'border-red-600 border'
+                titleError && 'border-red-600/70 border'
               }}`}
               name='title'
               value={detailsToEdit.title}
@@ -174,7 +174,7 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
             />
           </label>
           {titleError && (
-            <small className='text-red-600 absolute right-0 top-[4.3rem]'>
+            <small className='text-red-600/90 absolute right-0 top-[4.3rem]'>
               {titleError}
             </small>
           )}

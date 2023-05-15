@@ -16,6 +16,7 @@ import { removeUser } from '../../redux/userSlice';
 import { AiFillVideoCamera } from 'react-icons/ai';
 import { setSearchTerm } from '../../redux/searchSlice';
 import { persistor } from '../../redux/store';
+import { toast } from 'react-toastify';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -99,6 +100,7 @@ function TopNavBar({
         console.log('signed out');
         setLoggedIn(false);
         navigate('/');
+        toast.success('Logged out successfully');
       })
       .catch((error: Error) => {
         console.log(error);

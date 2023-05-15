@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import Loading from './Loading';
+// import Loading from './Loading';
 import LoadingPage from './LoadingPage';
 
 interface AuthRouteProps {
