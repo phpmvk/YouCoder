@@ -64,7 +64,7 @@
 
 
 
-
+// need to remove above at  a later time
 import { motion, useScroll, useTransform } from "framer-motion";
 import React, { useEffect, useState } from "react";
 
