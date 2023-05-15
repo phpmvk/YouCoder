@@ -22,7 +22,7 @@ const HomePage: React.FC = () => {
         showExamples={true}
         showSearch={false}
         showCreateRecording={false}
-        showDashboard={false}
+        showDashboard={true}
       />
 
       <Heading />
@@ -51,7 +51,6 @@ export default HomePage;
             <TeachInteractively />
             <MiddleBall percentage={percentage} />
             <ExampleFrame />
-            <Footer />
           </>
         )}
       /> */}

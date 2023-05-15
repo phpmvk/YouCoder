@@ -32,6 +32,7 @@ import {
   Language,
 } from '../types/Editor';
 import Tooltip from './Tooltip';
+import { MultiEditorPlayback } from './MultiEditorPlayback';
 
 export function PlaybackEditor({
   recordingData,
@@ -455,7 +456,9 @@ export function PlaybackEditor({
     });
   }
 
-  return (
+  return recordingData.language === 'multi' ? (
+    <MultiEditorPlayback recordingData={recordingData} />
+  ) : (
     <div>
       <audio
         ref={(audio) => {
@@ -494,22 +497,21 @@ export function PlaybackEditor({
               </div>
               <div className='relative w-full h-[50%] border-t-6 border-l-2 border-r-8 border-bg-pri'>
                 <div className='flex justify-center items-center'>
-
-<TooltipMUI title="Execute & Compile">
-                  <button
-                    className=' absolute top-0 right-14 w-fit items-center px-2 text-sm  text-gray-200 rounded !bg-green-900/20 border !border-gray-700 uppercase hover:!bg-green-900/50 active:ring-1 active:ring-bg-alt'
-                    onClick={handleJudge0}
-                  >
-                  <PlayArrowOutlinedIcon/> 
-                  </button>
+                  <TooltipMUI title='Execute & Compile'>
+                    <button
+                      className=' absolute top-0 right-14 w-fit items-center px-2 text-sm  text-gray-200 rounded !bg-green-900/20 border !border-gray-700 uppercase hover:!bg-green-900/50 active:ring-1 active:ring-bg-alt'
+                      onClick={handleJudge0}
+                    >
+                      <PlayArrowOutlinedIcon />
+                    </button>
                   </TooltipMUI>
-                  <TooltipMUI title="Clear Console">
-                  <button
-                    className='absolute top-0 right-2 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-red-900/20 border !border-gray-700 uppercase hover:!bg-red-900/50 active:ring-1 active:ring-bg-alt'
-                    onClick={() => setStudentConsoleOutput('')}
-                  >
-                    <ClearIcon/>
-                  </button>
+                  <TooltipMUI title='Clear Console'>
+                    <button
+                      className='absolute top-0 right-2 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-red-900/20 border !border-gray-700 uppercase hover:!bg-red-900/50 active:ring-1 active:ring-bg-alt'
+                      onClick={() => setStudentConsoleOutput('')}
+                    >
+                      <ClearIcon />
+                    </button>
                   </TooltipMUI>
                 </div>
                 <Terminal
@@ -524,7 +526,6 @@ export function PlaybackEditor({
         <br></br>
         <div className='w-auto flex items-center justify-start space-x-10 -mt-12 bg-bg-pri mx-6 px-1 md:pax-auto'>
           {playbackState.status === 'stopped' && (
-            
             <Button
               variant='outlined'
               className='!rounded-full !bg-bg-alt !text-bg-pri'

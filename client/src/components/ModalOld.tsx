@@ -1,50 +1,27 @@
 import React, { useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import http from '../../services/recordingApi';
-import { Recording } from '../../types/Creator';
-import { editUser } from '../../redux/userSlice';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 
-interface PublishModalProps {
-  recording: Recording;
+interface ModalProps {
+  handleClickYes?: () => void;
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
-  setPublished: (published: boolean) => void;
   title?: string;
   description?: string;
   yesBtnText?: string;
+  noBtnText?: string;
 }
 
-const PublishModal: React.FC<PublishModalProps> = ({
-  recording,
+const Modal: React.FC<ModalProps> = ({
+  handleClickYes = () => {},
   isModalOpen,
   setIsModalOpen,
-  setPublished,
   title,
   description,
   yesBtnText,
+  noBtnText,
 }) => {
-  const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user);
-
   const closeModal = () => {
     setIsModalOpen(false);
-  };
-
-  const handleUnpublish = () => {
-    // setPublished(false);
-    setIsModalOpen(false);
-    http
-      .patchRecording(recording.recording_id, { published: false })
-      .then((res) => {
-        console.log('res from unpublishing: ', res);
-        dispatch(editUser({ ...user, recordings: res.data }));
-        setIsModalOpen(false);
-        setPublished(false);
-      })
-      .catch((err) => {
-        console.log('err from unpublishing: ', err);
-      });
   };
 
   return (
@@ -90,7 +67,7 @@ const PublishModal: React.FC<PublishModalProps> = ({
                   <button
                     type='button'
                     className='inline-flex justify-center px-4 py-2 text-sm font-medium border-red-500 text-white/80 bg-red-500/10 border rounded-md hover:bg-red-500/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white'
-                    onClick={handleUnpublish}
+                    onClick={handleClickYes}
                   >
                     {yesBtnText}
                   </button>
@@ -111,4 +88,4 @@ const PublishModal: React.FC<PublishModalProps> = ({
   );
 };
 
-export default PublishModal;
+export default Modal;
