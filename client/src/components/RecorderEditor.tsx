@@ -409,7 +409,7 @@ export function RecorderEditor() {
     <>
       {recorderState === 'stopped' && (
         <>
-          <div className='flex items-center'>
+          <div className='flex items-center mx-[15vw]'>
             <label
               className='block mb-2 text-sm font-medium text-white mr-3'
               htmlFor='language'
@@ -434,18 +434,19 @@ export function RecorderEditor() {
         </>
       )}
       {recorderState !== 'stopped' && (
-        <div className='border text-sm rounded-lg w-48 bg-gray-700 border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mb-3 flex items-center justify-center'>
+        <div className='border text-sm rounded-lg w-48 bg-gray-700 border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mb-3 flex items-center justify-center mx-[15vw]'>
           {editorLanguage}
         </div>
       )}
-
-      <div className='flex w-full h-[500px] border border-white rounded-sm'>
+<div>
+      <div className='flex mx-[15vw] h-[500px] border border-white rounded-sm '>
         <Allotment>
           <Allotment.Pane minSize={500}>
+            <div className=" bg-bg-console">
             <Editor
               height='500px'
               defaultLanguage='javascript'
-              defaultValue=''
+              defaultValue={''}
               theme='vs-dark'
               options={{
                 wordWrap: 'on',
@@ -454,6 +455,7 @@ export function RecorderEditor() {
               onChange={handleEditorChange}
               onMount={handleEditorDidMount}
             />
+            </div>
           </Allotment.Pane>
           <Allotment.Pane minSize={180} preferredSize={300}>
             <div className='border w-full h-full border-[#1e1e1e] text-white relative'>
@@ -476,16 +478,16 @@ export function RecorderEditor() {
           </Allotment.Pane>
         </Allotment>
       </div>
-
+</div>
       {recorderState === 'stopped' && (
-        <button className='p-2 text-white' onClick={handleStartRecording}>
+        <button className='p-2 text-white mx-[15vw]' onClick={handleStartRecording}>
           Start Recording
         </button>
       )}
 
       {recorderState === 'recording' && (
         <>
-          <button className='p-2 text-white' onClick={handlePauseRecording}>
+          <button className='p-2 text-white mx-[15vw]' onClick={handlePauseRecording}>
             Pause Recording
           </button>
           <button className='p-2 text-white' onClick={handleEndRecording}>
@@ -496,7 +498,7 @@ export function RecorderEditor() {
 
       {recorderState === 'paused' && (
         <>
-          <button className='p-2 text-white' onClick={handleResumeRecording}>
+          <button className='p-2 text-white mx-[15vw]' onClick={handleResumeRecording}>
             Resume Recording
           </button>
           <button className='p-2 text-white' onClick={handleEndRecording}>
@@ -511,7 +513,7 @@ export function RecorderEditor() {
       )}
 
       {recorderState !== 'stopped' && (
-        <p className='p-2 text-white'>
+        <p className='p-2 text-white mx-[15vw]'>
           {formatTime(elapsedTime)}
           {recorderState === 'recording' && (
             <span className='text-red-700 animate-[blinking_1s_infinite] text-4xl'>

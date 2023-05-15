@@ -104,7 +104,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
               <span className='text-white'>Coder</span>
               <span className='text-bg-sec'>{`}`}</span>
             </div>
-            <div className='flex flex-col flex-row justify-evenly h-1/3 min-w-[200px] '>
+            <div className='flex flex-col  justify-evenly h-1/3 min-w-[200px] '>
               <button
                 // variant="outlined"
                 className='bg-bg-pri z-20 flex items-center w-full h-1/8 t-[10px] border-solid !border-2 border-bg-sec rounded-lg !text-white lg:text-xl    p-3 hover:border-bg-alt whitespace-nowrap'
