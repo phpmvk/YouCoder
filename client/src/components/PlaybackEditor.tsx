@@ -497,7 +497,7 @@ export function PlaybackEditor({
 
 <TooltipMUI title="Execute & Compile">
                   <button
-                    className='font-extralight absolute top-0 right-14 w-fit items-center px-2 text-sm  text-gray-200 rounded !bg-green-900/20 border !border-gray-700 uppercase'
+                    className=' absolute top-0 right-14 w-fit items-center px-2 text-sm  text-gray-200 rounded !bg-green-900/20 border !border-gray-700 uppercase hover:!bg-green-900/50 active:ring-1 active:ring-bg-alt'
                     onClick={handleJudge0}
                   >
                   <PlayArrowOutlinedIcon/> 
@@ -505,7 +505,7 @@ export function PlaybackEditor({
                   </TooltipMUI>
                   <TooltipMUI title="Clear Console">
                   <button
-                    className='absolute top-0 right-2 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-red-900/20 border !border-gray-700 uppercase'
+                    className='absolute top-0 right-2 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-red-900/20 border !border-gray-700 uppercase hover:!bg-red-900/50 active:ring-1 active:ring-bg-alt'
                     onClick={() => setStudentConsoleOutput('')}
                   >
                     <ClearIcon/>
