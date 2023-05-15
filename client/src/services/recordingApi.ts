@@ -56,12 +56,12 @@ class RecordingApiService {
   patchRecording(
     id: string,
     data: updateRecording
-  ): Promise<AxiosResponse<Recording[]>> {
+  ): Promise<AxiosResponse<Recording>> {
     console.log('id', id);
     console.log('data', data);
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await protectedHttp.patch<Recording[]>(
+        const response = await protectedHttp.patch<Recording>(
           `/recording/update/${id}`,
           data
         );

@@ -2,6 +2,14 @@ import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { Recording, updateRecording } from '../../types/Creator';
 import Modal from '../Modal';
 import EditDetailsform from './EditDetailsForm';
+import http from '../../services/recordingApi';
+import { useAppDispatch } from '../../redux/hooks';
+import {
+  deleteUserRecording,
+  updateUserRecording,
+} from '../../redux/userSlice';
+import { setLoadingSpinner } from '../../redux/spinnerSlice';
+import { toast } from 'react-toastify';
 
 interface DotsMenuProps {
   activeMenu: string | null;
@@ -24,6 +32,9 @@ const DotsMenu = ({
     thumbnail_link: recording.thumbnail_link,
     published: recording.published,
   });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const dispatch = useAppDispatch();
 
   const closeOpenMenus = (e: Event) => {
     if (
@@ -48,18 +59,60 @@ const DotsMenu = ({
   };
 
   const handleSave = (updatedDetails: updateRecording) => {
-    setDetails(updatedDetails);
-    setShowModal(false);
+    http
+      .patchRecording(recording.recording_id, updatedDetails)
+      .then((res) => {
+        console.log('res.data: ', res);
+        dispatch(updateUserRecording({ recording: res.data }));
+        setShowModal(false);
+        dispatch(setLoadingSpinner(false));
+      })
+      .catch((err) => {
+        console.log('err: ', err);
+      });
+  };
+
+  const handleDelete = () => {
+    http
+      .deleteRecording(recording.recording_id)
+      .then((res) => {
+        console.log('res from deleting recording: ', res);
+        dispatch(deleteUserRecording({ recordingId: recording.recording_id }));
+        setShowDeleteModal(false);
+      })
+      .catch((err) => {
+        console.log('err from deleting recording: ', err);
+      });
   };
 
   return (
     <>
+      <Modal
+        show={showDeleteModal}
+        closeModal={() => setShowDeleteModal(false)}
+      >
+        <p className='pb-5'>Are you sure you want to delete this recording?</p>
+        <button
+          className='bg-bg-muilightgrey mr-5 text:white py-1 px-2 rounded border border-gray-300 hover:bg-gray-300/50'
+          onClick={handleDelete}
+        >
+          Confirm
+        </button>
+        <button
+          className='bg-bg-gptdark text-white py-1 px-2 rounded border border-gray-300 hover:bg-gray-300/20'
+          onClick={() => setShowDeleteModal(false)}
+        >
+          Cancel
+        </button>
+      </Modal>
+
       <Modal
         show={showModal}
         closeModal={() => setShowModal(false)}
       >
         <EditDetailsform
           detailsToEdit={details}
+          setDetailsToEdit={setDetails}
           save={handleSave}
         />
       </Modal>
@@ -99,35 +152,44 @@ const DotsMenu = ({
                 e.stopPropagation();
                 setShowModal(true);
               }}
-              className='block px-4 py-2 hover:bg-bg-muigrey w-full text-left'
+              className='block px-4 py-2 hover:bg-bg-muigrey w-full text-left active:bg-bg-sec/20'
             >
               Edit Details
             </button>
           </li>
           <li>
-            <a
-              href='#'
-              className='block px-4 py-2 hover:bg-bg-muigrey '
+            <button
+              onClick={(e) => {
+                navigator.clipboard.writeText(recording.full_link);
+                toast.success('Link copied to clipboard');
+              }}
+              className='block px-4 py-2 hover:bg-bg-muigrey w-full text-left active:bg-bg-sec/20'
             >
               Copy Link
-            </a>
+            </button>
           </li>
           <li>
-            <a
-              href='#'
-              className='block px-4 py-2 hover:bg-bg-muigrey '
+            <button
+              onClick={(e) => {
+                navigator.clipboard.writeText(recording.iframe_link);
+                toast.success('Link copied to clipboard');
+              }}
+              className='block px-4 py-2 hover:bg-bg-muigrey w-full text-left active:bg-bg-sec/20'
             >
               Copy Embed Link
-            </a>
+            </button>
           </li>
         </ul>
         <div className='py-2'>
-          <a
-            href='#'
-            className='block px-4 py-2 text-sm hover:bg-bg-muigrey'
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowDeleteModal(true);
+            }}
+            className='block px-4 py-2 text-sm hover:bg-bg-muigrey w-full text-left active:bg-bg-sec/20'
           >
             Delete Recording
-          </a>
+          </button>
         </div>
       </div>
     </>
