@@ -11,14 +11,14 @@ interface AuthRouteProps {
 const AuthRoute: FC<AuthRouteProps> = ({ children }) => {
   const auth = getAuth();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const AuthCheck = onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log('user from AuthCheck: ', user);
         console.log('authorized');
-        setLoading(false);
+        // setLoading(false);
       } else {
         console.log('unauthorized');
         navigate('/login');

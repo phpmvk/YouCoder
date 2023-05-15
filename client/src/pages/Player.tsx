@@ -43,10 +43,17 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
             <>
               {displayCover && !coverClicked ? (
                 <div
-                  className='w-full h-full bg-bg-pri text-white flex justify-center items-center cursor-pointer'
+                  className='cursor-pointer flex justify-center items-center w-full h-full'
                   onClick={() => setCoverClicked(true)}
                 >
-                  {showTitle ? <h1>{response.data.title}</h1> : <h1>Cover</h1>}
+                  {response.data.thumbnail_link && (
+                    <img
+                      className='object-cover w-full h-auto'
+                      src={response.data.thumbnail_link}
+                      alt={response.data.title}
+                    />
+                  )}
+                  {showTitle && <h1>{response.data.title}</h1>}
                 </div>
               ) : (
                 <PlaybackEditor recordingData={response.data} />
