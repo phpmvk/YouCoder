@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
-import { PrismaClient } from '@prisma/client'
 import { getRecordingById, createNewRecording, findUser, fetchAllUserRecordings, updateRecording, deleteRecording } from "../models/recordings.model";
-
-const prisma = new PrismaClient()
+import moment from 'moment'
 
 export async function getRecordingByIdController(req: Request, res: Response) {
   console.log('Recordings - GET received - getRecordingById')
@@ -23,6 +21,7 @@ export async function getRecordingByIdController(req: Request, res: Response) {
         return res.status(403).send({ message: 'Private' })
       }
     }
+    recording.time_since_creation = moment(recording.created_at).fromNow()
     return res.status(200).send(recording)
 
   } catch (err) {
@@ -42,6 +41,9 @@ export async function getAllUserRecordingsController(req: Request, res: Response
       return res.status(403).send({ message: 'User does not exist'})
     }
     const allUserRecordings = await fetchAllUserRecordings(user.uid)
+    allUserRecordings?.forEach(recording => {
+      recording.time_since_creation = moment(recording.created_at).fromNow()
+    })
     res.status(200).send(allUserRecordings)
   } catch (err) {
     console.error(err)
@@ -53,6 +55,7 @@ export async function uploadRecordingController(req: Request, res: Response) {
   console.log('Recordings - POST received - uploadRecording')
   try {
     const newRecording = await createNewRecording(req.body);
+    newRecording.time_since_creation = moment(newRecording.created_at).fromNow()
     res.status(201).send(newRecording)
   } catch (err) {
     console.error(err);
@@ -101,6 +104,8 @@ export async function updateRecordingController(req: Request, res: Response) {
     }
 
     const updatedRecording = await updateRecording(recordingId, dataToUpdate);
+
+    updatedRecording.time_since_creation = moment(updatedRecording.created_at).fromNow()
 
     res.status(200).send(updatedRecording)
   } catch (err) {

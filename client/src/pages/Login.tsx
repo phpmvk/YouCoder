@@ -89,8 +89,8 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
   return (
     <>
       {/* {showError && !showLoading && <ErrorBackend />} */}
-      <div className='bg-bg-pri h-screen w-full flex overflow-hidden'>
-        <div className='bg-bg-pri w-1/3 min-w-[300px] h-full flex items-center justify-center mx-6'>
+      <div className='bg-bg-pri h-screen w-full flex overflow-hidden justify-center sm:justify-start'>
+        <div className='bg-bg-pri w-full h-full flex items-center justify-center mx-6 sm:w-1/3 min-w-[300px]'>
           <div className='absolute top-20 z-20 text-5xl max-lg:mx-auto ml:24 flex items-center mx-12 font-title'>
             <span className='text-white'>You</span>
             &nbsp;
@@ -102,7 +102,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
           <div className='flex flex-col justify-evenly h-1/3 min-w-[200px] '>
             <button
               // variant="outlined"
-              className='bg-bg-pri z-20 flex items-center w-full h-1/8 t-[10px] border-solid !border-2 border-bg-sec rounded-lg !text-white lg:text-xl sm:text-sm  md:p-6 p-3 hover:border-bg-alt whitespace-nowrap'
+              className='bg-bg-pri z-20 flex items-center w-full h-1/8 t-[10px] border-solid !border-2 border-bg-sec rounded-lg !text-white lg:text-xl    p-3 hover:border-bg-alt whitespace-nowrap'
               onClick={() => signInWithGoogle()}
               disabled={authing}
             >
@@ -113,7 +113,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
             </button>
             <button
               // variant="outlined"
-              className='bg-bg-pri z-20 flex items-center w-full h-1/8 t-[10px] border-solid !border-2 border-bg-sec rounded-lg !text-white lg:text-xl sm:text-sm md:p-6 p-3 hover:border-bg-alt whitespace-nowrap'
+              className='bg-bg-pri z-20 flex items-center w-full h-1/8 t-[10px] border-solid !border-2 border-bg-sec rounded-lg !text-white lg:text-xl p-3 hover:border-bg-alt whitespace-nowrap'
               onClick={() => signInWithGithub()}
               disabled={authing}
             >
@@ -122,9 +122,13 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
                 <BsGithub />
               </span>
             </button>
+            {/* <div className="scale-[20%] md:hidden bottom-0 -z-30">
+              <LoginArt />
+            </div> */}
           </div>
         </div>
-        <div className='w-2/3 min-w-[400px]'>
+
+        <div className='hidden sm:block w-2/3 min-w-[400px] -ml-12'>
           <LoginArt />
         </div>
       </div>

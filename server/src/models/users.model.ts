@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { FirebaseUser } from '../types/types';
+import moment from 'moment';
 const prisma = new PrismaClient();
 
 export async function existingCreatorLogin(userData: FirebaseUser){
@@ -22,6 +23,9 @@ export async function existingCreatorLogin(userData: FirebaseUser){
       }
     }
   });
+  user?.recordings.forEach(recording => {
+    recording.time_since_creation = moment(recording.created_at).fromNow()
+  })
   return user
 };
 

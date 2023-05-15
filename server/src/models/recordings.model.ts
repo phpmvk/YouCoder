@@ -34,6 +34,13 @@ export async function fetchAllUserRecordings(uid: string): Promise<Recording[] |
     where: {
       creator_uid: uid
     },
+    include: {
+      creator: {
+        select: {
+          picture: true
+        }
+      }
+    },
     orderBy: {
       created_at: 'desc'
     }
@@ -87,7 +94,7 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
       description: description?description:'',
       language: language,
       recording_link: recording_link,
-      created_at: (new Date(Date.now())).toString(),
+      created_at: new Date(Date.now()),
       view_count: 0,
       like_count: 0,
       tags: [],
