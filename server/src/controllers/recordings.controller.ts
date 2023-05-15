@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getRecordingById, createNewRecording, findUser, fetchAllUserRecordings, updateRecording, deleteRecording, incrementViewCount } from "../models/recordings.model";
+import { getRecordingById, createNewRecording, findUser, fetchAllUserRecordings, updateRecording, deleteRecording, incrementViewCount, incrementLikeCount } from "../models/recordings.model";
 import moment from 'moment'
 
 export async function getRecordingByIdController(req: Request, res: Response) {
@@ -31,6 +31,20 @@ export async function getRecordingByIdController(req: Request, res: Response) {
     } else {
       res.status(500).send({ message: 'Internal server error'})
     }
+  }
+}
+
+export async function incrementRecordingLikesController(req: Request, res: Response) {
+  console.log('Recordings - POST received - incrementRecordingLikes')
+  try {
+    const { recording_id } = req.params
+    const updatedResource = await incrementLikeCount(recording_id)
+    if (!updatedResource) {
+      return res.status(404).send({ message: 'Resource not found'})
+    }
+    res.status(200).send({ message: 'Resource updated' })
+  } catch (err) {
+    res.status(500).send({ message: 'Internal server error'})
   }
 }
 

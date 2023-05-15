@@ -32,6 +32,18 @@ export async function incrementViewCount(recordingId: string): Promise<Recording
   return updatedRecording;
 }
 
+export async function incrementLikeCount(recordingId: string): Promise<Recording | null> {
+  const updatedRecording = await prisma.recording.update({
+    where: {
+      recording_id: recordingId
+    },
+    data: {
+      like_count: {increment: 1}
+    }
+  });
+  return updatedRecording;
+}
+
 export async function findUser(user: FirebaseUser): Promise<Creator | null>{
   const storedUser = await prisma.creator.findUnique({
     where: {
