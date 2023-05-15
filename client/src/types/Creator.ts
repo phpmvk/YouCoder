@@ -37,6 +37,7 @@ export interface Recording {
   like_count: number;
   tags: string[];
   view_count: number;
+  time_since_creation: string;
 }
 
 export interface updateRecording {

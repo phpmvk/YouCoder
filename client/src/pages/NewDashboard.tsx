@@ -81,7 +81,7 @@ const NewDashboardPage = ({}: NewDashboardPageProps) => {
       <div ref={createRecordingButtonRef}>
         <CreateRecordingButton />
       </div>
-      {displayRecordings.length > 0 ? (
+      {displayRecordings && displayRecordings.length > 0 ? (
         <RecordingsList
           recordings={displayRecordings}
           allowEdit={true}

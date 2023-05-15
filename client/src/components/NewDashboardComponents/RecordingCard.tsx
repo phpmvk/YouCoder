@@ -22,7 +22,10 @@ const RecordingCard = ({
     <>
       <div className='flex flex-col justify-center items-center w-96 rounded-md bg-bg-pri hover:bg-gradient-to-r from-white via-bg-alt to-bg-sec'>
         <div className='w-[23.875rem] h-[19rem] pt-px'>
-          <div className='text-gray-200 shadow-black border-b border-b-gray-200 relative flex justify-center items-center w-full h-48 bg-gradient-to-b from-gray-900 to-gray-600 rounded-t-md'>
+          <a
+            href={recording.full_link}
+            className='text-gray-200 shadow-black border-b border-b-gray-200 relative flex justify-center items-center w-full h-48 bg-gradient-to-b from-gray-900 to-gray-600 rounded-t-md'
+          >
             {recording.thumbnail_link ? (
               <img
                 className='absolute object-cover w-full h-full rounded-t-md'
@@ -42,7 +45,7 @@ const RecordingCard = ({
                 {formatTime(recording.duration)}
               </small>
             </div>
-          </div>
+          </a>
           <div className='relative flex flex-col w-full h-[6.875rem] rounded-b-md bg-bg-gptdark p-2 text-gray-200'>
             {allowEdit && (
               <div className='absolute top-2 right-1'>
@@ -53,9 +56,12 @@ const RecordingCard = ({
                 />
               </div>
             )}
-            <div className='w-11/12 line-clamp-2 font-semibold text-lg'>
+            <a
+              href={recording.full_link}
+              className='w-11/12 line-clamp-2 font-semibold text-lg decoration-transparent'
+            >
               {recording.title}
-            </div>
+            </a>
             <div className='absolute bottom-1 left-0 px-2 w-full text-sm grid grid-cols-3'>
               <div className='flex items-center col-start-1 col-end-2 text-gray-200'>
                 {' '}
@@ -72,8 +78,8 @@ const RecordingCard = ({
                 </div>
               )}
               <div className='col-start-3 text-right'>
-                2 months ago
-                {/* {recording.created_at_str} */}
+                {/* 2 months ago */}
+                {recording.time_since_creation}
               </div>
             </div>
           </div>

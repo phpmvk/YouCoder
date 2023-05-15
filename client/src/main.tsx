@@ -5,13 +5,13 @@ import './index.css';
 import { Provider } from 'react-redux';
 import { store, persistor } from './redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
-import Loading from './components/Loading';
+import LoadingPage from './components/LoadingPage';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
       <PersistGate
-        loading={<Loading />}
+        loading={<LoadingPage show={true} />}
         persistor={persistor}
       >
         <App />
