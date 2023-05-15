@@ -20,7 +20,7 @@ const CreateRecordingPage: React.FC<RecordingPageProps> = ({}) => {
         />
         <div>Recording Page</div>
         <div className='w-full px-10 mx-auto'>
-          <MultiEditorRecorder />
+          <RecorderEditor />
         </div>
       </div>
     </>
