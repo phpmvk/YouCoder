@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { getAuth, signOut } from 'firebase/auth';
-import { Parallax } from 'react-parallax';
+
 import TopNavBar from './../components/HomePageComponents/TopNavBar';
 import TeachInteractively from './../components/HomePageComponents/TeachInteractively';
 import Heading from './../components/HomePageComponents/Heading';
 import ExampleFrame from './../components/HomePageComponents/ExampleFrame';
-import TopBall from './../components/HomePageComponents/TopBall';
+import TopBall from './../components/HomePageComponents/TopBall.tsx';
 import MiddleBall from './../components/HomePageComponents/MiddleBall';
 import BottomBall from './../components/HomePageComponents/BottomBall';
 import Footer from './../components/HomePageComponents/Footer';
@@ -43,6 +43,8 @@ const HomePage: React.FC = () => {
 
 
 <Heading />
+<TopBall />
+<div className="bg-bg-muilightgrey h-[400px] w-full"></div>
 
 
 
