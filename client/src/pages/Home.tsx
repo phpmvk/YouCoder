@@ -21,7 +21,7 @@ const HomePage: React.FC = () => {
         showExamples={true}
         showSearch={false}
         showCreateRecording={false}
-        showDashboard={false}
+        showDashboard={true}
       />
 
       <Parallax
@@ -34,7 +34,6 @@ const HomePage: React.FC = () => {
             <TeachInteractively />
             <MiddleBall percentage={percentage} />
             <ExampleFrame />
-            <Footer />
           </>
         )}
       />

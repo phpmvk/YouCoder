@@ -13,16 +13,22 @@ import NotFoundPage from './pages/NotFound';
 import { getStorage } from 'firebase/storage';
 import LoadingSpinner from './components/LoadingSpinner';
 import { useAppSelector } from './redux/hooks';
+import NewDashboardPage from './pages/NewDashboard';
+import Footer from './components/HomePageComponents/Footer';
+import LoadingPage from './components/LoadingPage';
 
 export const Firebase = initializeApp(config.firebaseConfig);
 export const storage = getStorage(Firebase);
 
 function App() {
-  const { loadingSpinner } = useAppSelector((state) => state.loadingSpinner);
+  const { loadingSpinner, loadingPage } = useAppSelector(
+    (state) => state.loadingSpinner
+  );
 
   return (
     <>
       <LoadingSpinner show={loadingSpinner} />
+      <LoadingPage show={loadingPage} />
       <BrowserRouter>
         <Routes>
           <Route
@@ -45,7 +51,7 @@ function App() {
             path='/dashboard'
             element={
               <AuthRoute>
-                <DashboardPage />
+                <NewDashboardPage />
               </AuthRoute>
             }
           />
@@ -71,6 +77,7 @@ function App() {
           />
         </Routes>
       </BrowserRouter>
+      <Footer />
     </>
   );
 }

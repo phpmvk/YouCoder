@@ -88,6 +88,21 @@ class RecordingApiService {
       }
     });
   }
+
+  getAllUserRecordings(): Promise<AxiosResponse<Recording[]>> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await protectedHttp.get<Recording[]>(
+          `/recording/user/get`
+        );
+        resolve(response);
+      } catch (e) {
+        const error = e as AxiosError;
+        console.log(error);
+        reject(error);
+      }
+    });
+  }
 }
 
 export default new RecordingApiService();

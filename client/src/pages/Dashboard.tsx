@@ -88,7 +88,6 @@ const DashboardPage: React.FC<DashboardPageProps> = ({}) => {
             <NoRecordings />
           )}
         </div>
-        <Footer />
       </div>
     </>
   );

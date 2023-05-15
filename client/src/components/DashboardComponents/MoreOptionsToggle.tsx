@@ -4,7 +4,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ThemeProvider, createTheme } from '@mui/material';
-import Modal from '../Modal';
+import Modal from '../ModalOld';
 
 const options = ['Delete Recording'];
 
