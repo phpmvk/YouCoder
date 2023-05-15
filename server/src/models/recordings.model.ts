@@ -34,6 +34,13 @@ export async function fetchAllUserRecordings(uid: string): Promise<Recording[] |
     where: {
       creator_uid: uid
     },
+    include: {
+      creator: {
+        select: {
+          picture: true
+        }
+      }
+    },
     orderBy: {
       created_at: 'desc'
     }
