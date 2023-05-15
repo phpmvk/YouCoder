@@ -75,7 +75,7 @@ import { motion, useTransform, useScroll } from 'framer-motion';
 
 const ExampleFrame: React.FC = () => {
   const { scrollYProgress } = useScroll();
-  const scale = useTransform(scrollYProgress, [0.9, 1], [0, 6]);
+  const scale = useTransform(scrollYProgress, [0.9, 1], [0, 3]);
   const width = useTransform(scrollYProgress, [0, 1], [0, 160]);
   const height = useTransform(scrollYProgress, [0, 1], [0, 80]);
 
@@ -88,15 +88,24 @@ const ExampleFrame: React.FC = () => {
           left: '43%',
           top: '580vh',
           scale: scale,
-          width: width,
-          height: height,
+          width: `${width}px`,
+          height: `${height}px`,
           background: 'white',
           border: '0.7px solid white',
           zIndex: 1000,
         }}
-      />
+      >
+        <iframe 
+          src='http://localhost:5173/player/a8e50f974704eeed54c0c7d3981f8a0a4143?embed=true' 
+          width='100%' 
+          height='100%' 
+          allowFullScreen 
+          title='My Recording'
+        />
+      </motion.div>
     </>
   );
 };
 
 export default ExampleFrame;
+

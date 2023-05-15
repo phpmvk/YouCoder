@@ -13,6 +13,7 @@ import NotFoundPage from './pages/NotFound';
 import { getStorage } from 'firebase/storage';
 import LoadingSpinner from './components/LoadingSpinner';
 import { useAppSelector } from './redux/hooks';
+import Footer from './components/HomePageComponents/Footer';
 
 export const Firebase = initializeApp(config.firebaseConfig);
 export const storage = getStorage(Firebase);
@@ -71,6 +72,7 @@ function App() {
           />
         </Routes>
       </BrowserRouter>
+      <Footer/>
     </>
   );
 }

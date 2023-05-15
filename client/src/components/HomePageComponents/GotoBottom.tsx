@@ -27,7 +27,7 @@ const GotoBottom: React.FC = () => {
     <StyledTooltip title="See it in Action" placement="top-start" 
       sx={{
         '.MuiTooltip-tooltip': {
-          backgroundColor: 'white', 
+          backgroundColor: '#b4b4b4', 
           fontSize: '16px', 
           color: 'black', 
         }

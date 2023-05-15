@@ -75,7 +75,7 @@ const Heading: React.FC<HeadingProps> = () => {
   const [showCursor, setShowCursor] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = scrollYProgress.onChange(v => setShowCursor(v < 0.05));
+    const unsubscribe = scrollYProgress.onChange(v => setShowCursor(v < 0.025));
     return unsubscribe;
   }, [scrollYProgress]);
 

@@ -16,8 +16,7 @@ const HomePage: React.FC = () => {
   const user = useAppSelector((state) => state.user);
 
   return (
-    <>
-    <div className='text-center bg-bg-pri font-title overflow-x-hidden max-w-screen'>
+    <div className='overflow-x-hidden w-screen text-center bg-bg-pri font-title'>
       <TopNavBar
         showFeatures={true}
         showExamples={true}
@@ -26,7 +25,23 @@ const HomePage: React.FC = () => {
         showDashboard={false}
       />
 
-      {/* <Parallax
+      <Heading />
+      <TopBall />
+      <MiddleBall />
+      <BottomBall />
+      <ExampleFrame/>
+
+      <div className="bg-bg-pri h-[280vw] w-full rounded-tr-full rounded-tl-full"></div>
+
+      <GotoBottom/>
+    </div>
+  );
+};
+
+export default HomePage;
+
+
+ {/* <Parallax
         strength={600}
         renderLayer={(percentage) => (
           <>
@@ -40,24 +55,3 @@ const HomePage: React.FC = () => {
           </>
         )}
       /> */}
-
-
-
-
-<Heading />
-<TopBall />
-<MiddleBall />
-<BottomBall />
-<ExampleFrame/>
-
-
-<div className="bg-bg-pri h-[280vw] w-full rounded-tr-full rounded-tl-full"></div>
-
-<GotoBottom/>
-    </div>
-
-</>
-  );
-};
-
-export default HomePage;

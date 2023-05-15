@@ -82,8 +82,8 @@ const AnimatedLetter: React.FC<{ index: number; children: React.ReactNode }> = (
 
 const TeachInteractively = () => {
   const { scrollYProgress } = useScroll();
-  const x = useTransform(scrollYProgress, [0.03, 0.2], ['120vw', '2vw']);
-  const y = useTransform(scrollYProgress, [0.03, 0.2], ['-130', '15vw']);
+  const x = useTransform(scrollYProgress, [0.02, 0.2], ['80vw', '2vw']);
+  const y = useTransform(scrollYProgress, [0.02, 0.2], ['-40', '15vw']);
 
   const activeText = 'actively.';
 
