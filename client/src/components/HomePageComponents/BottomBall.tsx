@@ -59,7 +59,7 @@ const BottomBall: React.FC = () => {
           scale,
           originX: 0,
           originY: 0,
-          background: 'radial-gradient(circle, #050505, #b300ff, #050505, #b300ff,#050505, #b300ff, #050505, #b300ff, #050505, #b300ff,#050505, #b300ff, #050505, #b300ff, transparent, transparent, transparent, transparent )',
+          background: 'radial-gradient(circle, #050505, #b300ff, #050505, #b300ff,#050505, #b300ff, transparent, transparent, transparent, transparent )',
           
           width: '30vw',
           height: '30vw',

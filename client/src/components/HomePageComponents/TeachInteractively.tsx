@@ -74,15 +74,15 @@ import { motion, useTransform, useScroll } from 'framer-motion';
 
 const AnimatedLetter: React.FC<{ index: number; children: React.ReactNode }> = ({ index, children }) => {
   const { scrollYProgress } = useScroll();
-  const color = useTransform(scrollYProgress, (value) => (value > index * 0.05 ? '#ccff00' : 'white'));
+  const color = useTransform(scrollYProgress, (value) => (value > index * 0.01 ? '#ccff00' : 'white'));
 
   return <motion.span style={{ color, fontWeight: 600 }}>{children}</motion.span>;
 };
 
 const TeachInteractively = () => {
   const { scrollYProgress } = useScroll();
-  const x = useTransform(scrollYProgress, [0, 0.6], ['100vw', '-100vw']);
-  const y = useTransform(scrollYProgress, [0, 0.3], ['0', '10vw']);
+  const x = useTransform(scrollYProgress, [0, 0.2], ['100vw', '2vw']);
+  const y = useTransform(scrollYProgress, [0.1, 0.2], ['-30', '15vw']);
 
   const activeText = 'actively.';
 

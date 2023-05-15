@@ -15,6 +15,7 @@ const HomePage: React.FC = () => {
   const user = useAppSelector((state) => state.user);
 
   return (
+    <>
     <div className='text-center bg-bg-pri font-title'>
       <TopNavBar
         showFeatures={true}
@@ -46,32 +47,15 @@ const HomePage: React.FC = () => {
 <TopBall />
 <MiddleBall />
 <BottomBall />
-
-<div className="bg-bg-pri h-[250vw] w-full rounded-tr-full rounded-tl-full"></div>
-<div className="bg-bg-muilightgrey h-[30vw] w-full rounded-tr-full rounded-tl-full"></div>
+<ExampleFrame/>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<div className="bg-bg-pri h-[280vw] w-full rounded-tr-full rounded-tl-full"></div>
 
 
     </div>
+
+</>
   );
 };
 
