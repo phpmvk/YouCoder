@@ -35,7 +35,7 @@ const RecordingCard = ({
             ) : (
               <span className='z-10 text-black'>Youcoder Recording</span>
             )}
-            <BiPlayCircle className='absolute left-auto right-auto text-7xl text-bg-sec/50 z-10' />
+            <BiPlayCircle className='absolute left-auto right-auto text-7xl text-white/30 z-10' />
             <div className='absolute text-sm bottom-2 w-full flex justify-between px-2'>
               <small className='bg-gray-800/70 text-white/70 rounded-sm px-1 '>
                 {formatLanguage(recording.language)}
@@ -71,7 +71,7 @@ const RecordingCard = ({
               {allowEdit && (
                 <div
                   className={`text-center rounded ${
-                    recording.published ? 'bg-green-500/50' : 'bg-red-500/50'
+                    recording.published ? 'bg-green-500/10' : 'bg-red-500/10'
                   }`}
                 >
                   {recording.published ? 'Published' : 'Not published'}

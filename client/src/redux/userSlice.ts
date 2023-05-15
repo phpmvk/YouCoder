@@ -42,6 +42,14 @@ export const userSlice = createSlice({
         state.recordings![index] = updatedRecording;
       }
     },
+    deleteUserRecording: (
+      state,
+      action: PayloadAction<{ recordingId: string }>
+    ) => {
+      state.recordings = state.recordings!.filter(
+        (recording) => recording.recording_id !== action.payload.recordingId
+      );
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(PURGE, (state) => {
@@ -50,7 +58,12 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUser, removeUser, editUser, updateUserRecording } =
-  userSlice.actions;
+export const {
+  setUser,
+  removeUser,
+  editUser,
+  updateUserRecording,
+  deleteUserRecording,
+} = userSlice.actions;
 
 export default userSlice.reducer;

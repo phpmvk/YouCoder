@@ -82,7 +82,10 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
     }
     let updatedDetails = { ...detailsToEdit };
 
-    if (file) {
+    console.log('file: ', file);
+    console.log('image: ', image);
+
+    if (image && file) {
       try {
         dispatch(setLoadingSpinner(true));
         const storageRef = ref(storage, `thumbnails/${file.name}`);
@@ -96,6 +99,8 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
         console.error('Error uploading thumbnail:', error);
       }
     } else {
+      updatedDetails.thumbnail_link = '';
+      setDetailsToEdit({ ...detailsToEdit, thumbnail_link: '' });
       save(updatedDetails);
     }
   };
@@ -229,7 +234,7 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
         <button
           type='button'
           onClick={handleSave}
-          className='w-fit py-2 px-4 border-2 rounded-md bg-bg-muigrey/80 mb-4'
+          className='w-fit py-2 px-4 border-2 rounded-md bg-bg-muigrey/80 mb-4 hover:bg-white/20 active:bg-white/30'
         >
           Save
         </button>
