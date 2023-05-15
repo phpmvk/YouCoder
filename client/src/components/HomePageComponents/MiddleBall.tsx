@@ -51,14 +51,14 @@
 
 
 import React from 'react';
-import { motion, useTransform, useViewportScroll } from 'framer-motion';
+import { motion, useTransform, useScroll } from 'framer-motion';
 
 interface BallProps {
   percentage: number;
 }
 
-const MiddleBall: React.FC<BallProps> = ({ percentage }) => {
-  const { scrollYProgress } = useViewportScroll();
+const MiddleBall: React.FC<BallProps> = () => {
+  const { scrollYProgress } = useScroll();
 
   const scale = useTransform(scrollYProgress, [0.4, 1], [1, 4.5]);
   const y = useTransform(scrollYProgress, [0, 0.5], ['0vw', '0vw']);
@@ -68,7 +68,7 @@ const MiddleBall: React.FC<BallProps> = ({ percentage }) => {
       {/* <div className="invisible max-lg:visible bg-gradient-to-r from-bg-sec via-black to-black rounded-full h-[350px] w-[350px] -mt-50 -ml-20 animate-spin-xslow -z-10 flex"></div> */}
       {/* <div className="invisible max-lg:visible bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-bg-alt via-transparent to-transparent rounded-full h-[30vw] w-[10vw] mt-30 ml-20 animate-spin-xslow z-0 flex"></div> */}
       <motion.div
-        className="text-5xl p-20 h-[30vw] w-[30vw]"
+        className="text-5xl p-20 h-[30vw] w-[30vw] z-10"
         style={{
           position: 'absolute',
           left: '35%',

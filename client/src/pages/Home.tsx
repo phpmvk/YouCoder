@@ -45,8 +45,10 @@ const HomePage: React.FC = () => {
 <Heading />
 <TopBall />
 <MiddleBall />
+<BottomBall />
 
-<div className="bg-bg-muilightgrey h-[200vw] w-full rounded-tr-full rounded-tl-full"></div>
+<div className="bg-bg-pri h-[250vw] w-full rounded-tr-full rounded-tl-full"></div>
+<div className="bg-bg-muilightgrey h-[30vw] w-full rounded-tr-full rounded-tl-full"></div>
 
 
 
