@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getRecordingById, createNewRecording, findUser, fetchAllUserRecordings, updateRecording, deleteRecording } from "../models/recordings.model";
+import { getRecordingById, createNewRecording, findUser, fetchAllUserRecordings, updateRecording, deleteRecording, incrementViewCount } from "../models/recordings.model";
 import moment from 'moment'
 
 export async function getRecordingByIdController(req: Request, res: Response) {
@@ -21,9 +21,10 @@ export async function getRecordingByIdController(req: Request, res: Response) {
         return res.status(403).send({ message: 'Private' })
       }
     }
-    recording.time_since_creation = moment(recording.created_at).fromNow()
+    await incrementViewCount(recording.recording_id)
+    recording.view_count++;
+    recording.time_since_creation = moment(recording.created_at_datetime).fromNow()
     return res.status(200).send(recording)
-
   } catch (err) {
     if (err instanceof InvalidRecordingError) {
       res.status(400).send({ message: err.message})
@@ -42,7 +43,7 @@ export async function getAllUserRecordingsController(req: Request, res: Response
     }
     const allUserRecordings = await fetchAllUserRecordings(user.uid)
     allUserRecordings?.forEach(recording => {
-      recording.time_since_creation = moment(recording.created_at).fromNow()
+      recording.time_since_creation = moment(recording.created_at_datetime).fromNow()
     })
     res.status(200).send(allUserRecordings)
   } catch (err) {
@@ -55,7 +56,7 @@ export async function uploadRecordingController(req: Request, res: Response) {
   console.log('Recordings - POST received - uploadRecording')
   try {
     const newRecording = await createNewRecording(req.body);
-    newRecording.time_since_creation = moment(newRecording.created_at).fromNow()
+    newRecording.time_since_creation = moment(newRecording.created_at_datetime).fromNow()
     res.status(201).send(newRecording)
   } catch (err) {
     console.error(err);
@@ -105,7 +106,7 @@ export async function updateRecordingController(req: Request, res: Response) {
 
     const updatedRecording = await updateRecording(recordingId, dataToUpdate);
 
-    updatedRecording.time_since_creation = moment(updatedRecording.created_at).fromNow()
+    updatedRecording.time_since_creation = moment(updatedRecording.created_at_datetime).fromNow()
 
     res.status(200).send(updatedRecording)
   } catch (err) {

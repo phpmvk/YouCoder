@@ -20,6 +20,18 @@ export async function getRecordingById(recordingId: string): Promise<Recording |
   return recording
 }
 
+export async function incrementViewCount(recordingId: string): Promise<Recording | null> {
+  const updatedRecording = await prisma.recording.update({
+    where: {
+      recording_id: recordingId
+    },
+    data: {
+      view_count: { increment: 1}
+    }
+  });
+  return updatedRecording;
+}
+
 export async function findUser(user: FirebaseUser): Promise<Creator | null>{
   const storedUser = await prisma.creator.findUnique({
     where: {
@@ -42,7 +54,7 @@ export async function fetchAllUserRecordings(uid: string): Promise<Recording[] |
       }
     },
     orderBy: {
-      created_at: 'desc'
+      created_at_datetime: 'desc'
     }
   })
   return allUserRecordings
@@ -81,6 +93,10 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
     return createNewRecording(frontendRecording);
   };
 
+  const now = new Date();
+  const createdDateTime = now.toISOString();
+  const timezone = now.toUTCString()
+
   const newRecording = await prisma.recording.create({
     data: {
       creator: {
@@ -94,7 +110,8 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
       description: description?description:'',
       language: language,
       recording_link: recording_link,
-      created_at: new Date(Date.now()),
+      created_at_datetime: createdDateTime,
+      created_at_timezone: timezone,
       view_count: 0,
       like_count: 0,
       tags: [],
