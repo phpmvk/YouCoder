@@ -25,6 +25,7 @@
 
 import { motion, useTransform, useScroll } from 'framer-motion';
 import React from 'react';
+import TeachInteractively from './TeachInteractively'; // Import the component you want to render
 
 interface BallProps {}
 
@@ -35,21 +36,19 @@ const TopBall: React.FC<BallProps> = () => {
   const x = useTransform(scrollYProgress, [0, 0.4], ['-10vw', '0vw']);
   const y = useTransform(scrollYProgress, [0, 1], ['0vw', '30vw']); 
 
-
   return (
-    <motion.div
-      className="absolute 
-      
-     bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-bg-sec/75 via-bg-pri to-bg-pri/75
-      
-      rounded-full md:top-[20vw] top-[120vw] w-[40vw] h-[40vw]"
-      style={{
-        x,
-        y,
-        scale,
-        originX: 0,
-      }}
-    />
+    <>
+      <motion.div
+        className="absolute bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-bg-sec/75 via-bg-pri to-bg-pri/75 rounded-full md:top-[20vw] top-[10vh] w-[40vw] h-[40vw]"
+        style={{
+          x,
+          y,
+          scale,
+          originX: 0,
+        }}
+      />
+      <TeachInteractively /> 
+    </>
   );
 };
 

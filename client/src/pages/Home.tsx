@@ -44,7 +44,8 @@ const HomePage: React.FC = () => {
 
 <Heading />
 <TopBall />
-<div className="bg-bg-muilightgrey h-[400px] w-full"></div>
+
+<div className="bg-bg-muilightgrey h-[1200px] w-full"></div>
 
 
 
