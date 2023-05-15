@@ -431,7 +431,7 @@ export function RecorderEditor() {
               className='block mb-2 text-sm font-medium text-white mr-3'
               htmlFor='language'
             >
-              Choose a language to record in:
+              Choose a language
             </label>
             <select
               id='language'
