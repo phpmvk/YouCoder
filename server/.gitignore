@@ -24,7 +24,10 @@ dist-ssr
 *.sw?
 
 
+toml
 .env
 build
 firebase-project-credentials.json
-
+fly.toml
+.toml
+*.toml

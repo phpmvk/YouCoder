@@ -6,6 +6,13 @@ export type RecorderActions = {
   pauseLengthArray: number[];
   editorActions: EditorAction[];
   consoleLogOutputs: ConsoleLog[];
+  htmlOutputArray: htmlOutput[];
+};
+
+export type htmlOutput = {
+  output: string;
+  timestamp: number;
+  playbackTimestamp: number;
 };
 
 export type ChangeRange = {
@@ -27,6 +34,7 @@ export type RecorderAction = {
 
 export type Language =
   | 'javascript'
+  | 'typescript'
   | 'python'
   | 'java'
   | 'csharp'
@@ -46,4 +54,5 @@ export type EditorRecording = {
   thumbnail_link?: string;
   language: string;
   recording_link: string;
+  duration: number;
 };

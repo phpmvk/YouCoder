@@ -2,7 +2,6 @@ import Editor from '@monaco-editor/react';
 import React, { useState, useRef, useEffect } from 'react';
 import { editor } from 'monaco-editor';
 import * as monaco from 'monaco-editor';
-import RecordRTC from 'recordrtc';
 import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
 
@@ -27,6 +26,7 @@ import {
   EditorRecording,
   Language,
 } from '../types/Editor';
+import { MultiEditorRecorder } from './MultiEditorRecorder';
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
@@ -35,7 +35,8 @@ export function RecorderEditor() {
     null
   );
 
-  // const [audioRecorder, setAudioRecorder] = useState<RecordRTC | null>(null);
+  const [fontSize, setFontSize] = useState(14);
+
   const [recorderState, setRecorderState] = useState<
     'stopped' | 'recording' | 'paused'
   >('stopped');
@@ -44,7 +45,7 @@ export function RecorderEditor() {
   const [consoleOutput, setConsoleOutput] = useState('');
   const [isConsoleLoading, setIsConsoleLoading] = useState(false);
   const [saveModalVisible, setSaveModalVisible] = useState(false);
-  const [editorLanguage, setEditorLanguage] = useState('javascript');
+  const [selectedLanguage, setSelectedLanguage] = useState('javascript');
 
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [recordingIntervalId, setRecordingIntervalId] =
@@ -59,33 +60,53 @@ export function RecorderEditor() {
     pauseLengthArray: [],
     editorActions: [],
     consoleLogOutputs: [],
+    htmlOutputArray: [],
   });
 
-  const [isRecording, setIsRecording] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordedChunksRef = useRef<Blob[]>([]);
   const audioRecordingBlobRef = useRef<Blob | null>(null);
 
+  const analyserRef = useRef<AnalyserNode | null>(null);
+
   useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      mediaRecorderRef.current = new MediaRecorder(stream, {
-        mimeType: 'audio/webm;codecs=opus',
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        mediaRecorderRef.current = new MediaRecorder(stream, {
+          mimeType: 'audio/webm;codecs=opus',
+        });
+        //Analyser to check if there's audioinput in the first 10 seconds.
+        const audioContext = new window.AudioContext();
+        const analyser = audioContext.createAnalyser();
+        const source = audioContext.createMediaStreamSource(stream);
+        source.connect(analyser);
+        analyserRef.current = analyser;
+
+        mediaRecorderRef.current.ondataavailable = function (e) {
+          if (e.data.size > 0) {
+            recordedChunksRef.current.push(e.data);
+          }
+
+          if (mediaRecorderRef.current!.state === 'inactive') {
+            // Check if the recorder is stopped
+            audioRecordingBlobRef.current = new Blob(
+              recordedChunksRef.current,
+              {
+                type: 'audio/webm',
+              }
+            );
+            recordedChunksRef.current = [];
+          }
+        };
+      })
+      .catch((error) => {
+        console.error('Could not get user media', error);
+        // Display message to user
+        alert(
+          'Permission for microphone is required to record. Please enable access and refresh the page.'
+        );
       });
-
-      mediaRecorderRef.current.ondataavailable = function (e) {
-        if (e.data.size > 0) {
-          recordedChunksRef.current.push(e.data);
-        }
-
-        if (mediaRecorderRef.current!.state === 'inactive') {
-          // Check if the recorder is stopped
-          audioRecordingBlobRef.current = new Blob(recordedChunksRef.current, {
-            type: 'audio/webm',
-          });
-          recordedChunksRef.current = [];
-        }
-      };
-    });
   }, []);
 
   useEffect(() => {
@@ -95,6 +116,38 @@ export function RecorderEditor() {
       }
     };
   }, [recordingIntervalId]);
+
+  useEffect(() => {
+    const defaultFontSize = getDefaultFontSize();
+    setFontSize(defaultFontSize);
+
+    const handleResize = () => {
+      const newDefaultFontSize = getDefaultFontSize();
+      if (newDefaultFontSize !== defaultFontSize) {
+        setFontSize(newDefaultFontSize);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (editorInstance) {
+      editorInstance!.updateOptions({ fontSize });
+    }
+  }, [fontSize]);
+
+  const getDefaultFontSize = () => {
+    let div = document.createElement('div');
+    div.style.fontSize = 'initial';
+    div = document.body.appendChild(div);
+    const defaultFontSize = parseFloat(
+      window.getComputedStyle(div, null).fontSize
+    );
+    document.body.removeChild(div);
+    return defaultFontSize;
+  };
 
   const user = useAppSelector((state) => state.user);
 
@@ -111,6 +164,7 @@ export function RecorderEditor() {
   function handleLanguageChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const model = editorInstance!.getModel();
     monacoInstance!.editor.setModelLanguage(model!, event.target.value);
+    setSelectedLanguage(event.target.value);
   }
 
   function handleEditorDidMount(
@@ -143,11 +197,32 @@ export function RecorderEditor() {
 
   //recording handlers
   function handleStartRecording() {
+    if (!mediaRecorderRef.current) {
+      alert(
+        'Permission for microphone is required to record. Please enable access and refresh the page.'
+      );
+      return;
+    }
     //audio
     setRecorderLoading(true);
-    setIsRecording(true);
     mediaRecorderRef.current!.start();
     setRecorderLoading(false);
+
+    // Wait for 5 seconds and then check if the microphone is recording data
+    setTimeout(() => {
+      const bufferLength = analyserRef.current!.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      analyserRef.current!.getByteFrequencyData(dataArray);
+
+      const volume = dataArray.reduce((a, b) => a + b) / bufferLength;
+
+      // Check if the volume level is consistently at zero
+      if (volume === 0) {
+        alert(
+          'Microphone is not recording. Please check your microphone. You will not be able to save the recording.'
+        );
+      }
+    }, 10000);
     //actions
     recorderActions.current.editorActions = [];
     recorderActions.current.consoleLogOutputs = [];
@@ -163,13 +238,13 @@ export function RecorderEditor() {
     //language
     const model = editorInstance!.getModel();
     const language = model!.getLanguageId();
-    setEditorLanguage(formatLanguage(language));
+    setSelectedLanguage(formatLanguage(language));
 
     //timer
     setElapsedTime(0);
     const intervalId = setInterval(() => {
-      setElapsedTime((prevTime) => prevTime + 1000);
-    }, 1000);
+      setElapsedTime((prevTime) => prevTime + 10);
+    }, 10);
     setRecordingIntervalId(intervalId);
   }
 
@@ -191,22 +266,22 @@ export function RecorderEditor() {
     recorderActions.current.resumeArray.push({ timestamp });
     setRecorderState('recording');
     const intervalId = setInterval(() => {
-      setElapsedTime((prevTime) => prevTime + 1000);
-    }, 1000);
+      setElapsedTime((prevTime) => prevTime + 10);
+    }, 10);
     setRecordingIntervalId(intervalId);
     setPauseAction(false);
   }
   function handleEndRecording() {
-    // if (pauseAction) {
-    //   if (
-    //     !window.confirm(
-    //       'You have unsaved changes from when the recording was paused. These changes will be discarded. Are you sure you want to end the recording?'
-    //     )
-    //   ) {
-    //     //If they press cancel on the prompt, don't run the rest of the handleEndRecording Function
-    //     return;
-    //   }
-    // }
+    if (pauseAction) {
+      if (
+        !window.confirm(
+          'You have unsaved changes from when the recording was paused. These changes will be discarded. Are you sure you want to end the recording?'
+        )
+      ) {
+        //If they press cancel on the prompt, don't run the rest of the handleEndRecording Function
+        return;
+      }
+    }
     const timestamp = Date.now();
     recorderActions.current.end = timestamp;
 
@@ -265,15 +340,13 @@ export function RecorderEditor() {
 
     console.log(recorderState);
     if (recorderState === 'paused') {
-      mediaRecorderRef.current!.resume(); // Resume recording
+      mediaRecorderRef.current!.resume();
       mediaRecorderRef.current!.onresume = () => {
-        setIsRecording(false);
         setTimeout(() => {
           mediaRecorderRef.current!.stop();
         }, 1000);
       };
     } else {
-      setIsRecording(false);
       mediaRecorderRef.current!.stop();
     }
     setRecorderState('stopped');
@@ -308,6 +381,7 @@ export function RecorderEditor() {
         thumbnail_link,
         language,
         recording_link: ycrFileUrl,
+        duration: elapsedTime,
       };
 
       recordingApi.postRecording(Recording);
@@ -316,12 +390,12 @@ export function RecorderEditor() {
     }
   }
 
-  function handleDiscard() {
-    // Implement the logic to discard the recording
-  }
+  function handleDiscard() {}
 
   function handleJudge0() {
     setIsConsoleLoading(true);
+    handleConsoleLogOutput('...', Date.now());
+
     const model = editorInstance!.getModel();
     const language = model!.getLanguageId() as Language;
     const source_code = editorInstance!.getValue();
@@ -346,90 +420,103 @@ export function RecorderEditor() {
       });
   }
 
-  return (
+  return selectedLanguage === 'multi' ? (
+    <MultiEditorRecorder />
+  ) : (
     <>
       {recorderState === 'stopped' && (
         <>
-          <div className="flex items-center">
+          <div className='flex items-center mx-[15vw]'>
             <label
-              className="block mb-2 text-sm font-medium text-white mr-3"
-              htmlFor="language"
+              className='block mb-2 text-sm font-medium text-white mr-3'
+              htmlFor='language'
             >
-              Choose a language to record in:
+              Choose a language
             </label>
             <select
-              id="language"
+              id='language'
               onChange={handleLanguageChange}
-              className="border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3"
+              className='border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3'
             >
-              <option defaultValue="javascript">JavaScript</option>
-              <option value="typescript">TypeScript</option>
-              <option value="python">Python</option>
-              <option value="java">Java</option>
-              <option value="csharp">C#</option>
-              <option value="cpp">C++</option>
-              <option value="ruby">Ruby</option>
-              <option value="go">Go</option>
+              <option defaultValue='javascript'>JavaScript</option>
+              {/* <option value='multi'>HTML, CSS & JavaScript</option> */}
+              <option value='typescript'>TypeScript</option>
+              <option value='python'>Python</option>
+              <option value='java'>Java</option>
+              <option value='csharp'>C#</option>
+              <option value='cpp'>C++</option>
+              <option value='ruby'>Ruby</option>
+              <option value='go'>Go</option>
             </select>
           </div>
         </>
       )}
       {recorderState !== 'stopped' && (
-        <div className="border text-sm rounded-lg w-48 bg-gray-700 border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mb-3 flex items-center justify-center">
-          {editorLanguage}
+        <div className='border text-sm rounded-lg w-48 bg-gray-700 border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mb-3 flex items-center justify-center mx-[15vw]'>
+          {selectedLanguage}
         </div>
       )}
+      <div>
+        <div className='flex mx-[15vw] h-[500px] border border-white rounded-sm '>
+          <Allotment>
+            <Allotment.Pane minSize={500}>
+              <div className=' bg-bg-console'>
+                <Editor
+                  height='500px'
+                  defaultLanguage='javascript'
+                  defaultValue={''}
+                  theme='vs-dark'
+                  options={{
+                    wordWrap: 'on',
+                    fontSize: fontSize,
+                  }}
+                  onChange={handleEditorChange}
+                  onMount={handleEditorDidMount}
+                />
+              </div>
+            </Allotment.Pane>
+            <Allotment.Pane minSize={180} preferredSize={300}>
+              <div className='border w-full h-full border-[#1e1e1e] text-white relative'>
+                <button
+                  className='absolute bottom-2 right-2 border-white border rounded-sm p-2 bg-slate-500 hover:bg-slate-500/50 '
+                  onClick={handleJudge0}
+                  disabled={isConsoleLoading}
+                >
+                  {isConsoleLoading ? 'Loading...' : 'Compile & Execute'}
+                </button>
+                <button
+                  className='absolute top-2 right-2 border-white border text-sm rounded-md px-1 bg-slate-500 hover:bg-slate-500/50'
+                  onClick={() => setConsoleOutput('')}
+                >
+                  clear
+                </button>
 
-      <div className="flex w-full h-[500px] border border-white rounded-sm">
-        <Allotment>
-          <Allotment.Pane minSize={500}>
-            <Editor
-              height="500px"
-              defaultLanguage="javascript"
-              defaultValue=""
-              theme="vs-dark"
-              options={{
-                wordWrap: 'on',
-                fontSize: 16,
-              }}
-              onChange={handleEditorChange}
-              onMount={handleEditorDidMount}
-            />
-          </Allotment.Pane>
-          <Allotment.Pane minSize={180} preferredSize={300}>
-            <div className="border w-full h-full border-[#1e1e1e] text-white relative">
-              <button
-                className="absolute bottom-2 right-2 border-white border rounded-sm p-2 bg-slate-500 hover:bg-slate-500/50 "
-                onClick={handleJudge0}
-                disabled={isConsoleLoading}
-              >
-                {isConsoleLoading ? 'Loading...' : 'Compile & Execute'}
-              </button>
-              <button
-                className="absolute top-2 right-2 border-white border text-sm rounded-md px-1 bg-slate-500 hover:bg-slate-500/50"
-                onClick={() => setConsoleOutput('')}
-              >
-                clear
-              </button>
-
-              <Terminal output={consoleOutput} />
-            </div>
-          </Allotment.Pane>
-        </Allotment>
+                <Terminal output={consoleOutput} />
+              </div>
+            </Allotment.Pane>
+          </Allotment>
+        </div>
       </div>
-
       {recorderState === 'stopped' && (
-        <button className="p-2 text-white" onClick={handleStartRecording}>
+        <button
+          className='p-2 text-white mx-[15vw]'
+          onClick={handleStartRecording}
+        >
           Start Recording
         </button>
       )}
 
       {recorderState === 'recording' && (
         <>
-          <button className="p-2 text-white" onClick={handlePauseRecording}>
+
+          <button
+            className='p-2 text-white ml-[15vw]'
+            onClick={handlePauseRecording}
+          >
+
             Pause Recording
           </button>
-          <button className="p-2 text-white" onClick={handleEndRecording}>
+          <button className='p-2 text-white' onClick={handleEndRecording}>
             End Recording
           </button>
         </>
@@ -437,22 +524,32 @@ export function RecorderEditor() {
 
       {recorderState === 'paused' && (
         <>
-          <button className="p-2 text-white" onClick={handleResumeRecording}>
+          <button
+            className='p-2 text-white ml-[15vw]'
+            onClick={handleResumeRecording}
+          >
             Resume Recording
           </button>
-          <button className="p-2 text-white" onClick={handleEndRecording}>
+          <button className='p-2 text-white' onClick={handleEndRecording}>
             End Recording
           </button>
         </>
       )}
       {recorderLoading && (
-        <div className="p-2">
+        <div className='p-2'>
           <span>Loading...</span>
         </div>
       )}
 
       {recorderState !== 'stopped' && (
-        <p className="p-2 text-white">{formatTime(elapsedTime)}</p>
+        <p className='p-2 text-white mx-[15vw]'>
+          {formatTime(elapsedTime)}
+          {recorderState === 'recording' && (
+            <span className='text-red-700 animate-[blinking_1s_infinite] text-4xl'>
+              •
+            </span>
+          )}
+        </p>
       )}
 
       {saveModalVisible && (

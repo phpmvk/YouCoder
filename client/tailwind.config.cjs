@@ -4,7 +4,18 @@ module.exports = {
   theme: {
     extend: {
       screens: {
+        '700': '700px',
+        '740': '740px',
         '720': '720px',
+        '720': '720px',
+        '720': '720px',
+        '720': '720px',
+        '720': '720px',
+        '720': '720px',
+        '720': '720px',
+        '720': '720px',
+        '720': '720px',
+        '900': '900px',
         '1140': '1140px',
       },
       scale: {
@@ -22,7 +33,9 @@ module.exports = {
           alt: '#ccff00',
           blackTransparent: 'rgba(3, 0, 0, 0.5)',
           muigrey: '#2a2a2a',
+          muilightgrey: '#515151',
           gptdark: '#202123',
+          console: '#1e1e1e'
         },
         text: {
           // normal: 'slate-300',

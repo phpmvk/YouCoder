@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { auth } from '../config/firebase';
 
-const baseURL = 'http://localhost:3000';
-// const baseURL = 'https://1db1-45-133-139-102.ngrok-free.app';
+const baseURL = 'https://yc-serv.fly.dev/';
 
 export const protectedHttp = axios.create({
   baseURL,

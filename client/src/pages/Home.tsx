@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { getAuth, signOut } from 'firebase/auth';
-import { Parallax } from 'react-parallax';
+
 import TopNavBar from './../components/HomePageComponents/TopNavBar';
 import TeachInteractively from './../components/HomePageComponents/TeachInteractively';
 import Heading from './../components/HomePageComponents/Heading';
@@ -10,24 +10,38 @@ import MiddleBall from './../components/HomePageComponents/MiddleBall';
 import BottomBall from './../components/HomePageComponents/BottomBall';
 import Footer from './../components/HomePageComponents/Footer';
 import { useAppSelector } from '../redux/hooks';
+import GotoBottom from '../components/HomePageComponents/GotoBottom';
 
 const HomePage: React.FC = () => {
   const user = useAppSelector((state) => state.user);
 
   return (
-    <div className='text-center bg-bg-pri font-title'>
-      {/* <button onClick={() => signOut(auth)}>Sign out</button> */}
-      <div className='sticky top-0 z-50'>
-        <TopNavBar
-          showFeatures={true}
-          showExamples={true}
-          showSearch={false}
-          showCreateRecording={false}
-          showDashboard={false}
-        />
-      </div>
+    <div className='overflow-x-hidden w-screen text-center bg-bg-pri font-title'>
+      <TopNavBar
+        showFeatures={true}
+        showExamples={true}
+        showSearch={false}
+        showCreateRecording={false}
+        showDashboard={true}
+      />
 
-      <Parallax
+      <Heading />
+      <TopBall />
+      <MiddleBall />
+      <BottomBall />
+      <ExampleFrame/>
+
+      <div className="bg-bg-pri h-[280vw] w-full rounded-tr-full rounded-tl-full"></div>
+
+      <GotoBottom/>
+    </div>
+  );
+};
+
+export default HomePage;
+
+
+ {/* <Parallax
         strength={600}
         renderLayer={(percentage) => (
           <>
@@ -37,12 +51,6 @@ const HomePage: React.FC = () => {
             <TeachInteractively />
             <MiddleBall percentage={percentage} />
             <ExampleFrame />
-            <Footer />
           </>
         )}
-      />
-    </div>
-  );
-};
-
-export default HomePage;
+      /> */}

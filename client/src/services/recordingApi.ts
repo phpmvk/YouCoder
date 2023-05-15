@@ -56,12 +56,12 @@ class RecordingApiService {
   patchRecording(
     id: string,
     data: updateRecording
-  ): Promise<AxiosResponse<Recording[]>> {
+  ): Promise<AxiosResponse<Recording>> {
     console.log('id', id);
     console.log('data', data);
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await protectedHttp.patch<Recording[]>(
+        const response = await protectedHttp.patch<Recording>(
           `/recording/update/${id}`,
           data
         );
@@ -79,6 +79,21 @@ class RecordingApiService {
       try {
         const response = await protectedHttp.delete<Recording[]>(
           `/recording/delete/${id}`
+        );
+        resolve(response);
+      } catch (e) {
+        const error = e as AxiosError;
+        console.log(error);
+        reject(error);
+      }
+    });
+  }
+
+  getAllUserRecordings(): Promise<AxiosResponse<Recording[]>> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await protectedHttp.get<Recording[]>(
+          `/recording/user/get`
         );
         resolve(response);
       } catch (e) {

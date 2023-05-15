@@ -17,7 +17,6 @@ export async function saveYCRFile(
   audioBlob: Blob,
   userId: string
 ) {
-  console.log(audioBlob);
   const zip = new JSZip();
   zip.file('recorderActions.json', jsonBlob);
   zip.file('recordedAudio.webm', audioBlob);
@@ -56,7 +55,6 @@ export async function loadYCRFile(
                 string,
                 Blob
               ];
-              console.log('audioblob in loadYCR', recordedAudioBlob);
               const recorderActions = JSON.parse(recorderActionsJSON);
               const recordedAudioURL = URL.createObjectURL(recordedAudioBlob);
               resolve({ recorderActions, recordedAudioURL });
