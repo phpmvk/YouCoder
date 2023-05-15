@@ -9,7 +9,7 @@ import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@emotion/react';
 import PublishModal from './PublishModal';
 import MoreOptionsToggle from './MoreOptionsToggle';
-import Modal from '../Modal';
+import Modal from '../ModalOld';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { editUser } from '../../redux/userSlice';
 import { BsCheckLg } from 'react-icons/bs';
