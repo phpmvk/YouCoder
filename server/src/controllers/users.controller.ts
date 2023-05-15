@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createCreatorAccount, deleteCreator, existingCreatorLogin } from '../models/users.model';
+import { createCreatorAccount, deleteCreator, existingCreatorLogin, incrementLoginCount, updateField } from '../models/users.model';
 
 export async function creatorLoginController(req: Request, res: Response) {
   console.log('Users - POST received - creatorLogin');
@@ -8,6 +8,11 @@ export async function creatorLoginController(req: Request, res: Response) {
 
     const user = await existingCreatorLogin(userData)
     if (user) {
+      await incrementLoginCount(user.uid);
+      const dataToUpdate = {
+        last_login_datetime: new Date(Date.now())
+      }
+      await updateField(user.uid, dataToUpdate)
       return res.status(200).send({ user: user });
     }
 
@@ -17,11 +22,6 @@ export async function creatorLoginController(req: Request, res: Response) {
     console.error(err);
     res.status(500).send({ error: 'Internal server error' });
   }
-}
-
-//this should be discarded if we dont implement this feature in the deployed version
-export function updateCreatorController(req: Request, res: Response) {
-  console.log('Users - PATCH received - updateCreator');
 }
 
 export async function deleteCreatorController(req: Request, res: Response) {
