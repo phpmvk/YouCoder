@@ -5,7 +5,6 @@ import LoginPage from './pages/Login';
 import { initializeApp } from 'firebase/app';
 import { config } from './config/config';
 import AuthRoute from './components/AuthRoute';
-import DashboardPage from './pages/Dashboard';
 import CreateRecordingPage from './pages/CreateRecording';
 import DocsPage from './pages/Docs';
 import PlayerPage from './pages/Player';

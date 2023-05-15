@@ -2,6 +2,10 @@ import { MouseEvent, useEffect, useRef, useState } from 'react';
 import { Recording, updateRecording } from '../../types/Creator';
 import Modal from '../Modal';
 import EditDetailsform from './EditDetailsForm';
+import http from '../../services/recordingApi';
+import { useAppDispatch } from '../../redux/hooks';
+import { updateUserRecording } from '../../redux/userSlice';
+import { setLoadingSpinner } from '../../redux/spinnerSlice';
 
 interface DotsMenuProps {
   activeMenu: string | null;
@@ -24,6 +28,7 @@ const DotsMenu = ({
     thumbnail_link: recording.thumbnail_link,
     published: recording.published,
   });
+  const dispatch = useAppDispatch();
 
   const closeOpenMenus = (e: Event) => {
     if (
@@ -48,8 +53,21 @@ const DotsMenu = ({
   };
 
   const handleSave = (updatedDetails: updateRecording) => {
-    setDetails(updatedDetails);
-    setShowModal(false);
+    console.log('updatedDetails: ', updatedDetails);
+
+    http
+      .patchRecording(recording.recording_id, updatedDetails)
+      .then((res) => {
+        console.log('res.data: ', res);
+        dispatch(updateUserRecording({ recording: res.data }));
+        setShowModal(false);
+        dispatch(setLoadingSpinner(false));
+      })
+      .catch((err) => {
+        console.log('err: ', err);
+      });
+
+    // setDetails(updatedDetails);
   };
 
   return (
@@ -60,6 +78,7 @@ const DotsMenu = ({
       >
         <EditDetailsform
           detailsToEdit={details}
+          setDetailsToEdit={setDetails}
           save={handleSave}
         />
       </Modal>

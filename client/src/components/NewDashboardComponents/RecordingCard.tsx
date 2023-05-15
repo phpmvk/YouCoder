@@ -29,12 +29,11 @@ const RecordingCard = ({
             {recording.thumbnail_link ? (
               <img
                 className='absolute object-cover w-full h-full rounded-t-md'
-                // src={recording.thumbnail_link}
-                src='https://images.unsplash.com/photo-1684069158042-de27cd720172?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3327&q=80'
+                src={recording.thumbnail_link}
                 alt={`cover image for ${recording.title}`}
               />
             ) : (
-              <span className='z-20 text-black'>Youcoder Recording</span>
+              <span className='z-10 text-black'>Youcoder Recording</span>
             )}
             <BiPlayCircle className='absolute left-auto right-auto text-7xl text-bg-sec/50 z-10' />
             <div className='absolute text-sm bottom-2 w-full flex justify-between px-2'>

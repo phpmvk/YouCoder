@@ -6,7 +6,7 @@ import { setLoadingPage } from '../redux/spinnerSlice';
 import TopNavBar from '../components/HomePageComponents/TopNavBar';
 import CreateRecordingButton from '../components/DashboardComponents/CreateRecordingButton';
 import RecordingsList from '../components/NewDashboardComponents/RecordingsList';
-import NoRecordings from '../components/DashboardComponents/NoRecordings';
+import NoRecordings from '../components/NewDashboardComponents/NoRecordings';
 
 interface NewDashboardPageProps {}
 

@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { Creator } from '../types/Creator';
+import { Creator, Recording } from '../types/Creator';
 import { PURGE } from 'redux-persist';
 
 type UserState = Creator & { shortName: string };
@@ -29,6 +29,19 @@ export const userSlice = createSlice({
         ...action.payload,
       };
     },
+    updateUserRecording: (
+      state,
+      action: PayloadAction<{ recording: Recording }>
+    ) => {
+      const updatedRecording = action.payload.recording;
+      const index = state.recordings!.findIndex(
+        (recording) => recording.recording_id === updatedRecording.recording_id
+      );
+
+      if (index !== -1) {
+        state.recordings![index] = updatedRecording;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(PURGE, (state) => {
@@ -37,6 +50,7 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUser, removeUser, editUser } = userSlice.actions;
+export const { setUser, removeUser, editUser, updateUserRecording } =
+  userSlice.actions;
 
 export default userSlice.reducer;
