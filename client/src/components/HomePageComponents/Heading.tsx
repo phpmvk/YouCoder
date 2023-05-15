@@ -75,16 +75,16 @@ const Heading: React.FC<HeadingProps> = () => {
   const [showCursor, setShowCursor] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = scrollYProgress.onChange(v => setShowCursor(v < 0.1));
+    const unsubscribe = scrollYProgress.onChange(v => setShowCursor(v < 0.05));
     return unsubscribe;
   }, [scrollYProgress]);
 
   const text: string[] = ["Y", "o", "u", " ", "{", "C", "o", "d", "e", "r", "}", "·"];
 
   return (
-    <div className="h-[50vh] whitespace-nowrap">
+    <div className="h-[50vw] mt-[40vh] whitespace-nowrap">
       <div
-        className="text-center whitespace-no-wrap font-semibold mt-[35vh] z-1  lg:text-8xl md:text-7xl text-6xl"
+        className="text-center whitespace-no-wrap font-semibold  z-20  lg:text-8xl md:text-7xl text-6xl"
       >
         {text.map((char, index) => (
           <React.Fragment key={index}>

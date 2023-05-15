@@ -69,24 +69,25 @@
 
 
 
-import React, { useEffect, useState } from 'react';
-import { motion, useTransform, useViewportScroll } from 'framer-motion';
+import React from 'react';
+import { motion, useTransform, useScroll } from 'framer-motion';
 
 const AnimatedLetter: React.FC<{ index: number; children: React.ReactNode }> = ({ index, children }) => {
-  const { scrollYProgress } = useViewportScroll();
-  const color = useTransform(scrollYProgress, (value) => (value > index * 0.015 ? '#ccff00' : 'white'));
+  const { scrollYProgress } = useScroll();
+  const color = useTransform(scrollYProgress, (value) => (value > index * 0.05 ? '#ccff00' : 'white'));
 
   return <motion.span style={{ color, fontWeight: 600 }}>{children}</motion.span>;
 };
 
 const TeachInteractively = () => {
-  const { scrollYProgress } = useViewportScroll();
-  const x = useTransform(scrollYProgress, [0, 0.4], ['-50vw', '100vw']);
+  const { scrollYProgress } = useScroll();
+  const x = useTransform(scrollYProgress, [0, 0.6], ['100vw', '-100vw']);
+  const y = useTransform(scrollYProgress, [0, 0.3], ['0', '10vw']);
 
   const activeText = 'actively.';
 
   return (
-    <motion.div className="whitespace-nowrap z-50 xl:text-[5rem] lg:text-6xl md:text-6xl md:visible sm:visible text-4xl" style={{ x }}>
+    <motion.div className="whitespace-nowrap z-50 xl:text-[5rem] lg:text-6xl md:text-6xl md:visible sm:visible text-4xl" style={{ x,y }}>
       <div className='text-white'>
         <span>Teach Inter</span>
         {Array.from(activeText).map((letter, i) => (

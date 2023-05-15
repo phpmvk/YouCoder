@@ -5,7 +5,7 @@ import TopNavBar from './../components/HomePageComponents/TopNavBar';
 import TeachInteractively from './../components/HomePageComponents/TeachInteractively';
 import Heading from './../components/HomePageComponents/Heading';
 import ExampleFrame from './../components/HomePageComponents/ExampleFrame';
-import TopBall from './../components/HomePageComponents/TopBall.tsx';
+import TopBall from './../components/HomePageComponents/TopBall';
 import MiddleBall from './../components/HomePageComponents/MiddleBall';
 import BottomBall from './../components/HomePageComponents/BottomBall';
 import Footer from './../components/HomePageComponents/Footer';
@@ -44,8 +44,9 @@ const HomePage: React.FC = () => {
 
 <Heading />
 <TopBall />
+<MiddleBall />
 
-<div className="bg-bg-muilightgrey h-[1200px] w-full"></div>
+<div className="bg-bg-muilightgrey h-[200vw] w-full rounded-tr-full rounded-tl-full"></div>
 
 
 
