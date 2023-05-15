@@ -508,10 +508,12 @@ export function RecorderEditor() {
 
       {recorderState === 'recording' && (
         <>
+
           <button
             className='p-2 text-white ml-[15vw]'
             onClick={handlePauseRecording}
           >
+
             Pause Recording
           </button>
           <button className='p-2 text-white' onClick={handleEndRecording}>
