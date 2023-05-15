@@ -120,7 +120,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                   <div className="bg-bg-pri flex flex-row">
                     <div className="flex flex-row bg-bg-pri w-full h-[250px]">
                       {/* ---------Left Card */}
-                      <div className=" mx-2 min-w-[200px] max-w-[20vw] px-10 h-56 bg-white border border-gray-200 rounded-xl shadow dark:bg-bg-pri dark:border-gray-700">
+                      <div className=" mx-2 min-w-[200px] max-w-[20vw] px-10 h-56  border border-gray-700 rounded-xl shadow bg-bg-pri">
                         {/* <div className="flex justify-end px-4 pt-4"></div> */}
                         <div className="flex flex-col items-center">
                           <img
@@ -128,7 +128,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                             src="./../../public/avatar.webp"
                             alt=""
                           />
-                          <h5 className=" text-xl font-medium text-gray-900 dark:text-white">
+                          <h5 className=" text-xl font-medium text-white">
                             {recording.creator}
                           </h5>
                           <Chip
@@ -139,7 +139,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                             <Button
                               variant="outlined"
                               size="small"
-                              className="!rounded-xl !bg-bg-muigrey !border-gray-700 !min-w-[120px] !text-gray-100 whitespace-nowrap h-1/2 align-middle focus:ring-1 focus:ring-bg-alt "
+                              className="!rounded-xl !bg-bg-muigrey !border-gray-700 !min-w-[120px] !text-gray-100 whitespace-nowrap h-1/2 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700"
                             >
                               <AddIcon />
                               Subscribe
@@ -149,7 +149,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                       </div>
                       {/* Middle Card -----------------------------------   */}
 
-                      <div className="flex-col mx-2 w-full py-4 h-56 text-left bg-white border border-gray-200 rounded-xl shadow dark:bg-bg-pri dark:border-gray-700 overflow-hidden text-white">
+                      <div className="flex-col mx-2 w-full py-4 h-56 text-left  border rounded-xl shadow bg-bg-pri border-gray-700 overflow-hidden text-white">
   <div className="flex justify-end px-4 pt-4 h-28 md:h-full overflow-y-scroll">
     <p className="overflow-ellipsis ">
       {recording.description}
@@ -164,7 +164,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
       <Button
         variant="outlined"
         size="small"
-        className="!rounded-xl !bg-bg-muigrey !border-gray-700  !text-gray-100 whitespace-nowrap h-1/2 align-middle focus:ring-1 focus:ring-bg-alt "
+        className="!rounded-xl !bg-bg-muigrey !border-gray-700 !min-w-[120px] !text-gray-100 whitespace-nowrap h-1/2 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700"
       >
         <ReplyIcon className="transform scale-x-[-1]" />
         share
@@ -173,7 +173,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
       <Button
         variant="outlined"
         size="small"
-        className="!rounded-xl !bg-bg-muigrey !border-gray-700  !text-gray-100 whitespace-nowrap h-1/2 align-middle focus:ring-1 focus:ring-bg-alt "
+        className="!rounded-xl !bg-bg-muigrey !border-gray-700 !min-w-[120px] !text-gray-100 whitespace-nowrap h-1/2 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700"
       >
         <AddIcon />
         add to list
@@ -185,7 +185,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
 
                       {/* ------Right Side Card */}
 
-                      <div className="hidden md:block mx-2 min-w-[150px] lg:min-w-[200px] w-[20vw] max-w-[20vw] md:px-10 sm:px-auto h-56  bg-white border border-gray-200 rounded-xl shadow dark:bg-bg-pri dark:border-gray-700">
+                      <div className="hidden md:block mx-2 min-w-[150px] lg:min-w-[200px] w-[20vw] max-w-[20vw] md:px-10 sm:px-auto h-56 border rounded-xl shadow bg-bg-pri border-gray-700">
   <div className="flex py-5 sm:px-0 justify-center items-center h-full">
     <Stack
       className="mx-auto max-w-sm"
@@ -195,7 +195,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
       <Button
         variant="outlined"
         size="small"
-        className="!rounded-xl !min-w-[120px] mx-auto px-6 !bg-bg-muigrey !border-gray-700  !text-gray-100 whitespace-nowrap h-1/2 align-middle focus:ring-1 focus:ring-bg-alt "
+        className="!rounded-xl !bg-bg-muigrey !border-gray-700 !min-w-[120px] !text-gray-100 whitespace-nowrap h-1/2 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700"
       >
         <ReplyIcon className="transform scale-x-[-1]" />
         share
@@ -204,7 +204,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
       <Button
         variant="outlined"
         size="small"
-        className="!rounded-xl !min-w-[120px] mx-auto !bg-bg-muigrey !border-gray-700  !text-gray-100 whitespace-nowrap h-1/2 align-middle focus:ring-1 focus:ring-bg-alt "
+        className="!rounded-xl !bg-bg-muigrey !border-gray-700 !min-w-[120px] !text-gray-100 whitespace-nowrap h-1/2 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700"
       >
         <AddIcon />
         add to list
@@ -226,7 +226,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                     </div>
                   </div>
                   {/* code block------ */}
-                  <div className="flex max-w-full mx-2 px-2 mb-6 h-full text-left bg-white border border-gray-200 rounded-xl shadow dark:bg-bg-pri dark:border-gray-700 overflow-hidden overflow-y-scroll overflow-x-scroll text-white">
+                  <div className="flex max-w-full mx-2 px-2 mb-6 h-full text-left  border rounded-xl shadow bg-bg-pri border-gray-700 overflow-hidden overflow-y-scroll overflow-x-scroll text-white">
                     <div className="flex justify-end mx-2 pt-4">
                       <p className="overflow-ellipsis ">
                         <div>
@@ -237,11 +237,6 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                       </p>
                     </div>
                   </div>
-                 {/* <div className="w-full h-[150px] bg-bg-pri">
-                     <div className="w-full bg-bg-sec text-gray-200 text-l text-left p-4 pl-10  pb-10 mt-4 rounded-b-xl">
-                      {recording.description}
-                    </div> 
-                  </div>*/}
                 </div>
 
                 <div className="flex md:flex-row"></div>
