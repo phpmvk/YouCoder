@@ -112,7 +112,6 @@ export function RecorderEditor() {
     const defaultFontSize = getDefaultFontSize();
     setFontSize(defaultFontSize);
 
-    // Listen to resize event
     const handleResize = () => {
       const newDefaultFontSize = getDefaultFontSize();
       if (newDefaultFontSize !== defaultFontSize) {
@@ -315,7 +314,7 @@ export function RecorderEditor() {
 
     console.log(recorderState);
     if (recorderState === 'paused') {
-      mediaRecorderRef.current!.resume(); // Resume recording
+      mediaRecorderRef.current!.resume();
       mediaRecorderRef.current!.onresume = () => {
         setTimeout(() => {
           mediaRecorderRef.current!.stop();
