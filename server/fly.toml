@@ -1,0 +1,22 @@
+# fly.toml app configuration file generated for serv-yc on 2023-05-15T19:58:27+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "serv-yc"
+primary_region = "mad"
+
+[env]
+  DATABASE_URL = "postgresql://postgres:@U5541r$8smH@EJoZbYP@db.bmqcixhowkprmodzramx.supabase.co:5432/postgres"
+  FIREBASE_CLIENT_EMAIL = "firebase-adminsdk-r3mu0@youcoder-bcn.iam.gserviceaccount.com"
+  FIREBASE_PRIVATE_KEY = "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCtYZqAS6Epm9Gb\nNLHFSfWkg40K0hLNxcCw+CMVjdKwk5ThdzccyqBYLVk9bFr8L5PhiY/I79Q6/iEc\n2XeA1AyKCHfJJAdoLFUWpuzDppXzW9bT+2QqTQcozyIlO3B172fr08RoIo0S3ZKz\nG+dyU/ImU6dVJLyNkc6jFSMkGJIKSDOexrkIW5zcDlkrl9h04Rbh+gbvxkg2zcl3\nzwt5Y/Y53hzHAeyhLVr+a43BuDNCDlt8AiIGIarFkZbjEqwNq56Cc4hGyDGLTSb4\nZtHRpByLuobIkVCJ99w8vBPrQjZCjZJZHRcOtUmF1e078AVB/iy6f3tO2RkNZ3yU\nqrikMBCNAgMBAAECggEACtofF4SkU7xjBDnqHpUggOmS/GhlsOd9xhXh7ElyNIco\nPGx/0JeGLb645TVRBJPdx7Iag9MvD3o0jF+4MSIUntck2DwfEpAjy0UrcJuOqyrG\naYJEpLkph45fbsEnqtoPQR2CH5p6BgJEWl2WwPssHuYBhTzFaH8F1gNOrcWz7ly4\nJoWr42OJ8SsLnI0HeHFpqj3sqzc0VnRlcbjobcExI4k2I2M5FWWO0GdrYtD60i0K\nbzLcgWQ7GHtRx5iM4ejlBEQExmVA1swadq75phIr1nMr3boxCmW1Q1udBXx8ZMXj\nCr0BY2mCFTmV0uXIXE5qQzuWP3bPq9GrXVHf+dMKqQKBgQDdYby6cQ9iqb0dq4SL\nFhi/U/puUuDwly6qktk536y5mWaRMygYseBhzsUsx6WyjRKLMJBvlSonLxfYzANp\nL6SCBKL3wQEGJgIT6SbJJrXuLgb1Vqii3frgmNF7KDRf/z/6vgnZ+t7qOQZ7hGkJ\n/KvMU+rzrsUlh9sweM27s7msfwKBgQDIflRcI0DpJWZHIixDqt2t0yw5TmTO+FId\nY6CvHAxuYilOIU8AdLCwa4wuKVrrWn/0+duPeghVfFzkuezoGLSslTc5X9TyedRL\nbYWpPfnrbN28k1s2b0fFB1dJ7wU7aTrhlVSihxzM9/STA1Dbb9YF7iQaGFXon40Y\n3z/jHvSs8wKBgBeSSogHdb3pmMtJ8ejlR2lHxchtZqn3Tu62iA6TdE6muLcJHWHT\nvrJrU6866reiMbFEUHyxAzX826snvc07V2bIm5mJoVRIQ7xe/NQ6HPDpUbBZs8bz\nn7y+SL+2Pi1ifityhJYDEi0aOUh5hr2be6db4A5mM3OVjY8RrcYoksJ9AoGACr56\nVtWszNGsQXObW6T0bDQ80nVZAZ5dCCYmnjuqjt/DxuQSD7wxG8Mnp/GfZa1b3gzl\nrzKi77HSaI9uGqH4TKdSZki0aKoOrlwYJZGkqvESkOB0qt4bwns6OkQMy7o/5YbT\nGkKTUIiZGqe61YeQuJCibqOPNwAV15dfHRSzl/ECgYA66dD2XojSso4Z8k8I0po3\n+t0kUqGyL9tryv3EPiAmz9DvEZybdSwTVLJZCJQ0mkt+fBuQDORABAnIRClv4YVv\nxCZirZgqHuRb9PIFiHn8Snnr9+6JiMp9L0pfC5ELuZmEbzflA57we/rxQLP0udgQ\n6FmiGjXmHDAM4XFOl8czCg==\n-----END PRIVATE KEY-----\n"
+  FIREBASE_PROJECT_ID = "youcoder-bcn"
+  PORT = "3000"
+  RAPIDAPI_HOST = "16.16.196.196:2358"
+  RAPIDAPI_KEY = "ea6993d5ffmsha94f56212fd1a68p142913jsndf0b14b800c7"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true

@@ -61,4 +61,5 @@ model Analytics {
   method       String
   timestamp    DateTime
   responseTime Float?
+  status_code  Int
 }
