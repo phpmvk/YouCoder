@@ -82,7 +82,7 @@ const Heading: React.FC<HeadingProps> = () => {
   const text: string[] = ["Y", "o", "u", " ", "{", "C", "o", "d", "e", "r", "}", "·"];
 
   return (
-    <div className="h-[50vw] mt-[40vh] whitespace-nowrap">
+    <div className="h-[50vw] mt-[20vh] sm:mt-[40vh] whitespace-nowrap">
       <div
         className="text-center whitespace-no-wrap font-semibold  z-20  lg:text-8xl md:text-7xl text-6xl"
       >

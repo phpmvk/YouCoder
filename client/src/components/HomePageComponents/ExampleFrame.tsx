@@ -82,26 +82,17 @@ const ExampleFrame: React.FC = () => {
   return (
     <>
       <motion.div
-        className={`rectangle`}
+        className=" top-[350vw] sm:top-[330vw] 700:top-[320vw] md:top-[340vw] 900:top-[320vw] lg:top-[330vw] w-[25vw] h-[12.5vw]"
         style={{
           position: 'absolute',
           left: '38%',
-          top: '580vh',
           scale: scale,
-          width: `${width}px`,
-          height: `${height}px`,
           background: 'white',
           border: '0.7px solid white',
           zIndex: 1000,
         }}
       >
-        <iframe 
-          src='http://localhost:5173/player/a8e50f974704eeed54c0c7d3981f8a0a4143?embed=true' 
-          width='100%' 
-          height='100%' 
-          allowFullScreen 
-          title='My Recording'
-        />
+       
       </motion.div>
     </>
   );

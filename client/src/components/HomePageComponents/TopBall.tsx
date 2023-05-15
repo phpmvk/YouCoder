@@ -39,7 +39,7 @@ const TopBall: React.FC<BallProps> = () => {
   return (
     <>
       <motion.div
-        className="absolute bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-cyan-800 via-purple-800 to-cyan-100 rounded-full md:top-[30vw] top-[55vh] w-[60vw] h-[60vw] opacity-100"
+        className="absolute bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-cyan-800 via-purple-800 to-cyan-100 rounded-full  top-[55vh] w-[60vw] h-[60vw] opacity-100"
         style={{
           x,
           y,

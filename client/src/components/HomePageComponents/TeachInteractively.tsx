@@ -88,7 +88,7 @@ const TeachInteractively = () => {
   const activeText = 'actively.';
 
   return (
-    <motion.div className="whitespace-nowrap z-50 xl:text-[5rem] lg:text-6xl md:text-6xl md:visible sm:visible text-4xl" style={{ x,y }}>
+    <motion.div className="whitespace-nowrap z-50 xl:text-[5rem] lg:text-6xl md:text-6xl md:visible sm:visible text-4xl  mt-20 sm:mt-0" style={{ x,y }}>
       <div className='text-white'>
         <span>Teach Inter</span>
         {Array.from(activeText).map((letter, i) => (
