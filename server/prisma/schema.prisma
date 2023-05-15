@@ -22,22 +22,23 @@ model Creator {
 }
 
 model Recording {
-  recording_id   String   @id @default(uuid())
-  creator        Creator  @relation(fields: [creator_uid], references: [uid], onDelete: Cascade, onUpdate: Cascade)
-  creator_uid    String //primary key in Creator model
-  thumbnail_link String?
-  title          String
-  description    String?
-  published      Boolean  @default(false)
-  language       String
-  recording_link String
-  created_at     String
-  full_link      String?
-  iframe_link    String?
-  view_count     Int
-  like_count     Int
-  duration       Int
-  tags           String[] //remove '?' when frontend is ready
+  recording_id        String   @id @default(uuid())
+  creator             Creator  @relation(fields: [creator_uid], references: [uid], onDelete: Cascade, onUpdate: Cascade)
+  creator_uid         String //primary key in Creator model
+  thumbnail_link      String?
+  title               String
+  description         String?
+  published           Boolean  @default(false)
+  language            String
+  recording_link      String
+  created_at          DateTime
+  time_since_creation String?
+  full_link           String?
+  iframe_link         String?
+  view_count          Int
+  like_count          Int
+  duration            Int
+  tags                String[]
 }
 
 model User {

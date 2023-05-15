@@ -87,7 +87,7 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
       description: description?description:'',
       language: language,
       recording_link: recording_link,
-      created_at: (new Date(Date.now())).toString(),
+      created_at: new Date(Date.now()),
       view_count: 0,
       like_count: 0,
       tags: [],
