@@ -1,36 +1,68 @@
-import { useEffect, useRef } from 'react';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
+import { Recording, updateRecording } from '../../types/Creator';
+import Modal from '../Modal';
+import EditDetailsform from './EditDetailsForm';
 
 interface DotsMenuProps {
   activeMenu: string | null;
   setActiveMenu: React.Dispatch<React.SetStateAction<string | null>>;
   id: string;
+  recording: Recording;
 }
 
-const DotsMenu = ({ activeMenu, setActiveMenu, id }: DotsMenuProps) => {
+const DotsMenu = ({
+  activeMenu,
+  setActiveMenu,
+  id,
+  recording,
+}: DotsMenuProps) => {
   const optionsMenu = useRef<HTMLDivElement | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [details, setDetails] = useState<updateRecording>({
+    title: recording.title,
+    description: recording.description,
+    thumbnail_link: recording.thumbnail_link,
+    published: recording.published,
+  });
 
-  const closeOpenMenus = (e: MouseEvent) => {
+  const closeOpenMenus = (e: Event) => {
     if (
       optionsMenu.current &&
-      !optionsMenu.current.contains(e.target as Node)
+      !optionsMenu.current.contains(e.target as Node) &&
+      e.target !== document.getElementById(`dropdownMenuIconButton${id}`)
     ) {
       setActiveMenu(null);
     }
   };
 
   useEffect(() => {
-    document.addEventListener('mousedown', closeOpenMenus);
+    document.addEventListener('click', closeOpenMenus);
     return () => {
-      document.removeEventListener('mousedown', closeOpenMenus);
+      document.removeEventListener('click', closeOpenMenus);
     };
   }, []);
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setActiveMenu(activeMenu === id ? null : id);
+  };
+
+  const handleSave = (updatedDetails: updateRecording) => {
+    setDetails(updatedDetails);
+    setShowModal(false);
   };
 
   return (
     <>
+      <Modal
+        show={showModal}
+        closeModal={() => setShowModal(false)}
+      >
+        <EditDetailsform
+          initialDetails={details}
+          save={handleSave}
+        />
+      </Modal>
       <button
         id={`dropdownMenuIconButton${id}`}
         data-dropdown-toggle='dropdownDots'
@@ -62,12 +94,15 @@ const DotsMenu = ({ activeMenu, setActiveMenu, id }: DotsMenuProps) => {
           aria-labelledby={`dropdownMenuIconButton${id}`}
         >
           <li>
-            <a
-              href='#'
-              className='block px-4 py-2 hover:bg-bg-muigrey '
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowModal(true);
+              }}
+              className='block px-4 py-2 hover:bg-bg-muigrey w-full text-left'
             >
               Edit Details
-            </a>
+            </button>
           </li>
           <li>
             <a

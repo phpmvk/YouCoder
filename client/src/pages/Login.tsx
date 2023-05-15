@@ -76,7 +76,6 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
         navigate('/dashboard');
       })
       .catch((error) => {
-        //--------------------------------------[here]
         console.log(error);
         setShowError(true);
       })
@@ -101,7 +100,6 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
           </div>
           <div className='flex flex-col justify-evenly h-1/3 min-w-[200px] '>
             <button
-              // variant="outlined"
               className='bg-bg-pri z-20 flex items-center w-full h-1/8 t-[10px] border-solid !border-2 border-bg-sec rounded-lg !text-white lg:text-xl    p-3 hover:border-bg-alt whitespace-nowrap'
               onClick={() => signInWithGoogle()}
               disabled={authing}
@@ -112,7 +110,6 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
               </span>
             </button>
             <button
-              // variant="outlined"
               className='bg-bg-pri z-20 flex items-center w-full h-1/8 t-[10px] border-solid !border-2 border-bg-sec rounded-lg !text-white lg:text-xl p-3 hover:border-bg-alt whitespace-nowrap'
               onClick={() => signInWithGithub()}
               disabled={authing}
@@ -122,12 +119,8 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
                 <BsGithub />
               </span>
             </button>
-            {/* <div className="scale-[20%] md:hidden bottom-0 -z-30">
-              <LoginArt />
-            </div> */}
           </div>
         </div>
-
         <div className='hidden sm:block w-2/3 min-w-[400px] -ml-12'>
           <LoginArt />
         </div>

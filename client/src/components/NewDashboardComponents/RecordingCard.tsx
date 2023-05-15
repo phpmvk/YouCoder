@@ -53,12 +53,13 @@ const RecordingCard = ({
                   activeMenu={activeMenu}
                   setActiveMenu={setActiveMenu}
                   id={recording.recording_id}
+                  recording={recording}
                 />
               </div>
             )}
             <a
               href={recording.full_link}
-              className='w-11/12 line-clamp-2 font-semibold text-lg decoration-transparent'
+              className='max-w-11/12 w-fit line-clamp-2 font-semibold text-lg decoration-transparent'
             >
               {recording.title}
             </a>
