@@ -5,6 +5,7 @@ import Page404 from '../components/404';
 import Page500 from '../components/500';
 import { PlaybackEditor } from '../components/PlaybackEditor';
 import FullPlayerPage from './FullPlayer';
+import { MultiEditorPlayback } from '../components/MultiEditorPlayback';
 
 interface PlayerPageProps {}
 

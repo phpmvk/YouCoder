@@ -1,6 +1,7 @@
 import React from 'react';
 import { RecorderEditor } from '../components/RecorderEditor';
 import TopNavBar from '../components/HomePageComponents/TopNavBar';
+import { MultiEditorRecorder } from '../components/MultiEditorRecorder';
 
 interface RecordingPageProps {}
 

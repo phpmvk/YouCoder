@@ -7,50 +7,41 @@ import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
-import Terminal from './TerminalOutput';
 import { loadYCRFile } from '../utils/ycrUtils';
-import { CodeToExecute } from '../types/Console';
-import consoleApi from '../services/consoleApi';
-import {
-  formatTime,
-  getLanguageId,
-  formatLanguage,
-} from '../utils/editorUtils';
+import { formatTime } from '../utils/editorUtils';
 import { Recording } from '../types/Creator';
 import Button from '@mui/material/Button';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import ClearIcon from '@mui/icons-material/Clear';
-import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
-import { default as TooltipMUI } from '@mui/material/Tooltip';
 
 import {
   RecorderActions,
   ChangeRange,
   EditorAction,
-  Language,
-} from '../types/Editor';
-import Tooltip from './Tooltip';
-import { MultiEditorPlayback } from './MultiEditorPlayback';
+} from '../types/MultiEditor';
 
-export function PlaybackEditor({
+import Tooltip from './Tooltip';
+
+export function MultiEditorPlayback({
   recordingData,
 }: {
   recordingData: Recording;
 }) {
-  const [editorInstance, setEditorInstance] =
-    useState<editor.IStandaloneCodeEditor | null>(null);
   const [monacoInstance, setMonacoInstance] = useState<typeof monaco | null>(
     null
   );
 
+  const [htmlEditorInstance, setHtmlEditorInstance] =
+    useState<editor.IStandaloneCodeEditor | null>(null);
+  const [cssEditorInstance, setCssEditorInstance] =
+    useState<editor.IStandaloneCodeEditor | null>(null);
+  const [jsEditorInstance, setJsEditorInstance] =
+    useState<editor.IStandaloneCodeEditor | null>(null);
+
+  const [htmlOutput, setHtmlOutput] = useState<string>('');
+
   const [fontSize, setFontSize] = useState(14);
-
-  const [TeacherConsoleOutput, setTeacherConsoleOutput] = useState('');
-  const [StudentConsoleOutput, setStudentConsoleOutput] = useState('');
-
-  const [editorLanguage, setEditorLanguage] = useState('javascript');
 
   //editor playback states
   const [importedActions, setImportedActions] =
@@ -62,7 +53,7 @@ export function PlaybackEditor({
   const [ignoreUserInputs, setIgnoreUserInputs] = useState<boolean>(false);
   const playbackStateRef = useRef(playbackState);
   const actionTimeoutIdsRef = useRef<number[]>([]);
-  const consoleTimeoutIdsRef = useRef<number[]>([]);
+  const outputTimeoutIdsRef = useRef<number[]>([]);
 
   //scrubber states
   const [sliderValue, setSliderValue] = useState<number>(0);
@@ -91,14 +82,6 @@ export function PlaybackEditor({
 
   useEffect(() => {
     handleFirebaseURL(recordingData.recording_link);
-    setEditorLanguage(recordingData.language);
-    let model;
-    if (editorInstance) {
-      model = editorInstance.getModel();
-    }
-    if (monacoInstance && model) {
-      monacoInstance.editor.setModelLanguage(model!, editorLanguage);
-    }
   }, []);
 
   useEffect(() => {
@@ -118,8 +101,10 @@ export function PlaybackEditor({
   }, []);
 
   useEffect(() => {
-    if (editorInstance) {
-      editorInstance!.updateOptions({ fontSize });
+    if (htmlEditorInstance && cssEditorInstance && jsEditorInstance) {
+      htmlEditorInstance!.updateOptions({ fontSize });
+      cssEditorInstance!.updateOptions({ fontSize });
+      jsEditorInstance!.updateOptions({ fontSize });
     }
   }, [fontSize]);
 
@@ -136,18 +121,41 @@ export function PlaybackEditor({
 
   const handleEditorDidMount = (
     editor: editor.IStandaloneCodeEditor,
-    monaco: typeof import('monaco-editor')
+    monaco: typeof import('monaco-editor'),
+    fileType: 'html' | 'css' | 'javascript'
   ) => {
-    setEditorInstance(editor);
+    switch (fileType) {
+      case 'html':
+        setHtmlEditorInstance(editor);
+        break;
+      case 'css':
+        setCssEditorInstance(editor);
+        break;
+      case 'javascript':
+        setJsEditorInstance(editor);
+        break;
+    }
     setMonacoInstance(monaco);
   };
 
-  function applyChange(
+  function applyChangeToFileEditor(
     range: ChangeRange,
-    editor: editor.IStandaloneCodeEditor,
-    text: string
+    text: string,
+    fileType: 'html' | 'css' | 'javascript'
   ) {
-    const model = editor.getModel();
+    let editorInstance;
+    switch (fileType) {
+      case 'html':
+        editorInstance = htmlEditorInstance!;
+        break;
+      case 'css':
+        editorInstance = cssEditorInstance!;
+        break;
+      case 'javascript':
+        editorInstance = jsEditorInstance!;
+        break;
+    }
+    const model = editorInstance!.getModel();
     const rangeInstance = new monacoInstance!.Range(
       range.startLineNumber,
       range.startColumn,
@@ -169,7 +177,6 @@ export function PlaybackEditor({
 
   function startPlayback(
     editorActions: EditorAction[],
-    editor: editor.IStandaloneCodeEditor,
     scrubberPosition?: number
   ) {
     let baseTimestamp: number;
@@ -183,7 +190,7 @@ export function PlaybackEditor({
       (action) => action.playbackTimestamp >= baseTimestamp
     );
 
-    const consoleOutputsToExecute = importedActions!.consoleLogOutputs.filter(
+    const outputsToExecute = importedActions!.htmlOutputArray.filter(
       (output) => output.playbackTimestamp >= baseTimestamp
     );
 
@@ -194,10 +201,8 @@ export function PlaybackEditor({
     // Clear existing timeouts if any
     actionTimeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
     actionTimeoutIdsRef.current = [];
-    consoleTimeoutIdsRef.current.forEach((timeoutId) =>
-      clearTimeout(timeoutId)
-    );
-    consoleTimeoutIdsRef.current = [];
+    outputTimeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
+    outputTimeoutIdsRef.current = [];
 
     setPlaybackState({
       status: 'playing',
@@ -212,22 +217,29 @@ export function PlaybackEditor({
     );
 
     actionsToApplyInstantly.forEach((action: EditorAction) => {
-      applyChange(action, editor, action.text);
+      applyChangeToFileEditor(
+        action,
+        action.text,
+        action.fileType as 'javascript' | 'html' | 'css'
+      );
     });
 
-    const consoleOutputsToApplyInstantly =
-      importedActions!.consoleLogOutputs.filter(
-        (output) => output.playbackTimestamp < baseTimestamp
-      );
+    const outputsToApplyInstantly = importedActions!.htmlOutputArray.filter(
+      (output) => output.playbackTimestamp < baseTimestamp
+    );
 
-    consoleOutputsToApplyInstantly.forEach((output) => {
-      setTeacherConsoleOutput(output.text);
+    outputsToApplyInstantly.forEach((output) => {
+      setHtmlOutput(output.output);
     });
 
     actionsToExecute.forEach((action: EditorAction) => {
       const timeoutId = window.setTimeout(() => {
         if (playbackStateRef.current.status === 'playing') {
-          applyChange(action, editor, action.text);
+          applyChangeToFileEditor(
+            action,
+            action.text,
+            action.fileType as 'javascript' | 'html' | 'css'
+          );
           setPlaybackState((prevState) => ({
             status: 'playing',
             currentPosition: prevState.currentPosition + 100,
@@ -239,13 +251,13 @@ export function PlaybackEditor({
       }, action.playbackTimestamp - baseTimestamp);
       actionTimeoutIdsRef.current.push(timeoutId);
     });
-    consoleOutputsToExecute.forEach((output) => {
+    outputsToExecute.forEach((output) => {
       const timeoutId = window.setTimeout(() => {
         if (playbackStateRef.current.status === 'playing') {
-          setTeacherConsoleOutput(output.text);
+          setHtmlOutput(output.output);
         }
       }, output.playbackTimestamp - baseTimestamp);
-      consoleTimeoutIdsRef.current.push(timeoutId);
+      outputTimeoutIdsRef.current.push(timeoutId);
     });
 
     sliderIntervalIdRef.current = startSliderInterval();
@@ -254,10 +266,11 @@ export function PlaybackEditor({
   //playback handlers
   function handleStartPlayback() {
     if (importedActions) {
-      getCurrentLanguage();
-      editorInstance!.setValue('');
-      setTeacherConsoleOutput('');
-      startPlayback(importedActions.editorActions, editorInstance!);
+      htmlEditorInstance!.setValue('');
+      cssEditorInstance!.setValue('');
+      jsEditorInstance!.setValue('');
+      setHtmlOutput('');
+      startPlayback(importedActions.editorActions);
     }
   }
 
@@ -274,8 +287,10 @@ export function PlaybackEditor({
   function handleResumePlayback() {
     audioElement?.play();
     if (importedActions) {
-      editorInstance!.setValue('');
-      startPlayback(importedActions.editorActions, editorInstance!);
+      htmlEditorInstance!.setValue('');
+      cssEditorInstance!.setValue('');
+      jsEditorInstance!.setValue('');
+      startPlayback(importedActions.editorActions);
     }
     clearInterval(sliderIntervalIdRef.current!);
     sliderIntervalIdRef.current = startSliderInterval();
@@ -299,64 +314,65 @@ export function PlaybackEditor({
         clearTimeout(timeoutId)
       );
       actionTimeoutIdsRef.current = [];
-      consoleTimeoutIdsRef.current.forEach((timeoutId) =>
+      outputTimeoutIdsRef.current.forEach((timeoutId) =>
         clearTimeout(timeoutId)
       );
-      consoleTimeoutIdsRef.current = [];
+      outputTimeoutIdsRef.current = [];
 
-      editorInstance!.setValue('');
+      htmlEditorInstance!.setValue('');
+      cssEditorInstance!.setValue('');
+      jsEditorInstance!.setValue('');
 
-      startPlayback(
-        importedActions!.editorActions,
-        editorInstance!,
-        scrubberPosition
-      );
+      startPlayback(importedActions!.editorActions, scrubberPosition);
       setSliderValue(scrubberPosition);
-      if (importedActions!.consoleLogOutputs[0]) {
+      if (importedActions!.htmlOutputArray[0]) {
         if (
           scrubberPosition <
-          importedActions!.consoleLogOutputs[0].playbackTimestamp
+          importedActions!.htmlOutputArray[0].playbackTimestamp
         ) {
-          setTeacherConsoleOutput('');
+          setHtmlOutput('');
         }
       }
     }
-    if (importedActions!.consoleLogOutputs[0]) {
+    if (importedActions!.htmlOutputArray[0]) {
       if (
-        scrubberPosition <
-        importedActions!.consoleLogOutputs[0].playbackTimestamp
+        scrubberPosition < importedActions!.htmlOutputArray[0].playbackTimestamp
       ) {
-        setTeacherConsoleOutput('');
+        setHtmlOutput('');
       }
     }
   }
 
   function applyChangesUntilScrubber(scrubberPosition: number) {
-    editorInstance!.setValue('');
+    htmlEditorInstance!.setValue('');
+    cssEditorInstance!.setValue('');
+    jsEditorInstance!.setValue('');
     // Apply all changes up to the scrubber position instantly
     const actionsToApplyInstantly = importedActions!.editorActions.filter(
       (action) => action.playbackTimestamp < scrubberPosition
     );
 
     actionsToApplyInstantly.forEach((action: EditorAction) => {
-      applyChange(action, editorInstance!, action.text);
-    });
-
-    const consoleOutputsToApplyInstantly =
-      importedActions!.consoleLogOutputs.filter(
-        (output) => output.playbackTimestamp < scrubberPosition
+      applyChangeToFileEditor(
+        action,
+        action.text,
+        action.fileType as 'javascript' | 'html' | 'css'
       );
-
-    consoleOutputsToApplyInstantly.forEach((output) => {
-      setTeacherConsoleOutput(output.text);
     });
 
-    if (importedActions!.consoleLogOutputs[0]) {
+    const outputsToApplyInstantly = importedActions!.htmlOutputArray.filter(
+      (output) => output.playbackTimestamp < scrubberPosition
+    );
+
+    outputsToApplyInstantly.forEach((output) => {
+      setHtmlOutput(output.output);
+    });
+
+    if (importedActions!.htmlOutputArray[0]) {
       if (
-        scrubberPosition <
-        importedActions!.consoleLogOutputs[0].playbackTimestamp
+        scrubberPosition < importedActions!.htmlOutputArray[0].playbackTimestamp
       ) {
-        setTeacherConsoleOutput('');
+        setHtmlOutput('');
       }
     }
   }
@@ -433,32 +449,24 @@ export function PlaybackEditor({
     }
   }
 
-  function getCurrentLanguage() {
-    const model = editorInstance!.getModel();
-    const language = model!.getLanguageId();
-    setEditorLanguage(language);
+  function handleRenderOutput() {
+    const html = htmlEditorInstance?.getValue() ?? '<h1>hello</h1>';
+    const css = cssEditorInstance?.getValue() ?? '';
+    const js = jsEditorInstance?.getValue() ?? '';
+    const output = `<html>
+    <head>
+      <style>${css}</style>
+    </head>
+    <body>
+      ${html}
+      <script>${js}</script>
+    </body>
+  </html>`;
+
+    setHtmlOutput(output);
   }
 
-  function handleJudge0() {
-    const model = editorInstance!.getModel();
-    const language = model!.getLanguageId() as Language;
-    const source_code = editorInstance!.getValue();
-    const base64SourceCode = window.btoa(source_code);
-    const language_id = getLanguageId(language)!;
-
-    const judge0: CodeToExecute = {
-      language_id,
-      source_code: base64SourceCode,
-    };
-    consoleApi.getOutput(judge0)!.then((response) => {
-      const output = window.atob(response.data.output);
-      setStudentConsoleOutput(output);
-    });
-  }
-
-  return recordingData.language === 'multi' ? (
-    <MultiEditorPlayback recordingData={recordingData} />
-  ) : (
+  return (
     <div>
       <audio
         ref={(audio) => {
@@ -466,13 +474,6 @@ export function PlaybackEditor({
         }}
       ></audio>
 
-      <h1
-        className={`ml-6 bg-bg-pri w-[20ch] text-center rounded-t-md mt-2  ${
-          editorLanguage ? 'text-gray-200' : 'text-transparent'
-        }`}
-      >
-        {editorLanguage ? formatLanguage(editorLanguage) : '·'}
-      </h1>
       <div className=''>
         <div className='bg-bg-pri flex w-full h-[400px] px-4 mb-2 '>
           <Allotment>
@@ -480,7 +481,7 @@ export function PlaybackEditor({
               <Editor
                 className=' border-bg-pri border-8 border-r-6 '
                 height='500px'
-                defaultLanguage={editorLanguage}
+                defaultLanguage='html'
                 defaultValue=''
                 theme='vs-dark'
                 options={{
@@ -488,37 +489,48 @@ export function PlaybackEditor({
                   readOnly: ignoreUserInputs,
                   fontSize: fontSize,
                 }}
-                onMount={handleEditorDidMount}
+                onMount={(editor, monaco) =>
+                  handleEditorDidMount(editor, monaco, 'html')
+                }
               />
             </Allotment.Pane>
-            <Allotment.Pane minSize={200} preferredSize={400}>
-              <div className=' w-full h-[50%] border-r-8 border-t-8 border-l-2 border-bg-pri '>
-                <Terminal terminalName='output' output={TeacherConsoleOutput} />
-              </div>
-              <div className='relative w-full h-[50%] border-t-6 border-l-2 border-r-8 border-bg-pri'>
-                <div className='flex justify-center items-center'>
-                  <TooltipMUI title='Execute & Compile'>
-                    <button
-                      className=' absolute top-0 right-14 w-fit items-center px-2 text-sm  text-gray-200 rounded !bg-green-900/20 border !border-gray-700 uppercase hover:!bg-green-900/50 active:ring-1 active:ring-bg-alt'
-                      onClick={handleJudge0}
-                    >
-                      <PlayArrowOutlinedIcon />
-                    </button>
-                  </TooltipMUI>
-                  <TooltipMUI title='Clear Console'>
-                    <button
-                      className='absolute top-0 right-2 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-red-900/20 border !border-gray-700 uppercase hover:!bg-red-900/50 active:ring-1 active:ring-bg-alt'
-                      onClick={() => setStudentConsoleOutput('')}
-                    >
-                      <ClearIcon />
-                    </button>
-                  </TooltipMUI>
-                </div>
-                <Terminal
-                  terminalName='your output'
-                  output={StudentConsoleOutput}
-                />
-              </div>
+          </Allotment>
+          <Allotment>
+            <Allotment.Pane minSize={600}>
+              <Editor
+                className=' border-bg-pri border-8 border-r-6 '
+                height='500px'
+                defaultLanguage='css'
+                defaultValue=''
+                theme='vs-dark'
+                options={{
+                  wordWrap: 'on',
+                  readOnly: ignoreUserInputs,
+                  fontSize: fontSize,
+                }}
+                onMount={(editor, monaco) =>
+                  handleEditorDidMount(editor, monaco, 'css')
+                }
+              />
+            </Allotment.Pane>
+          </Allotment>
+          <Allotment>
+            <Allotment.Pane minSize={600}>
+              <Editor
+                className=' border-bg-pri border-8 border-r-6 '
+                height='500px'
+                defaultLanguage='javascript'
+                defaultValue=''
+                theme='vs-dark'
+                options={{
+                  wordWrap: 'on',
+                  readOnly: ignoreUserInputs,
+                  fontSize: fontSize,
+                }}
+                onMount={(editor, monaco) =>
+                  handleEditorDidMount(editor, monaco, 'javascript')
+                }
+              />
             </Allotment.Pane>
           </Allotment>
         </div>
@@ -579,9 +591,17 @@ export function PlaybackEditor({
             }}
           />
           <Tooltip />
+          <button className='p-2 text-white' onClick={handleRenderOutput}>
+            Render HTML
+          </button>
         </div>
         <br></br>
       </div>
+      <iframe
+        srcDoc={htmlOutput}
+        title='Output'
+        sandbox='allow-scripts'
+      ></iframe>
     </div>
   );
 }

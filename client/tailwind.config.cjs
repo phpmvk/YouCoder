@@ -24,6 +24,7 @@ module.exports = {
           muigrey: '#2a2a2a',
           muilightgrey: '#515151',
           gptdark: '#202123',
+          console: '#1e1e1e'
         },
         text: {
           // normal: 'slate-300',

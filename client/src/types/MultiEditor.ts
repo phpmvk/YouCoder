@@ -9,12 +9,6 @@ export type RecorderActions = {
   htmlOutputArray: htmlOutput[];
 };
 
-export type htmlOutput = {
-  output: string;
-  timestamp: number;
-  playbackTimestamp: number;
-};
-
 export type ChangeRange = {
   startLineNumber: number;
   startColumn: number;
@@ -26,10 +20,17 @@ export type EditorAction = ChangeRange & {
   actionCreationTimestamp: number;
   playbackTimestamp: number;
   text: string;
+  fileType?: string;
 };
 
 export type RecorderAction = {
   timestamp: number;
+};
+
+export type htmlOutput = {
+  output: string;
+  timestamp: number;
+  playbackTimestamp: number;
 };
 
 export type Language =

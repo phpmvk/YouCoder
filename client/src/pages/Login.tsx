@@ -120,6 +120,7 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
               </span>
             </button>
           </div>
+
         </div>
         <div className='hidden sm:block w-2/3 min-w-[400px] -ml-12'>
           <LoginArt />
