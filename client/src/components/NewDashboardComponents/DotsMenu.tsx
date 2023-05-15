@@ -59,7 +59,7 @@ const DotsMenu = ({
         closeModal={() => setShowModal(false)}
       >
         <EditDetailsform
-          initialDetails={details}
+          detailsToEdit={details}
           save={handleSave}
         />
       </Modal>
