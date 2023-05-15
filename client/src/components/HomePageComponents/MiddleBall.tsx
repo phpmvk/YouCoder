@@ -53,11 +53,8 @@
 import React from 'react';
 import { motion, useTransform, useScroll } from 'framer-motion';
 
-interface BallProps {
-  percentage: number;
-}
 
-const MiddleBall: React.FC<BallProps> = () => {
+const MiddleBall = () => {
   const { scrollYProgress } = useScroll();
 
   const scale = useTransform(scrollYProgress, [0.3, 0.5], [2, 3]);

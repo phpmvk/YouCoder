@@ -10,13 +10,14 @@ import MiddleBall from './../components/HomePageComponents/MiddleBall';
 import BottomBall from './../components/HomePageComponents/BottomBall';
 import Footer from './../components/HomePageComponents/Footer';
 import { useAppSelector } from '../redux/hooks';
+import GotoBottom from '../components/HomePageComponents/GotoBottom';
 
 const HomePage: React.FC = () => {
   const user = useAppSelector((state) => state.user);
 
   return (
     <>
-    <div className='text-center bg-bg-pri font-title'>
+    <div className='text-center bg-bg-pri font-title overflow-x-hidden max-w-screen'>
       <TopNavBar
         showFeatures={true}
         showExamples={true}
@@ -52,7 +53,7 @@ const HomePage: React.FC = () => {
 
 <div className="bg-bg-pri h-[280vw] w-full rounded-tr-full rounded-tl-full"></div>
 
-
+<GotoBottom/>
     </div>
 
 </>
