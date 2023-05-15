@@ -26,6 +26,7 @@ import {
   EditorRecording,
   Language,
 } from '../types/Editor';
+import { MultiEditorRecorder } from './MultiEditorRecorder';
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
@@ -44,7 +45,7 @@ export function RecorderEditor() {
   const [consoleOutput, setConsoleOutput] = useState('');
   const [isConsoleLoading, setIsConsoleLoading] = useState(false);
   const [saveModalVisible, setSaveModalVisible] = useState(false);
-  const [editorLanguage, setEditorLanguage] = useState('javascript');
+  const [selectedLanguage, setSelectedLanguage] = useState('javascript');
 
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [recordingIntervalId, setRecordingIntervalId] =
@@ -155,6 +156,7 @@ export function RecorderEditor() {
   function handleLanguageChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const model = editorInstance!.getModel();
     monacoInstance!.editor.setModelLanguage(model!, event.target.value);
+    setSelectedLanguage(event.target.value);
   }
 
   function handleEditorDidMount(
@@ -212,7 +214,7 @@ export function RecorderEditor() {
     //language
     const model = editorInstance!.getModel();
     const language = model!.getLanguageId();
-    setEditorLanguage(formatLanguage(language));
+    setSelectedLanguage(formatLanguage(language));
 
     //timer
     setElapsedTime(0);
@@ -394,7 +396,9 @@ export function RecorderEditor() {
       });
   }
 
-  return (
+  return selectedLanguage === 'multi' ? (
+    <MultiEditorRecorder />
+  ) : (
     <>
       {recorderState === 'stopped' && (
         <>
@@ -411,6 +415,7 @@ export function RecorderEditor() {
               className='border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3'
             >
               <option defaultValue='javascript'>JavaScript</option>
+              {/* <option value='multi'>HTML, CSS & JavaScript</option> */}
               <option value='typescript'>TypeScript</option>
               <option value='python'>Python</option>
               <option value='java'>Java</option>
@@ -424,7 +429,7 @@ export function RecorderEditor() {
       )}
       {recorderState !== 'stopped' && (
         <div className='border text-sm rounded-lg w-48 bg-gray-700 border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mb-3 flex items-center justify-center mx-[15vw]'>
-          {editorLanguage}
+          {selectedLanguage}
         </div>
       )}
       <div>

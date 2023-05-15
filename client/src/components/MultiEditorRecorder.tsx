@@ -16,6 +16,7 @@ import {
   EditorRecording,
   htmlOutput,
 } from '../types/MultiEditor';
+import { RecorderEditor } from './RecorderEditor';
 
 export function MultiEditorRecorder() {
   //Multi states
@@ -33,6 +34,8 @@ export function MultiEditorRecorder() {
     'stopped' | 'recording' | 'paused'
   >('stopped');
   const [recorderLoading, setRecorderLoading] = useState(false);
+
+  const [selectedLanguage, setSelectedLanguage] = useState('multi');
 
   const [consoleOutput, setConsoleOutput] = useState('');
   const [saveModalVisible, setSaveModalVisible] = useState(false);
@@ -122,6 +125,10 @@ export function MultiEditorRecorder() {
       jsEditorInstance!.updateOptions({ fontSize });
     }
   }, [fontSize]);
+
+  function handleLanguageChange(event: React.ChangeEvent<HTMLSelectElement>) {
+    setSelectedLanguage(event.target.value);
+  }
 
   const getDefaultFontSize = () => {
     let div = document.createElement('div');
@@ -375,8 +382,42 @@ export function MultiEditorRecorder() {
 
   function handleDiscard() {}
 
-  return (
+  return selectedLanguage !== 'multi' ? (
+    <RecorderEditor />
+  ) : (
     <>
+      {recorderState === 'stopped' && (
+        <>
+          <div className='flex items-center mx-[15vw]'>
+            <label
+              className='block mb-2 text-sm font-medium text-white mr-3'
+              htmlFor='language'
+            >
+              Choose a language to record in:
+            </label>
+            <select
+              id='language'
+              onChange={handleLanguageChange}
+              className='border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3'
+            >
+              <option defaultValue='multi'>HTML, CSS & JavaScript</option>
+              <option value='javascript'>JavaScript</option>
+              <option value='typescript'>TypeScript</option>
+              <option value='python'>Python</option>
+              <option value='java'>Java</option>
+              <option value='csharp'>C#</option>
+              <option value='cpp'>C++</option>
+              <option value='ruby'>Ruby</option>
+              <option value='go'>Go</option>
+            </select>
+          </div>
+        </>
+      )}
+      {recorderState !== 'stopped' && (
+        <div className='border text-sm rounded-lg w-48 bg-gray-700 border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mb-3 flex items-center justify-center mx-[15vw]'>
+          {selectedLanguage}
+        </div>
+      )}
       <div className='flex w-full h-[500px] border border-white rounded-sm'>
         <Allotment>
           <Allotment.Pane minSize={500}>
