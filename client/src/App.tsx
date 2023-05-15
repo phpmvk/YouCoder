@@ -15,6 +15,8 @@ import { useAppSelector } from './redux/hooks';
 import NewDashboardPage from './pages/NewDashboard';
 import Footer from './components/HomePageComponents/Footer';
 import LoadingPage from './components/LoadingPage';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Firebase = initializeApp(config.firebaseConfig);
 export const storage = getStorage(Firebase);
@@ -26,6 +28,14 @@ function App() {
 
   return (
     <>
+      <ToastContainer
+        autoClose={500}
+        theme='dark'
+        position='bottom-right'
+        hideProgressBar={true}
+        icon={false}
+        closeButton={false}
+      />
       <LoadingSpinner show={loadingSpinner} />
       <LoadingPage show={loadingPage} />
       <BrowserRouter>

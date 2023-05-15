@@ -9,6 +9,7 @@ import {
   updateUserRecording,
 } from '../../redux/userSlice';
 import { setLoadingSpinner } from '../../redux/spinnerSlice';
+import { toast } from 'react-toastify';
 
 interface DotsMenuProps {
   activeMenu: string | null;
@@ -160,6 +161,7 @@ const DotsMenu = ({
             <button
               onClick={(e) => {
                 navigator.clipboard.writeText(recording.full_link);
+                toast.success('Link copied to clipboard');
               }}
               className='block px-4 py-2 hover:bg-bg-muigrey w-full text-left active:bg-bg-sec/20'
             >
@@ -170,6 +172,7 @@ const DotsMenu = ({
             <button
               onClick={(e) => {
                 navigator.clipboard.writeText(recording.iframe_link);
+                toast.success('Link copied to clipboard');
               }}
               className='block px-4 py-2 hover:bg-bg-muigrey w-full text-left active:bg-bg-sec/20'
             >
