@@ -64,7 +64,7 @@
 
 
 
-
+// will remove above code when all is working
 import { motion, useScroll, useTransform } from "framer-motion";
 import React, { useEffect, useState } from "react";
 
