@@ -31,8 +31,8 @@ const BottomBall: React.FC = () => {
 
   const scale = useTransform(scrollYProgress, [0.5, 1], [1, 2]);
   const x = useTransform(scrollYProgress, [0.3, 1], ['100vw', '-70vw']);
-  const y = useTransform(scrollYProgress, [0.4, 1], ['50vw', '180vw']);
-  const opacity = useTransform(scrollYProgress, [0.6, 0.7], [0, 1]);
+  const y = useTransform(scrollYProgress, [0.3, 1], ['50vw', '200vw']);
+  const opacity = useTransform(scrollYProgress, [0.7, 0.85], [0, 1]);
   
 
   return (

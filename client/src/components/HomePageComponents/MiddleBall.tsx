@@ -60,7 +60,7 @@ interface BallProps {
 const MiddleBall: React.FC<BallProps> = () => {
   const { scrollYProgress } = useScroll();
 
-  const scale = useTransform(scrollYProgress, [0.4, 1], [1, 4.5]);
+  const scale = useTransform(scrollYProgress, [0.3, 0.5], [2, 3]);
   const y = useTransform(scrollYProgress, [0, 0.5], ['0vw', '0vw']);
 
   return (
