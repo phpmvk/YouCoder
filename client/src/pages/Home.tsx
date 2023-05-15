@@ -24,7 +24,7 @@ const HomePage: React.FC = () => {
         showDashboard={false}
       />
 
-      <Parallax
+      {/* <Parallax
         strength={600}
         renderLayer={(percentage) => (
           <>
@@ -37,7 +37,34 @@ const HomePage: React.FC = () => {
             <Footer />
           </>
         )}
-      />
+      /> */}
+
+
+
+
+<Heading />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </div>
   );
 };
