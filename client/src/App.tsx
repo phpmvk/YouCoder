@@ -16,6 +16,7 @@ import { useAppSelector } from './redux/hooks';
 import NewDashboardPage from './pages/NewDashboard';
 import Footer from './components/HomePageComponents/Footer';
 import LoadingPage from './components/LoadingPage';
+import Team from './pages/Team';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -45,6 +46,10 @@ function App() {
           <Route
             path='/'
             element={<HomePage />}
+          />
+          <Route
+            path='/team'
+            element={<Team />}
           />
           <Route
             path='/login'

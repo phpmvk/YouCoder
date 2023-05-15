@@ -52,7 +52,7 @@ export const Footer: FC = (): ReactElement => {
     </div>
     <ul className="flex items-center text-sm font-medium text-gray-200">
       <li>
-        <a href="#" className="hover:underline">Team</a>
+        <a href="https://youcoder.io/team" className="hover:underline">Team</a>
       </li>
     </ul>
   </div>
