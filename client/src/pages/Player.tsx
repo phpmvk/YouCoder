@@ -6,6 +6,7 @@ import Page500 from '../components/500';
 import { PlaybackEditor } from '../components/PlaybackEditor';
 import FullPlayerPage from './FullPlayer';
 import { MultiEditorPlayback } from '../components/MultiEditorPlayback';
+import { BiPlayCircle } from 'react-icons/bi';
 
 interface PlayerPageProps {}
 
@@ -13,16 +14,22 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const embed = searchParams.get('embed');
-  const showMultiEditor = searchParams.get('multi');
-  const showTitle = searchParams.get('title');
-  const showCover = searchParams.get('cover');
+  const embed = Boolean(searchParams.get('embed') === 'true');
+  const showMultiEditor = Boolean(searchParams.get('multi') === 'true');
+  const showTitle = Boolean(searchParams.get('title') === 'true');
+  const showCover = Boolean(searchParams.get('cover') === 'true');
   const [toRender, setToRender] = useState<JSX.Element | null>(null);
   const [displayCover, setDisplayCover] = useState<boolean>(
-    showCover === 'true' || showTitle === 'true' ? true : false
+    showCover || showTitle ? true : false
   );
 
-  const [coverClicked, setCoverClicked] = useState<boolean>(false);
+  console.log('showCover: ', showCover);
+  console.log('showTitle: ', showTitle);
+  console.log('displayCover: ', displayCover);
+
+  const [coverClicked, setCoverClicked] = useState<boolean>(
+    !showCover && !showTitle
+  );
 
   useEffect(() => {
     if (!id) {
@@ -32,28 +39,40 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
     }
   }, [id, navigate]);
 
+  const hiderecordingCover = () => {
+    setCoverClicked(true);
+    setDisplayCover(false);
+  };
+
   function getRecording(id: string) {
     http
       .getRecording(id)
       .then((response) => {
         console.log('recording: ', response.data);
-        if (embed && embed === 'true') {
+        if (embed) {
+          setCoverClicked(false);
+
           // show the embed player
           setToRender(
             <>
               {displayCover && !coverClicked ? (
                 <div
-                  className='cursor-pointer flex justify-center items-center w-full h-full'
-                  onClick={() => setCoverClicked(true)}
+                  className='cursor-pointer h-[480px] overflow-hidden flex items-center justify-center w-full bg-bg-pri'
+                  onClick={hiderecordingCover}
                 >
-                  {response.data.thumbnail_link && (
+                  {response.data.thumbnail_link && showCover && (
                     <img
-                      className='object-cover w-full h-auto'
+                      className='object-cover w-full h-[480px]'
                       src={response.data.thumbnail_link}
                       alt={response.data.title}
                     />
                   )}
-                  {showTitle && <h1>{response.data.title}</h1>}
+                  {showTitle && (
+                    <h1 className='my-auto text-white/90 text-7xl capitalize line-clamp-3 max-w-10/12'>
+                      {response.data.title}
+                    </h1>
+                  )}
+                  <BiPlayCircle className='absolute left-auto right-auto text-7xl text-white/30 z-10' />
                 </div>
               ) : (
                 <PlaybackEditor recordingData={response.data} />
@@ -66,7 +85,7 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
         }
       })
       .catch((error) => {
-        if (embed && embed === 'true') {
+        if (embed) {
           if (error.response) {
             console.log(error.response.data);
             console.log(error.response.status);
@@ -76,6 +95,8 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
               case 400:
                 setToRender(<Page404 />);
               case 403:
+                setToRender(<Page404 />);
+              case 404:
                 setToRender(<Page404 />);
               case 500:
                 setToRender(<Page500 />);
@@ -100,6 +121,9 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
                 navigate('/404');
                 break;
               case 403:
+                navigate('/404');
+                break;
+              case 404:
                 navigate('/404');
                 break;
               case 500:

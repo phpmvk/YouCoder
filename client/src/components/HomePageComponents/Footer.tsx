@@ -1,9 +1,8 @@
-import React, { FC, ReactElement } from 'react';
-import { Box, Container, Grid, Typography } from '@mui/material';
+import { FC, ReactElement } from 'react';
 
 export const Footer: FC = (): ReactElement => {
   return (
-    <footer className='bg-bg-pri my-4 w-full pt-5 flex justify-between items-center text-sm text-gray-500 font-medium px-10'>
+    <footer className='bg-bg-pri my-4 w-full pt-5 flex justify-evenly items-center text-sm text-gray-500 font-medium'>
       <span>
         © 2023{' '}
         <a
