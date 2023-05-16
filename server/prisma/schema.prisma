@@ -19,6 +19,7 @@ model Creator {
   recordings          Recording[]
   login_count         Int
   last_login_datetime DateTime
+  socials             Json[]
 }
 
 model Recording {

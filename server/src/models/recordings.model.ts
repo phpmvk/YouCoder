@@ -12,7 +12,8 @@ export async function getRecordingById(recordingId: string): Promise<Recording |
     include: {
       creator: {
         select: {
-          picture: true
+          picture: true,
+          display_name: true,
         }
       }
     }
@@ -61,7 +62,8 @@ export async function fetchAllUserRecordings(uid: string): Promise<Recording[] |
     include: {
       creator: {
         select: {
-          picture: true
+          picture: true,
+          display_name: true,
         }
       }
     },
@@ -72,13 +74,82 @@ export async function fetchAllUserRecordings(uid: string): Promise<Recording[] |
   return allUserRecordings
 }
 
+export async function fetchAllUserPublicRecordings(uid: string): Promise<Recording[] | null> {
+  const publicRecordings = await prisma.recording.findMany({
+    where: {
+      creator_uid: uid,
+      published: true
+    },
+    orderBy: {
+      view_count: 'desc'
+    },
+    include: {
+      creator: {
+        select: {
+          picture: true,
+          display_name: true
+        }
+      }
+    }
+  })
+  return publicRecordings;
+}
+
+export async function fetchPublicRecordingsBySearchQuery(searchQuery: string ): Promise<Recording[] | null> {
+  const publicRecordings = await prisma.recording.findMany({
+    where: {
+      published: true,
+      OR: [
+        {title: { contains: searchQuery}},
+        {description: { contains: searchQuery}},
+        {language: { contains: searchQuery}}
+      ]
+    },
+    orderBy: {
+      view_count: 'desc'
+    },
+    include: {
+      creator: {
+        select: {
+          picture: true,
+          display_name: true
+        }
+      }
+    }
+  });
+  return publicRecordings;
+}
+
 export async function updateRecording(recordingId: string , dataToUpdate: Record<string, string | boolean>) {
+  if (dataToUpdate.title) {
+    const exisitingRecording = await prisma.recording.findUnique({
+      where: {
+        recording_id: recordingId
+      }
+    });
+    if (exisitingRecording) {
+      const updatedRecording = await prisma.recording.update({
+        where: {
+          recording_id: recordingId
+        },
+        data: {
+          ...dataToUpdate,
+          iframe_link: exisitingRecording.iframe_link?.replace(
+            /title='[^']*'/,
+            `title='${dataToUpdate.title}'`
+          )
+        }
+      });
+      return updatedRecording
+    }
+  }
+  
   const updatedRecording = await prisma.recording.update({
     where: {
       recording_id: recordingId
     }, 
     data: dataToUpdate
-  })
+  });
   return updatedRecording
 }
 
@@ -90,7 +161,8 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
     description,
     language,
     recording_link,
-    duration
+    duration,
+    published,
   } = frontendRecording
 
   const random36CharStringId = randomBytes(18).toString('hex');
@@ -127,12 +199,14 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
       view_count: 0,
       like_count: 0,
       tags: [],
-      duration: duration, 
+      duration: duration,
+      published: published?published:false 
     },
     include: {
       creator: {
         select: {
-          picture: true
+          picture: true,
+          display_name: true,
         }
       }
     }
@@ -144,7 +218,7 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
     },
     data: {
       full_link: `https://youcoder.io/player/${newRecording.recording_id}`,
-      iframe_link: `<iframe src='https://youcoder.io/player/${newRecording.recording_id}?embed=true' width='1000' height='480' allowFullScreentitle='${newRecording.title}'/>`
+      iframe_link: `<iframe src='https://youcoder.io/player/${newRecording.recording_id}?embed=true&title=false&cover=true' width='1000' height='480' allowFullScreen title='${newRecording.title}'/>`
     }
   })
 

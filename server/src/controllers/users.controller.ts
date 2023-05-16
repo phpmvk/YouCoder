@@ -24,6 +24,32 @@ export async function creatorLoginController(req: Request, res: Response) {
   }
 }
 
+export async function updateCreatorController(req: Request, res: Response) {
+  console.log('Users - PATCH received - updateCreatorController');
+  try {
+    const { uid } = req.body.user;
+    const dataToUpdate: Record<string, string> = {};
+  
+    const fieldsToUpdate: string[] = ['display_name', 'email', 'picture', 'socials']
+
+    fieldsToUpdate.forEach((field: string) => {
+      if (req.body[field] !== undefined) {
+        dataToUpdate[field] = req.body[field]
+      }
+    });
+
+    if (Object.keys(dataToUpdate).length === 0) {
+      return res.status(400).send({ message: 'Error updating resource: no fields to update provided' })
+    }
+
+    const updatedUserProfile = await updateField(uid, dataToUpdate)
+    return res.status(200).send({ user: updatedUserProfile });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: 'Internal error updating user data' })
+  }
+}
+
 export async function deleteCreatorController(req: Request, res: Response) {
   console.log('Users - DELETE received - deleteCreator');
   try {
