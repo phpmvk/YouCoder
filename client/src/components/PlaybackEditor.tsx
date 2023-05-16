@@ -130,9 +130,11 @@ export function PlaybackEditor({
 
   useEffect(() => {
     if (autoplay && importedActions && audioSource && audioElement) {
-      handleStartPlayback();
+      setTimeout(() => {
+        handleStartPlayback();
+      }, 300);
     }
-  }, [autoplay, importedActions, audioSource]);
+  }, [autoplay, importedActions]);
 
   const getDefaultFontSize = () => {
     let div = document.createElement('div');
