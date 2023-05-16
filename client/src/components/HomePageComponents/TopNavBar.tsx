@@ -7,7 +7,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import youcoderlogo from '../../../public/Layer-1.svg';
+import youcoderlogo from '../../assets/logo.svg';
 import { Button } from '@mui/material';
 import { Link, Router, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -16,6 +16,7 @@ import { removeUser } from '../../redux/userSlice';
 import { AiFillVideoCamera } from 'react-icons/ai';
 import { setSearchTerm } from '../../redux/searchSlice';
 import { persistor } from '../../redux/store';
+import { toast } from 'react-toastify';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -99,6 +100,7 @@ function TopNavBar({
         console.log('signed out');
         setLoggedIn(false);
         navigate('/');
+        toast.success('Logged out successfully');
       })
       .catch((error: Error) => {
         console.log(error);
@@ -144,8 +146,10 @@ function TopNavBar({
                 sx={{ display: { xs: 'none', sm: 'block' } }}
               >
                 {' '}
-                
-                <img src={youcoderlogo} style={{width: '80px', height: '80px'}}></img> 
+                <img
+                  src={youcoderlogo}
+                  style={{ width: '80px', height: '80px' }}
+                ></img>
               </Typography>
             </Link>
             {showSearch && (
@@ -173,14 +177,16 @@ function TopNavBar({
             >
               {/* Conditionally render the Create Recording button */}
               {showCreateRecording && (
-                <Button
-                  className='w-full h-full t-[10vw] border-solid !border-2 !border-red-700 hover:!bg-red-700/20 !text-white !rounded-full !text-l !mr-6 whitespace-nowrap'
-                  color='inherit'
-                  variant='outlined'
-                >
-                  <AiFillVideoCamera className='text-red-700 mr-2 text-lg' />
-                  Create Recording
-                </Button>
+                <Link to='/recording'>
+                  <Button
+                    className='w-full h-full t-[10vw] border-solid !border-2 !border-red-700 hover:!bg-red-700/30 !text-white !rounded-full !text-l !mr-6 whitespace-nowrap'
+                    color='inherit'
+                    variant='outlined'
+                  >
+                    <AiFillVideoCamera className='text-red-700 mr-2 text-lg' />
+                    Create Recording
+                  </Button>
+                </Link>
               )}
 
               {/* Conditionally render the Dashboard button */}

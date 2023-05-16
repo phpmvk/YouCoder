@@ -4,12 +4,17 @@ import { editor } from 'monaco-editor';
 import * as monaco from 'monaco-editor';
 import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
+import ClearIcon from '@mui/icons-material/Clear';
+import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
+import { default as TooltipMUI } from '@mui/material/Tooltip';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 import consoleApi from '../services/consoleApi';
 import { CodeToExecute } from '../types/Console';
 import { SaveRecordingModal } from './HomePageComponents/SaveRecordingModal';
 import { saveYCRFile } from '../utils/ycrUtils';
-import { useAppSelector } from '../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import Terminal from './TerminalOutput';
 import recordingApi from '../services/recordingApi';
 import {
@@ -27,6 +32,12 @@ import {
   Language,
 } from '../types/Editor';
 import { MultiEditorRecorder } from './MultiEditorRecorder';
+import Modal from './Modal';
+import EditDetailsform from './NewDashboardComponents/EditDetailsForm';
+import { updateRecording } from '../types/Creator';
+import { setLoadingSpinner } from '../redux/spinnerSlice';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
@@ -51,6 +62,8 @@ export function RecorderEditor() {
   const [recordingIntervalId, setRecordingIntervalId] =
     useState<NodeJS.Timeout | null>(null);
   const [pauseAction, setPauseAction] = useState(false);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const recorderActions = useRef<RecorderActions>({
     start: 0,
@@ -61,6 +74,13 @@ export function RecorderEditor() {
     editorActions: [],
     consoleLogOutputs: [],
     htmlOutputArray: [],
+  });
+
+  const [details, setDetails] = useState<updateRecording>({
+    title: '',
+    description: '',
+    thumbnail_link: '',
+    published: false,
   });
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -338,7 +358,6 @@ export function RecorderEditor() {
         return { ...change, playbackTimestamp: adjustedTimestamp };
       });
 
-    console.log(recorderState);
     if (recorderState === 'paused') {
       mediaRecorderRef.current!.resume();
       mediaRecorderRef.current!.onresume = () => {
@@ -357,11 +376,7 @@ export function RecorderEditor() {
     setSaveModalVisible(true);
   }
 
-  async function handleSave(
-    title: string,
-    description: string,
-    thumbnail_link: string
-  ) {
+  async function handleSave(updatedDetails: updateRecording) {
     try {
       const json = JSON.stringify(recorderActions.current);
       const jsonBlob = new Blob([json], { type: 'application/json' });
@@ -371,22 +386,27 @@ export function RecorderEditor() {
         audioRecordingBlobRef.current!,
         user.uid!
       );
-      console.log(ycrFileUrl);
       const model = editorInstance!.getModel();
       const language = model!.getLanguageId();
 
       const Recording: EditorRecording = {
-        title,
-        description,
-        thumbnail_link,
+        title: updatedDetails.title!,
+        description: updatedDetails.description || '',
+        thumbnail_link: updatedDetails.thumbnail_link || '',
+        published: updatedDetails.published!,
         language,
         recording_link: ycrFileUrl,
         duration: elapsedTime,
       };
 
-      recordingApi.postRecording(Recording);
+      recordingApi.postRecording(Recording)?.then((response) => {
+        toast.success('Recording saved successfully!');
+        dispatch(setLoadingSpinner(false));
+        navigate('/dashboard');
+      });
     } catch (error) {
       console.error('Error saving recording', error);
+      toast.error('Error saving recording');
     }
   }
 
@@ -410,8 +430,16 @@ export function RecorderEditor() {
       .getOutput(judge0)!
       .then((response) => {
         const output = window.atob(response.data.output);
-        setConsoleOutput(output);
-        handleConsoleLogOutput(output, Date.now());
+        if (response.data.output === null) {
+          setConsoleOutput('{Code executed, but nothing to log}');
+          handleConsoleLogOutput(
+            '{Code executed, but nothing to log}',
+            Date.now()
+          );
+        } else {
+          setConsoleOutput(output);
+          handleConsoleLogOutput(output, Date.now());
+        }
         setIsConsoleLoading(false);
       })
       .catch((error) => {
@@ -475,21 +503,60 @@ export function RecorderEditor() {
                 />
               </div>
             </Allotment.Pane>
-            <Allotment.Pane minSize={180} preferredSize={300}>
+            <Allotment.Pane
+              minSize={180}
+              preferredSize={300}
+            >
               <div className='border w-full h-full border-[#1e1e1e] text-white relative'>
-                <button
+                {/* <button
                   className='absolute bottom-2 right-2 border-white border rounded-sm p-2 bg-slate-500 hover:bg-slate-500/50 '
                   onClick={handleJudge0}
                   disabled={isConsoleLoading}
                 >
-                  {isConsoleLoading ? 'Loading...' : 'Compile & Execute'}
+                  {isConsoleLoading ? (
+                    <svg
+                      className='animate-spin h-5 w-5 mr-3'
+                      viewBox='0 0 24 24'
+                    ></svg>
+                  ) : (
+                    'Compile & Execute'
+                  )}
                 </button>
                 <button
                   className='absolute top-2 right-2 border-white border text-sm rounded-md px-1 bg-slate-500 hover:bg-slate-500/50'
                   onClick={() => setConsoleOutput('')}
                 >
                   clear
-                </button>
+                </button> */}
+                <TooltipMUI title='Compile & Execute'>
+                  <button
+                    className=' absolute top-0 right-14 w-fit items-center px-2 text-sm  text-gray-200 rounded !bg-green-900/20 border !border-gray-700 uppercase hover:!bg-green-900/50 active:ring-1 active:ring-bg-alt mt-2'
+                    onClick={handleJudge0}
+                    disabled={isConsoleLoading}
+                  >
+                    {isConsoleLoading ? (
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <CircularProgress size={24} />
+                      </Box>
+                    ) : (
+                      <PlayArrowOutlinedIcon style={{ fontSize: 24 }} />
+                    )}
+                  </button>
+                </TooltipMUI>
+                <TooltipMUI title='Clear Console'>
+                  <button
+                    className='absolute top-0 right-2 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-red-900/20 border !border-gray-700 uppercase hover:!bg-red-900/50 active:ring-1 active:ring-bg-alt mt-2'
+                    onClick={() => setConsoleOutput('')}
+                  >
+                    <ClearIcon />
+                  </button>
+                </TooltipMUI>
 
                 <Terminal output={consoleOutput} />
               </div>
@@ -508,15 +575,16 @@ export function RecorderEditor() {
 
       {recorderState === 'recording' && (
         <>
-
           <button
             className='p-2 text-white ml-[15vw]'
             onClick={handlePauseRecording}
           >
-
             Pause Recording
           </button>
-          <button className='p-2 text-white' onClick={handleEndRecording}>
+          <button
+            className='p-2 text-white'
+            onClick={handleEndRecording}
+          >
             End Recording
           </button>
         </>
@@ -530,7 +598,10 @@ export function RecorderEditor() {
           >
             Resume Recording
           </button>
-          <button className='p-2 text-white' onClick={handleEndRecording}>
+          <button
+            className='p-2 text-white'
+            onClick={handleEndRecording}
+          >
             End Recording
           </button>
         </>
@@ -552,13 +623,19 @@ export function RecorderEditor() {
         </p>
       )}
 
-      {saveModalVisible && (
-        <SaveRecordingModal
-          onSave={handleSave}
-          onDiscard={handleDiscard}
-          onClose={() => setSaveModalVisible(false)}
+      <Modal
+        show={saveModalVisible}
+        closeModal={() => setSaveModalVisible(false)}
+        closeOnOutsideClick={false}
+      >
+        <EditDetailsform
+          detailsToEdit={details}
+          setDetailsToEdit={setDetails}
+          cancelText='Discard'
+          save={handleSave}
+          cancel={() => setSaveModalVisible(false)}
         />
-      )}
+      </Modal>
     </>
   );
 }

@@ -10,12 +10,16 @@ interface EditDetailsformProps {
   detailsToEdit: updateRecording;
   save: (details: updateRecording) => void;
   setDetailsToEdit: React.Dispatch<React.SetStateAction<updateRecording>>;
+  cancel: () => void;
+  cancelText?: string;
 }
 
 const EditDetailsform: FC<EditDetailsformProps> = ({
   detailsToEdit,
   setDetailsToEdit,
   save,
+  cancel,
+  cancelText = 'Cancel',
 }) => {
   const [image, setImage] = useState(detailsToEdit.thumbnail_link);
   const [file, setFile] = useState<File | null>(null);
@@ -32,7 +36,6 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
   const handleInputChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    console.log('event.target.name: ', event.target.name);
     setDetailsToEdit({
       ...detailsToEdit,
       [event.target.name]: event.target.value,
@@ -85,7 +88,7 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
     console.log('file: ', file);
     console.log('image: ', image);
 
-    if (image && file) {
+    if (file) {
       try {
         dispatch(setLoadingSpinner(true));
         const storageRef = ref(storage, `thumbnails/${file.name}`);
@@ -98,6 +101,10 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
       } catch (error) {
         console.error('Error uploading thumbnail:', error);
       }
+    } else if (!file && image) {
+      updatedDetails.thumbnail_link = image;
+      setDetailsToEdit({ ...detailsToEdit, thumbnail_link: image });
+      save(updatedDetails);
     } else {
       updatedDetails.thumbnail_link = '';
       setDetailsToEdit({ ...detailsToEdit, thumbnail_link: '' });
@@ -124,7 +131,7 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
 
   return (
     <>
-      <form>
+      <form className='text-white'>
         <input
           ref={fileInputRef}
           accept='image/*'
@@ -165,7 +172,7 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
             Title:
             <input
               className={`w-full p-2 border-2 rounded-md bg-bg-muigrey/80 mb-4 ${
-                titleError && 'border-red-600 border'
+                titleError && 'border-red-600/70 border'
               }}`}
               name='title'
               value={detailsToEdit.title}
@@ -174,7 +181,7 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
             />
           </label>
           {titleError && (
-            <small className='text-red-600 absolute right-0 top-[4.3rem]'>
+            <small className='text-red-600/90 absolute right-0 top-[4.3rem]'>
               {titleError}
             </small>
           )}
@@ -237,6 +244,13 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
           className='w-fit py-2 px-4 border-2 rounded-md bg-bg-muigrey/80 mb-4 hover:bg-white/20 active:bg-white/30'
         >
           Save
+        </button>
+        <button
+          type='button'
+          onClick={cancel}
+          className='ml-10 w-fit py-2 px-4 border-2 rounded-md bg-bg-muigrey/80 mb-4 hover:bg-white/20 active:bg-white/30'
+        >
+          {cancelText}
         </button>
       </form>
       {showUnpublishModal && (

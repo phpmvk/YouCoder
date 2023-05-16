@@ -20,7 +20,6 @@ import Team from './pages/Team';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 export const Firebase = initializeApp(config.firebaseConfig);
 export const storage = getStorage(Firebase);
 
@@ -95,7 +94,6 @@ function App() {
       </BrowserRouter>
 
       <Footer />
-
     </>
   );
 }

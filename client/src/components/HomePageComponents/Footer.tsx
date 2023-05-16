@@ -1,5 +1,4 @@
-import React, { FC, ReactElement } from 'react';
-import { Box, Container, Grid, Typography } from '@mui/material';
+import { FC, ReactElement } from 'react';
 
 export const Footer: FC = (): ReactElement => {
   return (
