@@ -36,7 +36,6 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
   const handleInputChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    console.log('event.target.name: ', event.target.name);
     setDetailsToEdit({
       ...detailsToEdit,
       [event.target.name]: event.target.value,
@@ -102,7 +101,7 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
       } catch (error) {
         console.error('Error uploading thumbnail:', error);
       }
-    } else if (image) {
+    } else if (!file && image) {
       updatedDetails.thumbnail_link = image;
       setDetailsToEdit({ ...detailsToEdit, thumbnail_link: image });
       save(updatedDetails);
@@ -132,7 +131,7 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
 
   return (
     <>
-      <form>
+      <form className='text-white'>
         <input
           ref={fileInputRef}
           accept='image/*'

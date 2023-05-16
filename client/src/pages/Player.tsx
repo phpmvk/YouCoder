@@ -158,7 +158,11 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
     },
     [displayCover, coverClicked]
   );
-  return <>{toRender}</>;
+  return (
+    <>
+      <div className='overflow-hidden'>{toRender}</div>
+    </>
+  );
 };
 
 export default PlayerPage;

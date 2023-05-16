@@ -4,9 +4,8 @@ import { editor } from 'monaco-editor';
 import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
 
-import { SaveRecordingModal } from './HomePageComponents/SaveRecordingModal';
 import { saveYCRFile } from '../utils/ycrUtils';
-import { useAppSelector } from '../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import recordingApi from '../services/recordingApi';
 import { formatTime, calculateTotalPauseTime } from '../utils/editorUtils';
 
@@ -17,6 +16,12 @@ import {
   htmlOutput,
 } from '../types/MultiEditor';
 import { RecorderEditor } from './RecorderEditor';
+import Modal from './Modal';
+import EditDetailsform from './NewDashboardComponents/EditDetailsForm';
+import { updateRecording } from '../types/Creator';
+import { setLoadingSpinner } from '../redux/spinnerSlice';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export function MultiEditorRecorder() {
   //Multi states
@@ -44,6 +49,14 @@ export function MultiEditorRecorder() {
   const [recordingIntervalId, setRecordingIntervalId] =
     useState<NodeJS.Timeout | null>(null);
   const [pauseAction, setPauseAction] = useState(false);
+  const [details, setDetails] = useState<updateRecording>({
+    title: '',
+    description: '',
+    thumbnail_link: '',
+    published: false,
+  });
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const recorderActions = useRef<RecorderActions>({
     start: 0,
@@ -348,11 +361,7 @@ export function MultiEditorRecorder() {
     setSaveModalVisible(true);
   }
 
-  async function handleSave(
-    title: string,
-    description: string,
-    thumbnail_link: string
-  ) {
+  async function handleSave(updatedDetails: updateRecording) {
     try {
       const json = JSON.stringify(recorderActions.current);
       const jsonBlob = new Blob([json], { type: 'application/json' });
@@ -366,17 +375,23 @@ export function MultiEditorRecorder() {
       const language = 'multi';
 
       const Recording: EditorRecording = {
-        title,
-        description,
-        thumbnail_link,
+        title: updatedDetails.title!,
+        description: updatedDetails.description || '',
+        thumbnail_link: updatedDetails.thumbnail_link || '',
+        published: updatedDetails.published!,
         language,
         recording_link: ycrFileUrl,
         duration: elapsedTime,
       };
 
-      recordingApi.postRecording(Recording);
+      recordingApi.postRecording(Recording)?.then((response) => {
+        toast.success('Recording saved successfully!');
+        dispatch(setLoadingSpinner(false));
+        navigate('/dashboard');
+      });
     } catch (error) {
       console.error('Error saving recording', error);
+      toast.error('Error saving recording');
     }
   }
 
@@ -482,17 +497,26 @@ export function MultiEditorRecorder() {
       </div>
 
       {recorderState === 'stopped' && (
-        <button className='p-2 text-white' onClick={handleStartRecording}>
+        <button
+          className='p-2 text-white'
+          onClick={handleStartRecording}
+        >
           Start Recording
         </button>
       )}
 
       {recorderState === 'recording' && (
         <>
-          <button className='p-2 text-white' onClick={handlePauseRecording}>
+          <button
+            className='p-2 text-white'
+            onClick={handlePauseRecording}
+          >
             Pause Recording
           </button>
-          <button className='p-2 text-white' onClick={handleEndRecording}>
+          <button
+            className='p-2 text-white'
+            onClick={handleEndRecording}
+          >
             End Recording
           </button>
         </>
@@ -500,16 +524,25 @@ export function MultiEditorRecorder() {
 
       {recorderState === 'paused' && (
         <>
-          <button className='p-2 text-white' onClick={handleResumeRecording}>
+          <button
+            className='p-2 text-white'
+            onClick={handleResumeRecording}
+          >
             Resume Recording
           </button>
-          <button className='p-2 text-white' onClick={handleEndRecording}>
+          <button
+            className='p-2 text-white'
+            onClick={handleEndRecording}
+          >
             End Recording
           </button>
         </>
       )}
 
-      <button className='p-2 text-white' onClick={handleRenderOutput}>
+      <button
+        className='p-2 text-white'
+        onClick={handleRenderOutput}
+      >
         Render HTML
       </button>
 
@@ -530,13 +563,19 @@ export function MultiEditorRecorder() {
         </p>
       )}
 
-      {saveModalVisible && (
-        <SaveRecordingModal
-          onSave={handleSave}
-          onDiscard={handleDiscard}
-          onClose={() => setSaveModalVisible(false)}
+      <Modal
+        show={saveModalVisible}
+        closeModal={() => setSaveModalVisible(false)}
+        closeOnOutsideClick={false}
+      >
+        <EditDetailsform
+          detailsToEdit={details}
+          setDetailsToEdit={setDetails}
+          cancelText='Discard'
+          save={handleSave}
+          cancel={() => setSaveModalVisible(false)}
         />
-      )}
+      </Modal>
 
       <iframe
         srcDoc={htmlOutput}
