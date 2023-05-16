@@ -2,29 +2,34 @@
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
+    screens: {
+      xs: '320px',
+      sm: '640px',
+      md: '768px',
+      md2: '1000px',
+      lg: '1024px',
+      lg2: '1200px',
+      xl: '1280px',
+      '2xl': '1536px',
+    },
+
     extend: {
       screens: {
+        '600': '600px',
         '700': '700px',
+        '720': '720px',
         '740': '740px',
-        '720': '720px',
-        '720': '720px',
-        '720': '720px',
-        '720': '720px',
-        '720': '720px',
-        '720': '720px',
-        '720': '720px',
-        '720': '720px',
-        '720': '720px',
+        '850': '850px',
         '900': '900px',
         '1140': '1140px',
       },
       scale: {
-        '80': '.80',
-        '82': '82',
-        '85': '.85',
+        80: '.80',
+        82: '82',
+        85: '.85',
       },
       margin: {
-'-200': '-200px',
+        '-200': '-200px',
       },
       colors: {
         bg: {
@@ -35,12 +40,17 @@ module.exports = {
           muigrey: '#2a2a2a',
           muilightgrey: '#515151',
           gptdark: '#202123',
-          console: '#1e1e1e'
+          console: '#1e1e1e',
         },
+       
         text: {
           // normal: 'slate-300',
         },
       },
+
+       backgroundImage: {
+          'player': "url('/client/src/components/HomePageComponents/PlayerPicture.svg)",
+        },
       fontFamily: {
         title: ['"Space Grotesk"'],
         console: ['"IBM Plex Mono"'],
@@ -53,7 +63,7 @@ module.exports = {
         'spin-slow': 'spin 5s linear infinite',
         'spin-med': 'spin 10s linear infinite',
         'spin-xslow': 'spin 20s linear infinite',
-        'spin-xxslow': 'spin 25s linear infinite'
+        'spin-xxslow': 'spin 25s linear infinite',
       },
       keyframes: {
         blinking: {

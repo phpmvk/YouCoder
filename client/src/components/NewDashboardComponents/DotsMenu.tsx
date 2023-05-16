@@ -77,11 +77,16 @@ const DotsMenu = ({
       .deleteRecording(recording.recording_id)
       .then((res) => {
         console.log('res from deleting recording: ', res);
+        toast.success('Recording deleted successfully!');
         dispatch(deleteUserRecording({ recordingId: recording.recording_id }));
-        setShowDeleteModal(false);
       })
       .catch((err) => {
         console.log('err from deleting recording: ', err);
+        toast.error('Error deleting recording');
+      })
+      .finally(() => {
+        setShowDeleteModal(false);
+        dispatch(setLoadingSpinner(false));
       });
   };
 
@@ -114,6 +119,7 @@ const DotsMenu = ({
           detailsToEdit={details}
           setDetailsToEdit={setDetails}
           save={handleSave}
+          cancel={() => setShowModal(false)}
         />
       </Modal>
       <button
@@ -176,7 +182,7 @@ const DotsMenu = ({
               }}
               className='block px-4 py-2 hover:bg-bg-muigrey w-full text-left active:bg-bg-sec/20'
             >
-              Copy Embed Link
+              Copy {'<iframe>'}
             </button>
           </li>
         </ul>

@@ -3,6 +3,7 @@ import { BiPlayCircle } from 'react-icons/bi';
 import { IoEyeSharp } from 'react-icons/io5';
 import { formatLanguage, formatTime } from '../../utils/editorUtils';
 import DotsMenu from './DotsMenu';
+import youcoderlogo from '../../assets/logo.png';
 import { useState } from 'react';
 
 interface RecordingCardProps {
@@ -20,12 +21,23 @@ const RecordingCard = ({
 }: RecordingCardProps) => {
   return (
     <>
-      <div className='flex flex-col justify-center items-center w-96 rounded-md bg-bg-pri hover:bg-gradient-to-r from-white via-bg-alt to-bg-sec'>
+      <div className='flex flex-col h-fit justify-center items-center w-96 rounded-md bg-bg-pri hover:bg-gradient-to-r from-white via-bg-alt to-bg-sec'>
         <div className='w-[23.875rem] h-[19rem] pt-px'>
           <a
             href={recording.full_link}
             className='text-gray-200 shadow-black border-b border-b-gray-200 relative flex justify-center items-center w-full h-48 bg-gradient-to-b from-gray-900 to-gray-600 rounded-t-md'
           >
+            {!allowEdit && (
+              <>
+                <div className='absolute top-3 right-3 z-10'>
+                  <img
+                    className='w-12 h-12 rounded-full'
+                    src={recording.creator?.picture}
+                    alt=''
+                  />
+                </div>
+              </>
+            )}
             {recording.thumbnail_link ? (
               <img
                 className='absolute object-cover w-full h-full rounded-t-md'
@@ -33,9 +45,16 @@ const RecordingCard = ({
                 alt={`cover image for ${recording.title}`}
               />
             ) : (
-              <span className='z-10 text-black'>Youcoder Recording</span>
+              <div className='absolute top-7 left-7 opacity-100 flex items-start'>
+                <img
+                  className='opacity-50 w-20 '
+                  src={youcoderlogo}
+                ></img>
+              </div>
             )}
-            <BiPlayCircle className='absolute left-auto right-auto text-7xl text-white/30 z-10' />
+            <div className='absolute w-full h-full opacity-0 hover:opacity-100 flex items-center justify-around transition-opacity'>
+              <BiPlayCircle className='text-7xl text-white/30 z-10' />
+            </div>
             <div className='absolute text-sm bottom-2 w-full flex justify-between px-2'>
               <small className='bg-gray-800/70 text-white/70 rounded-sm px-1 '>
                 {formatLanguage(recording.language)}

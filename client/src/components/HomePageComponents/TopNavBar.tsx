@@ -7,7 +7,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import youcoderlogo from '../../../public/Layer-1.svg';
+import youcoderlogo from '../../assets/logo.png';
 import { Button } from '@mui/material';
 import { Link, Router, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -16,6 +16,7 @@ import { removeUser } from '../../redux/userSlice';
 import { AiFillVideoCamera } from 'react-icons/ai';
 import { setSearchTerm } from '../../redux/searchSlice';
 import { persistor } from '../../redux/store';
+import { toast } from 'react-toastify';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -68,8 +69,7 @@ interface TopNavBarProps {
 function TopNavBar({
   showSearch = false,
   showCreateRecording = false,
-  showDashboard = false,
-  showFeatures = false,
+  showDashboard = true,
   showExamples = false,
 }: TopNavBarProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -99,6 +99,7 @@ function TopNavBar({
         console.log('signed out');
         setLoggedIn(false);
         navigate('/');
+        toast.success('Logged out successfully');
       })
       .catch((error: Error) => {
         console.log(error);
@@ -125,61 +126,6 @@ function TopNavBar({
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  // const menuId = 'primary-search-account-menu';
-  // const renderMenu = (
-  //   <Menu
-  //     anchorEl={anchorEl}
-  //     anchorOrigin={{
-  //       vertical: 'top',
-  //       horizontal: 'right',
-  //     }}
-  //     id={menuId}
-  //     keepMounted
-  //     transformOrigin={{
-  //       vertical: 'top',
-  //       horizontal: 'right',
-  //     }}
-  //     open={isMenuOpen}
-  //     onClose={handleMenuClose}
-  //   >
-  //     <MenuItem onClick={handleMenuClose}>Log In</MenuItem>
-  //     <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-  //   </Menu>
-  // );
-
-  // const mobileMenuId = 'primary-search-account-menu-mobile';
-  // const renderMobileMenu = (
-  //   <Menu
-  //     anchorEl={mobileMoreAnchorEl}
-  //     anchorOrigin={{
-  //       vertical: 'top',
-  //       horizontal: 'right',
-  //     }}
-  //     id={mobileMenuId}
-  //     keepMounted
-  //     transformOrigin={{
-  //       vertical: 'top',
-  //       horizontal: 'right',
-  //     }}
-  //     open={isMobileMenuOpen}
-  //     onClose={handleMobileMenuClose}
-  //   >
-  //     <MenuItem></MenuItem>
-  //     <MenuItem onClick={handleProfileMenuOpen}>
-  //       <IconButton
-  //         size='large'
-  //         aria-label='account of current user'
-  //         aria-controls='primary-search-account-menu'
-  //         aria-haspopup='true'
-  //         color='inherit'
-  //       >
-  //         <AccountCircle />
-  //       </IconButton>
-  //       <p>Profile</p>
-  //     </MenuItem>
-  //   </Menu>
-  // );
-
   return (
     <div className='sticky top-0 z-40'>
       <Box sx={{ flexGrow: 1, height: '60px' }}>
@@ -199,8 +145,10 @@ function TopNavBar({
                 sx={{ display: { xs: 'none', sm: 'block' } }}
               >
                 {' '}
-                
-                <img src={youcoderlogo} style={{width: '80px', height: '80px'}}></img> 
+                <img
+                  src={youcoderlogo}
+                  style={{ height: '55px', marginBottom: '15px' }}
+                ></img>
               </Typography>
             </Link>
             {showSearch && (
@@ -228,18 +176,20 @@ function TopNavBar({
             >
               {/* Conditionally render the Create Recording button */}
               {showCreateRecording && (
-                <Button
-                  className='w-full h-full t-[10vw] border-solid !border-2 !border-red-700 hover:!bg-red-700/20 !text-white !rounded-full !text-l !mr-6 whitespace-nowrap'
-                  color='inherit'
-                  variant='outlined'
-                >
-                  <AiFillVideoCamera className='text-red-700 mr-2 text-lg' />
-                  Create Recording
-                </Button>
+                <Link to='/recording'>
+                  <Button
+                    className='w-full h-full t-[10vw] border-solid !border-2 !border-red-700 hover:!bg-red-700/30 !text-white !rounded-full !text-l !mr-6 whitespace-nowrap'
+                    color='inherit'
+                    variant='outlined'
+                  >
+                    <AiFillVideoCamera className='text-red-700 mr-2 text-lg' />
+                    Create Recording
+                  </Button>
+                </Link>
               )}
 
               {/* Conditionally render the Dashboard button */}
-              {showDashboard && (
+              {showDashboard && loggedIn && (
                 <Link to='/dashboard'>
                   <Button
                     className='hover:!underline'
@@ -249,14 +199,14 @@ function TopNavBar({
                   </Button>
                 </Link>
               )}
-              {showFeatures && (
+              <Link to='/discover'>
                 <Button
                   className='hover:!underline hover:!underline-offset-8'
                   color='inherit'
                 >
-                  Features
+                  Discovery
                 </Button>
-              )}
+              </Link>
               {showExamples && (
                 <Button
                   className='hover:!underline hover:!underline-offset-8'
@@ -270,7 +220,7 @@ function TopNavBar({
                   className='hover:!underline hover:!underline-offset-8'
                   color='inherit'
                 >
-                  Docs
+                  FAQ
                 </Button>
               </Link>
             </Box>
@@ -299,34 +249,12 @@ function TopNavBar({
                 </>
               )}
 
-              {/* <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup='true'
-              onClick={handleProfileMenuOpen}
-              color='inherit'
-            >
-              <AccountCircle />
-            </IconButton> */}
+            
             </Box>
-            {/* <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size='large'
-              aria-label='show more'
-              aria-controls={mobileMenuId}
-              aria-haspopup='true'
-              onClick={handleMobileMenuOpen}
-              color='inherit'
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box> */}
+           
           </Toolbar>
         </AppBar>
-        {/* {renderMobileMenu}
-      {renderMenu} */}
+        
       </Box>
     </div>
   );
