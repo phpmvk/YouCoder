@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getRecordingById, createNewRecording, findUser, fetchAllUserRecordings, updateRecording, deleteRecording, incrementViewCount, incrementLikeCount } from "../models/recordings.model";
+import { getRecordingById, createNewRecording, findUser, fetchAllUserRecordings, updateRecording, deleteRecording, incrementViewCount, incrementLikeCount, fetchAllUserPublicRecordings, fetchPublicRecordingsBySearchQuery } from "../models/recordings.model";
 import moment from 'moment'
 
 export async function getRecordingByIdController(req: Request, res: Response) {
@@ -27,8 +27,10 @@ export async function getRecordingByIdController(req: Request, res: Response) {
     return res.status(200).send(recording)
   } catch (err) {
     if (err instanceof InvalidRecordingError) {
+      console.error(err)
       res.status(400).send({ message: err.message})
     } else {
+      console.error(err)
       res.status(500).send({ message: 'Internal server error'})
     }
   }
@@ -44,6 +46,7 @@ export async function incrementRecordingLikesController(req: Request, res: Respo
     }
     res.status(200).send({ message: 'Resource updated' })
   } catch (err) {
+    console.error(err)
     res.status(500).send({ message: 'Internal server error'})
   }
 }
@@ -65,6 +68,44 @@ export async function getAllUserRecordingsController(req: Request, res: Response
     res.status(500).send({ message: 'Internal server error'})
   }
 }
+
+export async function recordingsQueryController(req: Request, res: Response) {
+  console.log('Recordings - GET received - recordingsQueryController')
+  try {
+    const { query, user } = req.query
+
+    if (!query && !user) {
+      return res.status(400).send({ message: 'No query params provided' })
+    };
+
+    if (user) {
+      const uid = user.toString();
+      try {
+        const publicUserRecordings = await fetchAllUserPublicRecordings(uid);
+        return res.status(200).send(publicUserRecordings)
+      } catch (err) {
+        console.error(err);
+        return res.status(500).send({ message: 'Error searching for user with provided query parameters'})
+      }
+    }
+
+    if (query) {
+      const searchParams = query.toString();
+      try {
+        const publicSearchResults = await fetchPublicRecordingsBySearchQuery(searchParams);
+        return res.status(200).send(publicSearchResults)
+      } catch (err) {
+        console.error(err);
+        return res.status(500).send({ message: 'Error searching for resources with provided query parameters'})
+      }
+    }
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: 'Internal server error when searching with provided parameters: ' + req.query})
+  }
+}
+
 
 export async function uploadRecordingController(req: Request, res: Response) {
   console.log('Recordings - POST received - uploadRecording')
@@ -125,8 +166,10 @@ export async function updateRecordingController(req: Request, res: Response) {
     res.status(200).send(updatedRecording)
   } catch (err) {
     if (err instanceof InvalidRecordingError) {
+      console.error(err)
       res.status(400).send({ message: err.message})
     } else {
+      console.error(err)
       res.status(500).send({ message: 'Internal server error' })
     }
   }
@@ -157,8 +200,10 @@ export async function deleteRecordingController(req: Request, res: Response) {
     res.status(204).send()
   } catch (err) {
     if (err instanceof InvalidRecordingError) {
+      console.error(err)
       res.status(400).send({ message: err.message})
     } else {
+      console.error(err)
       res.status(500).send({ message: 'Internal server error'})
     }
   }

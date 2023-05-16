@@ -86,13 +86,10 @@ export function calculateTotalPauseTime(
 }
 
 // Set current theme based on if darkmode is on or not
-export const toggleTheme = (
-  darkMode: boolean,
-  monacoInstance: typeof monaco
-) => {
-  if (darkMode) {
-    monacoInstance.editor.setTheme('vs-dark');
-  } else {
+export const toggleTheme = (theme: string, monacoInstance: typeof monaco) => {
+  if (theme === 'light') {
     monacoInstance.editor.setTheme('vs-light');
+  } else {
+    monacoInstance.editor.setTheme('vs-dark');
   }
 };

@@ -15,12 +15,15 @@ import {
   formatTime,
   getLanguageId,
   formatLanguage,
+  toggleTheme,
 } from '../utils/editorUtils';
 import { Recording } from '../types/Creator';
 import Button from '@mui/material/Button';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import VolumeDownIcon from '@mui/icons-material/VolumeDown';
 import ClearIcon from '@mui/icons-material/Clear';
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 import { default as TooltipMUI } from '@mui/material/Tooltip';
@@ -39,9 +42,11 @@ import { MultiEditorPlayback } from './MultiEditorPlayback';
 export function PlaybackEditor({
   recordingData,
   autoplay,
+  theme,
 }: {
   recordingData: Recording;
   autoplay?: boolean;
+  theme: string;
 }) {
   const [editorInstance, setEditorInstance] =
     useState<editor.IStandaloneCodeEditor | null>(null);
@@ -83,6 +88,8 @@ export function PlaybackEditor({
     null
   );
   const [audioDuration, setAudioDuration] = useState<number>(0);
+  const [volume, setVolume] = useState(1);
+  const [showVolumeSlider, setShowVolumeSlider] = useState(false);
 
   useEffect(() => {
     playbackStateRef.current = playbackState;
@@ -105,6 +112,10 @@ export function PlaybackEditor({
       monacoInstance.editor.setModelLanguage(model!, editorLanguage);
     }
   }, []);
+
+  // useEffect(() => {
+  //   if (monacoInstance) toggleTheme(theme, monacoInstance!);
+  // }, [theme, monacoInstance]);
 
   useEffect(() => {
     const defaultFontSize = getDefaultFontSize();
@@ -178,6 +189,7 @@ export function PlaybackEditor({
       ],
       () => null
     );
+    editor.revealLineInCenter(range.endLineNumber);
   }
 
   function startPlayback(
@@ -200,9 +212,10 @@ export function PlaybackEditor({
       (output) => output.playbackTimestamp >= baseTimestamp
     );
 
-    // if (audioElement && (sliderValue !== 0 || !sliderValue)) {
-    //   audioElement.play();
-    // }
+    if (audioElement && sliderValue === 0) {
+      audioElement.play();
+      audioElement!.volume = volume;
+    }
 
     // Clear existing timeouts if any
     actionTimeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
@@ -265,9 +278,8 @@ export function PlaybackEditor({
   }
 
   //playback handlers
-  async function handleStartPlayback() {
+  function handleStartPlayback() {
     if (importedActions) {
-      await audioElement!.play();
       getCurrentLanguage();
       editorInstance!.setValue('');
       setTeacherConsoleOutput('');
@@ -287,6 +299,7 @@ export function PlaybackEditor({
 
   function handleResumePlayback() {
     audioElement?.play();
+    audioElement!.volume = volume;
     if (importedActions) {
       editorInstance!.setValue('');
       startPlayback(importedActions.editorActions, editorInstance!);
@@ -299,6 +312,7 @@ export function PlaybackEditor({
     updateAudioCurrentTime(scrubberPosition);
     if (previousPlaybackState === 'playing') {
       audioElement!.play();
+      audioElement!.volume = volume;
 
       clearInterval(sliderIntervalIdRef.current!);
       setSliderValue(scrubberPosition);
@@ -390,6 +404,7 @@ export function PlaybackEditor({
               status: 'stopped',
               currentPosition: 0,
             });
+            updateAudioCurrentTime(0);
             return 0; // Set sliderValue to audioDuration
           }
           return prevSliderValue + 100;
@@ -482,6 +497,15 @@ export function PlaybackEditor({
         setIsStudentConsoleLoading(false);
       });
   }
+  function VolumeIcon() {
+    if (volume === 0) {
+      return <VolumeOffIcon />;
+    } else if (volume < 0.5) {
+      return <VolumeDownIcon />;
+    } else {
+      return <VolumeUpIcon />;
+    }
+  }
 
   return recordingData.language === 'multi' ? (
     <MultiEditorPlayback recordingData={recordingData} />
@@ -509,7 +533,7 @@ export function PlaybackEditor({
                 height='500px'
                 defaultLanguage={editorLanguage}
                 defaultValue=''
-                theme='vs-dark'
+                theme={`vs-${theme}`}
                 options={{
                   wordWrap: 'on',
                   readOnly: ignoreUserInputs,
@@ -520,13 +544,13 @@ export function PlaybackEditor({
             </Allotment.Pane>
             <Allotment.Pane minSize={200} preferredSize={400}>
               <div className=' w-full h-[50%] border-r-8 border-t-8 border-l-2 border-bg-pri '>
-                <Terminal terminalName='output' output={TeacherConsoleOutput} />
+                <Terminal terminalName='recording console' output={TeacherConsoleOutput} />
               </div>
               <div className='relative w-full h-[50%] border-t-6 border-l-2 border-r-8 border-bg-pri'>
                 <div className='flex justify-center items-center'>
                   <TooltipMUI title='Compile & Execute'>
                     <button
-                      className=' absolute top-0 right-14 w-fit items-center px-2 text-sm  text-gray-200 rounded !bg-green-900/20 border !border-gray-700 uppercase hover:!bg-green-900/50 active:ring-1 active:ring-bg-alt'
+                      className=' absolute top-0 right-20 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-green-900/20 border !border-gray-400 uppercase hover:!bg-green-900/50 active:ring-1 active:ring-bg-alt'
                       onClick={handleJudge0}
                       disabled={isStudentConsoleLoading}
                     >
@@ -538,24 +562,25 @@ export function PlaybackEditor({
                             alignItems: 'center',
                           }}
                         >
-                          <CircularProgress size={24} />
+                          <CircularProgress size={20} />
                         </Box>
                       ) : (
-                        <PlayArrowOutlinedIcon style={{ fontSize: 24 }} />
+                        // <PlayArrowOutlinedIcon style={{ fontSize: 24 }} />
+                        <p>run</p>
                       )}
                     </button>
                   </TooltipMUI>
                   <TooltipMUI title='Clear Console'>
                     <button
-                      className='absolute top-0 right-2 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-red-900/20 border !border-gray-700 uppercase hover:!bg-red-900/50 active:ring-1 active:ring-bg-alt'
+                      className='absolute top-0 right-2 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-red-900/20 border !border-gray-400 uppercase hover:!bg-red-900/50 active:ring-1 active:ring-bg-alt'
                       onClick={() => setStudentConsoleOutput('')}
-                    >
-                      <ClearIcon />
+                    > <p>clear</p>
+                      {/* <ClearIcon /> */}
                     </button>
                   </TooltipMUI>
                 </div>
                 <Terminal
-                  terminalName='your output'
+                  terminalName='your console'
                   output={StudentConsoleOutput}
                 />
               </div>
@@ -564,11 +589,19 @@ export function PlaybackEditor({
         </div>
         <br></br>
         <br></br>
-        <div className='w-auto flex items-center justify-start space-x-10 -mt-12 bg-bg-pri mx-6 px-1 md:pax-auto'>
+        <div
+          className={`w-auto flex items-center justify-start space-x-10 -mt-12 bg-bg-pri mx-6 px-1 md:pax-auto ${
+            theme === 'light' ? 'bg-white' : 'bg-bg-pri'
+          }`}
+        >
           {playbackState.status === 'stopped' && (
             <Button
-              variant='outlined'
-              className='!rounded-full !bg-bg-alt !text-bg-pri'
+              variant='contained'
+              className={`!rounded-xl !bg-bg-alt !text-bg-pri
+               ${
+                 theme === 'light' ? '!bg-gray-500 ' : '!bg-bg-alt !text-bg-pri'
+               }
+              `}
               onClick={handleStartPlayback}
             >
               <PlayArrowIcon />
@@ -576,8 +609,8 @@ export function PlaybackEditor({
           )}
           {playbackState.status === 'playing' && (
             <Button
-              variant='outlined'
-              className='!rounded-full !bg-bg-alt !text-bg-pri'
+              variant='contained'
+              className='!rounded-xl !bg-bg-alt !text-bg-pri'
               onClick={handlePausePlayback}
             >
               <PauseIcon />
@@ -585,8 +618,8 @@ export function PlaybackEditor({
           )}
           {playbackState.status === 'paused' && (
             <Button
-              variant='outlined'
-              className='!rounded-full !bg-bg-alt !text-bg-pri'
+              variant='contained'
+              className='!rounded-xl !bg-bg-alt !text-bg-pri'
               onClick={handleResumePlayback}
             >
               <PlayArrowIcon />
@@ -594,10 +627,33 @@ export function PlaybackEditor({
           )}
 
           <div className='text-gray-200 mx-4 whitespace-nowrap'>
-            <button className='mr-8'>
-              <VolumeUpIcon />
-            </button>
-            {formatTime(sliderValue)} / {formatTime(audioDuration)}
+            <div style={{ position: 'relative' }}>
+              <button
+                className='mr-8'
+                onClick={() => setShowVolumeSlider(!showVolumeSlider)}
+              >
+                <VolumeIcon />
+              </button>
+              {showVolumeSlider && (
+                <div style={{ position: 'absolute', left: 3, bottom: '100%' }}>
+                  <ReactSlider
+                    className='w-3 h-32 max-h-[800px] bg-bg-gptdark rounded-full mx-auto border-white border flex justify-center px-2'
+                    thumbClassName='w-5 h-5 bg-white rounded-full cursor-pointer focus:outline-none active:h-7 active:w-7 transition'
+                    value={volume}
+                    step={0.01}
+                    min={0}
+                    max={1}
+                    orientation='vertical'
+                    invert
+                    onChange={(value) => {
+                      setVolume(value);
+                      audioElement!.volume = value;
+                    }}
+                  />
+                </div>
+              )}
+              {formatTime(sliderValue)} / {formatTime(audioDuration)}
+            </div>
           </div>
           <ReactSlider
             className='w-10/12 max-w-[800px] h-5 bg-bg-gptdark rounded-full mx-auto border-white border flex items-center pr-2'
@@ -618,7 +674,7 @@ export function PlaybackEditor({
               audioElement!.muted = false;
             }}
           />
-          <Tooltip />
+          {/* <Tooltip /> */}
         </div>
         <br></br>
       </div>
