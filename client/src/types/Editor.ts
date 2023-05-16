@@ -55,4 +55,5 @@ export type EditorRecording = {
   language: string;
   recording_link: string;
   duration: number;
+  published: boolean;
 };
