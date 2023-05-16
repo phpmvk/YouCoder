@@ -38,7 +38,7 @@ const BottomBall: React.FC = () => {
   return (
     <>
       <motion.div
-        className="absolute rounded-full z-0 "
+        className="absolute rounded-full z-0  "
         style={{
           x,
           y,
@@ -52,7 +52,7 @@ const BottomBall: React.FC = () => {
         }}
       />
       <motion.div
-        className="absolute rounded-full z-0"
+        className="absolute rounded-full z-0  "
         style={{
           x,
           y,
