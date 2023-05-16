@@ -10,6 +10,7 @@ export default function Page404() {
           height='480'
           allowFullScreen
           title='the end of the world'
+
           scrolling='no'
         />
       </div>

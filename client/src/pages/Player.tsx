@@ -83,7 +83,10 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
                     </div>
                   </div>
                 ) : (
-                  <PlaybackEditor recordingData={response.data} />
+                  <PlaybackEditor
+                    autoplay={true}
+                    recordingData={response.data}
+                  />
                 )}
               </>
             );
