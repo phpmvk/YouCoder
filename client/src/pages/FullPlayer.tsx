@@ -19,7 +19,7 @@ interface FullPlayerPageProps {
 const recording = {
   title: 'Javascript Functions Explained Pt. 2',
   description:
-    'Today we will continue our lesson ',
+    'Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson ',
   creator: 'Michael ',
   subs: '2.3K',
 };
@@ -28,11 +28,11 @@ const recording = {
 
 const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
   return (
-    <div className='min-h-screen bg-bg-pri min-w-[720px]'>
+    <div className='min-h-screen bg-bg-pri min-w-[720px] px-20 flex flex-col justify-center items-center'>
       <div>
         <TopNavBar />
 
-        <div className='bg-bg-pri relative flex justify-center items-center overflow-y-scroll overflow-x-hidden hide-scrollbar'>
+        <div className='bg-bg-pri relative flex justify-center items-center overflow-y-scroll overflow-x-hidden hide-scrollbar pt-4 max-w-[1600px]'>
           <div className=' bg-bg-pri border-solid mx-2 pt-4 top-[20px] mb-20 pb-0 overflow-y-scroll border border-gray-600  rounded-2xl hide-scrollbar'>
             {/* className="border border-bg-pri rounded-xl pt-2 */}
             <PlaybackEditor theme='dark' recordingData={recordingData} />
@@ -48,7 +48,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                   <div className='bg-bg-pri flex flex-row'>
                     <div className='flex flex-row bg-bg-pri w-full h-[250px]'>
                       {/* ---------Left Card */}
-                      <div className='flex flex-col items-center mx-1 min-w-36 max-w-[20vw] px-10'>
+                      <div className='flex flex-col items-center mx-1 min-w-36 max-w-[20vw] px-5'>
   <div className='h-36 w-36 border border-gray-700 rounded-xl shadow bg-bg-pri flex items-center justify-center mb-7'>
     <div className='flex flex-col items-center'>
       <img
@@ -75,8 +75,8 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
 
                       {/* Middle Card -----------------------------------   */}
 
-                      <div className='flex-col mx-1 min-w-[60vw] w-full py-4 h-40 text-left  border rounded-xl shadow bg-bg-pri border-gray-700 overflow-hidden text-white'>
-                        <div className='flex justify-start px-4 pt-4 h-28 md:h-full overflow-y-scroll'>
+                      <div className='flex-col mx-1 min-w-[60vw] w-full py-4 h-56 text-left  border rounded-xl shadow bg-bg-pri border-gray-700 overflow-hidden text-white'>
+                        <div className='flex justify-start px-5 pt-4 h-28 md:h-full overflow-y-scroll hide-scrollbar'>
                           <p className='overflow-ellipsis '>
                             {recording.description}
                           </p>
