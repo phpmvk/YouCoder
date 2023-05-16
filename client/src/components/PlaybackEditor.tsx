@@ -22,6 +22,8 @@ import Button from '@mui/material/Button';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import VolumeDownIcon from '@mui/icons-material/VolumeDown';
 import ClearIcon from '@mui/icons-material/Clear';
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 import { default as TooltipMUI } from '@mui/material/Tooltip';
@@ -494,6 +496,15 @@ export function PlaybackEditor({
         setIsStudentConsoleLoading(false);
       });
   }
+  function VolumeIcon() {
+    if (volume === 0) {
+      return <VolumeOffIcon />;
+    } else if (volume < 0.5) {
+      return <VolumeDownIcon />;
+    } else {
+      return <VolumeUpIcon />;
+    }
+  }
 
   return recordingData.language === 'multi' ? (
     <MultiEditorPlayback recordingData={recordingData} />
@@ -615,17 +626,14 @@ export function PlaybackEditor({
 
           <div className='text-gray-200 mx-4 whitespace-nowrap'>
             <div style={{ position: 'relative' }}>
-              <button onClick={() => setShowVolumeSlider(!showVolumeSlider)}>
-                <i className='fas fa-volume-up'></i>
-              </button>
               <button
                 className='mr-8'
                 onClick={() => setShowVolumeSlider(!showVolumeSlider)}
               >
-                <VolumeUpIcon />
+                <VolumeIcon />
               </button>
               {showVolumeSlider && (
-                <div style={{ position: 'absolute', left: 0, bottom: '100%' }}>
+                <div style={{ position: 'absolute', left: 3, bottom: '100%' }}>
                   <ReactSlider
                     className='w-3 h-32 max-h-[800px] bg-bg-gptdark rounded-full mx-auto border-white border flex justify-center px-2'
                     thumbClassName='w-5 h-5 bg-white rounded-full cursor-pointer focus:outline-none active:h-7 active:w-7 transition'

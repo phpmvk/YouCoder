@@ -105,8 +105,8 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
       <div>
         <TopNavBar />
 
-        <div className='bg-bg-pri relative flex justify-center items-center overflow-y-scroll overflow-x-hidden '>
-          <div className=' bg-bg-pri border-solid mx-2 pt-4 top-[20px] mb-20 pb-0 overflow-y-scroll border border-gray-600  rounded-2xl'>
+        <div className='bg-bg-pri relative flex justify-center items-center overflow-y-scroll overflow-x-hidden hide-scrollbar'>
+          <div className=' bg-bg-pri border-solid mx-2 pt-4 top-[20px] mb-20 pb-0 overflow-y-scroll border border-gray-600  rounded-2xl hide-scrollbar'>
             {/* className="border border-bg-pri rounded-xl pt-2 */}
             <PlaybackEditor theme='dark' recordingData={recordingData} />
 
