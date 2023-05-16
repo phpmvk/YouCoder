@@ -70,7 +70,7 @@ export async function getAllUserRecordingsController(req: Request, res: Response
 }
 
 export async function recordingsQueryController(req: Request, res: Response) {
-  console.log('Recordings - POST received - uploadRecording')
+  console.log('Recordings - GET received - recordingsQueryController')
   try {
     const { query, user } = req.query
 
