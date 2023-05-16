@@ -103,12 +103,35 @@ export async function fetchPublicRecordingsBySearchQuery(searchQuery: string ): 
 }
 
 export async function updateRecording(recordingId: string , dataToUpdate: Record<string, string | boolean>) {
+  if (dataToUpdate.title) {
+    const exisitingRecording = await prisma.recording.findUnique({
+      where: {
+        recording_id: recordingId
+      }
+    });
+    if (exisitingRecording) {
+      const updatedRecording = await prisma.recording.update({
+        where: {
+          recording_id: recordingId
+        },
+        data: {
+          ...dataToUpdate,
+          iframe_link: exisitingRecording.iframe_link?.replace(
+            /title='[^']*'/,
+            `title='${dataToUpdate.title}'`
+          )
+        }
+      });
+      return updatedRecording
+    }
+  }
+  
   const updatedRecording = await prisma.recording.update({
     where: {
       recording_id: recordingId
     }, 
     data: dataToUpdate
-  })
+  });
   return updatedRecording
 }
 
@@ -176,7 +199,7 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
     },
     data: {
       full_link: `https://youcoder.io/player/${newRecording.recording_id}`,
-      iframe_link: `<iframe src='https://youcoder.io/player/${newRecording.recording_id}?embed=true&title=false&cover=true' width='1000' height='480' allowFullScreentitle='${newRecording.title}'/>`
+      iframe_link: `<iframe src='https://youcoder.io/player/${newRecording.recording_id}?embed=true&title=false&cover=true' width='1000' height='480' allowFullScreen title='${newRecording.title}'/>`
     }
   })
 
