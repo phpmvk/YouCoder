@@ -86,6 +86,8 @@ export function PlaybackEditor({
     null
   );
   const [audioDuration, setAudioDuration] = useState<number>(0);
+  const [volume, setVolume] = useState(1);
+  const [showVolumeSlider, setShowVolumeSlider] = useState(false);
 
   useEffect(() => {
     playbackStateRef.current = playbackState;
@@ -209,6 +211,7 @@ export function PlaybackEditor({
 
     if (audioElement && sliderValue === 0) {
       audioElement.play();
+      audioElement!.volume = volume;
     }
 
     // Clear existing timeouts if any
@@ -293,6 +296,7 @@ export function PlaybackEditor({
 
   function handleResumePlayback() {
     audioElement?.play();
+    audioElement!.volume = volume;
     if (importedActions) {
       editorInstance!.setValue('');
       startPlayback(importedActions.editorActions, editorInstance!);
@@ -305,6 +309,7 @@ export function PlaybackEditor({
     updateAudioCurrentTime(scrubberPosition);
     if (previousPlaybackState === 'playing') {
       audioElement!.play();
+      audioElement!.volume = volume;
 
       clearInterval(sliderIntervalIdRef.current!);
       setSliderValue(scrubberPosition);
@@ -609,10 +614,36 @@ export function PlaybackEditor({
           )}
 
           <div className='text-gray-200 mx-4 whitespace-nowrap'>
-            <button className='mr-8'>
-              <VolumeUpIcon />
-            </button>
-            {formatTime(sliderValue)} / {formatTime(audioDuration)}
+            <div style={{ position: 'relative' }}>
+              <button onClick={() => setShowVolumeSlider(!showVolumeSlider)}>
+                <i className='fas fa-volume-up'></i>
+              </button>
+              <button
+                className='mr-8'
+                onClick={() => setShowVolumeSlider(!showVolumeSlider)}
+              >
+                <VolumeUpIcon />
+              </button>
+              {showVolumeSlider && (
+                <div style={{ position: 'absolute', left: 0, bottom: '100%' }}>
+                  <ReactSlider
+                    className='w-3 h-32 max-h-[800px] bg-bg-gptdark rounded-full mx-auto border-white border flex justify-center px-2'
+                    thumbClassName='w-5 h-5 bg-white rounded-full cursor-pointer focus:outline-none active:h-7 active:w-7 transition'
+                    value={volume}
+                    step={0.01}
+                    min={0}
+                    max={1}
+                    orientation='vertical'
+                    invert
+                    onChange={(value) => {
+                      setVolume(value);
+                      audioElement!.volume = value;
+                    }}
+                  />
+                </div>
+              )}
+              {formatTime(sliderValue)} / {formatTime(audioDuration)}
+            </div>
           </div>
           <ReactSlider
             className='w-10/12 max-w-[800px] h-5 bg-bg-gptdark rounded-full mx-auto border-white border flex items-center pr-2'
