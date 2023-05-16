@@ -11,6 +11,7 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import { Recording } from '../types/Creator';
 import ButtonGroup from '@mui/material';
 import { MultiEditorPlayback } from '../components/MultiEditorPlayback';
+import { toast } from 'react-toastify';
 
 interface FullPlayerPageProps {
   recordingData: Recording;
@@ -48,12 +49,12 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                   <div className='bg-bg-pri flex flex-row'>
                     <div className='flex flex-row bg-bg-pri w-full h-[250px]'>
                       {/* ---------Left Card */}
-                      <div className='flex flex-col items-center mx-1 min-w-36 max-w-[20vw] px-5'>
+                      <div className='flex flex-col items-center mx-1 min-w-36 max-w-[20vw] '>
   <div className='h-36 w-36 border border-gray-700 rounded-xl shadow bg-bg-pri flex items-center justify-center mb-7'>
     <div className='flex flex-col items-center'>
       <img
         className='w-20 h-20 !min-w-20 mb-3 rounded-full shadow-lg'
-        src={recordingData.creator.picture}
+        src={recordingData.creator!.picture}
         alt=''
       />
       <h5 className=' text-xl font-medium text-white'>
@@ -64,6 +65,10 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
   <Button
     variant='outlined'
     size='small'
+    onClick={(e) => {
+      navigator.clipboard.writeText(recordingData.full_link);
+      toast.success('Link copied to clipboard');
+    }}
     className='!rounded-lg !bg-bg-muigrey !border-gray-700 w-36 !text-gray-100 whitespace-nowrap h-8 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700 mt-4'
   >
     {/* <ReplyIcon className='transform scale-x-[-1]' /> */}
@@ -75,10 +80,10 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
 
                       {/* Middle Card -----------------------------------   */}
 
-                      <div className='flex-col mx-1 min-w-[60vw] max-w-[1000px] w-full py-4 h-56 text-left  border rounded-xl shadow bg-bg-pri border-gray-700 overflow-hidden text-white'>
-                        <div className='flex justify-start px-5 pt-4 h-28 md:h-full overflow-y-scroll hide-scrollbar'>
-                          <p className='overflow-ellipsis '>
-                            {recording.description}
+                      <div className='flex-col mx-1 min-w-[60vw] max-w-[1000px] w-full py-4 ml-4 h-56 text-left  border rounded-xl shadow bg-bg-pri border-gray-700 overflow-hidden text-white'>
+                        <div className='flex justify-start px-5 pt-1  md:h-full overflow-y-scroll scrollbar-hide'>
+                          <p>
+                            {recordingData.description}
                           </p>
                         </div>
                         {/* <div className='py-8 md:hidden'>

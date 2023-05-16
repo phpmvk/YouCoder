@@ -562,7 +562,7 @@ export function PlaybackEditor({
                             alignItems: 'center',
                           }}
                         >
-                          <CircularProgress size={24} />
+                          <CircularProgress size={20} />
                         </Box>
                       ) : (
                         // <PlayArrowOutlinedIcon style={{ fontSize: 24 }} />
