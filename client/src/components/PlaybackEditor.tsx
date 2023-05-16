@@ -189,6 +189,7 @@ export function PlaybackEditor({
       ],
       () => null
     );
+    editor.revealLineInCenter(range.endLineNumber);
   }
 
   function startPlayback(
