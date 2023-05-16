@@ -298,13 +298,13 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
           {teamMembers.map((member, index) => (
             <div
               key={index}
-              className="h-[30vw] w-[30vw] md:h-[20vw] md:w-[20vw] backdrop-blur bg-black/30 rounded-lg flex items-center justify-center p-5"
+              className="h-[32vw] w-[32vw] md:h-[22vw] md:w-[22vw] backdrop-blur bg-black/30 rounded-lg flex items-center justify-center p-8 m-4"
             >
               <div className="flex items-center text-left flex-col">
                 <img
                   src={member.img}
                   alt={member.name}
-                  className="h-20 w-20 object-cover rounded-full mb-4"
+                  className="h-20 w-20 object-cover rounded-full m-2 "
                 />
                 <h2 className=" sm:text-sm md:text-md text-lg text-white whitespace-nowrap z-10">{member.name}</h2>
                 <div>
