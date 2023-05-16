@@ -29,11 +29,11 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
   return (
     <div className='bg-bg-pri min-h-screen'>
       <TopNavBar showDashboard={true} />
-      <div className=' h-min-screen text-white flex flex-col items-start '>
+      <div className=' h-min-screen text-white flex flex-col items-start max-w-[1600px]'>
         <div className='!font-title text-6xl ml-20 my-10 pb-10 flex items-center bg-gradient-to-r from-bg-sec via-white to-bg-alt text-transparent bg-clip-text'>
           F.A.Q.
         </div>
-        <div className='mx-20 !stroke-gray-200 !stroke-2 !text-gray-200'>
+        <div className='mx-auto max-w-[80vw] !stroke-gray-200 !stroke-2 !text-gray-200'>
           <Accordion className='!bg-bg-gptdark/60 mb-5 !rounded-sm !font-console'>
             <AccordionSummary
               className='!bg-bg-gptdark !rounded-sm'
