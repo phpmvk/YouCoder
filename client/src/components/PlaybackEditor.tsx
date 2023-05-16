@@ -571,11 +571,19 @@ export function PlaybackEditor({
         </div>
         <br></br>
         <br></br>
-        <div className='w-auto flex items-center justify-start space-x-10 -mt-12 bg-bg-pri mx-6 px-1 md:pax-auto'>
+        <div
+          className={`w-auto flex items-center justify-start space-x-10 -mt-12 bg-bg-pri mx-6 px-1 md:pax-auto ${
+            theme === 'light' ? 'bg-white' : 'bg-bg-pri'
+          }`}
+        >
           {playbackState.status === 'stopped' && (
             <Button
-              variant='outlined'
-              className='!rounded-full !bg-bg-alt !text-bg-pri'
+              variant='contained'
+              className={`!rounded-full !bg-bg-alt !text-bg-pri
+               ${
+                 theme === 'light' ? '!bg-gray-500 ' : '!bg-bg-alt !text-bg-pri'
+               }
+              `}
               onClick={handleStartPlayback}
             >
               <PlayArrowIcon />
