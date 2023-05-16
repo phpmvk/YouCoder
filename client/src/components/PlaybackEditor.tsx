@@ -24,6 +24,8 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import ClearIcon from '@mui/icons-material/Clear';
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 import { default as TooltipMUI } from '@mui/material/Tooltip';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 import {
   RecorderActions,
@@ -49,6 +51,7 @@ export function PlaybackEditor({
 
   const [TeacherConsoleOutput, setTeacherConsoleOutput] = useState('');
   const [StudentConsoleOutput, setStudentConsoleOutput] = useState('');
+  const [isStudentConsoleLoading, setIsStudentConsoleLoading] = useState(false);
 
   const [editorLanguage, setEditorLanguage] = useState('javascript');
 
@@ -440,6 +443,8 @@ export function PlaybackEditor({
   }
 
   function handleJudge0() {
+    setIsStudentConsoleLoading(true);
+
     const model = editorInstance!.getModel();
     const language = model!.getLanguageId() as Language;
     const source_code = editorInstance!.getValue();
@@ -450,10 +455,21 @@ export function PlaybackEditor({
       language_id,
       source_code: base64SourceCode,
     };
-    consoleApi.getOutput(judge0)!.then((response) => {
-      const output = window.atob(response.data.output);
-      setStudentConsoleOutput(output);
-    });
+    consoleApi
+      .getOutput(judge0)!
+      .then((response) => {
+        const output = window.atob(response.data.output);
+        if (response.data.output === null) {
+          setStudentConsoleOutput('{Code executed, but nothing to log}');
+        } else {
+          setStudentConsoleOutput(output);
+        }
+        setIsStudentConsoleLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error getting console output from Judge0', error);
+        setIsStudentConsoleLoading(false);
+      });
   }
 
   return recordingData.language === 'multi' ? (
@@ -497,12 +513,25 @@ export function PlaybackEditor({
               </div>
               <div className='relative w-full h-[50%] border-t-6 border-l-2 border-r-8 border-bg-pri'>
                 <div className='flex justify-center items-center'>
-                  <TooltipMUI title='Execute & Compile'>
+                  <TooltipMUI title='Compile & Execute'>
                     <button
                       className=' absolute top-0 right-14 w-fit items-center px-2 text-sm  text-gray-200 rounded !bg-green-900/20 border !border-gray-700 uppercase hover:!bg-green-900/50 active:ring-1 active:ring-bg-alt'
                       onClick={handleJudge0}
+                      disabled={isStudentConsoleLoading}
                     >
-                      <PlayArrowOutlinedIcon />
+                      {isStudentConsoleLoading ? (
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <CircularProgress size={24} />
+                        </Box>
+                      ) : (
+                        <PlayArrowOutlinedIcon style={{ fontSize: 24 }} />
+                      )}
                     </button>
                   </TooltipMUI>
                   <TooltipMUI title='Clear Console'>
