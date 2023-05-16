@@ -515,9 +515,15 @@ export function PlaybackEditor({
                 onMount={handleEditorDidMount}
               />
             </Allotment.Pane>
-            <Allotment.Pane minSize={200} preferredSize={400}>
+            <Allotment.Pane
+              minSize={200}
+              preferredSize={400}
+            >
               <div className=' w-full h-[50%] border-r-8 border-t-8 border-l-2 border-bg-pri '>
-                <Terminal terminalName='output' output={TeacherConsoleOutput} />
+                <Terminal
+                  terminalName='output'
+                  output={TeacherConsoleOutput}
+                />
               </div>
               <div className='relative w-full h-[50%] border-t-6 border-l-2 border-r-8 border-bg-pri'>
                 <div className='flex justify-center items-center'>
