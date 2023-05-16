@@ -25,8 +25,6 @@ const recording = {
   subs: '2.3K',
 };
 
-
-
 const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
   return (
     <div className='min-h-screen bg-bg-pri min-w-[720px] px-20 flex flex-col justify-center items-center'>
@@ -50,41 +48,39 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                     <div className='flex flex-row bg-bg-pri w-full h-[250px]'>
                       {/* ---------Left Card */}
                       <div className='flex flex-col items-center mx-1 min-w-36 max-w-[20vw] '>
-  <div className='h-36 w-36 border border-gray-700 rounded-xl shadow bg-bg-pri flex items-center justify-center mb-7'>
-    <div className='flex flex-col items-center'>
-      <img
-        className='w-20 h-20 !min-w-20 mb-3 rounded-full shadow-lg'
-        src={recordingData.creator!.picture}
-        alt=''
-      />
-      <h5 className=' text-xl font-medium text-white'>
-        {recordingData.display_name}
-      </h5>
-    </div>
-  </div>
-  <Button
-    variant='outlined'
-    size='small'
-    onClick={(e) => {
-      navigator.clipboard.writeText(recordingData.full_link);
-      toast.success('Link copied to clipboard');
-    }}
-    className='!rounded-lg !bg-bg-muigrey !border-gray-700 w-36 !text-gray-100 whitespace-nowrap h-8 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700 mt-4'
-  >
-    {/* <ReplyIcon className='transform scale-x-[-1]' /> */}
-    copy link
-  </Button>
-</div>
-
-
+                        <div className='h-36 w-36 border border-gray-700 rounded-xl shadow bg-bg-pri flex items-center justify-center mb-7'>
+                          <div className='flex flex-col items-center'>
+                            <img
+                              className='w-20 h-20 !min-w-20 mb-3 rounded-full shadow-lg'
+                              src={recordingData.creator!.picture}
+                              alt=''
+                            />
+                            <h5 className=' text-xl font-medium text-white'>
+                              {recordingData.creator?.display_name}
+                            </h5>
+                          </div>
+                        </div>
+                        <Button
+                          variant='outlined'
+                          size='small'
+                          onClick={(e) => {
+                            navigator.clipboard.writeText(
+                              recordingData.full_link
+                            );
+                            toast.success('Link copied to clipboard');
+                          }}
+                          className='!rounded-lg !bg-bg-muigrey !border-gray-700 w-36 !text-gray-100 whitespace-nowrap h-8 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700 mt-4'
+                        >
+                          {/* <ReplyIcon className='transform scale-x-[-1]' /> */}
+                          copy link
+                        </Button>
+                      </div>
 
                       {/* Middle Card -----------------------------------   */}
 
                       <div className='flex-col mx-1 min-w-[60vw] max-w-[1000px] w-full py-4 ml-4 h-56 text-left  border rounded-xl shadow bg-bg-pri border-gray-700 overflow-hidden text-white'>
                         <div className='flex justify-start px-5 pt-1  md:h-full overflow-y-scroll scrollbar-hide'>
-                          <p>
-                            {recordingData.description}
-                          </p>
+                          <p>{recordingData.description}</p>
                         </div>
                         {/* <div className='py-8 md:hidden'>
                           <Stack
@@ -131,7 +127,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                               share
                             </Button> */}
 
-                            {/* <Button
+                      {/* <Button
                               variant='outlined'
                               size='small'
                               className='!rounded-xl !bg-bg-muigrey !border-gray-700 !min-w-[120px] !text-gray-100 whitespace-nowrap h-1/2 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700'
@@ -139,7 +135,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                               <AddIcon />
                               add to list
                             </Button> */}
-                          {/* </Stack>
+                      {/* </Stack>
                         </div>
                       </div> */}
                     </div>
