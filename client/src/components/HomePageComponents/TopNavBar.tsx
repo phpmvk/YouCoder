@@ -7,7 +7,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import youcoderlogo from './youcoderlogo.png';
+import youcoderlogo from '../../../public/Layer-1.svg';
 import { Button } from '@mui/material';
 import { Link, Router, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -201,8 +201,8 @@ function TopNavBar({
                 sx={{ display: { xs: 'none', sm: 'block' } }}
               >
                 {' '}
-                LOGO
-                {/* <img src={youcoderlogo} style={{width: '80px', height: '80px'}}></img>  */}
+                
+                <img src={youcoderlogo} style={{width: '80px', height: '80px'}}></img> 
               </Typography>
             </Link>
             {showSearch && (

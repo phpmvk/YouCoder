@@ -67,6 +67,8 @@ export function RecorderEditor() {
   const recordedChunksRef = useRef<Blob[]>([]);
   const audioRecordingBlobRef = useRef<Blob | null>(null);
 
+  const analyserRef = useRef<AnalyserNode | null>(null);
+
   useEffect(() => {
     navigator.mediaDevices
       .getUserMedia({ audio: true })
@@ -74,6 +76,12 @@ export function RecorderEditor() {
         mediaRecorderRef.current = new MediaRecorder(stream, {
           mimeType: 'audio/webm;codecs=opus',
         });
+        //Analyser to check if there's audioinput in the first 10 seconds.
+        const audioContext = new window.AudioContext();
+        const analyser = audioContext.createAnalyser();
+        const source = audioContext.createMediaStreamSource(stream);
+        source.connect(analyser);
+        analyserRef.current = analyser;
 
         mediaRecorderRef.current.ondataavailable = function (e) {
           if (e.data.size > 0) {
@@ -199,6 +207,22 @@ export function RecorderEditor() {
     setRecorderLoading(true);
     mediaRecorderRef.current!.start();
     setRecorderLoading(false);
+
+    // Wait for 5 seconds and then check if the microphone is recording data
+    setTimeout(() => {
+      const bufferLength = analyserRef.current!.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      analyserRef.current!.getByteFrequencyData(dataArray);
+
+      const volume = dataArray.reduce((a, b) => a + b) / bufferLength;
+
+      // Check if the volume level is consistently at zero
+      if (volume === 0) {
+        alert(
+          'Microphone is not recording. Please check your microphone. You will not be able to save the recording.'
+        );
+      }
+    }, 10000);
     //actions
     recorderActions.current.editorActions = [];
     recorderActions.current.consoleLogOutputs = [];
@@ -407,7 +431,7 @@ export function RecorderEditor() {
               className='block mb-2 text-sm font-medium text-white mr-3'
               htmlFor='language'
             >
-              Choose a language to record in:
+              Choose a language
             </label>
             <select
               id='language'
@@ -484,10 +508,12 @@ export function RecorderEditor() {
 
       {recorderState === 'recording' && (
         <>
+
           <button
             className='p-2 text-white ml-[15vw]'
             onClick={handlePauseRecording}
           >
+
             Pause Recording
           </button>
           <button className='p-2 text-white' onClick={handleEndRecording}>
