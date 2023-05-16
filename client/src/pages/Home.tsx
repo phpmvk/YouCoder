@@ -17,7 +17,7 @@ const HomePage: React.FC = () => {
   const user = useAppSelector((state) => state.user);
 
   return (
-    <div className='overflow-x-hidden w-screen text-center bg-bg-pri font-title snap-mandatory snap-y '>
+    <div className='overflow-x-hidden min-w-screen text-center bg-bg-pri font-title snap-mandatory snap-y '>
       <TopNavBar
         showFeatures={true}
         showExamples={true}
@@ -29,18 +29,15 @@ const HomePage: React.FC = () => {
       <Heading />
       <TopBall />
       <MiddleBall />
-<div className="snap-center ">
-      <Explainer />
-</div>
+      <div className='snap-center '>
+        <Explainer />
+      </div>
       <BottomBall />
-      <ExampleFrame/>
-      <div className="bg-bg-pri h-[280vw] w-full rounded-tr-full rounded-tl-full"></div>
-      <GotoBottom/>
+      <ExampleFrame />
+      <div className='bg-bg-pri h-[280vw] w-full rounded-tr-full rounded-tl-full'></div>
+      <GotoBottom />
     </div>
   );
 };
 
 export default HomePage;
-
-
- 
