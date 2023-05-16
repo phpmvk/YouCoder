@@ -41,8 +41,8 @@ export const Footer: FC = (): ReactElement => {
     //   </Container>
     // </Box>
 
-    <footer className='bg-bg-pri m-1 sticky bottom-0'>
-      <div className='w-full mx-auto max-w-screen-xl p-4 flex flex-wrap justify-between items-center text-sm'>
+    <footer className='bg-bg-pri mt-auto h-20'>
+      <div className='w-full mx-auto max-w-screen-xl p-4 flex flex-wrap justify-evenly items-center text-sm'>
         <div className='flex items-center text-gray-300 mb-2 sm:mb-0'>
           <span>© 2023 </span>
           <a

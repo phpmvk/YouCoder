@@ -114,6 +114,7 @@ const DotsMenu = ({
           detailsToEdit={details}
           setDetailsToEdit={setDetails}
           save={handleSave}
+          cancel={() => setShowModal(false)}
         />
       </Modal>
       <button

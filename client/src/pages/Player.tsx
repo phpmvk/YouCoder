@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import http from '../services/recordingApi';
 import Page404 from '../components/404';
@@ -37,111 +37,119 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
     } else {
       getRecording(id);
     }
-  }, [id, navigate]);
+  }, [id, navigate, coverClicked]);
 
   const hiderecordingCover = () => {
     setCoverClicked(true);
     setDisplayCover(false);
   };
 
-  function getRecording(id: string) {
-    http
-      .getRecording(id)
-      .then((response) => {
-        console.log('recording: ', response.data);
-        if (embed) {
-          setCoverClicked(false);
+  useEffect(() => {
+    console.log(displayCover && !coverClicked);
+  }, [displayCover, coverClicked]);
 
-          // show the embed player
-          setToRender(
-            <>
-              {displayCover && !coverClicked ? (
-                <div
-                  className='cursor-pointer h-[480px] overflow-hidden flex items-center justify-center w-full bg-bg-pri'
-                  onClick={hiderecordingCover}
-                >
-                  {response.data.thumbnail_link && showCover && (
-                    <img
-                      className='object-cover w-full h-[480px]'
-                      src={response.data.thumbnail_link}
-                      alt={response.data.title}
-                    />
-                  )}
-                  {showTitle && (
-                    <h1 className='my-auto text-white/90 text-7xl capitalize line-clamp-3 max-w-10/12'>
-                      {response.data.title}
-                    </h1>
-                  )}
-                  <BiPlayCircle className='absolute left-auto right-auto text-7xl text-white/30 z-10' />
-                </div>
-              ) : (
-                <PlaybackEditor recordingData={response.data} />
-              )}
-            </>
-          );
-        } else {
-          // show the full player
-          setToRender(<FullPlayerPage recordingData={response.data} />);
-        }
-      })
-      .catch((error) => {
-        if (embed) {
-          if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+  const getRecording = useCallback(
+    (id: string) => {
+      console.log('hello');
+      http
+        .getRecording(id)
+        .then((response) => {
+          console.log('recording: ', response.data);
+          if (embed) {
+            setCoverClicked(false);
 
-            switch (error.response.status) {
-              case 400:
-                setToRender(<Page404 />);
-              case 403:
-                setToRender(<Page404 />);
-              case 404:
-                setToRender(<Page404 />);
-              case 500:
-                setToRender(<Page500 />);
-              default:
-                setToRender(<Page500 />);
-            }
-          } else if (error.request) {
-            console.log(error.request);
-            setToRender(<Page500 />);
+            // show the embed player
+            setToRender(
+              <>
+                {displayCover && !coverClicked ? (
+                  <div
+                    className='cursor-pointer h-[480px] overflow-hidden flex items-center justify-center w-full bg-bg-pri'
+                    onClick={hiderecordingCover}
+                  >
+                    {response.data.thumbnail_link && showCover && (
+                      <img
+                        className='object-cover w-full h-[480px]'
+                        src={response.data.thumbnail_link}
+                        alt={response.data.title}
+                      />
+                    )}
+                    {showTitle && !showCover && (
+                      <div className='my-auto text-white/90 text-7xl capitalize line-clamp-3 leading-tight mx-10 text-center'>
+                        {response.data.title}
+                      </div>
+                    )}
+                    <BiPlayCircle className='absolute left-auto right-auto text-7xl text-white/30 z-10 opacity-0 hover:opacity-100' />
+                  </div>
+                ) : (
+                  <PlaybackEditor recordingData={response.data} />
+                )}
+              </>
+            );
           } else {
-            console.log('Error', error.message);
-            setToRender(<Page500 />);
+            // show the full player
+            setToRender(<FullPlayerPage recordingData={response.data} />);
           }
-        } else {
-          if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+        })
+        .catch((error) => {
+          if (embed) {
+            if (error.response) {
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
 
-            switch (error.response.status) {
-              case 400:
-                navigate('/404');
-                break;
-              case 403:
-                navigate('/404');
-                break;
-              case 404:
-                navigate('/404');
-                break;
-              case 500:
-                navigate('/oops');
-                break;
-              default:
-                navigate('/oops');
+              switch (error.response.status) {
+                case 400:
+                  setToRender(<Page404 />);
+                case 403:
+                  setToRender(<Page404 />);
+                case 404:
+                  setToRender(<Page404 />);
+                case 500:
+                  setToRender(<Page500 />);
+                default:
+                  setToRender(<Page500 />);
+              }
+            } else if (error.request) {
+              console.log(error.request);
+              setToRender(<Page500 />);
+            } else {
+              console.log('Error', error.message);
+              setToRender(<Page500 />);
             }
-          } else if (error.request) {
-            console.log('Request Error: ', error.request);
-            navigate('/oops');
           } else {
-            console.log('Other Error', error.message);
-            navigate('/oops');
+            if (error.response) {
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+
+              switch (error.response.status) {
+                case 400:
+                  navigate('/404');
+                  break;
+                case 403:
+                  navigate('/404');
+                  break;
+                case 404:
+                  navigate('/404');
+                  break;
+                case 500:
+                  navigate('/oops');
+                  break;
+                default:
+                  navigate('/oops');
+              }
+            } else if (error.request) {
+              console.log('Request Error: ', error.request);
+              navigate('/oops');
+            } else {
+              console.log('Other Error', error.message);
+              navigate('/oops');
+            }
           }
-        }
-      });
-  }
+        });
+    },
+    [displayCover, coverClicked]
+  );
   return <>{toRender}</>;
 };
 
