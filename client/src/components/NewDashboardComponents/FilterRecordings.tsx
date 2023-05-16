@@ -10,7 +10,7 @@ const FilterRecordings = ({
   filterTerm,
   setFilterTerm,
 }: FilterRecordingsProps) => {
-  const [showsearch, setShowSearch] = useState<boolean>(false);
+  const [showsearch, setShowSearch] = useState<boolean>(true);
   return (
     <>
       <div className='text-white text-2xl flex items-center'>
@@ -18,7 +18,7 @@ const FilterRecordings = ({
           className={`rounded-full p-1 active:bg-bg-sec/20 ${
             showsearch ? '' : 'border-bg-sec w-20 border hover:bg-bg-sec/20 '
           } `}
-          onClick={() => setShowSearch(!showsearch)}
+          // onClick={() => setShowSearch(!showsearch)}
         >
           <AiOutlineSearch />
         </button>
@@ -29,7 +29,6 @@ const FilterRecordings = ({
             placeholder='Search'
             value={filterTerm}
             onChange={(e) => setFilterTerm(e.target.value)}
-            autoFocus
           />
         )}
       </div>

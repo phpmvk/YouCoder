@@ -1,13 +1,12 @@
 import request from 'supertest';
 import { default as mocks } from './mocks'
-import { app } from '../index';
-import { describe, test } from 'node:test';
+import app from '../app';
 
 
 describe('ROUTES TESTING', () => {
   
   describe('Unit', () => {
-    test('should return the output of executing the code received', async () => { 
+    it('should return the output of executing the code received', async () => { 
       const res = await request(app).post('/console').send(mocks.codeToExecuteData);
       expect(res.body).toHaveProperty('stdout', 'Test number one')
     })
@@ -28,11 +27,11 @@ describe('ROUTES TESTING', () => {
     })
   })
   
-  describe('Integration', () => {
-    test('should ...', () => { 
+  // describe('Integration', () => {
+  //   test('should ...', () => { 
 
-     })
-  })
+  //    })
+  // })
   
 })
 

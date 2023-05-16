@@ -309,18 +309,24 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
           {teamMembers.map((member, index) => (
             <div
               key={index}
+
               className="h-[30vw] w-[30vw] md:h-[20vw] md:w-[20vw] flex items-center justify-center p-5"
+
             >
               <div className="flex items-center text-left flex-col">
                 <img
                   src={member.img}
                   alt={member.name}
+
                   className="h-[8vw] w-[8vw] object-cover rounded-full mb-4"
+
                 />
                 <h2 className=" sm:text-sm md:text-md text-lg text-white whitespace-nowrap z-10">{member.name}</h2>
                 <div>
                   <a href={member.gh} target="_blank" rel="noopener noreferrer">
+
                     <IconButton className="!text-white !stroke-none scale-150">
+
                       <GitHubIcon/>
                     </IconButton>
                   </a>

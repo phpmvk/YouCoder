@@ -2,6 +2,17 @@
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
+    screens: {
+      xs: '320px',
+      sm: '640px',
+      md: '768px',
+      md2: '1000px',
+      lg: '1024px',
+      lg2: '1200px',
+      xl: '1280px',
+      '2xl': '1536px',
+    },
+
     extend: {
       screens: {
         '600': '600px',
@@ -13,12 +24,12 @@ module.exports = {
         '1140': '1140px',
       },
       scale: {
-        '80': '.80',
-        '82': '82',
-        '85': '.85',
+        80: '.80',
+        82: '82',
+        85: '.85',
       },
       margin: {
-'-200': '-200px',
+        '-200': '-200px',
       },
       colors: {
         bg: {
@@ -52,7 +63,7 @@ module.exports = {
         'spin-slow': 'spin 5s linear infinite',
         'spin-med': 'spin 10s linear infinite',
         'spin-xslow': 'spin 20s linear infinite',
-        'spin-xxslow': 'spin 25s linear infinite'
+        'spin-xxslow': 'spin 25s linear infinite',
       },
       keyframes: {
         blinking: {
