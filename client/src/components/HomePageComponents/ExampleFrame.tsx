@@ -10,7 +10,7 @@ const ExampleFrame: React.FC = () => {
   return (
     <>
       <div 
-    className="absolute w-screen h-[12.5vw] top-[480vw] sm:top-[400vw] 700:top-[410vw] md:top-[360vw] 900:top-[350vw] lg:top-[355vw] xl:top-[362vw] flex justify-center items-center"
+    className="absolute w-screen h-[12.5vw] top-[470vw] 600:top-[400vw] sm:top-[400vw] 700:top-[370vw] md:top-[360vw] 900:top-[350vw] lg:top-[355vw] xl:top-[362vw] flex justify-center items-center"
 >
     <motion.div
         className="min-w-[910px] w-[25vw] h-[12.5vw] bg-bg-pri"
