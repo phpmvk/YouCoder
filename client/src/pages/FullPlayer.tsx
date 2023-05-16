@@ -17,7 +17,7 @@ interface FullPlayerPageProps {
 }
 
 const recording = {
-  title: 'Javascript Functions Explained Pt. 2',
+  // title: 'Javascript Functions Explained Pt. 2',
   description:
     'Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson ',
   creator: 'Michael ',
@@ -43,7 +43,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                   {/* title */}
 
                   <div className='text-gray-200 text-4xl text-left pb-6 mx-2 mt-2 '>
-                    {recording.title}
+                    {recordingData.title}
                   </div>
                   <div className='bg-bg-pri flex flex-row'>
                     <div className='flex flex-row bg-bg-pri w-full h-[250px]'>
@@ -52,12 +52,12 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
   <div className='h-36 w-36 border border-gray-700 rounded-xl shadow bg-bg-pri flex items-center justify-center mb-7'>
     <div className='flex flex-col items-center'>
       <img
-        className='w-20 h-20 !min-w-20 mb-3 rounded-xl shadow-lg'
-        src='./../../public/avatar.webp'
+        className='w-20 h-20 !min-w-20 mb-3 rounded-full shadow-lg'
+        src={recordingData.creator.picture}
         alt=''
       />
       <h5 className=' text-xl font-medium text-white'>
-        {recording.creator}
+        {recordingData.display_name}
       </h5>
     </div>
   </div>
@@ -75,7 +75,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
 
                       {/* Middle Card -----------------------------------   */}
 
-                      <div className='flex-col mx-1 min-w-[60vw] w-full py-4 h-56 text-left  border rounded-xl shadow bg-bg-pri border-gray-700 overflow-hidden text-white'>
+                      <div className='flex-col mx-1 min-w-[60vw] max-w-[1000px] w-full py-4 h-56 text-left  border rounded-xl shadow bg-bg-pri border-gray-700 overflow-hidden text-white'>
                         <div className='flex justify-start px-5 pt-4 h-28 md:h-full overflow-y-scroll hide-scrollbar'>
                           <p className='overflow-ellipsis '>
                             {recording.description}

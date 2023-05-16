@@ -609,7 +609,7 @@ export function PlaybackEditor({
           )}
           {playbackState.status === 'playing' && (
             <Button
-              variant='outlined'
+              variant='contained'
               className='!rounded-xl !bg-bg-alt !text-bg-pri'
               onClick={handlePausePlayback}
             >
@@ -618,7 +618,7 @@ export function PlaybackEditor({
           )}
           {playbackState.status === 'paused' && (
             <Button
-              variant='outlined'
+              variant='contained'
               className='!rounded-xl !bg-bg-alt !text-bg-pri'
               onClick={handleResumePlayback}
             >
