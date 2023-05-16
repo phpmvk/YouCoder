@@ -13,7 +13,8 @@ export async function existingCreatorLogin(userData: FirebaseUser){
         include: {
           creator: {
             select: {
-              picture: true
+              picture: true,
+              display_name: true,
             }
           }
         },

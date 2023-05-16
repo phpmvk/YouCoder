@@ -12,7 +12,8 @@ export async function getRecordingById(recordingId: string): Promise<Recording |
     include: {
       creator: {
         select: {
-          picture: true
+          picture: true,
+          display_name: true,
         }
       }
     }
@@ -61,7 +62,8 @@ export async function fetchAllUserRecordings(uid: string): Promise<Recording[] |
     include: {
       creator: {
         select: {
-          picture: true
+          picture: true,
+          display_name: true,
         }
       }
     },
@@ -80,6 +82,14 @@ export async function fetchAllUserPublicRecordings(uid: string): Promise<Recordi
     },
     orderBy: {
       view_count: 'desc'
+    },
+    include: {
+      creator: {
+        select: {
+          picture: true,
+          display_name: true
+        }
+      }
     }
   })
   return publicRecordings;
@@ -97,6 +107,14 @@ export async function fetchPublicRecordingsBySearchQuery(searchQuery: string ): 
     },
     orderBy: {
       view_count: 'desc'
+    },
+    include: {
+      creator: {
+        select: {
+          picture: true,
+          display_name: true
+        }
+      }
     }
   });
   return publicRecordings;
@@ -187,7 +205,8 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
     include: {
       creator: {
         select: {
-          picture: true
+          picture: true,
+          display_name: true,
         }
       }
     }
