@@ -9,6 +9,14 @@ body {
 
 html {
   overflow-x: hidden;
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  background-color: #050505;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

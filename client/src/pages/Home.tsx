@@ -11,12 +11,13 @@ import BottomBall from './../components/HomePageComponents/BottomBall';
 import Footer from './../components/HomePageComponents/Footer';
 import { useAppSelector } from '../redux/hooks';
 import GotoBottom from '../components/HomePageComponents/GotoBottom';
+import Explainer from '../components/HomePageComponents/Explainer';
 
 const HomePage: React.FC = () => {
   const user = useAppSelector((state) => state.user);
 
   return (
-    <div className='overflow-x-hidden w-screen text-center bg-bg-pri font-title'>
+    <div className='overflow-x-hidden w-screen text-center bg-bg-pri font-title snap-mandatory snap-y '>
       <TopNavBar
         showFeatures={true}
         showExamples={true}
@@ -28,11 +29,12 @@ const HomePage: React.FC = () => {
       <Heading />
       <TopBall />
       <MiddleBall />
+<div className="snap-center ">
+      <Explainer />
+</div>
       <BottomBall />
       <ExampleFrame/>
-
       <div className="bg-bg-pri h-[280vw] w-full rounded-tr-full rounded-tl-full"></div>
-
       <GotoBottom/>
     </div>
   );
@@ -41,16 +43,4 @@ const HomePage: React.FC = () => {
 export default HomePage;
 
 
- {/* <Parallax
-        strength={600}
-        renderLayer={(percentage) => (
-          <>
-            <Heading percentage={percentage}></Heading>
-            <TopBall percentage={percentage} />
-            <BottomBall percentage={percentage} />
-            <TeachInteractively />
-            <MiddleBall percentage={percentage} />
-            <ExampleFrame />
-          </>
-        )}
-      /> */}
+ 

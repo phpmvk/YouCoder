@@ -6,123 +6,59 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import IconButton from '@mui/material/IconButton';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import { Link } from 'react-router-dom';
 
 interface DocsPageProps {}
 
+
 const DocsPage: React.FC<DocsPageProps> = ({}) => {
+
+
+ const teamMembers = [
+    { name: "Idar Nigatu", img: "https://avatars.githubusercontent.com/u/61595151?v=4", gh: "https://github.com/IdarDev"  },
+    { name: "Michael Epelboim", img: "https://avatars.githubusercontent.com/u/67226592?v=4", gh: "https://github.com/michaelito80us" },
+    { name: "Philip von Koss", img: "https://avatars.githubusercontent.com/u/123027089?v=4", gh: "https://github.com/phpmvk"},
+    { name: "Jordan Rollins", img: "https://avatars.githubusercontent.com/u/116223808?v=4", gh: "https://github.com/0xjcr" },
+  ];
+
+
+
+
   return (
     <div className='bg-bg-pri min-h-screen'>
       <TopNavBar showDashboard={true} />
       <div className=' h-min-screen text-white flex flex-col items-start '>
         <div className='!font-title text-6xl ml-20 my-10 pb-10 flex items-center bg-gradient-to-r from-bg-sec via-white to-bg-alt text-transparent bg-clip-text'>
-          Getting Started
+          F.A.Q.
         </div>
         <div className='mx-20 !stroke-gray-200 !stroke-2 !text-gray-200'>
-          <Accordion className='!bg-bg-gptdark/60 mb-5 !rounded-sm'>
+          <Accordion className='!bg-bg-gptdark/60 mb-5 !rounded-sm !font-console'>
             <AccordionSummary
               className='!bg-bg-gptdark !rounded-sm'
               expandIcon={<ExpandMoreIcon />}
               aria-controls='panel1a-content'
               id='panel1a-header'
             >
-              <Typography className='!text-2xl text-gray-200 h-20 flex items-center'>
-                Using the Recorder
+              <Typography className='!text-2xl text-gray-200 h-20 flex items-center !font-console'>
+              About YouCoder
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Typography className='!font-title !font-medium'>
-                <div className='bg-bg-muidark p-1'>
-                  <p className='mt-4 font-bold text-gray-200'>
-                    · Users must be signed in to create a recording.
-                  </p>
-                  <p className='text-gray-200'>
-                    <br />· Sign in with one click using your GitHub or Google
-                    account and you&apos;ll be redirected to your dashboard.
-                  </p>
-                </div>
-                <br />
 
-                <div className='bg-bg-gptdark/80 p-1'>
-                  <h2 className='text-2xl text-gray-200 my-6'>
-                    Navigating to Your Dashboard
+                <div className=' p-1'>
+                  <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                  What is YouCoder?
                   </h2>
-                  <p className='text-gray-200'>
-                    Once you&apos;ve signed in, you&apos;ll land on your
-                    dashboard page. Here, you&apos;ll find a variety of options
-                    and features. Your dashboard is essentially your control
-                    panel, providing access to all the app&apos;s main features.
+                  <p className='text-gray-200 !font-console'>
+                  YouCoder is a cutting-edge application that enables users to effortlessly record, replay, and share their keystrokes within an integrated development environment (IDE). With a focus on enhancing coding education and fostering collaboration, YouCoder empowers users to engage with pre-recorded coding sessions, facilitating interactive learning experiences and accelerating knowledge acquisition.
                   </p>
-                  <p className='text-gray-200'>
-                    The dashboard is designed to provide a simple, intuitive
-                    user interface. You&apos;ll see options to create a new
-                    recording, edit existing recordings, and links to publish,
-                    share or embed your recordings.
-                  </p>
+                  
                 </div>
 
-                <h2 className='text-2xl text-gray-200 my-6'>
-                  Creating a New Recording
-                </h2>
-                <p className='text-gray-200'>
-                  Follow these steps to create a new recording:
-                </p>
-                <br />
-                <ul>
-                  <li className='text-gray-200'>
-                    Navigate to the Recording Screen: On your dashboard, tap on
-                    the &apos;New Recording&apos; button. This will take you to
-                    the recording screen.
-                  </li>
-                  <br />
-                  <li className='text-gray-200'>
-                    Start Recording: Tap on the &apos;Record&apos; button to
-                    start recording. You can pause or stop the recording at any
-                    time by pressing the respective buttons.
-                  </li>
-                  <br />
-                  <li className='text-gray-200'>
-                    Save Recording: Once you&apos;re done, tap on the
-                    &apos;Stop&apos; button, then the &apos;Save&apos; button.
-                    Give your recording a name and a description then tap
-                    &apos;Save&apos; again. Your recording will be saved and
-                    appear in your list of recordings on your dashboard. All
-                    recordings are saved as .YCR file format.
-                  </li>
-                </ul>
-                <br />
-
-                <div className='!bg-bg-gptdark/80 p-1'>
-                  <h2 className='text-2xl text-gray-200 my-6'>
-                    Editing Existing Recordings
-                  </h2>
-                  <p className='text-gray-200'>
-                    To edit an existing recording:
-                  </p>
-                  <br />
-                  <ul>
-                    <li className='text-gray-200'>
-                      Navigate to Your Recordings: On your dashboard,
-                      you&apos;ll see a list of your saved recordings.
-                    </li>
-                    <br />
-                    <li className='text-gray-200'>
-                      Select a Recording: Tap on the recording you wish to edit.
-                      This will open the recording in an editing interface.
-                    </li>
-                    <br />
-                    <li className='text-gray-200'>
-                      Edit Your Recording: Use the provided tools to edit your
-                      recording. You can edit the title, description, and cover
-                      image.
-                    </li>
-                    <br />
-                    <li className='text-gray-200'>
-                      Save Changes: Once you&apos;re satisfied with your edits,
-                      tap on the &apos;Save&apos; button. You&apos;ll be asked
-                      if you want to sve your changes.
-                    </li>
-                  </ul>
-                </div>
+                
               </Typography>
             </AccordionDetails>
             {/* /----------------------------------------------------------------------------------------------/ */}
@@ -135,87 +71,257 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
               aria-controls='panel1a-content'
               id='panel1a-header'
             >
-              <Typography className='!text-2xl text-gray-200 h-20 flex items-center'>
-                Using the Interactive Player
+              <Typography className='!text-2xl text-gray-200 h-20 flex items-center !font-console'>
+              Features and Capabilities
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Typography className='!font-title !font-medium'>
                 <br />
-
-                <div className='bg-bg-gptdark/80 p-1'>
-                  <h2 className='text-2xl text-gray-200 my-6'>
-                    Interactive Playback Experience
-                  </h2>
-                  <p className='text-gray-200'>
-                    YouCoder provides an interactive coding lessons player where
-                    you can not only watch but also participate in the coding
-                    process. You have the ability to edit the code and view the
-                    changes to the output in real time.
-                  </p>
-                  <p className='text-gray-200'>
-                    This feature is designed to provide a hands-on learning
-                    experience, enhancing your understanding of the coding
-                    lessons and allowing you to learn at your own pace.
-                  </p>
-                </div>
-
-                <h2 className='text-2xl text-gray-200 my-6'>
-                  Using the Interactive Player
+                <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                What can I do with YouCoder?
                 </h2>
-                <p className='text-gray-200'>
-                  Follow these steps to use the interactive player:
+                <p className='text-gray-200 !font-console'>
+                YouCoder provides a myriad of possibilities. Capture and share your coding sessions while incorporating your thoughts and teachings. Seamlessly embed the provided iFrame into your website or share the link to a player hosted on YouCoder.io, allowing others to replay your sessions step-by-step as if they were actively collaborating with you. Keep recordings private until you are ready to share them, code in multiple languages from our expanding suite, and conveniently track the popularity of your videos.
                 </p>
+                
                 <br />
-                <ul>
-                  <li className='text-gray-200'>
-                    Select a Lesson: Browse through the available coding lessons
-                    and select one that you wish to view.
-                  </li>
-                  <br />
-                  <li className='text-gray-200'>
-                    Watch and Code: As you watch the lesson, you can also edit
-                    the code in real time and see the changes to the output
-                    instantly.
-                  </li>
-                  <br />
-                  <li className='text-gray-200'>
-                    Save Your Progress: If you need to pause and continue later,
-                    you can save your progress. When you&apos;re ready, you can
-                    pick up right where you left off.
-                  </li>
-                </ul>
 
-                <div className='!bg-bg-gptdark/80 pt-0 p-1'>
-                  <h2 className='text-2xl text-gray-200 my-6'>
-                    Continuing a Saved Lesson
+                <div className='! p-1'>
+                  <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                  How do I embed a recording?
                   </h2>
-                  <p className='text-gray-200'>To continue a saved lesson:</p>
+                  <p className='text-gray-200 !font-console'>
+                  Embedding a recording is effortless with YouCoder. Simply copy and paste the provided embed code into compatible websites or platforms. This seamless integration ensures a visually appealing presentation of your coding sessions.
+                  </p>
                   <br />
-                  <ul>
-                    <li className='text-gray-200'>
-                      Navigate to Your Saved Lessons: On your dashboard,
-                      you&apos;ll see a list of your saved lessons.
-                    </li>
-                    <br />
-                    <li className='text-gray-200'>
-                      Select a Lesson: Tap on the lesson you wish to continue.
-                      This will open the lesson in the interactive player.
-                    </li>
-                    <br />
-                    <li className='text-gray-200'>
-                      Continue Coding: Pick up right where you left off. You can
-                      continue to edit the code and view the changes in real
-                      time.
-                    </li>
-                    <br />
-                    <li className='text-gray-200'>
-                      Save Changes: Once you&apos;re done for the day, remember
-                      to save your progress again. The next time you return, you
-                      can start right where you stopped.
-                    </li>
-                  </ul>
+                  
+                  
                 </div>
+                <div className='! p-1'>
+                  <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                  Can YouCoder be used for teaching coding in a classroom setting?
+                  </h2>
+                  <p className='text-gray-200 !font-console'>
+                  Absolutely! YouCoder is an invaluable tool for teaching coding in a classroom environment. Educators can record coding sessions, effortlessly share them with students, and promote real-time collaboration, providing an immersive and engaging educational experience.
+                  </p>
+                  <br />
+                  
+                  
+                </div>
+                <div className='! p-1'>
+                  <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                  Does YouCoder support code syntax highlighting?
+                  </h2>
+                  <p className='text-gray-200 !font-console'>
+                  YouCoder currently supports syntax highlighting for JavaScript, TypeScript, HTML, and CSS, ensuring improved code readability and comprehension.
+                  </p>
+                  <br />
+                  
+                  
+                </div>
+                <div className='! p-1'>
+                  <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                  Can I collaborate with others in real-time while using YouCoder?
+                  </h2>
+                  <p className='text-gray-200 !font-console'>
+                  While YouCoder does not currently support real-time coding collaboration, users can interact with recorded sessions as if they were live, pausing playback and executing any code they write whenever desired.
+                  </p>
+                  <br />
+                  
+                  
+                </div>
+                <div className='! p-1'>
+                  <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                  How do I embed a recording?
+                  </h2>
+                  <p className='text-gray-200 !font-console'>
+                  Embedding a recording is effortless with YouCoder. Simply copy and paste the provided embed code into compatible websites or platforms. This seamless integration ensures a visually appealing presentation of your coding sessions.
+                  </p>
+                  <br />
+                  
+                  
+                </div>
+                
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+          {/* //--------------------------------------------------------------------------------- */}
+          <Accordion className='!bg-bg-gptdark/60 mb-5 !rounded-sm'>
+            <AccordionSummary
+              className='!bg-bg-gptdark !rounded-sm'
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls='panel1a-content'
+              id='panel1a-header'
+            >
+              <Typography className='!text-2xl text-gray-200 h-20 flex items-center !font-console'>
+              Recording and Playback
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography className='!font-title !font-medium'>
+                <br />
+                <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                How do I create a new recording
+                </h2>
+                <p className='text-gray-200 !font-console'>
+                Creating a new recording in YouCoder is a seamless process. Visit youcoder.io, click on &apos;Sign In,&apos; and select your preferred authentication method. Once logged in, navigate to the &apos;Create a Recording&apos; button, which will direct you to the YouCoder IDE. Choose your desired coding language, click &apos;Record,&apos; and YouCoder will capture all your keystrokes, including the time and output of code execution. After finishing your session, click &apos;End Recording,&apos; provide a title, description, thumbnail, and click &apos;Save.&apos; In your dashboard, you can access your recording, obtain its link and/or embed code, edit details, publish, or delete it.
+                </p>
+                
+                <br />
+
+                <div className='! p-1'>
+                  <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                  Where can I see all my recordings?
+                  </h2>
+                  <p className='text-gray-200 !font-console'>
+                  Upon logging in, your recordings are conveniently accessible in the &apos;Dashboard&apos; section of YouCoder. This centralized view enables effortless management and replay of your recorded coding sessions.
+                  </p>
+                  <br />
+                  
+                  
+                </div>
+                <div className='! p-1'>
+                  <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                  Is there a limit to the size or duration of the recordings in YouCoder?
+                  </h2>
+                  <p className='text-gray-200 !font-console'>
+                  YouCoder does not impose strict limits on recording size or duration. However, extremely large recordings may necessitate additional storage space and require more time to process and upload. Your patience is appreciated.
+                  </p>
+                  <br />
+                  
+                  
+                </div>
+                <div className='! p-1'>
+                  <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                  Can I export my recordings as video files or share them on social media platforms?
+                  </h2>
+                  <p className='text-gray-200 !font-console'>
+                  You can easily share your recordings by providing the link or embedding a player into your website. Exporting recordings as video files is not currently supported.
+                  </p>
+                  <br />
+                </div>
+                
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+          {/* //------------------------------------------- */}
+          <Accordion className='!bg-bg-gptdark/60 mb-5 !rounded-sm'>
+            <AccordionSummary
+              className='!bg-bg-gptdark !rounded-sm'
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls='panel1a-content'
+              id='panel1a-header'
+            >
+              <Typography className='!text-2xl text-gray-200 h-20 flex items-center !font-console'>
+              Usage and Accessibility
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography className='!font-title !font-medium'>
+                <br />
+                <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                Who can use YouCoder?
+                </h2>
+                <p className='text-gray-200 !font-console'>
+                YouCoder caters to a broad user base, including students, educators, professional programmers, and coding enthusiasts. Whether you are a beginner or an experienced individual seeking to enhance your coding skills and collaborate with others, YouCoder is designed to meet your needs.
+                </p>
+                
+                <br />
+
+                <div className='! p-1'>
+                  <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                  Who uses YouCoder?
+                  </h2>
+                  <p className='text-gray-200 !font-console'>
+                  YouCoder is utilized by a diverse community of learners, educators, coding bootcamps, and professionals. It serves as a valuable tool for coding education, code review, collaboration, and improving coding efficiency.
+                  </p>
+                  <br />
+                  
+                  
+                </div>
+                <div className='! p-1'>
+                  <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                  Can I keep recordings private?
+                  </h2>
+                  <p className='text-gray-200 !font-console'>
+                  Yes, YouCoder provides privacy settings that allow you to keep your recordings private. You have full control over who can access and view your recordings, ensuring complete privacy and control over your content.
+                  </p>
+                  <br />
+                  
+                  
+                </div>
+                <div className='! p-1'>
+                  <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                  Is there a mobile app available for YouCoder?
+                  </h2>
+                  <p className='text-gray-200 !font-console'>
+                  Currently, YouCoder does not have a dedicated mobile app.
+                  </p>
+                  <br />
+                </div>
+                
+                
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+          {/* //-------------------------------------------------------- */}
+          <Accordion className='!bg-bg-gptdark/60 mb-5 !rounded-sm'>
+            <AccordionSummary
+              className='!bg-bg-gptdark !rounded-sm'
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls='panel1a-content'
+              id='panel1a-header'
+            >
+              <Typography className='!text-2xl text-gray-200 h-20 flex items-center !font-console'>
+              Support and Contact
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography className='!font-title !font-medium'>
+                <br />
+                <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                How can I get in touch with the YouCoder team?
+                </h2>
+                <p className='text-gray-200 !font-console'>
+                For any inquiries, support, or feedback, you can get in touch with the YouCoder team through our dedicated support channels. Reach out to us via email at youcoder.bcn@gmail.com or visit our community Q&A forum at https://github.com/phpmvk/YouCoder/discussions/109 to connect with our team and community members.
+                </p>
+                
+                <br />
+
+                <div className='! p-10'>
+                  <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                  Who is the YouCoder team?
+                  </h2>
+                  <div className='text-gray-200'>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5 justify-items-center">
+          {teamMembers.map((member, index) => (
+            <div
+              key={index}
+              className="h-[30vw] w-[30vw] md:h-[20vw] md:w-[20vw] backdrop-blur bg-black/30 rounded-lg flex items-center justify-center p-5"
+            >
+              <div className="flex items-center text-left flex-col">
+                <img
+                  src={member.img}
+                  alt={member.name}
+                  className="h-20 w-20 object-cover rounded-full mb-4"
+                />
+                <h2 className=" sm:text-sm md:text-md text-lg text-white whitespace-nowrap z-10">{member.name}</h2>
+                <div>
+                  <a href={member.gh} target="_blank" rel="noopener noreferrer">
+                    <IconButton className="!text-white">
+                      <GitHubIcon/>
+                    </IconButton>
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+                  </div>
+                  <br />
+                </div>
+                
               </Typography>
             </AccordionDetails>
           </Accordion>
