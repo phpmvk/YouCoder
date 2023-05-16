@@ -14,7 +14,7 @@ import consoleApi from '../services/consoleApi';
 import { CodeToExecute } from '../types/Console';
 import { SaveRecordingModal } from './HomePageComponents/SaveRecordingModal';
 import { saveYCRFile } from '../utils/ycrUtils';
-import { useAppSelector } from '../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import Terminal from './TerminalOutput';
 import recordingApi from '../services/recordingApi';
 import {
@@ -32,6 +32,12 @@ import {
   Language,
 } from '../types/Editor';
 import { MultiEditorRecorder } from './MultiEditorRecorder';
+import Modal from './Modal';
+import EditDetailsform from './NewDashboardComponents/EditDetailsForm';
+import { updateRecording } from '../types/Creator';
+import { setLoadingSpinner } from '../redux/spinnerSlice';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 export function RecorderEditor() {
   const [editorInstance, setEditorInstance] =
@@ -56,6 +62,8 @@ export function RecorderEditor() {
   const [recordingIntervalId, setRecordingIntervalId] =
     useState<NodeJS.Timeout | null>(null);
   const [pauseAction, setPauseAction] = useState(false);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const recorderActions = useRef<RecorderActions>({
     start: 0,
@@ -66,6 +74,13 @@ export function RecorderEditor() {
     editorActions: [],
     consoleLogOutputs: [],
     htmlOutputArray: [],
+  });
+
+  const [details, setDetails] = useState<updateRecording>({
+    title: '',
+    description: '',
+    thumbnail_link: '',
+    published: false,
   });
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -361,11 +376,7 @@ export function RecorderEditor() {
     setSaveModalVisible(true);
   }
 
-  async function handleSave(
-    title: string,
-    description: string,
-    thumbnail_link: string
-  ) {
+  async function handleSave(updatedDetails: updateRecording) {
     try {
       const json = JSON.stringify(recorderActions.current);
       const jsonBlob = new Blob([json], { type: 'application/json' });
@@ -379,17 +390,23 @@ export function RecorderEditor() {
       const language = model!.getLanguageId();
 
       const Recording: EditorRecording = {
-        title,
-        description,
-        thumbnail_link,
+        title: updatedDetails.title!,
+        description: updatedDetails.description || '',
+        thumbnail_link: updatedDetails.thumbnail_link || '',
+        published: updatedDetails.published!,
         language,
         recording_link: ycrFileUrl,
         duration: elapsedTime,
       };
 
-      recordingApi.postRecording(Recording);
+      recordingApi.postRecording(Recording)?.then((response) => {
+        toast.success('Recording saved successfully!');
+        dispatch(setLoadingSpinner(false));
+        navigate('/dashboard');
+      });
     } catch (error) {
       console.error('Error saving recording', error);
+      toast.error('Error saving recording');
     }
   }
 
@@ -486,7 +503,10 @@ export function RecorderEditor() {
                 />
               </div>
             </Allotment.Pane>
-            <Allotment.Pane minSize={180} preferredSize={300}>
+            <Allotment.Pane
+              minSize={180}
+              preferredSize={300}
+            >
               <div className='border w-full h-full border-[#1e1e1e] text-white relative'>
                 {/* <button
                   className='absolute bottom-2 right-2 border-white border rounded-sm p-2 bg-slate-500 hover:bg-slate-500/50 '
@@ -561,7 +581,10 @@ export function RecorderEditor() {
           >
             Pause Recording
           </button>
-          <button className='p-2 text-white' onClick={handleEndRecording}>
+          <button
+            className='p-2 text-white'
+            onClick={handleEndRecording}
+          >
             End Recording
           </button>
         </>
@@ -575,7 +598,10 @@ export function RecorderEditor() {
           >
             Resume Recording
           </button>
-          <button className='p-2 text-white' onClick={handleEndRecording}>
+          <button
+            className='p-2 text-white'
+            onClick={handleEndRecording}
+          >
             End Recording
           </button>
         </>
@@ -597,13 +623,19 @@ export function RecorderEditor() {
         </p>
       )}
 
-      {saveModalVisible && (
-        <SaveRecordingModal
-          onSave={handleSave}
-          onDiscard={handleDiscard}
-          onClose={() => setSaveModalVisible(false)}
+      <Modal
+        show={saveModalVisible}
+        closeModal={() => setSaveModalVisible(false)}
+        closeOnOutsideClick={false}
+      >
+        <EditDetailsform
+          detailsToEdit={details}
+          setDetailsToEdit={setDetails}
+          cancelText='Discard'
+          save={handleSave}
+          cancel={() => setSaveModalVisible(false)}
         />
-      )}
+      </Modal>
     </>
   );
 }

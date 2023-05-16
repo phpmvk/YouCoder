@@ -77,11 +77,16 @@ const DotsMenu = ({
       .deleteRecording(recording.recording_id)
       .then((res) => {
         console.log('res from deleting recording: ', res);
+        toast.success('Recording deleted successfully!');
         dispatch(deleteUserRecording({ recordingId: recording.recording_id }));
-        setShowDeleteModal(false);
       })
       .catch((err) => {
         console.log('err from deleting recording: ', err);
+        toast.error('Error deleting recording');
+      })
+      .finally(() => {
+        setShowDeleteModal(false);
+        dispatch(setLoadingSpinner(false));
       });
   };
 
