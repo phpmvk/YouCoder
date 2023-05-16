@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getRecordingById, createNewRecording, findUser, fetchAllUserRecordings, updateRecording, deleteRecording, incrementViewCount, incrementLikeCount, fetchAllUserPublicRecordings, fetchPublicRecordingsBySearchQuery } from "../models/recordings.model";
+import { getRecordingById, createNewRecording, findUser, fetchAllUserRecordings, updateRecording, deleteRecording, incrementViewCount, incrementLikeCount, fetchAllUserPublicRecordings, fetchPublicRecordingsBySearchQuery, fetchAllPublicRecordings } from "../models/recordings.model";
 import moment from 'moment'
 
 export async function getRecordingByIdController(req: Request, res: Response) {
@@ -106,6 +106,19 @@ export async function recordingsQueryController(req: Request, res: Response) {
   }
 }
 
+export async function discoverPublicRecordingController(req: Request, res: Response) {
+  console.log('Recordings - GET received - discoverPublicRecordingController')
+  try {
+    const allPublicRecordings = await fetchAllPublicRecordings();
+    if (!allPublicRecordings) {
+      return res.status(400).send({ message: 'No public recordings available' })
+    }
+    res.status(200).send(allPublicRecordings);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: 'Internal server error fetching all public resources'})
+  }
+}
 
 export async function uploadRecordingController(req: Request, res: Response) {
   console.log('Recordings - POST received - uploadRecording')

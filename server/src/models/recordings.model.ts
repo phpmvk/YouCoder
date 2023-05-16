@@ -93,7 +93,27 @@ export async function fetchAllUserPublicRecordings(uid: string): Promise<Recordi
     }
   })
   return publicRecordings;
-}
+};
+
+export async function fetchAllPublicRecordings(): Promise<Recording[] | null> {
+  const allPublicRecordings = await prisma.recording.findMany({
+    where: {
+      published: true
+    },
+    orderBy: {
+      view_count: 'desc'
+    },
+    include: {
+      creator: {
+        select: {
+          picture: true,
+          display_name: true
+        }
+      }
+    }
+  });
+  return allPublicRecordings;
+};
 
 export async function fetchPublicRecordingsBySearchQuery(searchQuery: string ): Promise<Recording[] | null> {
   const publicRecordings = await prisma.recording.findMany({
@@ -218,7 +238,7 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
     },
     data: {
       full_link: `https://youcoder.io/player/${newRecording.recording_id}`,
-      iframe_link: `<iframe src='https://youcoder.io/player/${newRecording.recording_id}?embed=true&title=false&cover=true' width='1000' height='480' allowFullScreen title='${newRecording.title}'/>`
+      iframe_link: `<iframe src='https://youcoder.io/player/${newRecording.recording_id}?embed=true&title=false&cover=true&theme=dark' width='900' height='480' allowFullScreen scrolling='no' title='${newRecording.title}'/>`
     }
   })
 
