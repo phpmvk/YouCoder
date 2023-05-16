@@ -144,7 +144,7 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
     },
     data: {
       full_link: `https://youcoder.io/player/${newRecording.recording_id}`,
-      iframe_link: `<iframe src='https://youcoder.io/player/${newRecording.recording_id}?embed=true' width='1000' height='480' allowFullScreentitle='${newRecording.title}'/>`
+      iframe_link: `<iframe src='https://youcoder.io/player/${newRecording.recording_id}?embed=true&title=false&cover=true' width='1000' height='480' allowFullScreentitle='${newRecording.title}'/>`
     }
   })
 
