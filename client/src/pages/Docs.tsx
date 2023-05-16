@@ -309,7 +309,7 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
                 <h2 className=" sm:text-sm md:text-md text-lg text-white whitespace-nowrap z-10">{member.name}</h2>
                 <div>
                   <a href={member.gh} target="_blank" rel="noopener noreferrer">
-                    <IconButton className="!text-white">
+                    <IconButton className="!text-white !stroke-white">
                       <GitHubIcon/>
                     </IconButton>
                   </a>
