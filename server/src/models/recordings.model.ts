@@ -72,6 +72,36 @@ export async function fetchAllUserRecordings(uid: string): Promise<Recording[] |
   return allUserRecordings
 }
 
+export async function fetchAllUserPublicRecordings(uid: string): Promise<Recording[] | null> {
+  const publicRecordings = await prisma.recording.findMany({
+    where: {
+      creator_uid: uid,
+      published: true
+    },
+    orderBy: {
+      view_count: 'desc'
+    }
+  })
+  return publicRecordings;
+}
+
+export async function fetchPublicRecordingsBySearchQuery(searchQuery: string ): Promise<Recording[] | null> {
+  const publicRecordings = await prisma.recording.findMany({
+    where: {
+      published: true,
+      OR: [
+        {title: { contains: searchQuery}},
+        {description: { contains: searchQuery}},
+        {language: { contains: searchQuery}}
+      ]
+    },
+    orderBy: {
+      view_count: 'desc'
+    }
+  });
+  return publicRecordings;
+}
+
 export async function updateRecording(recordingId: string , dataToUpdate: Record<string, string | boolean>) {
   const updatedRecording = await prisma.recording.update({
     where: {
@@ -90,7 +120,8 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
     description,
     language,
     recording_link,
-    duration
+    duration,
+    published,
   } = frontendRecording
 
   const random36CharStringId = randomBytes(18).toString('hex');
@@ -127,7 +158,8 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
       view_count: 0,
       like_count: 0,
       tags: [],
-      duration: duration, 
+      duration: duration,
+      published: published?published:false 
     },
     include: {
       creator: {
