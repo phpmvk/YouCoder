@@ -30,7 +30,7 @@ export async function updateCreatorController(req: Request, res: Response) {
     const { uid } = req.body.user;
     const dataToUpdate: Record<string, string> = {};
   
-    const fieldsToUpdate: string[] = ['display_name', 'email', 'picture']
+    const fieldsToUpdate: string[] = ['display_name', 'email', 'picture', 'socials']
 
     fieldsToUpdate.forEach((field: string) => {
       if (req.body[field] !== undefined) {
