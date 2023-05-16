@@ -101,46 +101,46 @@ function power(base, exponent) {
 
 const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
   return (
-    <div className="min-h-screen bg-bg-pri min-w-[720px]">
+    <div className='min-h-screen bg-bg-pri min-w-[720px]'>
       <div>
         <TopNavBar />
 
-        <div className="bg-bg-pri relative flex justify-center items-center overflow-y-scroll overflow-x-hidden ">
-          <div className=" bg-bg-pri border-solid mx-2 pt-4 top-[20px] mb-20 pb-0 overflow-y-scroll border border-gray-600  rounded-2xl">
+        <div className='bg-bg-pri relative flex justify-center items-center overflow-y-scroll overflow-x-hidden hide-scrollbar'>
+          <div className=' bg-bg-pri border-solid mx-2 pt-4 top-[20px] mb-20 pb-0 overflow-y-scroll border border-gray-600  rounded-2xl hide-scrollbar'>
             {/* className="border border-bg-pri rounded-xl pt-2 */}
-            <PlaybackEditor recordingData={recordingData} />
+            <PlaybackEditor theme='dark' recordingData={recordingData} />
 
-            <div className="w-full bg-bg-pri h-auto mt-[15px] mx-auto ">
-              <div className="bg-bg-pri mx-4 pt-2 -mt-10">
-                <div className="">
+            <div className='w-full bg-bg-pri h-auto mt-[15px] mx-auto '>
+              <div className='bg-bg-pri mx-4 pt-2 -mt-10'>
+                <div className=''>
                   {/* title */}
 
-                  <div className="text-gray-200 text-4xl text-left pb-6 mx-2 mt-2 ">
+                  <div className='text-gray-200 text-4xl text-left pb-6 mx-2 mt-2 '>
                     {recording.title}
                   </div>
-                  <div className="bg-bg-pri flex flex-row">
-                    <div className="flex flex-row bg-bg-pri w-full h-[250px]">
+                  <div className='bg-bg-pri flex flex-row'>
+                    <div className='flex flex-row bg-bg-pri w-full h-[250px]'>
                       {/* ---------Left Card */}
-                      <div className=" mx-2 min-w-[200px] max-w-[20vw] px-10 h-56  border border-gray-700 rounded-xl shadow bg-bg-pri">
+                      <div className=' mx-2 min-w-[200px] max-w-[20vw] px-10 h-56  border border-gray-700 rounded-xl shadow bg-bg-pri'>
                         {/* <div className="flex justify-end px-4 pt-4"></div> */}
-                        <div className="flex flex-col items-center">
+                        <div className='flex flex-col items-center'>
                           <img
-                            className="w-20 h-20 !min-w-20 mb-3 rounded-xl shadow-lg"
-                            src="./../../public/avatar.webp"
-                            alt=""
+                            className='w-20 h-20 !min-w-20 mb-3 rounded-xl shadow-lg'
+                            src='./../../public/avatar.webp'
+                            alt=''
                           />
-                          <h5 className=" text-xl font-medium text-white">
+                          <h5 className=' text-xl font-medium text-white'>
                             {recording.creator}
                           </h5>
                           <Chip
-                            className=" !text-gray-300 !text-sm  !min-w-[140px] w-full"
+                            className=' !text-gray-300 !text-sm  !min-w-[140px] w-full'
                             label={`${recording.subs} Subscribers `}
                           />
-                          <div className="flex space-x-3 mt-2">
+                          <div className='flex space-x-3 mt-2'>
                             <Button
-                              variant="outlined"
-                              size="small"
-                              className="!rounded-xl !bg-bg-muigrey !border-gray-700 !min-w-[120px] !text-gray-100 whitespace-nowrap h-1/2 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700"
+                              variant='outlined'
+                              size='small'
+                              className='!rounded-xl !bg-bg-muigrey !border-gray-700 !min-w-[120px] !text-gray-100 whitespace-nowrap h-1/2 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700'
                             >
                               <AddIcon />
                               Subscribe
@@ -150,31 +150,31 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                       </div>
                       {/* Middle Card -----------------------------------   */}
 
-                      <div className="flex-col mx-2 w-full py-4 h-56 text-left  border rounded-xl shadow bg-bg-pri border-gray-700 overflow-hidden text-white">
-                        <div className="flex justify-end px-4 pt-4 h-28 md:h-full overflow-y-scroll">
-                          <p className="overflow-ellipsis ">
+                      <div className='flex-col mx-2 w-full py-4 h-56 text-left  border rounded-xl shadow bg-bg-pri border-gray-700 overflow-hidden text-white'>
+                        <div className='flex justify-end px-4 pt-4 h-28 md:h-full overflow-y-scroll'>
+                          <p className='overflow-ellipsis '>
                             {recording.description}
                           </p>
                         </div>
-                        <div className="py-8 md:hidden">
+                        <div className='py-8 md:hidden'>
                           <Stack
-                            className="mx-auto max-w-sm"
-                            direction="row"
+                            className='mx-auto max-w-sm'
+                            direction='row'
                             spacing={2}
                           >
                             <Button
-                              variant="outlined"
-                              size="small"
-                              className="!rounded-xl !bg-bg-muigrey !border-gray-700 !min-w-[120px] !text-gray-100 whitespace-nowrap h-1/2 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700"
+                              variant='outlined'
+                              size='small'
+                              className='!rounded-xl !bg-bg-muigrey !border-gray-700 !min-w-[120px] !text-gray-100 whitespace-nowrap h-1/2 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700'
                             >
-                              <ReplyIcon className="transform scale-x-[-1]" />
+                              <ReplyIcon className='transform scale-x-[-1]' />
                               share
                             </Button>
 
                             <Button
-                              variant="outlined"
-                              size="small"
-                              className="!rounded-xl !bg-bg-muigrey !border-gray-700 !min-w-[120px] !text-gray-100 whitespace-nowrap h-1/2 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700"
+                              variant='outlined'
+                              size='small'
+                              className='!rounded-xl !bg-bg-muigrey !border-gray-700 !min-w-[120px] !text-gray-100 whitespace-nowrap h-1/2 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700'
                             >
                               <AddIcon />
                               add to list
@@ -185,26 +185,26 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
 
                       {/* ------Right Side Card */}
 
-                      <div className="hidden md:block mx-2 min-w-[150px] lg:min-w-[200px] w-[20vw] max-w-[20vw] md:px-10 sm:px-auto h-56 border rounded-xl shadow bg-bg-pri border-gray-700">
-                        <div className="flex py-5 sm:px-0 justify-center items-center h-full">
+                      <div className='hidden md:block mx-2 min-w-[150px] lg:min-w-[200px] w-[20vw] max-w-[20vw] md:px-10 sm:px-auto h-56 border rounded-xl shadow bg-bg-pri border-gray-700'>
+                        <div className='flex py-5 sm:px-0 justify-center items-center h-full'>
                           <Stack
-                            className="mx-auto max-w-sm"
-                            direction="column"
+                            className='mx-auto max-w-sm'
+                            direction='column'
                             spacing={2}
                           >
                             <Button
-                              variant="outlined"
-                              size="small"
-                              className="!rounded-xl !bg-bg-muigrey !border-gray-700 !min-w-[120px] !text-gray-100 whitespace-nowrap h-1/2 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700"
+                              variant='outlined'
+                              size='small'
+                              className='!rounded-xl !bg-bg-muigrey !border-gray-700 !min-w-[120px] !text-gray-100 whitespace-nowrap h-1/2 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700'
                             >
-                              <ReplyIcon className="transform scale-x-[-1]" />
+                              <ReplyIcon className='transform scale-x-[-1]' />
                               share
                             </Button>
 
                             <Button
-                              variant="outlined"
-                              size="small"
-                              className="!rounded-xl !bg-bg-muigrey !border-gray-700 !min-w-[120px] !text-gray-100 whitespace-nowrap h-1/2 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700"
+                              variant='outlined'
+                              size='small'
+                              className='!rounded-xl !bg-bg-muigrey !border-gray-700 !min-w-[120px] !text-gray-100 whitespace-nowrap h-1/2 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700'
                             >
                               <AddIcon />
                               add to list
@@ -214,16 +214,16 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex  w-1/4 text-left mx-2  bg-bg-pri  text-3xl text-gray-200">
-                    <div className="flex justify-end pb-4">
+                  <div className='flex  w-1/4 text-left mx-2  bg-bg-pri  text-3xl text-gray-200'>
+                    <div className='flex justify-end pb-4'>
                       Code
-                      <p className="overflow-ellipsis "></p>
+                      <p className='overflow-ellipsis '></p>
                     </div>
                   </div>
                   {/* code block------ */}
-                  <div className="flex max-w-full mx-2 px-2 mb-6 h-full text-left  border rounded-xl shadow bg-bg-pri border-gray-700 overflow-hidden overflow-y-scroll overflow-x-scroll text-white">
-                    <div className="flex justify-end mx-2 pt-4">
-                      <p className="overflow-ellipsis ">
+                  <div className='flex max-w-full mx-2 px-2 mb-6 h-full text-left  border rounded-xl shadow bg-bg-pri border-gray-700 overflow-hidden overflow-y-scroll overflow-x-scroll text-white'>
+                    <div className='flex justify-end mx-2 pt-4'>
+                      <p className='overflow-ellipsis '>
                         <div>
                           <pre>
                             <code>{JavaScriptSnippet}</code>
@@ -234,12 +234,12 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                   </div>
                 </div>
 
-                <div className="flex md:flex-row"></div>
+                <div className='flex md:flex-row'></div>
 
-                <div className="ml-6 bg-bg-pri ">
-                  <div className="flex flex-col w-full">
-                    <div className="flex justify-between items-start">
-                      <div className="flex flex-col"></div>
+                <div className='ml-6 bg-bg-pri '>
+                  <div className='flex flex-col w-full'>
+                    <div className='flex justify-between items-start'>
+                      <div className='flex flex-col'></div>
                     </div>
                   </div>
 
