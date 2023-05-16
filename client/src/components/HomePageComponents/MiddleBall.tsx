@@ -13,7 +13,7 @@ const MiddleBall = () => {
     <>
       <div className="py-10">
       <motion.div
-        className=" text-2xl md:text-4xl xl:text-6xl p-20 h-[30vw] w-[30vw] z-10 top-[145vh] md:top-[193vw] lg:top-[178vw] xl:top-[160vw] "
+        className=" text-2xl md:text-4xl xl:text-6xl p-20 h-[30vw] w-[30vw] z-10 top-[120vh] sm:top-[145vh] md:top-[193vw] lg:top-[178vw] xl:top-[160vw] "
         style={{
           position: 'absolute',
           left: '35%',
