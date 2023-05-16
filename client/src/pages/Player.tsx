@@ -17,6 +17,8 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
   const embed = Boolean(searchParams.get('embed') === 'true');
   const showMultiEditor = Boolean(searchParams.get('multi') === 'true');
   const showTitle = Boolean(searchParams.get('title') === 'true');
+  const setTheme = searchParams.get('theme');
+
   const showCover = Boolean(searchParams.get('cover') === 'true');
   const [toRender, setToRender] = useState<JSX.Element | null>(null);
   const [displayCover, setDisplayCover] = useState<boolean>(
@@ -85,6 +87,7 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
                 ) : (
                   <PlaybackEditor
                     autoplay={true}
+                    theme={setTheme === 'light' ? 'light' : 'dark'}
                     recordingData={response.data}
                   />
                 )}

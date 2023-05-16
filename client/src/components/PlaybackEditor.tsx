@@ -15,6 +15,7 @@ import {
   formatTime,
   getLanguageId,
   formatLanguage,
+  toggleTheme,
 } from '../utils/editorUtils';
 import { Recording } from '../types/Creator';
 import Button from '@mui/material/Button';
@@ -39,9 +40,11 @@ import { MultiEditorPlayback } from './MultiEditorPlayback';
 export function PlaybackEditor({
   recordingData,
   autoplay,
+  theme,
 }: {
   recordingData: Recording;
   autoplay?: boolean;
+  theme: string;
 }) {
   const [editorInstance, setEditorInstance] =
     useState<editor.IStandaloneCodeEditor | null>(null);
@@ -105,6 +108,10 @@ export function PlaybackEditor({
       monacoInstance.editor.setModelLanguage(model!, editorLanguage);
     }
   }, []);
+
+  // useEffect(() => {
+  //   if (monacoInstance) toggleTheme(theme, monacoInstance!);
+  // }, [theme, monacoInstance]);
 
   useEffect(() => {
     const defaultFontSize = getDefaultFontSize();
@@ -200,9 +207,9 @@ export function PlaybackEditor({
       (output) => output.playbackTimestamp >= baseTimestamp
     );
 
-    // if (audioElement && (sliderValue !== 0 || !sliderValue)) {
-    //   audioElement.play();
-    // }
+    if (audioElement && sliderValue === 0) {
+      audioElement.play();
+    }
 
     // Clear existing timeouts if any
     actionTimeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
@@ -265,9 +272,8 @@ export function PlaybackEditor({
   }
 
   //playback handlers
-  async function handleStartPlayback() {
+  function handleStartPlayback() {
     if (importedActions) {
-      await audioElement!.play();
       getCurrentLanguage();
       editorInstance!.setValue('');
       setTeacherConsoleOutput('');
@@ -390,6 +396,7 @@ export function PlaybackEditor({
               status: 'stopped',
               currentPosition: 0,
             });
+            updateAudioCurrentTime(0);
             return 0; // Set sliderValue to audioDuration
           }
           return prevSliderValue + 100;
@@ -509,7 +516,7 @@ export function PlaybackEditor({
                 height='500px'
                 defaultLanguage={editorLanguage}
                 defaultValue=''
-                theme='vs-dark'
+                theme={`vs-${theme}`}
                 options={{
                   wordWrap: 'on',
                   readOnly: ignoreUserInputs,
