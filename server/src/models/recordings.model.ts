@@ -17,7 +17,7 @@ export async function getRecordingById(recordingId: string): Promise<Recording |
         }
       }
     }
-  })
+  });
   return recording
 }
 
@@ -30,7 +30,7 @@ export async function incrementViewCount(recordingId: string): Promise<Recording
       view_count: { increment: 1}
     }
   });
-  return updatedRecording;
+  return updatedRecording
 }
 
 export async function incrementLikeCount(recordingId: string): Promise<Recording | null> {
@@ -42,7 +42,7 @@ export async function incrementLikeCount(recordingId: string): Promise<Recording
       like_count: {increment: 1}
     }
   });
-  return updatedRecording;
+  return updatedRecording
 }
 
 export async function findUser(user: FirebaseUser): Promise<Creator | null>{
@@ -50,7 +50,7 @@ export async function findUser(user: FirebaseUser): Promise<Creator | null>{
     where: {
       uid: user.uid
     }
-  })
+  });
   return storedUser
 }
 
@@ -70,7 +70,7 @@ export async function fetchAllUserRecordings(uid: string): Promise<Recording[] |
     orderBy: {
       created_at_datetime: 'desc'
     }
-  })
+  });
   return allUserRecordings
 }
 
@@ -91,7 +91,7 @@ export async function fetchAllUserPublicRecordings(uid: string): Promise<Recordi
         }
       }
     }
-  })
+  });
   return publicRecordings;
 };
 
@@ -162,7 +162,7 @@ export async function updateRecording(recordingId: string , dataToUpdate: Record
       });
       return updatedRecording
     }
-  }
+  };
   
   const updatedRecording = await prisma.recording.update({
     where: {
@@ -191,7 +191,7 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
     where: {
       recording_id: random36CharStringId
     }
-  })
+  });
 
   if (existingRecording) {
     return createNewRecording(frontendRecording);
@@ -199,7 +199,7 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
 
   const now = new Date();
   const createdDateTime = now.toISOString();
-  const timezone = now.toUTCString()
+  const timezone = now.toUTCString();
 
   const newRecording = await prisma.recording.create({
     data: {
@@ -230,7 +230,7 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
         }
       }
     }
-  })
+  });
 
   const updatedNewRecording = await prisma.recording.update({
     where: {
@@ -240,8 +240,7 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
       full_link: `https://youcoder.io/player/${newRecording.recording_id}`,
       iframe_link: `<iframe src='https://youcoder.io/player/${newRecording.recording_id}?embed=true&title=false&cover=true&theme=dark' width='900' height='480' allowFullScreen scrolling='no' title='${newRecording.title}'/>`
     }
-  })
-
+  });
   return updatedNewRecording
 }
 
