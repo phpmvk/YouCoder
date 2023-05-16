@@ -4,6 +4,11 @@ import { editor } from 'monaco-editor';
 import * as monaco from 'monaco-editor';
 import { Allotment } from 'allotment';
 import 'allotment/dist/style.css';
+import ClearIcon from '@mui/icons-material/Clear';
+import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
+import { default as TooltipMUI } from '@mui/material/Tooltip';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 import consoleApi from '../services/consoleApi';
 import { CodeToExecute } from '../types/Console';
@@ -338,7 +343,6 @@ export function RecorderEditor() {
         return { ...change, playbackTimestamp: adjustedTimestamp };
       });
 
-    console.log(recorderState);
     if (recorderState === 'paused') {
       mediaRecorderRef.current!.resume();
       mediaRecorderRef.current!.onresume = () => {
@@ -371,7 +375,6 @@ export function RecorderEditor() {
         audioRecordingBlobRef.current!,
         user.uid!
       );
-      console.log(ycrFileUrl);
       const model = editorInstance!.getModel();
       const language = model!.getLanguageId();
 
@@ -410,8 +413,16 @@ export function RecorderEditor() {
       .getOutput(judge0)!
       .then((response) => {
         const output = window.atob(response.data.output);
-        setConsoleOutput(output);
-        handleConsoleLogOutput(output, Date.now());
+        if (response.data.output === null) {
+          setConsoleOutput('{Code executed, but nothing to log}');
+          handleConsoleLogOutput(
+            '{Code executed, but nothing to log}',
+            Date.now()
+          );
+        } else {
+          setConsoleOutput(output);
+          handleConsoleLogOutput(output, Date.now());
+        }
         setIsConsoleLoading(false);
       })
       .catch((error) => {
@@ -477,19 +488,55 @@ export function RecorderEditor() {
             </Allotment.Pane>
             <Allotment.Pane minSize={180} preferredSize={300}>
               <div className='border w-full h-full border-[#1e1e1e] text-white relative'>
-                <button
+                {/* <button
                   className='absolute bottom-2 right-2 border-white border rounded-sm p-2 bg-slate-500 hover:bg-slate-500/50 '
                   onClick={handleJudge0}
                   disabled={isConsoleLoading}
                 >
-                  {isConsoleLoading ? 'Loading...' : 'Compile & Execute'}
+                  {isConsoleLoading ? (
+                    <svg
+                      className='animate-spin h-5 w-5 mr-3'
+                      viewBox='0 0 24 24'
+                    ></svg>
+                  ) : (
+                    'Compile & Execute'
+                  )}
                 </button>
                 <button
                   className='absolute top-2 right-2 border-white border text-sm rounded-md px-1 bg-slate-500 hover:bg-slate-500/50'
                   onClick={() => setConsoleOutput('')}
                 >
                   clear
-                </button>
+                </button> */}
+                <TooltipMUI title='Compile & Execute'>
+                  <button
+                    className=' absolute top-0 right-14 w-fit items-center px-2 text-sm  text-gray-200 rounded !bg-green-900/20 border !border-gray-700 uppercase hover:!bg-green-900/50 active:ring-1 active:ring-bg-alt mt-2'
+                    onClick={handleJudge0}
+                    disabled={isConsoleLoading}
+                  >
+                    {isConsoleLoading ? (
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <CircularProgress size={24} />
+                      </Box>
+                    ) : (
+                      <PlayArrowOutlinedIcon style={{ fontSize: 24 }} />
+                    )}
+                  </button>
+                </TooltipMUI>
+                <TooltipMUI title='Clear Console'>
+                  <button
+                    className='absolute top-0 right-2 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-red-900/20 border !border-gray-700 uppercase hover:!bg-red-900/50 active:ring-1 active:ring-bg-alt mt-2'
+                    onClick={() => setConsoleOutput('')}
+                  >
+                    <ClearIcon />
+                  </button>
+                </TooltipMUI>
 
                 <Terminal output={consoleOutput} />
               </div>
@@ -508,12 +555,10 @@ export function RecorderEditor() {
 
       {recorderState === 'recording' && (
         <>
-
           <button
             className='p-2 text-white ml-[15vw]'
             onClick={handlePauseRecording}
           >
-
             Pause Recording
           </button>
           <button className='p-2 text-white' onClick={handleEndRecording}>
