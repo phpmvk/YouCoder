@@ -78,7 +78,9 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
                         {response.data.title}
                       </div>
                     )}
-                    <BiPlayCircle className='absolute left-auto right-auto text-7xl text-white/30 z-10 opacity-0 hover:opacity-100' />
+                    <div className='absolute w-full h-full opacity-0 hover:opacity-100 flex items-center justify-around'>
+                      <BiPlayCircle className='text-7xl text-white/30 z-10 ' />
+                    </div>
                   </div>
                 ) : (
                   <PlaybackEditor recordingData={response.data} />
