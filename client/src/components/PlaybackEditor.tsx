@@ -38,8 +38,10 @@ import { MultiEditorPlayback } from './MultiEditorPlayback';
 
 export function PlaybackEditor({
   recordingData,
+  autoplay,
 }: {
   recordingData: Recording;
+  autoplay?: boolean;
 }) {
   const [editorInstance, setEditorInstance] =
     useState<editor.IStandaloneCodeEditor | null>(null);
@@ -125,6 +127,12 @@ export function PlaybackEditor({
       editorInstance!.updateOptions({ fontSize });
     }
   }, [fontSize]);
+
+  useEffect(() => {
+    if (autoplay && importedActions) {
+      handleStartPlayback();
+    }
+  }, [autoplay, importedActions]);
 
   const getDefaultFontSize = () => {
     let div = document.createElement('div');
