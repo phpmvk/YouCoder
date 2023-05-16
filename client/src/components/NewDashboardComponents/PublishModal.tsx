@@ -3,9 +3,10 @@ import { FC } from 'react';
 interface PublishModalProps {
   close: () => void;
   confirm: () => void;
+  text: string;
 }
 
-const PublishModal: FC<PublishModalProps> = ({ close, confirm }) => {
+const PublishModal: FC<PublishModalProps> = ({ close, confirm, text }) => {
   return (
     <div
       className='absolute z-10 mx-auto left-0 right-0 top-0 bottom-0 overflow-y-hidden'
@@ -35,11 +36,7 @@ const PublishModal: FC<PublishModalProps> = ({ close, confirm }) => {
                   Unpublish Confirmation
                 </h3>
                 <div className='mt-2'>
-                  <p className='text-sm text-white/90'>
-                    If you unpublish this recording, all the links where this
-                    recording is embedded will stop working until you publish it
-                    again. Are you sure you want to proceed?
-                  </p>
+                  <p className='text-sm text-white/90'>{text}</p>
                 </div>
               </div>
             </div>

@@ -634,6 +634,7 @@ export function RecorderEditor() {
           cancelText='Discard'
           save={handleSave}
           cancel={() => setSaveModalVisible(false)}
+          warnBeforeUnpublish={false}
         />
       </Modal>
     </>

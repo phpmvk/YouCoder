@@ -574,6 +574,7 @@ export function MultiEditorRecorder() {
           cancelText='Discard'
           save={handleSave}
           cancel={() => setSaveModalVisible(false)}
+          warnBeforeUnpublish={false}
         />
       </Modal>
 

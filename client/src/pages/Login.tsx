@@ -5,7 +5,7 @@ import {
   signInWithPopup,
   GithubAuthProvider,
 } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BsGoogle, BsGithub } from 'react-icons/bs';
 import http from '../services/userApi';
 import { setUser } from '../redux/userSlice';
@@ -90,14 +90,16 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
       {/* {showError && !showLoading && <ErrorBackend />} */}
       <div className='bg-bg-pri h-screen w-full flex overflow-hidden justify-center sm:justify-start'>
         <div className='bg-bg-pri w-full h-full flex items-center justify-center mx-6 sm:w-1/3 min-w-[300px]'>
-          <div className='absolute top-20 z-20 text-5xl max-lg:mx-auto ml:24 flex items-center mx-12 font-title'>
-            <span className='text-white'>You</span>
-            &nbsp;
-            <span className='text-bg-sec'>{`{`}</span>
-            <span className='text-white'> </span>
-            <span className='text-white'>Coder</span>
-            <span className='text-bg-sec'>{`}`}</span>
-          </div>
+          <Link to='/'>
+            <div className='absolute top-20 z-20 text-5xl max-lg:mx-auto ml:24 flex items-center mx-12 font-title'>
+              <span className='text-white'>You</span>
+              &nbsp;
+              <span className='text-bg-sec'>{`{`}</span>
+              <span className='text-white'> </span>
+              <span className='text-white'>Coder</span>
+              <span className='text-bg-sec'>{`}`}</span>
+            </div>
+          </Link>
           <div className='flex flex-col justify-evenly h-1/3 min-w-[200px] '>
             <button
               className='bg-bg-pri z-20 flex items-center w-full h-1/8 t-[10px] border-solid !border-2 border-bg-sec rounded-lg !text-white lg:text-xl    p-3 hover:border-bg-alt whitespace-nowrap'
@@ -120,7 +122,6 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
               </span>
             </button>
           </div>
-
         </div>
         <div className='hidden sm:block w-2/3 min-w-[400px] -ml-12'>
           <LoginArt />
