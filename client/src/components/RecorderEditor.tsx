@@ -9,6 +9,8 @@ import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 import { default as TooltipMUI } from '@mui/material/Tooltip';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import PauseIcon from '@mui/icons-material/Pause';
+import DoneIcon from '@mui/icons-material/Done';
 
 import consoleApi from '../services/consoleApi';
 import { CodeToExecute } from '../types/Console';
@@ -449,9 +451,12 @@ export function RecorderEditor() {
   }
 
   return selectedLanguage === 'multi' ? (
+    <div className=' bg-bg-pri border-solid mx-2 pt-4 top-[20px] mb-5 pb-0 overflow-y-scroll border border-gray-600  rounded-2xl hide-scrollbar'>
     <MultiEditorRecorder />
+    </div>
   ) : (
     <>
+    <div className=' bg-bg-pri border-solid mx-2 pt-4 top-[20px] mb-5 pb-0 overflow-y-scroll border border-gray-600 rounded-2xl hide-scrollbar'>
       {recorderState === 'stopped' && (
         <>
           <div className='flex items-center mx-[15vw]'>
@@ -530,7 +535,7 @@ export function RecorderEditor() {
                 </button> */}
                 <TooltipMUI title='Compile & Execute'>
                   <button
-                    className=' absolute top-0 right-14 w-fit items-center px-2 text-sm  text-gray-200 rounded !bg-green-900/20 border !border-gray-700 uppercase hover:!bg-green-900/50 active:ring-1 active:ring-bg-alt mt-2'
+                    className=' absolute top-0 right-20 w-fit items-center px-2 text-sm  text-gray-200 rounded !bg-green-900/20 border !border-gray-400 uppercase hover:!bg-green-900/50 active:ring-1 active:ring-bg-alt mt-2'
                     onClick={handleJudge0}
                     disabled={isConsoleLoading}
                   >
@@ -541,20 +546,20 @@ export function RecorderEditor() {
                           justifyContent: 'center',
                           alignItems: 'center',
                         }}
-                      >
+                      > 
                         <CircularProgress size={24} />
                       </Box>
                     ) : (
-                      <PlayArrowOutlinedIcon style={{ fontSize: 24 }} />
+                      <p>run</p>
                     )}
-                  </button>
+                  </button> 
                 </TooltipMUI>
                 <TooltipMUI title='Clear Console'>
                   <button
-                    className='absolute top-0 right-2 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-red-900/20 border !border-gray-700 uppercase hover:!bg-red-900/50 active:ring-1 active:ring-bg-alt mt-2'
+                    className='absolute top-0 right-2 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-red-900/20 border !border-gray-400 uppercase hover:!bg-red-900/50 active:ring-1 active:ring-bg-alt mt-2'
                     onClick={() => setConsoleOutput('')}
-                  >
-                    <ClearIcon />
+                  > <p>clear</p>
+                    
                   </button>
                 </TooltipMUI>
 
@@ -564,9 +569,10 @@ export function RecorderEditor() {
           </Allotment>
         </div>
       </div>
+      <div className="flex flex-wrap justify-start items-center">
       {recorderState === 'stopped' && (
         <button
-          className='p-2 text-white mx-[15vw]'
+          className='p-2 text-white mx-[15vw] border border-red-600 rounded-xl m-2 '
           onClick={handleStartRecording}
         >
           Start Recording
@@ -576,15 +582,15 @@ export function RecorderEditor() {
       {recorderState === 'recording' && (
         <>
           <button
-            className='p-2 text-white ml-[15vw]'
+            className='p-2 text-white ml-[15vw] border  border-bg-alt/60 rounded-xl m-2 flex justify-center items-center'
             onClick={handlePauseRecording}
-          >
+          > <PauseIcon className="mr-2" />
             Pause Recording
           </button>
           <button
-            className='p-2 text-white'
+            className='p-2 text-white border border-bg-sec rounded-xl m-2'
             onClick={handleEndRecording}
-          >
+          ><DoneIcon className="mr-2"/>
             End Recording
           </button>
         </>
@@ -593,13 +599,13 @@ export function RecorderEditor() {
       {recorderState === 'paused' && (
         <>
           <button
-            className='p-2 text-white ml-[15vw]'
+            className='p-2 text-white ml-[15vw] border border-red-600 rounded-xl m-2'
             onClick={handleResumeRecording}
           >
             Resume Recording
           </button>
           <button
-            className='p-2 text-white'
+            className='p-2 text-white border border-blue-600 rounded-full m-2'
             onClick={handleEndRecording}
           >
             End Recording
@@ -622,7 +628,7 @@ export function RecorderEditor() {
           )}
         </p>
       )}
-
+</div>
       <Modal
         show={saveModalVisible}
         closeModal={() => setSaveModalVisible(false)}
@@ -637,6 +643,8 @@ export function RecorderEditor() {
           warnBeforeUnpublish={false}
         />
       </Modal>
+    </div>
     </>
+    
   );
 }
