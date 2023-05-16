@@ -75,25 +75,32 @@ import { motion, useTransform, useScroll } from 'framer-motion';
 
 const ExampleFrame: React.FC = () => {
   const { scrollYProgress } = useScroll();
-  const scale = useTransform(scrollYProgress, [0.6, 1], [0, 3]);
+  const scale = useTransform(scrollYProgress, [0.6, 1], [0, 1]);
   const width = useTransform(scrollYProgress, [0, 1], [0, 160]);
   const height = useTransform(scrollYProgress, [0, 1], [0, 80]);
 
   return (
     <>
       <motion.div
-        className=" top-[350vw] sm:top-[330vw] 700:top-[320vw] md:top-[340vw] 900:top-[320vw] lg:top-[330vw] w-[25vw] h-[12.5vw]"
+        className=" top-[420vw] sm:top-[430vw] 700:top-[410vw] md:top-[380vw] 900:top-[340vw] lg:top-[355vw] min-w-[910px] w-[25vw] h-[12.5vw] bg-bg-pri"
         style={{
           position: 'absolute',
-          left: '38%',
+          left: '10%',
           scale: scale,
-          background: 'white',
-          border: '0.7px solid white',
           zIndex: 1000,
         }}
       >
-       
+        <iframe
+          src='http://localhost:5173/player/e77140cd6c2bd389b902b538a4127ecb450e?embed=true&title=false&cover=false'
+          width='900'
+          height='480'
+          allowFullScreen
+          title='the end of the world'
+        />
       </motion.div>
+
+ 
+
     </>
   );
 };
