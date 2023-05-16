@@ -142,6 +142,17 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
                   
                   
                 </div>
+                <div className='! p-1'>
+                  <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                  Can I personalise the embedded recording?
+                  </h2>
+                  <p className='text-gray-200 !font-console'>
+                  Yes! You can chose to display either the Title or the thumbnail provided during the recording creation. In addition, you can also toggle between a &apos;light&apos; and &apos;dark&apos;. Just edit the fields in the provided iFrame link. Keep in mind that the cover takes precedence over the title.
+                  </p>
+                  <br />
+                  
+                  
+                </div>
                 
               </Typography>
             </AccordionDetails>
