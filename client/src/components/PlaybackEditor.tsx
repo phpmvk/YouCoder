@@ -129,10 +129,10 @@ export function PlaybackEditor({
   }, [fontSize]);
 
   useEffect(() => {
-    if (autoplay && importedActions) {
+    if (autoplay && importedActions && audioSource && audioElement) {
       handleStartPlayback();
     }
-  }, [autoplay, importedActions]);
+  }, [autoplay, importedActions, audioSource]);
 
   const getDefaultFontSize = () => {
     let div = document.createElement('div');
@@ -198,9 +198,9 @@ export function PlaybackEditor({
       (output) => output.playbackTimestamp >= baseTimestamp
     );
 
-    if (audioElement && sliderValue === 0) {
-      audioElement.play();
-    }
+    // if (audioElement && (sliderValue !== 0 || !sliderValue)) {
+    //   audioElement.play();
+    // }
 
     // Clear existing timeouts if any
     actionTimeoutIdsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
@@ -263,8 +263,9 @@ export function PlaybackEditor({
   }
 
   //playback handlers
-  function handleStartPlayback() {
+  async function handleStartPlayback() {
     if (importedActions) {
+      await audioElement!.play();
       getCurrentLanguage();
       editorInstance!.setValue('');
       setTeacherConsoleOutput('');
@@ -515,15 +516,9 @@ export function PlaybackEditor({
                 onMount={handleEditorDidMount}
               />
             </Allotment.Pane>
-            <Allotment.Pane
-              minSize={200}
-              preferredSize={400}
-            >
+            <Allotment.Pane minSize={200} preferredSize={400}>
               <div className=' w-full h-[50%] border-r-8 border-t-8 border-l-2 border-bg-pri '>
-                <Terminal
-                  terminalName='output'
-                  output={TeacherConsoleOutput}
-                />
+                <Terminal terminalName='output' output={TeacherConsoleOutput} />
               </div>
               <div className='relative w-full h-[50%] border-t-6 border-l-2 border-r-8 border-bg-pri'>
                 <div className='flex justify-center items-center'>
