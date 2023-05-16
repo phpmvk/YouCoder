@@ -12,6 +12,8 @@ const CreateRecordingPage: FC<RecordingPageProps> = ({}) => {
   // create a useEffect if there is a token in local storage and get the user data from the backend and update the store
   return (
     <>
+    <div className="min-h-screen flex items-center justify-center">
+    <div className=' bg-bg-pri border-solid w-[75vw] mt-20 overflow-y-scroll border border-gray-600  rounded-2xl hide-scrollbar'>
       {' '}
       <div className='bg-bg-pri h-screen overflow-auto'>
         <TopNavBar
@@ -20,11 +22,12 @@ const CreateRecordingPage: FC<RecordingPageProps> = ({}) => {
           showDashboard={true}
           showExamples={true}
         />
-        <div>Recording Page</div>
+  
         <div className='w-full px-10 mx-auto'>
           <RecorderEditor />
         </div>
       </div>
+      </div></div>
     </>
   );
 };
