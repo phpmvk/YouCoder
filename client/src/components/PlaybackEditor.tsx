@@ -556,7 +556,10 @@ export function PlaybackEditor({
                   theme === 'light' ? 'border-gray-200' : 'border-bg-pri'
                 }`}
               >
-                <Terminal terminalName='output' output={TeacherConsoleOutput} />
+                <Terminal
+                  terminalName='recording console'
+                  output={TeacherConsoleOutput}
+                />
               </div>
               <div
                 className={`relative w-full h-[50%] border-t-6 border-l-2 border-r-8  ${
@@ -566,7 +569,7 @@ export function PlaybackEditor({
                 <div className='flex justify-center items-center'>
                   <TooltipMUI title='Compile & Execute'>
                     <button
-                      className=' absolute top-0 right-14 w-fit items-center px-2 text-sm  text-gray-200 rounded !bg-green-900/20 border !border-gray-700 uppercase hover:!bg-green-900/50 active:ring-1 active:ring-bg-alt'
+                      className=' absolute top-0 right-20 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-green-900/20 border !border-gray-400 uppercase hover:!bg-green-900/50 active:ring-1 active:ring-bg-alt'
                       onClick={handleJudge0}
                       disabled={isStudentConsoleLoading}
                     >
@@ -578,24 +581,27 @@ export function PlaybackEditor({
                             alignItems: 'center',
                           }}
                         >
-                          <CircularProgress size={24} />
+                          <CircularProgress size={20} />
                         </Box>
                       ) : (
-                        <PlayArrowOutlinedIcon style={{ fontSize: 24 }} />
+                        // <PlayArrowOutlinedIcon style={{ fontSize: 24 }} />
+                        <p>run</p>
                       )}
                     </button>
                   </TooltipMUI>
                   <TooltipMUI title='Clear Console'>
                     <button
-                      className='absolute top-0 right-2 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-red-900/20 border !border-gray-700 uppercase hover:!bg-red-900/50 active:ring-1 active:ring-bg-alt'
+                      className='absolute top-0 right-2 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-red-900/20 border !border-gray-400 uppercase hover:!bg-red-900/50 active:ring-1 active:ring-bg-alt'
                       onClick={() => setStudentConsoleOutput('')}
                     >
-                      <ClearIcon />
+                      {' '}
+                      <p>clear</p>
+                      {/* <ClearIcon /> */}
                     </button>
                   </TooltipMUI>
                 </div>
                 <Terminal
-                  terminalName='your output'
+                  terminalName='your console'
                   output={StudentConsoleOutput}
                 />
               </div>
@@ -612,7 +618,7 @@ export function PlaybackEditor({
           {playbackState.status === 'stopped' && (
             <Button
               variant='contained'
-              className={`!rounded-full !bg-bg-alt !text-bg-pri
+              className={`!rounded-xl !bg-bg-alt !text-bg-pri
                ${
                  theme === 'light' ? '!bg-gray-500 ' : '!bg-bg-alt !text-bg-pri'
                }
@@ -624,8 +630,8 @@ export function PlaybackEditor({
           )}
           {playbackState.status === 'playing' && (
             <Button
-              variant='outlined'
-              className={`!rounded-full !bg-bg-alt !text-bg-pri ${
+              variant='contained'
+              className={`!rounded-xl !bg-bg-alt !text-bg-pri ${
                 theme === 'light' ? '!bg-gray-500' : '!bg-bg-alt'
               }`}
               onClick={handlePausePlayback}
@@ -635,8 +641,8 @@ export function PlaybackEditor({
           )}
           {playbackState.status === 'paused' && (
             <Button
-              variant='outlined'
-              className={`!rounded-full !bg-bg-alt !text-bg-pri ${
+              variant='contained'
+              className={`!rounded-xl !bg-bg-alt !text-bg-pri ${
                 theme === 'light' ? '!bg-gray-500' : '!bg-bg-alt'
               }`}
               onClick={handleResumePlayback}
@@ -709,7 +715,7 @@ export function PlaybackEditor({
               audioElement!.muted = false;
             }}
           />
-          <Tooltip />
+          {/* <Tooltip /> */}
         </div>
         <br></br>
       </div>

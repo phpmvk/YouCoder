@@ -12,6 +12,7 @@ interface EditDetailsformProps {
   setDetailsToEdit: React.Dispatch<React.SetStateAction<updateRecording>>;
   cancel: () => void;
   cancelText?: string;
+  warnBeforeUnpublish?: boolean;
 }
 
 const EditDetailsform: FC<EditDetailsformProps> = ({
@@ -20,15 +21,18 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
   save,
   cancel,
   cancelText = 'Cancel',
+  warnBeforeUnpublish = true,
 }) => {
   const [image, setImage] = useState(detailsToEdit.thumbnail_link);
   const [file, setFile] = useState<File | null>(null);
   const [titleError, setTitleError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showUnpublishModal, setShowUnpublishModal] = useState(false);
+  const [showDismissModal, setShowDismissModal] = useState(false);
   const [newPublishedValue, setNewPublishedValue] = useState(
     detailsToEdit.published
   );
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const storage = getStorage();
   const dispatch = useAppDispatch();
@@ -83,6 +87,7 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
       setTitleError('Title is required');
       return;
     }
+    setButtonDisabled(true);
     let updatedDetails = { ...detailsToEdit };
 
     console.log('file: ', file);
@@ -203,7 +208,11 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
                 type='radio'
                 checked={detailsToEdit.published === true}
                 onChange={(event) => {
-                  if (detailsToEdit.published && !event.target.checked) {
+                  if (
+                    warnBeforeUnpublish &&
+                    detailsToEdit.published &&
+                    !event.target.checked
+                  ) {
                     setNewPublishedValue(false);
                     setShowUnpublishModal(true);
                   } else {
@@ -242,12 +251,15 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
           type='button'
           onClick={handleSave}
           className='w-fit py-2 px-4 border-2 rounded-md bg-bg-muigrey/80 mb-4 hover:bg-white/20 active:bg-white/30'
+          disabled={buttonDisabled}
         >
           Save
         </button>
         <button
           type='button'
-          onClick={cancel}
+          onClick={
+            warnBeforeUnpublish ? cancel : () => setShowDismissModal(true)
+          }
           className='ml-10 w-fit py-2 px-4 border-2 rounded-md bg-bg-muigrey/80 mb-4 hover:bg-white/20 active:bg-white/30'
         >
           {cancelText}
@@ -255,10 +267,25 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
       </form>
       {showUnpublishModal && (
         <PublishModal
+          text={
+            'If you unpublish this recording, all the links where this recording is embedded will stop working until you publish it again. Are you sure you want to proceed?'
+          }
           close={() => setShowUnpublishModal(false)}
           confirm={() => {
             setDetailsToEdit({ ...detailsToEdit, published: false });
             setShowUnpublishModal(false);
+          }}
+        />
+      )}
+      {showDismissModal && (
+        <PublishModal
+          text={
+            'If you dismiss this recording, it will be deleted permanently. Are you sure you want to proceed?'
+          }
+          close={() => setShowDismissModal(false)}
+          confirm={() => {
+            cancel();
+            setShowDismissModal(false);
           }}
         />
       )}

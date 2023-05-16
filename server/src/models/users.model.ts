@@ -13,7 +13,8 @@ export async function existingCreatorLogin(userData: FirebaseUser){
         include: {
           creator: {
             select: {
-              picture: true
+              picture: true,
+              display_name: true,
             }
           }
         },
@@ -39,6 +40,7 @@ export async function createCreatorAccount(userData: FirebaseUser){
       join_date: new Date(Date.now()),
       login_count: 1,
       last_login_datetime: new Date(Date.now()),
+      socials: [],
     },
     include: {
       recordings: true
@@ -68,7 +70,6 @@ export async function updateField(uid: string, dataToUpdate: Record<string, stri
   })
   return updatedCreator;
 }
-
 
 export async function deleteCreator(userId: string){
   const deletedCreator = await prisma.creator.delete({

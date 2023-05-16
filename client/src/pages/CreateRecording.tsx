@@ -15,10 +15,9 @@ const CreateRecordingPage: FC<RecordingPageProps> = ({}) => {
       {' '}
       <div className='bg-bg-pri h-screen overflow-auto'>
         <TopNavBar
-          showSearch={false}
-          showCreateRecording={false}
+          showSearch={true}
+          showCreateRecording={true}
           showDashboard={true}
-          showFeatures={false}
           showExamples={true}
         />
         <div>Recording Page</div>

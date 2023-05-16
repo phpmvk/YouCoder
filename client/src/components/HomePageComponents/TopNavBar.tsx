@@ -7,7 +7,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import youcoderlogo from '../../assets/logo.svg';
+import youcoderlogo from '../../assets/logo.png';
 import { Button } from '@mui/material';
 import { Link, Router, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -69,8 +69,7 @@ interface TopNavBarProps {
 function TopNavBar({
   showSearch = false,
   showCreateRecording = false,
-  showDashboard = false,
-  showFeatures = false,
+  showDashboard = true,
   showExamples = false,
 }: TopNavBarProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -148,7 +147,7 @@ function TopNavBar({
                 {' '}
                 <img
                   src={youcoderlogo}
-                  style={{ width: '80px', height: '80px' }}
+                  style={{ height: '55px', marginBottom: '15px' }}
                 ></img>
               </Typography>
             </Link>
@@ -190,7 +189,7 @@ function TopNavBar({
               )}
 
               {/* Conditionally render the Dashboard button */}
-              {showDashboard && (
+              {showDashboard && loggedIn && (
                 <Link to='/dashboard'>
                   <Button
                     className='hover:!underline'
@@ -200,14 +199,14 @@ function TopNavBar({
                   </Button>
                 </Link>
               )}
-              {showFeatures && (
+              <Link to='/discover'>
                 <Button
                   className='hover:!underline hover:!underline-offset-8'
                   color='inherit'
                 >
-                  Features
+                  Discovery
                 </Button>
-              )}
+              </Link>
               {showExamples && (
                 <Button
                   className='hover:!underline hover:!underline-offset-8'
