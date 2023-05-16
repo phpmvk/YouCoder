@@ -7,6 +7,7 @@ module.exports = {
         '700': '700px',
         '720': '720px',
         '740': '740px',
+        '850': '850px',
         '900': '900px',
         '1140': '1140px',
       },
@@ -27,12 +28,17 @@ module.exports = {
           muigrey: '#2a2a2a',
           muilightgrey: '#515151',
           gptdark: '#202123',
-          console: '#1e1e1e'
+          console: '#1e1e1e',
         },
+       
         text: {
           // normal: 'slate-300',
         },
       },
+
+       backgroundImage: {
+          'player': "url('/client/src/components/HomePageComponents/PlayerPicture.svg)",
+        },
       fontFamily: {
         title: ['"Space Grotesk"'],
         console: ['"IBM Plex Mono"'],

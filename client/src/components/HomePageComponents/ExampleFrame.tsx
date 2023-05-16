@@ -81,24 +81,37 @@ const ExampleFrame: React.FC = () => {
 
   return (
     <>
+    {/* <div className="w-[100vw] h-[12.5vw] bg-white">
       <motion.div
         className=" top-[420vw] sm:top-[430vw] 700:top-[410vw] md:top-[380vw] 900:top-[340vw] lg:top-[355vw] min-w-[910px] w-[25vw] h-[12.5vw] bg-bg-pri"
         style={{
           position: 'absolute',
-          left: '10%',
           scale: scale,
           zIndex: 1000,
         }}
-      >
+      > */}
+      <div 
+    className="absolute w-screen h-[12.5vw] top-[420vw] sm:top-[430vw] 700:top-[410vw] md:top-[360vw] 900:top-[350vw] lg:top-[355vw] flex justify-center items-center"
+>
+    <motion.div
+        className="min-w-[910px] w-[25vw] h-[12.5vw] bg-bg-pri"
+        style={{
+            scale: scale,
+            zIndex: 1000,
+        }}
+    ><div className=" hidden 850:block">
         <iframe
           src='http://localhost:5173/player/e77140cd6c2bd389b902b538a4127ecb450e?embed=true&title=false&cover=false'
           width='900'
           height='480'
           allowFullScreen
           title='the end of the world'
-        />
+        /></div>
+        <div className="w-[80vw] h-[45vw] 850:hidden mx-auto bg-cover bg-center text-bg-alt text-center p-10 pt-16 text-2xl sm:text-3xl" style={{ 
+      backgroundImage: `url("public/playerpicture.svg")` 
+    }}>To enjoy the complete playback experience, a minimum screen size of 850px is required.</div>
       </motion.div>
-
+</div>
  
 
     </>
