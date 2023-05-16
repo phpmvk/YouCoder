@@ -33,9 +33,13 @@ const RecordingCard = ({
                 alt={`cover image for ${recording.title}`}
               />
             ) : (
-              <span className='z-10 text-black'>Youcoder Recording</span>
+              <div className='absolute w-full h-full opacity-0 hover:opacity-100 flex items-start'>
+                <div className='z-20 text-black'>Youcoder Recording</div>
+              </div>
             )}
-            <BiPlayCircle className='absolute left-auto right-auto text-7xl text-white/30 z-10' />
+            <div className='absolute w-full h-full opacity-0 hover:opacity-100 flex items-center justify-around'>
+              <BiPlayCircle className='text-7xl text-white/30 z-10' />
+            </div>
             <div className='absolute text-sm bottom-2 w-full flex justify-between px-2'>
               <small className='bg-gray-800/70 text-white/70 rounded-sm px-1 '>
                 {formatLanguage(recording.language)}
