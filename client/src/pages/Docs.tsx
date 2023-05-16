@@ -29,11 +29,11 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
   return (
     <div className='bg-bg-pri min-h-screen'>
       <TopNavBar showDashboard={true} />
-      <div className=' h-min-screen text-white flex flex-col items-start '>
+      <div className=' h-min-screen text-white flex flex-col items-start max-w-[1600px]'>
         <div className='!font-title text-6xl ml-20 my-10 pb-10 flex items-center bg-gradient-to-r from-bg-sec via-white to-bg-alt text-transparent bg-clip-text'>
           F.A.Q.
         </div>
-        <div className='mx-20 !stroke-gray-200 !stroke-2 !text-gray-200'>
+        <div className='mx-auto max-w-[80vw] !stroke-gray-200 !stroke-2 !text-gray-200'>
           <Accordion className='!bg-bg-gptdark/60 mb-5 !rounded-sm !font-console'>
             <AccordionSummary
               className='!bg-bg-gptdark !rounded-sm'
@@ -137,6 +137,17 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
                   </h2>
                   <p className='text-gray-200 !font-console'>
                   Embedding a recording is effortless with YouCoder. Simply copy and paste the provided embed code into compatible websites or platforms. This seamless integration ensures a visually appealing presentation of your coding sessions.
+                  </p>
+                  <br />
+                  
+                  
+                </div>
+                <div className='! p-1'>
+                  <h2 className='text-2xl text-gray-200 my-6 !font-console'>
+                  Can I personalise the embedded recording?
+                  </h2>
+                  <p className='text-gray-200 !font-console'>
+                  Yes! You can chose to display either the Title or the thumbnail provided during the recording creation. In addition, you can also toggle between a &apos;light&apos; and &apos;dark&apos;. Just edit the fields in the provided iFrame link. Keep in mind that the cover takes precedence over the title.
                   </p>
                   <br />
                   
@@ -294,22 +305,28 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
                   Who is the YouCoder team?
                   </h2>
                   <div className='text-gray-200'>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5 justify-items-center">
+                  <div className="flex grid-cols-1 gap-2 justify-items-center">
           {teamMembers.map((member, index) => (
             <div
               key={index}
-              className="h-[32vw] w-[32vw] md:h-[22vw] md:w-[22vw] backdrop-blur bg-black/30 rounded-lg flex items-center justify-center p-8 m-4"
+
+              className="h-[30vw] w-[30vw] md:h-[20vw] md:w-[20vw] flex items-center justify-center p-5"
+
             >
               <div className="flex items-center text-left flex-col">
                 <img
                   src={member.img}
                   alt={member.name}
-                  className="h-20 w-20 object-cover rounded-full m-2 "
+
+                  className="h-[8vw] w-[8vw] object-cover rounded-full mb-4"
+
                 />
                 <h2 className=" sm:text-sm md:text-md text-lg text-white whitespace-nowrap z-10">{member.name}</h2>
                 <div>
                   <a href={member.gh} target="_blank" rel="noopener noreferrer">
-                    <IconButton className="!text-white !stroke-none">
+
+                    <IconButton className="!text-white !stroke-none scale-150">
+
                       <GitHubIcon/>
                     </IconButton>
                   </a>
