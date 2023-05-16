@@ -510,7 +510,7 @@ export function PlaybackEditor({
   return recordingData.language === 'multi' ? (
     <MultiEditorPlayback recordingData={recordingData} />
   ) : (
-    <div>
+    <div className={`${theme === 'light' ? 'bg-gray-200' : 'bg-bg-pri'}`}>
       <audio
         ref={(audio) => {
           setAudioElement(audio);
@@ -518,18 +518,26 @@ export function PlaybackEditor({
       ></audio>
 
       <h1
-        className={`ml-6 bg-bg-pri w-[20ch] text-center rounded-t-md mt-2  ${
-          editorLanguage ? 'text-gray-200' : 'text-transparent'
+        className={`ml-6  w-[20ch] text-center rounded-t-md mt-2  ${
+          theme === 'dark' && editorLanguage ? 'text-gray-200' : 'text-black'
+        } ${theme === 'light' ? 'bg-gray-400/40' : ' bg-gray-800/60'} ${
+          theme === 'light' && editorLanguage ? 'text-black' : 'bg-gray-800/60'
         }`}
       >
         {editorLanguage ? formatLanguage(editorLanguage) : '·'}
       </h1>
-      <div className=''>
-        <div className='bg-bg-pri flex w-full h-[400px] px-4 mb-2 '>
+      <div className={`${theme === 'light' ? 'bg-gray-200' : 'bg-bg-pri'}`}>
+        <div
+          className={` flex w-full h-[400px] px-4 mb-2 ${
+            theme === 'light' ? 'bg-gray-200' : 'bg-bg-pri'
+          }`}
+        >
           <Allotment>
             <Allotment.Pane minSize={600}>
               <Editor
-                className=' border-bg-pri border-8 border-r-6 '
+                className={` border-8 border-r-6 ${
+                  theme === 'light' ? 'border-gray-200' : 'border-bg-pri'
+                }`}
                 height='500px'
                 defaultLanguage={editorLanguage}
                 defaultValue=''
@@ -543,10 +551,18 @@ export function PlaybackEditor({
               />
             </Allotment.Pane>
             <Allotment.Pane minSize={200} preferredSize={400}>
-              <div className=' w-full h-[50%] border-r-8 border-t-8 border-l-2 border-bg-pri '>
+              <div
+                className={`w-full h-[50%] border-r-8 border-t-8 border-l-2  ${
+                  theme === 'light' ? 'border-gray-200' : 'border-bg-pri'
+                }`}
+              >
                 <Terminal terminalName='output' output={TeacherConsoleOutput} />
               </div>
-              <div className='relative w-full h-[50%] border-t-6 border-l-2 border-r-8 border-bg-pri'>
+              <div
+                className={`relative w-full h-[50%] border-t-6 border-l-2 border-r-8  ${
+                  theme === 'light' ? 'border-gray-200' : 'border-bg-pri'
+                }`}
+              >
                 <div className='flex justify-center items-center'>
                   <TooltipMUI title='Compile & Execute'>
                     <button
@@ -590,7 +606,7 @@ export function PlaybackEditor({
         <br></br>
         <div
           className={`w-auto flex items-center justify-start space-x-10 -mt-12 bg-bg-pri mx-6 px-1 md:pax-auto ${
-            theme === 'light' ? 'bg-white' : 'bg-bg-pri'
+            theme === 'light' ? 'bg-gray-200' : 'bg-bg-pri'
           }`}
         >
           {playbackState.status === 'stopped' && (
@@ -609,7 +625,9 @@ export function PlaybackEditor({
           {playbackState.status === 'playing' && (
             <Button
               variant='outlined'
-              className='!rounded-full !bg-bg-alt !text-bg-pri'
+              className={`!rounded-full !bg-bg-alt !text-bg-pri ${
+                theme === 'light' ? '!bg-gray-500' : '!bg-bg-alt'
+              }`}
               onClick={handlePausePlayback}
             >
               <PauseIcon />
@@ -618,14 +636,20 @@ export function PlaybackEditor({
           {playbackState.status === 'paused' && (
             <Button
               variant='outlined'
-              className='!rounded-full !bg-bg-alt !text-bg-pri'
+              className={`!rounded-full !bg-bg-alt !text-bg-pri ${
+                theme === 'light' ? '!bg-gray-500' : '!bg-bg-alt'
+              }`}
               onClick={handleResumePlayback}
             >
               <PlayArrowIcon />
             </Button>
           )}
 
-          <div className='text-gray-200 mx-4 whitespace-nowrap'>
+          <div
+            className={` mx-4 whitespace-nowrap ${
+              theme === 'light' ? 'text-black' : 'text-gray-200'
+            }`}
+          >
             <div style={{ position: 'relative' }}>
               <button
                 className='mr-8'
@@ -636,8 +660,14 @@ export function PlaybackEditor({
               {showVolumeSlider && (
                 <div style={{ position: 'absolute', left: 3, bottom: '100%' }}>
                   <ReactSlider
-                    className='w-3 h-32 max-h-[800px] bg-bg-gptdark rounded-full mx-auto border-white border flex justify-center px-2'
-                    thumbClassName='w-5 h-5 bg-white rounded-full cursor-pointer focus:outline-none active:h-7 active:w-7 transition'
+                    className={`w-3 h-32 max-h-[800px] rounded-full mx-auto border flex justify-center px-2 ${
+                      theme === 'light'
+                        ? 'bg-gray-200 border-bg-gptdark'
+                        : 'bg-bg-gptdark border-gray-200 '
+                    }`}
+                    thumbClassName={`w-5 h-5 rounded-full cursor-pointer focus:outline-none active:h-7 active:w-7 transition ${
+                      theme === 'light' ? 'bg-black' : 'bg-gray-200'
+                    }`}
                     value={volume}
                     step={0.01}
                     min={0}
@@ -655,8 +685,14 @@ export function PlaybackEditor({
             </div>
           </div>
           <ReactSlider
-            className='w-10/12 max-w-[800px] h-5 bg-bg-gptdark rounded-full mx-auto border-white border flex items-center pr-2'
-            thumbClassName='w-5 h-5 bg-white rounded-full cursor-pointer focus:outline-none active:h-7 active:w-7 transition'
+            className={`w-10/12 max-w-[800px] h-5  rounded-full mx-auto  border flex items-center pr-2 ${
+              theme === 'light'
+                ? 'bg-gray-200 border-bg-gptdark'
+                : 'bg-bg-gptdark border-gray-200'
+            }`}
+            thumbClassName={`w-5 h-5  rounded-full cursor-pointer focus:outline-none active:h-7 active:w-7 transition ${
+              theme === 'light' ? 'bg-black' : 'bg-gray-200'
+            }`}
             value={sliderValue}
             step={0.001}
             max={audioDuration}
