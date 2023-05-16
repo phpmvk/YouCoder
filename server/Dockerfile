@@ -16,10 +16,11 @@ COPY prisma ./prisma
 # Copy the rest of the application code to the working directory
 COPY src ./src
 
+# COPY TypeScript configuration file
+COPY tsconfig.json ./
+
 # Generate the Prisma client
 RUN npx prisma generate
-
-# COPY .env ./
 
 #Build the TypeScript Code
 RUN npm run build
