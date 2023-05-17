@@ -49,6 +49,9 @@ protectedHttp.interceptors.request.use(
         console.log('got a fresh token', refreshedToken);
         localStorage.setItem('token', refreshedToken);
         config.headers.Authorization = `Bearer ${refreshedToken}`;
+      } else if (auth.currentUser) {
+        const refreshedToken = await auth.currentUser.getIdToken(true);
+        config.headers.Authorization = `Bearer ${refreshedToken}`;
       } else {
         config.headers.Authorization = `Bearer ${token}`;
       }
