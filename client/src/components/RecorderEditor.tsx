@@ -64,7 +64,6 @@ export function RecorderEditor() {
   const [isConsoleLoading, setIsConsoleLoading] = useState(false);
   const [saveModalVisible, setSaveModalVisible] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('javascript');
-
   const [alertVisible, setAlertVisible] = useState(true);
 
   

@@ -14,9 +14,8 @@ const CreateRecordingPage: FC<RecordingPageProps> = ({}) => {
     <>
     <TopNavBar
           showSearch={true}
-          showCreateRecording={true}
+          showCreateRecording={false}
           showDashboard={true}
-          showExamples={true}
         />
     <div className="mt-6 flex items-center justify-center">
     <div className=' bg-bg-pri border-solid w-[96vw] lg:w-[80vw] overflow-y-scroll border border-gray-600  rounded-2xl hide-scrollbar'>

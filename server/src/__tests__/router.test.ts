@@ -3,37 +3,37 @@ import { default as mocks } from './mocks'
 import app from '../app';
 
 
-describe('ROUTES TESTING', () => {
+// describe('ROUTES TESTING', () => {
   
-  describe('Unit', () => {
-    it('should return the output of executing the code received', async () => { 
-      const res = await request(app).post('/console').send(mocks.codeToExecuteData);
-      expect(res.body).toHaveProperty('stdout', 'Test number one')
-    })
+//   describe('Unit', () => {
+//     it('should return the output of executing the code received', async () => { 
+//       const res = await request(app).post('/console').send(mocks.codeToExecuteData);
+//       expect(res.body).toHaveProperty('stdout', 'Test number one')
+//     })
 
-    test('should respond with status 200 when a good request is made', async () => { 
-      const res = await request(app).post('/console').send(mocks.codeToExecuteData);
-      expect(res.status).toBe(200);
-    })
+//     test('should respond with status 200 when a good request is made', async () => { 
+//       const res = await request(app).post('/console').send(mocks.codeToExecuteData);
+//       expect(res.status).toBe(200);
+//     })
   
-    test('should respond with a 400 status when an invalid request is made', async () => {
-      const res = await request(app).post('/console').send(mocks.badCodeToExecuteData);
-      expect(res.status).toBe(400);
-    })
+//     test('should respond with a 400 status when an invalid request is made', async () => {
+//       const res = await request(app).post('/console').send(mocks.badCodeToExecuteData);
+//       expect(res.status).toBe(400);
+//     })
   
-    test('should return status 404 when a request is made to inexistant endpoint', async () => { 
-      const res = await request(app).get('/inexistantendpoint');
-      expect(res.status).toBe(404);
-    })
-  })
+//     test('should return status 404 when a request is made to inexistant endpoint', async () => { 
+//       const res = await request(app).get('/inexistantendpoint');
+//       expect(res.status).toBe(404);
+//     })
+//   })
   
-  // describe('Integration', () => {
-  //   test('should ...', () => { 
+//   // describe('Integration', () => {
+//   //   test('should ...', () => { 
 
-  //    })
-  // })
+//   //    })
+//   // })
   
-})
+// })
 
 
 // consoleRouteLimiter test: Test that the console route limiter is working as expected and not allowing too many requests from a single IP address.

@@ -715,7 +715,6 @@ export function PlaybackEditor({
               audioElement!.muted = false;
             }}
           />
-          {/* <Tooltip /> */}
         </div>
         <br></br>
       </div>

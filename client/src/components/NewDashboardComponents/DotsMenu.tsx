@@ -10,6 +10,7 @@ import {
 } from '../../redux/userSlice';
 import { setLoadingSpinner } from '../../redux/spinnerSlice';
 import { toast } from 'react-toastify';
+import { deleteYCRFile } from '../../utils/ycrUtils';
 
 interface DotsMenuProps {
   activeMenu: string | null;
@@ -73,9 +74,14 @@ const DotsMenu = ({
   };
 
   const handleDelete = () => {
+    const recordingLink = recording.recording_link;
     http
       .deleteRecording(recording.recording_id)
       .then((res) => {
+        console.log(res.status);
+        if (res.status === 204) {
+          deleteYCRFile(recordingLink);
+        }
         console.log('res from deleting recording: ', res);
         toast.success('Recording deleted successfully!');
         dispatch(deleteUserRecording({ recordingId: recording.recording_id }));
@@ -98,7 +104,7 @@ const DotsMenu = ({
       >
         <p className='pb-5'>Are you sure you want to delete this recording?</p>
         <button
-          className='bg-bg-muilightgrey mr-5 text:white py-1 px-2 rounded border border-gray-300 hover:bg-gray-300/50'
+          className='bg-bg-muilightgrey/60 mr-5 text:white py-1 px-2 rounded border border-gray-300 hover:bg-gray-300/50'
           onClick={handleDelete}
         >
           Confirm
@@ -111,10 +117,7 @@ const DotsMenu = ({
         </button>
       </Modal>
 
-      <Modal
-        show={showModal}
-        closeModal={() => setShowModal(false)}
-      >
+      <Modal show={showModal} closeModal={() => setShowModal(false)}>
         <EditDetailsform
           detailsToEdit={details}
           setDetailsToEdit={setDetails}
@@ -146,7 +149,7 @@ const DotsMenu = ({
         id={`dropdownDots${id}`}
         className={`${
           activeMenu === id ? 'block' : 'hidden'
-        } bg-gray-600 divide-y divide-gray-100 rounded-lg shadow w-44 z-30 absolute right-10 top-0 border-bg-alt border text-gray-100`}
+        } bg-bg-muigrey divide-y divide-gray-100 rounded-lg shadow w-44 z-30 absolute right-10 top-0 border-bg-alt/60 border text-gray-100`}
       >
         <ul
           className='py-2 text-sm text-gray-100 '
@@ -158,7 +161,7 @@ const DotsMenu = ({
                 e.stopPropagation();
                 setShowModal(true);
               }}
-              className='block px-4 py-2 hover:bg-bg-muigrey w-full text-left active:bg-bg-sec/20'
+              className='block px-4 py-2 hover:bg-bg-muilightgrey w-full text-left active:bg-bg-sec/20'
             >
               Edit Details
             </button>
@@ -169,7 +172,7 @@ const DotsMenu = ({
                 navigator.clipboard.writeText(recording.full_link);
                 toast.success('Link copied to clipboard');
               }}
-              className='block px-4 py-2 hover:bg-bg-muigrey w-full text-left active:bg-bg-sec/20'
+              className='block px-4 py-2 hover:bg-bg-muilightgrey w-full text-left active:bg-bg-sec/20'
             >
               Copy Link
             </button>
@@ -180,7 +183,7 @@ const DotsMenu = ({
                 navigator.clipboard.writeText(recording.iframe_link);
                 toast.success('Link copied to clipboard');
               }}
-              className='block px-4 py-2 hover:bg-bg-muigrey w-full text-left active:bg-bg-sec/20'
+              className='block px-4 py-2 hover:bg-bg-muilightgrey w-full text-left active:bg-bg-sec/20'
             >
               Copy {'<iframe>'}
             </button>
@@ -192,7 +195,7 @@ const DotsMenu = ({
               e.stopPropagation();
               setShowDeleteModal(true);
             }}
-            className='block px-4 py-2 text-sm hover:bg-bg-muigrey w-full text-left active:bg-bg-sec/20'
+            className='block px-4 py-2 text-sm hover:bg-bg-muilightgrey w-full text-left active:bg-bg-sec/20'
           >
             Delete Recording
           </button>
