@@ -42,7 +42,7 @@ export async function createCreatorAccount(userData: FirebaseUser){
       join_date: new Date(Date.now()),
       login_count: 1,
       last_login_datetime: new Date(Date.now()),
-      socials: [],
+      socials: {},
     },
     include: {
       recordings: true
