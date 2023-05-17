@@ -446,7 +446,7 @@ export function MultiEditorRecorder() {
       <div className='flex w-full h-[500px] border border-gray-600 rounded-sm'>
         <Allotment>
           <div>
-            <div className='text-white text-md mt-1 px-2 rounded-t-xl bg-bg-muilightgrey w-fit'>
+            <div className='text-white text-md mt-1 px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
               HTML
             </div>
             <Editor
@@ -468,7 +468,7 @@ export function MultiEditorRecorder() {
           </div>
           <Allotment vertical={true}>
             <div>
-              <div className='text-white text-md mt-1 px-2 rounded-t-xl bg-bg-muilightgrey w-fit'>
+              <div className='text-white text-md mt-1 px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
                 CSS
               </div>
 
@@ -490,7 +490,7 @@ export function MultiEditorRecorder() {
               />
             </div>
             <div>
-              <div className='text-white text-md mt-1 px-2 rounded-t-xl bg-bg-muilightgrey w-fit'>
+              <div className='text-white text-md mt-1 px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
                 Javascript
               </div>
 
@@ -515,7 +515,7 @@ export function MultiEditorRecorder() {
           <Allotment>
             <div className='h-full bg-white'>
               <div className='w-full bg-bg-pri'>
-                <div className='text-white text-md mt-1 px-2 rounded-t-xl bg-bg-muilightgrey w-fit'>
+                <div className='text-white text-md mt-1 px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
                   Output
                 </div>
               </div>
@@ -604,7 +604,7 @@ export function MultiEditorRecorder() {
       )}
 </div>
 <button
-        className='p-1 bg-red-300 roundedw-fit items-center px-2 text-sm  text-gray-200 rounded !bg-bg-sec/20 border !border-gray-400 uppercase hover:!bg-gray-600/50 active:ring-1 active:ring-bg-alt -mt-[200px] ml-[500px] '
+        className='p-1 bg-red-300 roundedw-fit items-center px-2 text-sm  text-gray-200 rounded !bg-bg-sec/20 border !border-gray-400 uppercase hover:!bg-gray-600/50 active:ring-1 active:ring-bg-alt '
         onClick={handleRenderOutput}
       >
         Render HTML
