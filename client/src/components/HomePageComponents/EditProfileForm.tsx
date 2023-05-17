@@ -15,11 +15,7 @@ export const UserProfile: FC<UserProfileProps> = ({ save, cancel }) => {
   const [userDetails, setUserDetails] = useState<CreatorUpdate>({
     display_name: user.display_name || '',
     picture: user.picture || '',
-    socials: user.socials || {
-      twitter: '',
-      github: '',
-      youtube: '',
-    },
+    socials: user.socials || {},
   });
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -55,83 +51,73 @@ export const UserProfile: FC<UserProfileProps> = ({ save, cancel }) => {
   const placeholderAvatar = 'https://robohash.org/mail@ashallendesign.co.uk';
 
   return (
-
     <div className='p-4 font-console grid grid-cols-3 gap-4 text-lg text-white'>
-  <label htmlFor='fileInput' className='col-span-3 text-center'>
-    <img
-      className='h-24 w-24 rounded-full cursor-pointer'
-      src={userDetails.picture || placeholderAvatar}
-      alt={userDetails.display_name}
-    />
-    <input
-      id='fileInput'
-      className='hidden'
-      type='file'
-      accept='image/*'
-      onChange={handleImageChange}
-    />
-  </label>
+      <label
+        htmlFor='fileInput'
+        className='col-span-3 text-center'
+      >
+        <img
+          className='h-24 w-24 rounded-full cursor-pointer border border-white/20 p-2'
+          src={userDetails.picture || placeholderAvatar}
+          alt={userDetails.display_name}
+        />
+        <input
+          id='fileInput'
+          className='hidden'
+          type='file'
+          accept='image/*'
+          onChange={handleImageChange}
+        />
+      </label>
 
+      <label className='flex items-center'>Name:</label>
+      <input
+        className='col-span-2 p-2 border rounded-md bg-bg-muigrey'
+        type='text'
+        name='display_name'
+        value={userDetails.display_name}
+        onChange={handleInputChange}
+      />
 
-      <div className='mt-4'>
-        <label>
-          Name:
-          <input
-            className='ml-2 p-2 border rounded-md'
-            type='text'
-            name='display_name'
-            value={userDetails.display_name}
-            onChange={handleInputChange}
-          />
-        </label>
-      </div>
+      <label className='flex items-center'>
+        <FaGithub className='mr-2' /> GitHub:
+      </label>
+      <input
+        className='col-span-2 p-2 border rounded-md bg-bg-muigrey'
+        type='text'
+        value={userDetails.socials!.github || ''}
+        onChange={(e) => handleSocialLinkChange(e, 'github')}
+      />
 
-      <div className='mt-4'>
-        <label>
-          <FaGithub />
-          GitHub:
-          <input
-            className='ml-2 p-2 border rounded-md'
-            type='text'
-            value={userDetails.socials!.github || ''}
-            onChange={(e) => handleSocialLinkChange(e, 'github')}
-          />
-        </label>
-      </div>
+      <label className='flex items-center'>
+        <FaYoutube className='mr-2' /> YouTube:
+      </label>
+      <input
+        className='col-span-2 p-2 border rounded-md bg-bg-muigrey'
+        type='text'
+        value={userDetails.socials!.youtube || ''}
+        onChange={(e) => handleSocialLinkChange(e, 'youtube')}
+      />
 
-      <div className='mt-4'>
-        <label>
-          <FaYoutube />
-          YouTube:
-          <input
-            className='ml-2 p-2 border rounded-md'
-            type='text'
-            value={userDetails.socials!.youtube || ''}
-            onChange={(e) => handleSocialLinkChange(e, 'youtube')}
-          />
-        </label>
-      </div>
+      <label className='flex items-center'>
+        <FaTwitter className='mr-2' /> Twitter:
+      </label>
+      <input
+        className='col-span-2 p-2 border rounded-md bg-bg-muigrey'
+        type='text'
+        value={userDetails.socials!.twitter || ''}
+        onChange={(e) => handleSocialLinkChange(e, 'twitter')}
+      />
 
-      <div className='mt-4'>
-        <label>
-          <FaTwitter />
-          Twitter:
-          <input
-            className='ml-2 p-2 border rounded-md'
-            type='text'
-            value={userDetails.socials!.twitter || ''}
-            onChange={(e) => handleSocialLinkChange(e, 'twitter')}
-          />
-        </label>
-      </div>
       <button
-        className='mt-4 p-2 bg-blue-500 text-white rounded-md'
+        className='col-span-3 mt-4 p-2 bg-bg-sec text-white rounded-md uppercase'
         onClick={() => save(userDetails, blob ? blob : undefined)}
       >
         Save Profile
       </button>
+
       <button
-        className='mt-4 p-2 bg-blue-500 text-white rounded-md'
+        className='col-span-3 mt-4 p-2 bg-bg-pri text-white outline outline-white rounded-md uppercase'
         onClick={cancel}
       >
         cancel
