@@ -106,19 +106,6 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
                 </p>
 
                 <br />
-
-                <div className='! p-1'>
-                  <h2 className='text-2xl text-gray-200 my-6 !font-console'>
-                    How do I embed a recording?
-                  </h2>
-                  <p className='text-gray-200 !font-console'>
-                    Embedding a recording is effortless with YouCoder. Simply
-                    copy and paste the provided embed code into compatible
-                    websites or platforms. This seamless integration ensures a
-                    visually appealing presentation of your coding sessions.
-                  </p>
-                  <br />
-                </div>
                 <div className='! p-1'>
                   <h2 className='text-2xl text-gray-200 my-6 !font-console'>
                     Can YouCoder be used for teaching coding in a classroom
@@ -174,7 +161,7 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
                   Can I personalise the embedded recording?
                   </h2>
                   <p className='text-gray-200 !font-console'>
-                  Yes! You can chose to display either the Title or the thumbnail provided during the recording creation. In addition, you can also toggle between a &apos;light&apos; and &apos;dark&apos;. Just edit the fields in the provided iFrame link. Keep in mind that the cover takes precedence over the title.
+                  Yes! You can chose to display either the title or the thumbnail provided during the recording creation. In addition, you can also toggle between a &apos;light&apos; and &apos;dark&apos;. Just edit the fields in the provided iFrame link. Keep in mind that the cover takes precedence over the title.
                   </p>
                   <br />
                   
