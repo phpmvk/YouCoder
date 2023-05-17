@@ -15,11 +15,7 @@ export const UserProfile: FC<UserProfileProps> = ({ save, cancel }) => {
   const [userDetails, setUserDetails] = useState<CreatorUpdate>({
     display_name: user.display_name || '',
     picture: user.picture || '',
-    socials: user.socials || {
-      twitter: '',
-      github: '',
-      youtube: '',
-    },
+    socials: user.socials || {},
   });
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
