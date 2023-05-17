@@ -181,7 +181,6 @@ export function MultiEditorPlayback({
       ],
       () => null
     );
-    editorInstance.revealLineInCenter(range.endLineNumber);
   }
 
   function startPlayback(
@@ -487,7 +486,6 @@ export function MultiEditorPlayback({
 
   return (
     <div>
-      
       <audio
         ref={(audio) => {
           setAudioElement(audio);
@@ -497,10 +495,10 @@ export function MultiEditorPlayback({
       <div className=''>
         <div className='bg-bg-pri flex w-full h-[400px] px-4 mb-2 '>
           <Allotment>
-          <div>
-            <div className='text-white text-md px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
-              HTML
-            </div>
+            <div>
+              <div className='text-white text-md px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
+                HTML
+              </div>
               <Editor
                 className=' border-bg-pri border-8 border-r-6 '
                 height='500px'
@@ -518,74 +516,71 @@ export function MultiEditorPlayback({
               />
             </div>
             <Allotment vertical={true}>
-            <div>
-              <div className='text-white text-md px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
-                CSS
+              <div>
+                <div className='text-white text-md px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
+                  CSS
+                </div>
+                <Editor
+                  className=' border-bg-pri border-8 border-r-6 '
+                  height='500px'
+                  defaultLanguage='css'
+                  defaultValue=''
+                  theme={`vs-${theme}`}
+                  options={{
+                    wordWrap: 'on',
+                    readOnly: ignoreUserInputs,
+                    fontSize: fontSize,
+                  }}
+                  onMount={(editor, monaco) =>
+                    handleEditorDidMount(editor, monaco, 'css')
+                  }
+                />
               </div>
-              <Editor
-                className=' border-bg-pri border-8 border-r-6 '
-                height='500px'
-                defaultLanguage='css'
-                defaultValue=''
-                theme={`vs-${theme}`}
-                options={{
-                  wordWrap: 'on',
-                  readOnly: ignoreUserInputs,
-                  fontSize: fontSize,
-                }}
-                onMount={(editor, monaco) =>
-                  handleEditorDidMount(editor, monaco, 'css')
-                }
-              />
-              </div>
-            <div>
-              <div className='text-white text-md px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
-                Javascript
-              </div>
-            
-              <Editor
-                className=' border-bg-pri border-8 border-r-6 '
-                height='500px'
-                defaultLanguage='javascript'
-                defaultValue=''
-                theme={`vs-${theme}`}
-                options={{
-                  wordWrap: 'on',
-                  readOnly: ignoreUserInputs,
-                  fontSize: fontSize,
-                }}
-                onMount={(editor, monaco) =>
-                  handleEditorDidMount(editor, monaco, 'javascript')
-                }
-              />
+              <div>
+                <div className='text-white text-md px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
+                  Javascript
+                </div>
+
+                <Editor
+                  className=' border-bg-pri border-8 border-r-6 '
+                  height='500px'
+                  defaultLanguage='javascript'
+                  defaultValue=''
+                  theme={`vs-${theme}`}
+                  options={{
+                    wordWrap: 'on',
+                    readOnly: ignoreUserInputs,
+                    fontSize: fontSize,
+                  }}
+                  onMount={(editor, monaco) =>
+                    handleEditorDidMount(editor, monaco, 'javascript')
+                  }
+                />
               </div>
             </Allotment>
             <Allotment>
-            <div className='h-full bg-white'>
-              <div className='w-full bg-bg-pri'>
-                <div className='text-white text-md px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
-                  Output
+              <div className='h-full bg-white'>
+                <div className='w-full bg-bg-pri'>
+                  <div className='text-white text-md px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
+                    Output
+                  </div>
                 </div>
+
+                <iframe
+                  srcDoc={htmlOutput}
+                  title='Output'
+                  sandbox='allow-scripts'
+                  width='100%'
+                  height='100%'
+                ></iframe>
               </div>
-
-              <iframe
-                srcDoc={htmlOutput}
-                title='Output'
-                sandbox='allow-scripts'
-                width='100%'
-                height='100%'
-              ></iframe>
-            </div>
+            </Allotment>
           </Allotment>
-
-          </Allotment>
-
-
-
         </div>
         <br></br>
         <br></br>
-        <div  className={`w-auto flex items-center justify-start space-x-10 -mt-12 bg-bg-pri mx-6 px-1 md:pax-auto ${
+        <div
+          className={`w-auto flex items-center justify-start space-x-10 -mt-12 bg-bg-pri mx-6 px-1 md:pax-auto ${
             theme === 'light' ? 'bg-gray-200' : 'bg-bg-pri'
           }`}
         >
@@ -625,13 +620,11 @@ export function MultiEditorPlayback({
             </Button>
           )}
 
-<div
+          <div
             className={` mx-4 whitespace-nowrap ${
               theme === 'light' ? 'text-black' : 'text-gray-200'
             }`}
-
-            >
-
+          >
             <div style={{ position: 'relative' }}>
               <button
                 className='mr-8'
@@ -663,10 +656,8 @@ export function MultiEditorPlayback({
                   />
                 </div>
               )}
-              
-
-            {formatTime(sliderValue)} / {formatTime(audioDuration)}
-          </div>
+              {formatTime(sliderValue)} / {formatTime(audioDuration)}
+            </div>
           </div>
           <ReactSlider
             className={`w-10/12 max-w-[800px] h-5  rounded-full mx-auto  border flex items-center pr-2 ${
@@ -692,7 +683,6 @@ export function MultiEditorPlayback({
             }}
           />
 
-       
           <button
             className='p-2 w-fit  items-center text-sm  text-gray-200 rounded !bg-bg-sec/20 border !border-gray-400 uppercase hover:!bg-gray-600/50 active:ring-1 active:ring-bg-alt right-0 whitespace-nowrap '
             onClick={handleRenderOutput}
@@ -702,8 +692,6 @@ export function MultiEditorPlayback({
         </div>
         <br></br>
       </div>
-     
     </div>
   );
 }
-
