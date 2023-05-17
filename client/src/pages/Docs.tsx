@@ -43,7 +43,7 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
         <div className='!font-title text-6xl ml-20 my-10 pb-10 flex items-center bg-gradient-to-r from-bg-sec via-white to-bg-alt text-transparent bg-clip-text'>
           F.A.Q.
         </div>
-        <div className='mx-auto max-w-[80vw] !stroke-gray-200 !stroke-2 !text-gray-200'>
+        <div className='ml-[5vw] lg:ml-[20vw] w-[90vw] lg:w-[60vw] !stroke-gray-200 !stroke-2 !text-gray-200 '>
           <Accordion className='!bg-bg-gptdark/60 mb-5 !rounded-sm !font-console'>
             <AccordionSummary
               className='!bg-bg-gptdark !rounded-sm'
@@ -106,19 +106,6 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
                 </p>
 
                 <br />
-
-                <div className='! p-1'>
-                  <h2 className='text-2xl text-gray-200 my-6 !font-console'>
-                    How do I embed a recording?
-                  </h2>
-                  <p className='text-gray-200 !font-console'>
-                    Embedding a recording is effortless with YouCoder. Simply
-                    copy and paste the provided embed code into compatible
-                    websites or platforms. This seamless integration ensures a
-                    visually appealing presentation of your coding sessions.
-                  </p>
-                  <br />
-                </div>
                 <div className='! p-1'>
                   <h2 className='text-2xl text-gray-200 my-6 !font-console'>
                     Can YouCoder be used for teaching coding in a classroom
@@ -174,7 +161,7 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
                   Can I personalise the embedded recording?
                   </h2>
                   <p className='text-gray-200 !font-console'>
-                  Yes! You can chose to display either the Title or the thumbnail provided during the recording creation. In addition, you can also toggle between a &apos;light&apos; and &apos;dark&apos;. Just edit the fields in the provided iFrame link. Keep in mind that the cover takes precedence over the title.
+                  Yes! You can chose to display either the title or the thumbnail provided during the recording creation. In addition, you can also toggle between a &apos;light&apos; and &apos;dark&apos;. Just edit the fields in the provided iFrame link. Keep in mind that the cover takes precedence over the title.
                   </p>
                   <br />
                   
@@ -356,12 +343,12 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
                     Who is the YouCoder team?
                   </h2>
                   <div className='text-gray-200'>
-                  <div className="flex grid-cols-1 gap-2 justify-items-center">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-1 justify-items-center">
           {teamMembers.map((member, index) => (
             <div
               key={index}
 
-              className="h-[30vw] w-[30vw] md:h-[20vw] md:w-[20vw] flex items-center justify-center p-5"
+              className="h-[40vw] w-[40vw] md:h-[20vw] md:w-[20vw] flex items-center justify-center p-5"
 
             >
               <div className="flex items-center text-left flex-col">
@@ -369,10 +356,10 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
                   src={member.img}
                   alt={member.name}
 
-                  className="h-[8vw] w-[8vw] object-cover rounded-full mb-4"
+                  className="h-[16vw] w-[16vw] md:h-[8vw] md:w-[8vw] object-cover rounded-full mb-4"
 
                 />
-                <h2 className=" sm:text-sm md:text-md text-lg text-white whitespace-nowrap z-10">{member.name}</h2>
+                <h2 className=" sm:text-sm md:text-md text-lg text-white whitespace-nowrap z-10 mb-2">{member.name}</h2>
                 <div>
                   <a href={member.gh} target="_blank" rel="noopener noreferrer">
 
