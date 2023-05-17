@@ -90,9 +90,9 @@ console.log('recordingData:--->', recordingData)
 
 { }
 
-<div className='flex justify-center space-x-4 scale-150'>
+<div className='flex justify-center space-x-3 lg:space-x-4 scale-150 mt-2'>
   {recordingData.creator.socials.length > 0 && recordingData.creator.socials.some((social: Social) => social.name === 'github') ? (
-    <a href={recordingData.creator.socials.find((social: Social) => social.name === 'github').url}>
+    <a href={recordingData.creator.socials.find((social: Social) => social.name === 'github').social}>
     <IconButton aria-label="GitHub"><GitHubIcon className='!fill-white' /></IconButton>
   </a>
   ) : (
@@ -100,7 +100,7 @@ console.log('recordingData:--->', recordingData)
   )}
 
   {recordingData.creator.socials.length > 0 && recordingData.creator.socials.some((social: Social) => social.name === 'youtube') ? (
-    <a href={recordingData.creator.socials.find((social: Social) => social.name === 'youtube').url}>
+    <a href={recordingData.creator.socials.find((social: Social) => social.name === 'youtube').social}>
     <IconButton aria-label="YouTube"><YouTubeIcon className='!fill-white'/></IconButton>
   </a>
   ) : (
@@ -108,7 +108,7 @@ console.log('recordingData:--->', recordingData)
   )}
 
   {recordingData.creator.socials.length > 0 && recordingData.creator.socials.some((social: Social) => social.name === 'twitter') ? (
-    <a href={recordingData.creator.socials.find((social: Social) => social.name === 'twitter').url}>
+    <a href={recordingData.creator.socials.find((social: Social) => social.name === 'twitter').social}>
     <IconButton aria-label="Twitter"><TwitterIcon className='!fill-white'/></IconButton>
   </a>
   ) : (

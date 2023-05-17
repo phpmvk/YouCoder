@@ -505,7 +505,7 @@ export function MultiEditorPlayback({
                 height='500px'
                 defaultLanguage='html'
                 defaultValue=''
-                theme='vs-dark'
+                theme={`vs-${theme}`}
                 options={{
                   wordWrap: 'on',
                   readOnly: ignoreUserInputs,
@@ -526,7 +526,7 @@ export function MultiEditorPlayback({
                 height='500px'
                 defaultLanguage='css'
                 defaultValue=''
-                theme='vs-dark'
+                theme={`vs-${theme}`}
                 options={{
                   wordWrap: 'on',
                   readOnly: ignoreUserInputs,
@@ -547,7 +547,7 @@ export function MultiEditorPlayback({
                 height='500px'
                 defaultLanguage='javascript'
                 defaultValue=''
-                theme='vs-dark'
+                theme={`vs-${theme}`}
                 options={{
                   wordWrap: 'on',
                   readOnly: ignoreUserInputs,
