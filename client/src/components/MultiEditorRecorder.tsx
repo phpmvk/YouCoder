@@ -202,6 +202,7 @@ export function MultiEditorRecorder() {
     const js = jsEditorInstance?.getValue() ?? '';
     const output = `<html>
     <head>
+      <style>:root { background-color: white; }</style>
       <style>${css}</style>
     </head>
     <body>
@@ -435,7 +436,10 @@ export function MultiEditorRecorder() {
       )}
       <div className='flex w-full h-[500px] border border-white rounded-sm'>
         <Allotment>
-          <Allotment.Pane>
+          <div>
+            <div className='text-white text-md mt-1 px-2 rounded-t-xl bg-bg-muilightgrey w-fit'>
+              HTML
+            </div>
             <Editor
               height='500px'
               defaultLanguage='html'
@@ -452,43 +456,70 @@ export function MultiEditorRecorder() {
                 handleEditorDidMount(editor, monaco, 'html')
               }
             />
-          </Allotment.Pane>
-          <Allotment.Pane>
-            <Editor
-              height='500px'
-              defaultLanguage='css'
-              defaultValue=''
-              theme='vs-dark'
-              options={{
-                wordWrap: 'on',
-                fontSize: fontSize,
-              }}
-              onChange={(value, event) =>
-                handleEditorChange(value, event, 'css')
-              }
-              onMount={(editor, monaco) =>
-                handleEditorDidMount(editor, monaco, 'css')
-              }
-            />
-          </Allotment.Pane>
-          <Allotment.Pane>
-            <Editor
-              height='500px'
-              defaultLanguage='javascript'
-              defaultValue=''
-              theme='vs-dark'
-              options={{
-                wordWrap: 'on',
-                fontSize: fontSize,
-              }}
-              onChange={(value, event) =>
-                handleEditorChange(value, event, 'javascript')
-              }
-              onMount={(editor, monaco) =>
-                handleEditorDidMount(editor, monaco, 'javascript')
-              }
-            />
-          </Allotment.Pane>
+          </div>
+          <Allotment vertical={true}>
+            <div>
+              <div className='text-white text-md mt-1 px-2 rounded-t-xl bg-bg-muilightgrey w-fit'>
+                CSS
+              </div>
+
+              <Editor
+                height='500px'
+                defaultLanguage='css'
+                defaultValue=''
+                theme='vs-dark'
+                options={{
+                  wordWrap: 'on',
+                  fontSize: fontSize,
+                }}
+                onChange={(value, event) =>
+                  handleEditorChange(value, event, 'css')
+                }
+                onMount={(editor, monaco) =>
+                  handleEditorDidMount(editor, monaco, 'css')
+                }
+              />
+            </div>
+            <div>
+              <div className='text-white text-md mt-1 px-2 rounded-t-xl bg-bg-muilightgrey w-fit'>
+                Javascript
+              </div>
+
+              <Editor
+                height='500px'
+                defaultLanguage='javascript'
+                defaultValue=''
+                theme='vs-dark'
+                options={{
+                  wordWrap: 'on',
+                  fontSize: fontSize,
+                }}
+                onChange={(value, event) =>
+                  handleEditorChange(value, event, 'javascript')
+                }
+                onMount={(editor, monaco) =>
+                  handleEditorDidMount(editor, monaco, 'javascript')
+                }
+              />
+            </div>
+          </Allotment>
+          <Allotment>
+            <div className='h-full bg-white'>
+              <div className='w-full bg-bg-pri'>
+                <div className='text-white text-md mt-1 px-2 rounded-t-xl bg-bg-muilightgrey w-fit'>
+                  Output
+                </div>
+              </div>
+
+              <iframe
+                srcDoc={htmlOutput}
+                title='Output'
+                sandbox='allow-scripts'
+                width='100%'
+                height='100%'
+              ></iframe>
+            </div>
+          </Allotment>
         </Allotment>
       </div>
 
@@ -573,12 +604,6 @@ export function MultiEditorRecorder() {
           warnBeforeUnpublish={false}
         />
       </Modal>
-
-      <iframe
-        srcDoc={htmlOutput}
-        title='Output'
-        sandbox='allow-scripts'
-      ></iframe>
     </>
   );
 }

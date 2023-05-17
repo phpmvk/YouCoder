@@ -36,9 +36,16 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
     },
   ];
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className='bg-bg-pri min-h-screen'>
-      <TopNavBar showDashboard={true} showSearch={true}/>
+      <TopNavBar
+        showDashboard={true}
+        showSearch={true}
+      />
       <div className=' h-min-screen text-white flex flex-col items-start max-w-[1600px]'>
         <div className='!font-title text-6xl ml-20 my-10 pb-10 flex items-center bg-gradient-to-r from-bg-sec via-white to-bg-alt text-transparent bg-clip-text'>
           F.A.Q.
@@ -171,14 +178,17 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
                 </div>
                 <div className='! p-1'>
                   <h2 className='text-2xl text-gray-200 my-6 !font-console'>
-                  Can I personalise the embedded recording?
+                    Can I personalise the embedded recording?
                   </h2>
                   <p className='text-gray-200 !font-console'>
-                  Yes! You can chose to display either the Title or the thumbnail provided during the recording creation. In addition, you can also toggle between a &apos;light&apos; and &apos;dark&apos;. Just edit the fields in the provided iFrame link. Keep in mind that the cover takes precedence over the title.
+                    Yes! You can chose to display either the Title or the
+                    thumbnail provided during the recording creation. In
+                    addition, you can also toggle between a &apos;light&apos;
+                    and &apos;dark&apos;. Just edit the fields in the provided
+                    iFrame link. Keep in mind that the cover takes precedence
+                    over the title.
                   </p>
                   <br />
-                  
-                  
                 </div>
               </Typography>
             </AccordionDetails>
@@ -356,36 +366,36 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
                     Who is the YouCoder team?
                   </h2>
                   <div className='text-gray-200'>
-                  <div className="flex grid-cols-1 gap-2 justify-items-center">
-          {teamMembers.map((member, index) => (
-            <div
-              key={index}
-
-              className="h-[30vw] w-[30vw] md:h-[20vw] md:w-[20vw] flex items-center justify-center p-5"
-
-            >
-              <div className="flex items-center text-left flex-col">
-                <img
-                  src={member.img}
-                  alt={member.name}
-
-                  className="h-[8vw] w-[8vw] object-cover rounded-full mb-4"
-
-                />
-                <h2 className=" sm:text-sm md:text-md text-lg text-white whitespace-nowrap z-10">{member.name}</h2>
-                <div>
-                  <a href={member.gh} target="_blank" rel="noopener noreferrer">
-
-                    <IconButton className="!text-white !stroke-none scale-150">
-
-                      <GitHubIcon/>
-                    </IconButton>
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+                    <div className='flex grid-cols-1 gap-2 justify-items-center'>
+                      {teamMembers.map((member, index) => (
+                        <div
+                          key={index}
+                          className='h-[30vw] w-[30vw] md:h-[20vw] md:w-[20vw] flex items-center justify-center p-5'
+                        >
+                          <div className='flex items-center text-left flex-col'>
+                            <img
+                              src={member.img}
+                              alt={member.name}
+                              className='h-[8vw] w-[8vw] object-cover rounded-full mb-4'
+                            />
+                            <h2 className=' sm:text-sm md:text-md text-lg text-white whitespace-nowrap z-10'>
+                              {member.name}
+                            </h2>
+                            <div>
+                              <a
+                                href={member.gh}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                              >
+                                <IconButton className='!text-white !stroke-none scale-150'>
+                                  <GitHubIcon />
+                                </IconButton>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                   <br />
                 </div>
