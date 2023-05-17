@@ -13,6 +13,7 @@ import { useAppDispatch } from '../redux/hooks';
 import LoginArt from '../components/HomePageComponents/LoginArt';
 import ErrorBackend from '../components/LoginPageComponents/ErrorBackend';
 import { setLoadingPage } from '../redux/spinnerSlice';
+import { toast } from 'react-toastify';
 
 export interface ILoginPageProps {}
 
@@ -61,7 +62,16 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        if (error.code === 'auth/account-exists-with-different-credential') {
+          toast.error(
+            'This email is connected to an account that is signed in with google. Please sign in with Google instead.',
+            {
+              position: 'bottom-left',
+              autoClose: 10000,
+            }
+          );
+        }
+        console.error(error);
         setAuthing(false);
       });
   };
