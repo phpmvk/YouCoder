@@ -18,13 +18,6 @@ interface FullPlayerPageProps {
   recordingData: Recording;
 }
 
-const recording = {
-  // title: 'Javascript Functions Explained Pt. 2',
-  description:
-    'Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson ',
-  creator: 'Michael ',
-  subs: '2.3K',
-};
 
 const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
   return (
@@ -49,7 +42,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                     <div className='flex flex-row bg-bg-pri w-full h-[250px]'>
                       {/* ---------Left Card */}
                       <div className='flex flex-col items-center mx-1 min-w-36 max-w-[20vw] '>
-                        <div className='h-36 w-36 md:h-44 md:w-44 border border-gray-700 rounded-xl shadow bg-bg-pri flex items-center justify-center mb-3'>
+                        <div className='h-36 w-36 md:h-44 md:w-44 border border-gray-700 rounded-xl shadow bg-bg-pri flex items-center justify-center mb-6 md:mb-3'>
                           <div className='flex flex-col items-center'>
                             <img
                               className='w-20 h-20 !min-w-20 mb-3 rounded-full shadow-lg'
