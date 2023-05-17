@@ -155,7 +155,7 @@ export function MultiEditorPlayback({
         editorInstance = jsEditorInstance!;
         break;
     }
-    const model = editorInstance!.getModel();
+    const model = editorInstance.getModel();
     const rangeInstance = new monacoInstance!.Range(
       range.startLineNumber,
       range.startColumn,
@@ -173,6 +173,7 @@ export function MultiEditorPlayback({
       ],
       () => null
     );
+    editorInstance.revealLineInCenter(range.endLineNumber);
   }
 
   function startPlayback(
@@ -587,10 +588,7 @@ export function MultiEditorPlayback({
             }}
           />
           <Tooltip />
-          <button
-            className='p-2 text-white'
-            onClick={handleRenderOutput}
-          >
+          <button className='p-2 text-white' onClick={handleRenderOutput}>
             Render HTML
           </button>
         </div>
