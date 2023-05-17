@@ -609,7 +609,7 @@ export function RecorderEditor() {
             Pause Recording
           </button>
           <button
-            className='p-2 text-white bg-bg-gptdark rounded-full m-2'
+            className='p-2 pr-4 text-white bg-bg-gptdark rounded-full m-2'
             onClick={handleEndRecording}
           ><DoneIcon className="mr-1 !fill-bg-sec"/>
             End Recording
