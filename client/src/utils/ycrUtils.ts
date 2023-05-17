@@ -1,5 +1,10 @@
 import JSZip from 'jszip';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from 'firebase/storage';
 import { storage } from '../App';
 import { RecorderActions } from '../types/Editor';
 
@@ -28,6 +33,20 @@ export async function saveYCRFile(
   await uploadBytes(fileRef, ycrBlob);
   const fileUrl = await getDownloadURL(fileRef);
   return fileUrl;
+}
+
+export async function deleteYCRFile(fileUrl: string) {
+  const filePath = decodeURIComponent(
+    fileUrl.split('/o/')[1].split('?alt=')[0]
+  );
+
+  const fileRef = ref(storage, filePath);
+
+  try {
+    await deleteObject(fileRef);
+  } catch (error) {
+    console.error('Failed to delete file from firebase', error);
+  }
 }
 
 export async function loadYCRFile(
