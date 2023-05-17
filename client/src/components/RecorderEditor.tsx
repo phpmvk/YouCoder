@@ -468,9 +468,9 @@ export function RecorderEditor() {
     
       {recorderState === 'stopped' && (
         <>
-          <div className='flex items-center'>
+          <div className='flex items-center h-16'>
             <label
-              className='block mb-2 text-sm font-medium text-white mr-3 font-console'
+              className='block text-sm font-medium text-white mr-3 font-console'
               htmlFor='language'
             >
               Choose a language
@@ -478,7 +478,7 @@ export function RecorderEditor() {
             <select
               id='language'
               onChange={handleLanguageChange}
-              className='border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-bg-gptdark border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3 font-console'
+              className='border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-bg-gptdark border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec  font-console'
             >
               <option defaultValue='javascript'>JavaScript</option>
               {/* <option value='multi'>HTML, CSS & JavaScript</option> */}
@@ -494,9 +494,10 @@ export function RecorderEditor() {
         </>
       )}
       {recorderState !== 'stopped' && (
-        <div className='border text-sm rounded-lg w-48 bg-bg-gptdark border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mb-3 flex items-center justify-center font-console'>
+        <div className="h-16 flex items-end">
+        <div className='border-t border-r border-l text-sm rounded-t-lg w-48 bg-bg-gptdark border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec flex items-center justify-center font-console'>
           {selectedLanguage}
-        </div>
+        </div></div>
       )}
       <div>
         <div className='flex  h-[500px] border border-gray-600 rounded-sm '>
@@ -582,7 +583,7 @@ export function RecorderEditor() {
       {recorderState === 'stopped' && (
       <div className="flex">  
         <button
-          className='p-2 text-white bg-red-900 flex rounded-full m-2 '
+          className='p-2 pr-4 text-white bg-red-900 flex rounded-full m-2 '
           onClick={handleStartRecording}
         ><RadioButtonCheckedIcon className="mr-1 !fill-red-500 "/>
           Start Recording
@@ -590,7 +591,7 @@ export function RecorderEditor() {
         {alertVisible && (
   <Alert 
     onClose={() => setAlertVisible(false)} 
-    className="fixed top-96 ml-6 !bg-blue-200 w-60 " 
+    className="absolute top-60 ml-6 !bg-blue-200 w-60 " 
     severity="info"
   >
     <AlertTitle>Info</AlertTitle>
@@ -620,13 +621,13 @@ export function RecorderEditor() {
       {recorderState === 'paused' && (
         <>
           <button
-            className='p-2 text-white bg-bg-gptdark rounded-full m-2 w-48'
+            className='p-2 text-white flex bg-bg-gptdark rounded-full m-2 w-48'
             onClick={handleResumeRecording}
           > <EjectIcon className="mr-1 rotate-90 !fill-red-600"/>
             Resume Recording
           </button>
           <button
-            className='p-2 text-white  bg-bg-gptdark rounded-full m-2'
+            className='p-2 pr-4 text-white flex bg-bg-gptdark rounded-full m-2'
             onClick={handleEndRecording}
           ><DoneIcon className="mr-1 !fill-bg-sec"/>
             End Recording
