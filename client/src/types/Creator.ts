@@ -22,13 +22,9 @@ export const rootUser: Creator = {
 
 export interface Recording {
   created_at: string;
-<<<<<<< Updated upstream
-  creator?: { picture: string; display_name: string; uid: string };
-=======
   creator?: {
     socials: any; picture: string; display_name: string; uid: string 
 };
->>>>>>> Stashed changes
   creator_uid: string;
   description: string;
   full_link: string;
