@@ -55,85 +55,69 @@ export const UserProfile: FC<UserProfileProps> = ({ save, cancel }) => {
   const placeholderAvatar = 'https://robohash.org/mail@ashallendesign.co.uk';
 
   return (
-    <div className='p-4'>
-      <label htmlFor='fileInput'>
-        <img
-          className='h-24 w-24 rounded-full cursor-pointer'
-          src={userDetails.picture || placeholderAvatar}
-          alt={userDetails.display_name}
-        />
-        <input
-          id='fileInput'
-          className='hidden'
-          type='file'
-          accept='image/*'
-          onChange={handleImageChange}
-        />
-      </label>
+    <div className='p-4 font-console grid grid-cols-3 gap-4 text-lg'>
+  <label htmlFor='fileInput' className='col-span-3 text-center'>
+    <img
+      className='h-24 w-24 rounded-full cursor-pointer'
+      src={userDetails.picture || placeholderAvatar}
+      alt={userDetails.display_name}
+    />
+    <input
+      id='fileInput'
+      className='hidden'
+      type='file'
+      accept='image/*'
+      onChange={handleImageChange}
+    />
+  </label>
 
-      <div className='mt-4'>
-        <label>
-          Name:
-          <input
-            className='ml-2 p-2 border rounded-md'
-            type='text'
-            name='display_name'
-            value={userDetails.display_name}
-            onChange={handleInputChange}
-          />
-        </label>
-      </div>
+  <label className='flex items-center'>Name:</label>
+  <input
+    className='col-span-2 p-2 border rounded-md'
+    type='text'
+    name='display_name'
+    value={userDetails.display_name}
+    onChange={handleInputChange}
+  />
 
-      <div className='mt-4'>
-        <label>
-          <FaGithub />
-          GitHub:
-          <input
-            className='ml-2 p-2 border rounded-md'
-            type='text'
-            value={userDetails.socials!.github || ''}
-            onChange={(e) => handleSocialLinkChange(e, 'github')}
-          />
-        </label>
-      </div>
+  <label className='flex items-center'><FaGithub /> GitHub:</label>
+  <input
+    className='col-span-2 p-2 border rounded-md'
+    type='text'
+    value={userDetails.socials!.github || ''}
+    onChange={(e) => handleSocialLinkChange(e, 'github')}
+  />
 
-      <div className='mt-4'>
-        <label>
-          <FaYoutube />
-          YouTube:
-          <input
-            className='ml-2 p-2 border rounded-md'
-            type='text'
-            value={userDetails.socials!.youtube || ''}
-            onChange={(e) => handleSocialLinkChange(e, 'youtube')}
-          />
-        </label>
-      </div>
+  <label className='flex items-center'><FaYoutube /> YouTube:</label>
+  <input
+    className='col-span-2 p-2 border rounded-md'
+    type='text'
+    value={userDetails.socials!.youtube || ''}
+    onChange={(e) => handleSocialLinkChange(e, 'youtube')}
+  />
 
-      <div className='mt-4'>
-        <label>
-          <FaTwitter />
-          Twitter:
-          <input
-            className='ml-2 p-2 border rounded-md'
-            type='text'
-            value={userDetails.socials!.twitter || ''}
-            onChange={(e) => handleSocialLinkChange(e, 'twitter')}
-          />
-        </label>
-      </div>
-      <button
-        className='mt-4 p-2 bg-blue-500 text-white rounded-md'
-        onClick={() => save(userDetails, blob ? blob : undefined)}
-      >
-        Save Profile
-      </button>
-      <button
-        className='mt-4 p-2 bg-blue-500 text-white rounded-md'
-        onClick={cancel}
-      >
-        cancel
-      </button>
-    </div>
+  <label className='flex items-center'><FaTwitter /> Twitter:</label>
+  <input
+    className='col-span-2 p-2 border rounded-md'
+    type='text'
+    value={userDetails.socials!.twitter || ''}
+    onChange={(e) => handleSocialLinkChange(e, 'twitter')}
+  />
+
+  <button
+    className='col-span-3 mt-4 p-2 bg-bg-sec text-white rounded-md uppercase'
+    onClick={() => save(userDetails, blob ? blob : undefined)}
+  >
+    Save Profile
+  </button>
+
+  <button
+    className='col-span-3 mt-4 p-2 bg-bg-pri text-white outline outline-white rounded-md uppercase'
+    onClick={cancel}
+  >
+    cancel
+  </button>
+</div>
+
   );
 };
