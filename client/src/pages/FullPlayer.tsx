@@ -54,7 +54,7 @@ console.log('recordingData:--->', recordingData)
                   <div className='text-gray-200 text-4xl text-left pb-6 mx-2 mt-2 text-ellipsis line-clamp-2'>
                     {recordingData.title}
                   </div>
-                  <div className='bg-bg-pri flex flex-row border border-gray-700 rounded-lg p-3 pt-4 h-60 mb-4'>
+                  <div className='bg-bg-pri flex flex-row border border-gray-600 rounded-lg p-3 pt-4 h-60 mb-4'>
                     
                       {/* ---------Left Card */}
                       <div className='flex flex-col items-center mx-1 min-w-36 max-w-[20vw] '>
@@ -122,7 +122,7 @@ console.log('recordingData:--->', recordingData)
 
                       {/* Middle Card -----------------------------------   */}
 
-                      <div className='flex-col mx-1 min-w-[60vw] max-w-[1000px] w-full py-4 ml-4 h-52 text-left  border rounded-lg shadow bg-bg-pri border-gray-700 overflow-hidden text-white'>
+                      <div className='flex-col mx-1 min-w-[60vw] max-w-[1000px] w-full py-4 ml-4 h-52 text-left  border-l  shadow bg-bg-pri border-gray-600 overflow-hidden text-white'>
   <div className='px-5 pt-1 md:h-full max-w-[60vw] overflow-y-auto scrollbar-hide overflow-x-hidden' style={{wordWrap: 'break-word', whiteSpace: 'pre-wrap'}}>
     <p>{recordingData.description}</p>
   </div>
