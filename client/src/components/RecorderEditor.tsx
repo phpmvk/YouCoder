@@ -11,6 +11,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import PauseIcon from '@mui/icons-material/Pause';
 import DoneIcon from '@mui/icons-material/Done';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import CloseIcon from '@mui/icons-material/Close';
 
 import consoleApi from '../services/consoleApi';
 import { CodeToExecute } from '../types/Console';
@@ -60,6 +64,9 @@ export function RecorderEditor() {
   const [saveModalVisible, setSaveModalVisible] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('javascript');
 
+  const [alertVisible, setAlertVisible] = useState(true);
+
+  
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [recordingIntervalId, setRecordingIntervalId] =
     useState<NodeJS.Timeout | null>(null);
@@ -216,6 +223,7 @@ export function RecorderEditor() {
       setPauseAction(true);
     }
   }
+
 
   //recording handlers
   function handleStartRecording() {
@@ -569,28 +577,40 @@ export function RecorderEditor() {
           </Allotment>
         </div>
       </div>
-      <div className="flex flex-wrap justify-start items-center border border-gray-600 rounded-xl mt-2 w-[50%]">
+      <div className="flex flex-wrap justify-start items-center border border-gray-600 rounded-xl mt-2 w-[490px] min-w-[490px] mb-2">
       {recorderState === 'stopped' && (
+      <div className="flex">  
         <button
           className='p-2 text-white border border-red-600 rounded-xl m-2 '
           onClick={handleStartRecording}
         >
           Start Recording
         </button>
+        {alertVisible && (
+  <Alert 
+    onClose={() => setAlertVisible(false)} 
+    className="fixed top-64 ml-6 !bg-blue-200 w-60 " 
+    severity="info"
+  >
+    <AlertTitle>Info</AlertTitle>
+    Any code typed into the editor before starting the recording will be discarded.
+  </Alert>
+)}
+        </div>
       )}
 
       {recorderState === 'recording' && (
         <>
           <button
-            className='p-2 text-white border  border-bg-alt/60 rounded-xl m-2 flex justify-center items-center'
+            className='p-2 text-white border  border-bg-alt/60 rounded-xl m-2 flex justify-center items-center w-48'
             onClick={handlePauseRecording}
-          > <PauseIcon className="mr-2" />
+          > <PauseIcon className="mr-1" />
             Pause Recording
           </button>
           <button
             className='p-2 text-white border border-bg-sec rounded-xl m-2'
             onClick={handleEndRecording}
-          ><DoneIcon className="mr-2"/>
+          ><DoneIcon className="mr-1"/>
             End Recording
           </button>
         </>
@@ -599,15 +619,15 @@ export function RecorderEditor() {
       {recorderState === 'paused' && (
         <>
           <button
-            className='p-2 text-white border border-red-600 rounded-xl m-2'
+            className='p-2 text-white border border-red-600 rounded-xl m-2 w-48'
             onClick={handleResumeRecording}
-          >
+          > <ArrowForwardIosIcon className="mr-1 scale-80"/>
             Resume Recording
           </button>
           <button
-            className='p-2 text-white border border-blue-600 rounded-xl m-2'
+            className='p-2 text-white border border-bg-sec rounded-xl m-2'
             onClick={handleEndRecording}
-          >
+          ><DoneIcon className="mr-1"/>
             End Recording
           </button>
         </>
@@ -619,14 +639,14 @@ export function RecorderEditor() {
       )}
 
       {recorderState !== 'stopped' && (
-        <p className=' text-white ml-4'>
-          {formatTime(elapsedTime)}
-          {recorderState === 'recording' && (
-            <span className='text-red-700 animate-[blinking_1s_infinite] text-4xl'>
-              •
-            </span>
-          )}
-        </p>
+        <div className='flex justify-center items-center space-x-4 text-white text-xl pl-3'>
+        <span>{formatTime(elapsedTime)}</span>
+        {recorderState === 'recording' && (
+          <div className="h-4 w-4 mr-2 bg-red-500 rounded-full animate-[blinking_1s_infinite]"></div>
+        )}
+      </div>
+
+        
       )}
 </div>
       <Modal

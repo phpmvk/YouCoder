@@ -13,9 +13,9 @@ const CreateRecordingPage: FC<RecordingPageProps> = ({}) => {
   return (
     <>
     <div className="min-h-screen flex items-center justify-center">
-    <div className=' bg-bg-pri border-solid w-[75vw] mt-20 overflow-y-scroll border border-gray-600  rounded-2xl hide-scrollbar'>
+    <div className=' bg-bg-pri border-solid w-[96vw] lg:w-[80vw] overflow-y-scroll border border-gray-600  rounded-2xl hide-scrollbar'>
       {' '}
-      <div className='bg-bg-pri h-screen overflow-auto'>
+      <div className='bg-bg-pri overflow-auto'>
         <TopNavBar
           showSearch={true}
           showCreateRecording={true}
