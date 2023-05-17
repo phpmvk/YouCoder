@@ -1,7 +1,7 @@
 import { AxiosResponse, AxiosError } from 'axios';
 import { rootUser } from '../redux/userSlice';
 import { protectedHttp } from './baseUrl';
-import { Creator } from '../types/Creator';
+import { Creator, CreatorUpdate } from '../types/Creator';
 
 /***************************
 to use this file:
@@ -65,12 +65,13 @@ class UserApiService {
 
   */
   creatorUpdate(
-    data: typeof rootUser
-  ): Promise<AxiosResponse<typeof rootUser>> | undefined {
+    data: CreatorUpdate
+  ): Promise<AxiosResponse<UserLogin>> | undefined {
+    console.log('data:', data);
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await protectedHttp.patch<typeof rootUser>(
-          `/users/creator/update/`,
+        const response = await protectedHttp.patch<UserLogin>(
+          `/users/creator/update`,
           data
         );
         resolve(response);

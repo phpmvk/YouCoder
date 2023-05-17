@@ -30,7 +30,6 @@ import AlertTitle from '@mui/material/AlertTitle';
 import CloseIcon from '@mui/icons-material/Close';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 
-
 export function MultiEditorRecorder() {
   //Multi states
   const [htmlEditorInstance, setHtmlEditorInstance] =
@@ -438,12 +437,20 @@ export function MultiEditorRecorder() {
         </>
       )}
       {recorderState !== 'stopped' && (
-        <div className="h-16 flex items-end">
-        <div className='border-t border-r border-l text-sm rounded-t-lg w-48 bg-bg-gptdark border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mt-2 flex items-center justify-center font-console'>
-          {selectedLanguage}
-        </div></div>
+        <div className='h-16 flex items-end'>
+          <div className='border-t border-r border-l text-sm rounded-t-lg w-48 bg-bg-gptdark border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mt-2 flex items-center justify-center font-console'>
+            {selectedLanguage}
+          </div>
+        </div>
       )}
-      <div className='flex w-full h-[500px] border border-gray-600 rounded-sm'>
+      <div className='flex w-full h-[500px] border border-gray-600 rounded-sm relative'>
+        <button
+          className='absolute -bottom-10 right-0 px-2 py-1 bg-red-300 roundedw-fit items-center text-sm  text-gray-200 rounded !bg-bg-sec/30 border !border-gray-400 uppercase hover:!bg-bg-sec/50 active:ring-1 active:ring-bg-alt'
+          onClick={handleRenderOutput}
+        >
+          Render HTML
+        </button>
+
         <Allotment>
           <div>
             <div className='text-white text-md mt-1 px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
@@ -531,80 +538,86 @@ export function MultiEditorRecorder() {
           </Allotment>
         </Allotment>
       </div>
-<div className="flex flex-wrap justify-start items-center border border-gray-600 rounded-full mt-2 w-[490px] min-w-[490px] mb-2">
-  
-      {recorderState === 'stopped' && (
-       <div className="flex"> 
-       <button
-          className='p-2 pr-4 text-white bg-red-900 flex rounded-full m-2 '
-          onClick={handleStartRecording}
-        ><RadioButtonCheckedIcon className="mr-1 !fill-red-500 "/>
-          Start Recording
-        </button>
-        {alertVisible && (
-  <Alert 
-    onClose={() => setAlertVisible(false)} 
-    className="absolute top-60 ml-6 !bg-blue-200 w-60 " 
-    severity="info"
-  >
-    <AlertTitle>Info</AlertTitle>
-    Any code typed into the editor before starting the recording will be discarded.
-  </Alert>
-)}
-        </div>
-      )}
+      <div className='flex flex-wrap justify-start items-center border border-gray-600 rounded-full mt-2 w-[490px] min-w-[490px] mb-2 '>
+        {recorderState === 'stopped' && (
+          <div className='flex'>
+            <button
+              className='p-2 pr-4 text-white bg-red-900 flex rounded-full m-2 '
+              onClick={handleStartRecording}
+            >
+              <RadioButtonCheckedIcon className='mr-1 !fill-red-500 ' />
+              Start Recording
+            </button>
+            {alertVisible && (
+              <Alert
+                onClose={() => setAlertVisible(false)}
+                className='absolute top-60 ml-6 !bg-blue-200 w-60 '
+                severity='info'
+              >
+                <AlertTitle>Info</AlertTitle>
+                Any code typed into the editor before starting the recording
+                will be discarded.
+              </Alert>
+            )}
+          </div>
+        )}
 
-      {recorderState === 'recording' && (
-        <>
-          <button
-            className='p-2 text-white bg-bg-gptdark rounded-full m-2 flex justify-center items-center w-48'
-            onClick={handlePauseRecording}
-          ><PauseIcon className="mr-1 !fill-bg-alt" />
-            Pause Recording
-          </button>
-          <button
-            className='p-2 pr-4 flex text-white bg-bg-gptdark rounded-full m-2'
-            onClick={handleEndRecording}
-          ><DoneIcon className="mr-1 !fill-bg-sec"/>
-            End Recording
-          </button>
-        </>
-      )}
-
-      {recorderState === 'paused' && (
-        <>
-          <button
-            className='p-2 text-white flex bg-bg-gptdark rounded-full m-2 w-48'
-            onClick={handleResumeRecording}
-          > <EjectIcon className="mr-1 rotate-90 !fill-red-600"/>
-            Resume Recording
-          </button>
-          <button
-            className='p-2 pr-4 text-white flex bg-bg-gptdark rounded-full m-2'
-            onClick={handleEndRecording}
-          ><DoneIcon className="mr-1 !fill-bg-sec"/>
-            End Recording
-          </button>
-        </>
-      )}
-
-      {recorderLoading && (
-        <div className='p-2'>
-          <span>Loading...</span>
-        </div>
-      )}
-
-      {recorderState !== 'stopped' && (
-        <div className='flex justify-center items-center space-x-4 text-white text-xl pl-3'>
-        <span>{formatTime(elapsedTime)}</span>
         {recorderState === 'recording' && (
-          <div className="h-4 w-4 mr-2 bg-red-500 rounded-full animate-[blinking_1s_infinite]"></div>
+          <>
+            <button
+              className='p-2 text-white bg-bg-gptdark rounded-full m-2 flex justify-center items-center w-48'
+              onClick={handlePauseRecording}
+            >
+              <PauseIcon className='mr-1 !fill-bg-alt' />
+              Pause Recording
+            </button>
+            <button
+              className='p-2 pr-4 flex text-white bg-bg-gptdark rounded-full m-2'
+              onClick={handleEndRecording}
+            >
+              <DoneIcon className='mr-1 !fill-bg-sec' />
+              End Recording
+            </button>
+          </>
+        )}
+
+        {recorderState === 'paused' && (
+          <>
+            <button
+              className='p-2 text-white flex bg-bg-gptdark rounded-full m-2 w-48'
+              onClick={handleResumeRecording}
+            >
+              {' '}
+              <EjectIcon className='mr-1 rotate-90 !fill-red-600' />
+              Resume Recording
+            </button>
+            <button
+              className='p-2 pr-4 text-white flex bg-bg-gptdark rounded-full m-2'
+              onClick={handleEndRecording}
+            >
+              <DoneIcon className='mr-1 !fill-bg-sec' />
+              End Recording
+            </button>
+          </>
+        )}
+
+        {recorderLoading && (
+          <div className='p-2'>
+            <span>Loading...</span>
+          </div>
+        )}
+
+        {recorderState !== 'stopped' && (
+          <div className='flex justify-center items-center space-x-4 text-white text-xl pl-3'>
+            <span>{formatTime(elapsedTime)}</span>
+            {recorderState === 'recording' && (
+              <div className='h-4 w-4 mr-2 bg-red-500 rounded-full animate-[blinking_1s_infinite]'></div>
+            )}
+          </div>
         )}
       </div>
-      )}
-</div>
-<button
-        className='p-1 bg-red-300 roundedw-fit items-center px-2 text-sm  text-gray-200 rounded !bg-bg-sec/20 border !border-gray-400 uppercase hover:!bg-gray-600/50 active:ring-1 active:ring-bg-alt '
+      <button
+        className='p-1 bg-red-300 roundedw-fit items-center px-2 text-sm  text-gray-200 rounded !bg-bg-sec/20 border !border-gray-400 uppercase hover:!bg-gray-600/50 active:ring-1 active:ring-bg-alt -mt-[200px] ml-[500px] '
         onClick={handleRenderOutput}
       >
         Render HTML
