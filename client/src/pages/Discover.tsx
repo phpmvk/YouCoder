@@ -24,34 +24,6 @@ const DiscoverPage: FC<DiscoverPageProps> = ({ userId }) => {
   const [searchParams] = useSearchParams();
   const userParams = searchParams.get('user');
 
-  console.log('there is a user:', userParams);
-
-  // useEffect(() => {
-  //   window.scrollTo(0, 0);
-  //   setRecordingsToDisplay([]);
-  //   if (userId) {
-  //     http
-  //       .discoverByUser(userId)
-  //       .then((response) => {
-  //         console.log('response: ', response.data);
-  //       })
-  //       .catch((error) => {
-  //         console.log('error: ', error);
-  //       });
-  //   } else {
-  //     http
-  //       .discover()
-  //       .then((response) => {
-  //         console.log('response: ', response.data);
-  //         setRecordingsToDisplay(response.data);
-  //         setFirstRecordingsToDisplay(response.data);
-  //       })
-  //       .catch((error) => {
-  //         console.log('error: ', error);
-  //       });
-  //   }
-  // }, []);
-
   const searchTerm = useAppSelector(
     (state: RootState) => state.search.searchTerm
   );
@@ -59,33 +31,11 @@ const DiscoverPage: FC<DiscoverPageProps> = ({ userId }) => {
     (state: RootState) => state.search.searchTriggered
   );
 
-  // const handleSearchKeyPress = (e: React.KeyboardEvent) => {
-  //   console.log('e:', e);
-  //   console.log('searchterm: ', searchTerm);
-  //   if (e.key === 'Enter' && searchTerm !== '') {
-  //     http
-  //       .discoverQuery(searchTerm)
-  //       .then((response) => {
-  //         console.log('response: ', response.data);
-  //         setShowKeywordTitle(true);
-  //         setRecordingsToDisplay(response.data);
-  //       })
-  //       .catch((error) => {
-  //         console.log('error: ', error);
-  //       });
-  //   } else if (e.key === 'Enter' && searchTerm === '') {
-  //     setShowKeywordTitle(false);
-  //     setRecordingsToDisplay(firstRecordingsToDisplay);
-  //   }
-  // };
-
   useEffect(() => {
     if (userParams && userParams !== '' && !searchTriggered) {
-      console.log('user params is not empty');
       http
         .discoverByUser(userParams)
         .then((response) => {
-          console.log('response: ', response.data);
           setRecordingsToDisplay(response.data);
           setFirstRecordingsToDisplay(response.data);
         })
@@ -93,12 +43,10 @@ const DiscoverPage: FC<DiscoverPageProps> = ({ userId }) => {
           console.log('error: ', error);
         });
     } else if (searchTriggered) {
-      console.log('search term is triggered');
       if (searchTerm !== '') {
         http
           .discoverQuery(searchTerm)
           .then((response) => {
-            console.log('response: ', response.data);
             setRecordingsToDisplay(response.data);
             setShowKeywordTitle(true);
             dispatch(setSearchTriggered(false));
@@ -112,13 +60,10 @@ const DiscoverPage: FC<DiscoverPageProps> = ({ userId }) => {
         dispatch(setSearchTriggered(false));
       }
     } else if (searchTerm === '') {
-      console.log('search term is empty');
       if (firstRecordingsToDisplay.length === 0) {
-        console.log('first recordings to display is empty');
         http
           .discover()
           .then((response) => {
-            console.log('response: ', response.data);
             setRecordingsToDisplay(response.data);
             setFirstRecordingsToDisplay(response.data);
           })

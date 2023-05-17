@@ -42,11 +42,11 @@ import { MultiEditorPlayback } from './MultiEditorPlayback';
 export function PlaybackEditor({
   recordingData,
   autoplay,
-  theme,
+  theme = 'dark',
 }: {
   recordingData: Recording;
   autoplay?: boolean;
-  theme: string;
+  theme: 'dark' | 'light';
 }) {
   const [editorInstance, setEditorInstance] =
     useState<editor.IStandaloneCodeEditor | null>(null);
@@ -550,13 +550,17 @@ export function PlaybackEditor({
                 onMount={handleEditorDidMount}
               />
             </Allotment.Pane>
-            <Allotment.Pane minSize={200} preferredSize={400}>
+            <Allotment.Pane
+              minSize={200}
+              preferredSize={400}
+            >
               <div
                 className={`w-full h-[50%] border-r-8 border-t-8 border-l-2  ${
                   theme === 'light' ? 'border-gray-200' : 'border-bg-pri'
                 }`}
               >
                 <Terminal
+                  theme={theme}
                   terminalName='recording console'
                   output={TeacherConsoleOutput}
                 />
@@ -569,7 +573,11 @@ export function PlaybackEditor({
                 <div className='flex justify-center items-center'>
                   <TooltipMUI title='Compile & Execute'>
                     <button
-                      className=' absolute top-0 right-20 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-green-900/20 border !border-gray-400 uppercase hover:!bg-green-900/50 active:ring-1 active:ring-bg-alt'
+                      className={`absolute top-2 right-20 w-fit items-center px-2 text-sm font-light text-gray-200 rounded ! border !border-gray-400 uppercase active:ring-1 active:ring-bg-alt ${
+                        theme === 'light'
+                          ? '!bg-green-900/80 hover:!bg-green-900/90'
+                          : '!bg-green-900/20 hover:!bg-green-900/50'
+                      }`}
                       onClick={handleJudge0}
                       disabled={isStudentConsoleLoading}
                     >
@@ -591,7 +599,11 @@ export function PlaybackEditor({
                   </TooltipMUI>
                   <TooltipMUI title='Clear Console'>
                     <button
-                      className='absolute top-0 right-2 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-red-900/20 border !border-gray-400 uppercase hover:!bg-red-900/50 active:ring-1 active:ring-bg-alt'
+                      className={`absolute top-2 right-2 w-fit items-center px-2 text-sm font-light text-gray-200 rounded border !border-gray-400 uppercase active:ring-1 active:ring-bg-alt ${
+                        theme === 'light'
+                          ? '!bg-red-900/80 hover:!bg-red-900/90'
+                          : '!bg-red-900/20 hover:!bg-red-900/50'
+                      }`}
                       onClick={() => setStudentConsoleOutput('')}
                     >
                       {' '}
@@ -601,6 +613,7 @@ export function PlaybackEditor({
                   </TooltipMUI>
                 </div>
                 <Terminal
+                  theme={theme}
                   terminalName='your console'
                   output={StudentConsoleOutput}
                 />

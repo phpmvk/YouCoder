@@ -480,7 +480,7 @@ export function RecorderEditor() {
               className='border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-bg-gptdark border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec  font-console'
             >
               <option defaultValue='javascript'>JavaScript</option>
-              {/* <option value='multi'>HTML, CSS & JavaScript</option> */}
+              <option value='multi'>HTML, CSS & JavaScript</option>
               <option value='typescript'>TypeScript</option>
               <option value='python'>Python</option>
               <option value='java'>Java</option>
