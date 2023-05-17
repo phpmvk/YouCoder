@@ -279,6 +279,11 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
       )}
       {showDismissModal && (
         <PublishModal
+          title={
+            cancelText === 'Discard'
+              ? 'Dismiss Changes'
+              : 'Unpublish Confirmation'
+          }
           text={
             'If you dismiss this recording, it will be deleted permanently. Are you sure you want to proceed?'
           }

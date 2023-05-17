@@ -9,8 +9,8 @@ import LoginArt from '../LoginPageComponents/LoginArt';
 
 interface RecordingsListProps {
   allowEdit: boolean;
-  filterTerm: string;
-  setFilterTerm: React.Dispatch<React.SetStateAction<string>>;
+  filterTerm?: string;
+  setFilterTerm?: React.Dispatch<React.SetStateAction<string>>;
   displayRecordings: Recording[];
 }
 

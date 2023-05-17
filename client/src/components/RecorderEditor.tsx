@@ -454,7 +454,7 @@ export function RecorderEditor() {
     <>
       {recorderState === 'stopped' && (
         <>
-          <div className='flex items-center mx-[15vw]'>
+          <div className='flex items-center mx-[10vw]'>
             <label
               className='block mb-2 text-sm font-medium text-white mr-3'
               htmlFor='language'
@@ -480,12 +480,12 @@ export function RecorderEditor() {
         </>
       )}
       {recorderState !== 'stopped' && (
-        <div className='border text-sm rounded-lg w-48 bg-gray-700 border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mb-3 flex items-center justify-center mx-[15vw]'>
+        <div className='border text-sm rounded-lg w-48 bg-gray-700 border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mb-3 flex items-center justify-center mx-[10vw]'>
           {selectedLanguage}
         </div>
       )}
       <div>
-        <div className='flex mx-[15vw] h-[500px] border border-white rounded-sm '>
+        <div className='flex mx-[10vw] h-[500px] border border-white rounded-sm '>
           <Allotment>
             <Allotment.Pane minSize={500}>
               <div className=' bg-bg-console'>
@@ -566,7 +566,7 @@ export function RecorderEditor() {
       </div>
       {recorderState === 'stopped' && (
         <button
-          className='p-2 text-white mx-[15vw]'
+          className='p-2 text-white mx-[10vw]'
           onClick={handleStartRecording}
         >
           Start Recording
@@ -576,7 +576,7 @@ export function RecorderEditor() {
       {recorderState === 'recording' && (
         <>
           <button
-            className='p-2 text-white ml-[15vw]'
+            className='p-2 text-white ml-[10vw]'
             onClick={handlePauseRecording}
           >
             Pause Recording
@@ -593,7 +593,7 @@ export function RecorderEditor() {
       {recorderState === 'paused' && (
         <>
           <button
-            className='p-2 text-white ml-[15vw]'
+            className='p-2 text-white ml-[10vw]'
             onClick={handleResumeRecording}
           >
             Resume Recording
@@ -613,7 +613,7 @@ export function RecorderEditor() {
       )}
 
       {recorderState !== 'stopped' && (
-        <p className='p-2 text-white mx-[15vw]'>
+        <p className='p-2 text-white mx-[10vw]'>
           {formatTime(elapsedTime)}
           {recorderState === 'recording' && (
             <span className='text-red-700 animate-[blinking_1s_infinite] text-4xl'>
