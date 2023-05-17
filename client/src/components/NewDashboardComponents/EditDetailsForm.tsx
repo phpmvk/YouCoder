@@ -151,7 +151,7 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
           className='w-full cursor-pointer'
           htmlFor='image'
         >
-          <div className='relative border-2 rounded-md h-52 mb-4'>
+          <div className='relative border border-gray-400 rounded-md h-52 mb-4'>
             {image && (
               <img
                 src={image}
@@ -176,7 +176,7 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
           <label>
             Title:
             <input
-              className={`w-full p-2 border-2 rounded-md bg-bg-muigrey/80 mb-4 ${
+              className={`w-full p-2 border border-gray-400 rounded-md bg-bg-muigrey/80 mb-4 ${
                 titleError && 'border-red-600/70 border'
               }}`}
               name='title'
@@ -194,7 +194,7 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
             Description:
             <textarea
               name='description'
-              className='w-full p-2 border-2 rounded-md bg-bg-muigrey/80 mb-4'
+              className='w-full p-2 border border-gray-400 rounded-md bg-bg-muigrey/80 mb-4'
               value={detailsToEdit.description}
               onChange={handleInputChange}
             />
@@ -250,7 +250,7 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
         <button
           type='button'
           onClick={handleSave}
-          className='w-fit py-2 px-4 border-2 rounded-md bg-bg-muigrey/80 mb-4 hover:bg-white/20 active:bg-white/30'
+          className='w-fit py-2 px-4 border border-gray-400 rounded-md bg-bg-sec/40 mb-4 hover:bg-bg-sec/90 active:bg-white/30'
           disabled={buttonDisabled}
         >
           Save
@@ -260,7 +260,7 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
           onClick={
             warnBeforeUnpublish ? cancel : () => setShowDismissModal(true)
           }
-          className='ml-10 w-fit py-2 px-4 border-2 rounded-md bg-bg-muigrey/80 mb-4 hover:bg-white/20 active:bg-white/30'
+          className='ml-10 w-fit py-2 px-4 border border-gray-400 rounded-md mb-4 hover:bg-white/20 active:bg-white/30'
         >
           {cancelText}
         </button>
