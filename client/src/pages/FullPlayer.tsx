@@ -12,6 +12,7 @@ import { Recording } from '../types/Creator';
 import ButtonGroup from '@mui/material';
 import { MultiEditorPlayback } from '../components/MultiEditorPlayback';
 import { toast } from 'react-toastify';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 interface FullPlayerPageProps {
   recordingData: Recording;
@@ -41,21 +42,21 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                 <div className=''>
                   {/* title */}
 
-                  <div className='text-gray-200 text-4xl text-left pb-6 mx-2 mt-2 '>
+                  <div className='text-gray-200 text-4xl text-left pb-6 mx-2 mt-2 text-ellipsis line-clamp-2'>
                     {recordingData.title}
                   </div>
                   <div className='bg-bg-pri flex flex-row'>
                     <div className='flex flex-row bg-bg-pri w-full h-[250px]'>
                       {/* ---------Left Card */}
                       <div className='flex flex-col items-center mx-1 min-w-36 max-w-[20vw] '>
-                        <div className='h-36 w-36 border border-gray-700 rounded-xl shadow bg-bg-pri flex items-center justify-center mb-7'>
+                        <div className='h-36 w-36 md:h-44 md:w-44 border border-gray-700 rounded-xl shadow bg-bg-pri flex items-center justify-center mb-3'>
                           <div className='flex flex-col items-center'>
                             <img
                               className='w-20 h-20 !min-w-20 mb-3 rounded-full shadow-lg'
                               src={recordingData.creator!.picture}
                               alt=''
                             />
-                            <h5 className=' text-xl font-medium text-white'>
+                            <h5 className=' text-sm md:text-lg  font-medium text-white text-ellipsis line-clamp-2'>
                               {recordingData.creator?.display_name}
                             </h5>
                           </div>
@@ -69,9 +70,9 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                             );
                             toast.success('Link copied to clipboard');
                           }}
-                          className='!rounded-lg !bg-bg-muigrey !border-gray-700 w-36 !text-gray-100 whitespace-nowrap h-8 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700 mt-4'
+                          className='!rounded-lg !bg-bg-muigrey !border-gray-700 w-36 md:w-44 !text-gray-100 whitespace-nowrap h-8 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700 mt-4 '
                         >
-                          {/* <ReplyIcon className='transform scale-x-[-1]' /> */}
+                           <ContentCopyIcon className='scale-75'/> 
                           copy link
                         </Button>
                       </div>
