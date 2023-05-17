@@ -359,7 +359,7 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
                   className="h-[16vw] w-[16vw] md:h-[8vw] md:w-[8vw] object-cover rounded-full mb-4"
 
                 />
-                <h2 className=" sm:text-sm md:text-md text-lg text-white whitespace-nowrap z-10">{member.name}</h2>
+                <h2 className=" sm:text-sm md:text-md text-lg text-white whitespace-nowrap z-10 mb-2">{member.name}</h2>
                 <div>
                   <a href={member.gh} target="_blank" rel="noopener noreferrer">
 
