@@ -74,7 +74,9 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
 
                       <div className='flex justify-around items-center space-x-3 lg:space-x-4 scale-150'>
                         {recordingData.creator!.socials.github !== '' ? (
-                          <a href={recordingData.creator?.socials.github}>
+                          <a
+                            href={`https://github.com/${recordingData.creator?.socials.github}`}
+                          >
                             <IconButton aria-label='GitHub'>
                               <GitHubIcon className='!fill-white' />
                             </IconButton>
@@ -84,7 +86,9 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                         )}
 
                         {recordingData.creator!.socials.youtube !== '' ? (
-                          <a href={recordingData.creator?.socials.youtube}>
+                          <a
+                            href={`https://youtube.com/@${recordingData.creator?.socials.youtube}`}
+                          >
                             <IconButton aria-label='YouTube'>
                               <YouTubeIcon className='!fill-white' />
                             </IconButton>
@@ -94,7 +98,11 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                         )}
 
                         {recordingData.creator!.socials.twitter !== '' ? (
-                          <a href={recordingData.creator!.socials.twitter}>
+                          <a
+                            href={`https://twitter.com/${
+                              recordingData.creator!.socials.twitter
+                            }`}
+                          >
                             <IconButton aria-label='Twitter'>
                               <TwitterIcon className='!fill-white' />
                             </IconButton>
