@@ -496,7 +496,10 @@ export function MultiEditorPlayback({
       <div className=''>
         <div className='bg-bg-pri flex w-full h-[400px] px-4 mb-2 '>
           <Allotment>
-            <Allotment.Pane>
+          <div>
+            <div className='text-white text-md px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
+              HTML
+            </div>
               <Editor
                 className=' border-bg-pri border-8 border-r-6 '
                 height='500px'
@@ -512,8 +515,12 @@ export function MultiEditorPlayback({
                   handleEditorDidMount(editor, monaco, 'html')
                 }
               />
-            </Allotment.Pane>
-            <Allotment.Pane>
+            </div>
+            <Allotment vertical={true}>
+            <div>
+              <div className='text-white text-md px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
+                CSS
+              </div>
               <Editor
                 className=' border-bg-pri border-8 border-r-6 '
                 height='500px'
@@ -529,8 +536,12 @@ export function MultiEditorPlayback({
                   handleEditorDidMount(editor, monaco, 'css')
                 }
               />
-            </Allotment.Pane>
-            <Allotment.Pane>
+              </div>
+            <div>
+              <div className='text-white text-md px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
+                Javascript
+              </div>
+            
               <Editor
                 className=' border-bg-pri border-8 border-r-6 '
                 height='500px'
@@ -546,8 +557,30 @@ export function MultiEditorPlayback({
                   handleEditorDidMount(editor, monaco, 'javascript')
                 }
               />
-            </Allotment.Pane>
+              </div>
+            </Allotment>
+            <Allotment>
+            <div className='h-full bg-white'>
+              <div className='w-full bg-bg-pri'>
+                <div className='text-white text-md px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
+                  Output
+                </div>
+              </div>
+
+              <iframe
+                srcDoc={htmlOutput}
+                title='Output'
+                sandbox='allow-scripts'
+                width='100%'
+                height='100%'
+              ></iframe>
+            </div>
           </Allotment>
+
+          </Allotment>
+
+
+
         </div>
         <br></br>
         <br></br>
@@ -672,15 +705,3 @@ export function MultiEditorPlayback({
   );
 }
 
-
-
-
-
-
-
-
-{/* <iframe
-        srcDoc={htmlOutput}
-        title='Output'
-        sandbox='allow-scripts'
-      ></iframe> */}
