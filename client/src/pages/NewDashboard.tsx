@@ -103,7 +103,10 @@ const NewDashboardPage = ({}: NewDashboardPageProps) => {
 
   return (
     <>
-      <TopNavBar showCreateRecording={showCreateRecording} />
+      <TopNavBar
+        showCreateRecording={showCreateRecording}
+        showSearch={true}
+      />
       <div
         className='grid lg:grid-cols-3 md:grid-cols-1 sm:grid-cols-1 px-[10vw] text-white items-center pt-12'
         ref={createRecordingButtonRef}

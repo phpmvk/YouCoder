@@ -15,13 +15,14 @@ module.exports = {
 
     extend: {
       screens: {
-        '600': '600px',
-        '700': '700px',
-        '720': '720px',
-        '740': '740px',
-        '850': '850px',
-        '900': '900px',
-        '1140': '1140px',
+        600: '600px',
+        700: '700px',
+        720: '720px',
+        740: '740px',
+        800: '800px',
+        850: '850px',
+        900: '900px',
+        1140: '1140px',
       },
       scale: {
         80: '.80',
@@ -42,15 +43,16 @@ module.exports = {
           gptdark: '#202123',
           console: '#1e1e1e',
         },
-       
+
         text: {
           // normal: 'slate-300',
         },
       },
 
-       backgroundImage: {
-          'player': "url('/client/src/components/HomePageComponents/PlayerPicture.svg)",
-        },
+      backgroundImage: {
+        player:
+          "url('/client/src/components/HomePageComponents/PlayerPicture.svg)",
+      },
       fontFamily: {
         title: ['"Space Grotesk"'],
         console: ['"IBM Plex Mono"'],
@@ -84,5 +86,5 @@ module.exports = {
       }),
     },
   },
-  plugins: [],
+  plugins: [require('daisyui')],
 };

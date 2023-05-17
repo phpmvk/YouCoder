@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, KeyboardEvent } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -12,11 +12,22 @@ import { Button } from '@mui/material';
 import { Link, Router, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { getAuth, signOut } from 'firebase/auth';
-import { removeUser } from '../../redux/userSlice';
+import { editUser, removeUser, setUser } from '../../redux/userSlice';
 import { AiFillVideoCamera } from 'react-icons/ai';
-import { setSearchTerm } from '../../redux/searchSlice';
+import { setSearchTerm, setSearchTriggered } from '../../redux/searchSlice';
 import { persistor } from '../../redux/store';
 import { toast } from 'react-toastify';
+import Modal from '../Modal';
+import { UserProfile } from './EditProfileForm';
+import { CreatorUpdate } from '../../types/Creator';
+import http from '../../services/userApi';
+import { storage } from '../../App';
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from 'firebase/storage';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -64,6 +75,7 @@ interface TopNavBarProps {
   showDashboard?: boolean;
   showFeatures?: boolean;
   showExamples?: boolean;
+  onEnterPress?: (event: React.KeyboardEvent) => void;
 }
 
 function TopNavBar({
@@ -71,6 +83,7 @@ function TopNavBar({
   showCreateRecording = false,
   showDashboard = true,
   showExamples = false,
+  onEnterPress,
 }: TopNavBarProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -78,9 +91,11 @@ function TopNavBar({
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [term, setTerm] = useState('');
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
 
   // import the user from the reducer
-  const { shortName } = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user);
+  const shortName = user.shortName;
   const [loggedIn, setLoggedIn] = useState(shortName ? true : false);
 
   const auth = getAuth();
@@ -106,157 +121,205 @@ function TopNavBar({
       });
   }
 
-  // const isMenuOpen = Boolean(anchorEl);
-  // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  function handleSearchKeyPress(e: React.KeyboardEvent) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      dispatch(setSearchTerm(term));
+      dispatch(setSearchTriggered(true));
+      navigate('/discover');
+    }
+  }
 
-  // const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
+  function showEditProfile() {
+    setShowEditProfileModal(true);
+  }
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
+  async function handleSave(userToUpdate: CreatorUpdate, blob?: Blob) {
+    if (blob) {
+      const storageRef = ref(storage, `users/${user.uid}`);
+      const snapshot = await uploadBytes(storageRef, blob);
+      const url = await getDownloadURL(snapshot.ref);
+      userToUpdate.picture = url;
+    } else {
+      userToUpdate.picture = user.picture;
+    }
+    http
+      .creatorUpdate(userToUpdate)
+      ?.then((res) => {
+        console.log(res);
+        dispatch(editUser({ ...user, ...res.data.user }));
+        toast.success('Profile updated successfully');
+        navigate('/dashboard');
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error('Error updating profile');
+      });
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
+    console.log('we are saving you');
+    setShowEditProfileModal(false);
+  }
 
   return (
-    <div className='sticky top-0 z-40'>
-      <Box sx={{ flexGrow: 1, height: '60px' }}>
-        <AppBar
-          sx={{
-            backgroundColor: '#050505',
-            maxHeight: '60px',
-            boxShadow: '0 4px 2px -2px #2a2a2a ',
-          }}
-        >
-          <Toolbar>
-            <Link to='/'>
-              <Typography
-                variant='h6'
-                noWrap
-                component='div'
-                sx={{ display: { xs: 'none', sm: 'block' } }}
+    <>
+      <Modal
+        show={showEditProfileModal}
+        closeModal={() => setShowEditProfileModal(false)}
+        closeOnOutsideClick={false}
+      >
+        <UserProfile
+          save={handleSave}
+          cancel={() => setShowEditProfileModal(false)}
+        />
+      </Modal>
+      <div className='sticky top-0 z-40'>
+        <Box sx={{ flexGrow: 1, height: '60px' }}>
+          <AppBar
+            sx={{
+              backgroundColor: '#050505',
+              maxHeight: '60px',
+              boxShadow: '0 4px 2px -2px #2a2a2a ',
+            }}
+          >
+            <Toolbar>
+              <Link
+                to='/'
+                reloadDocument
               >
-                {' '}
-                <img
-                  src={youcoderlogo}
-                  style={{ height: '55px', marginBottom: '15px' }}
-                ></img>
-              </Typography>
-            </Link>
-            {showSearch && (
-              <Search>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                  value={term}
-                  onChange={handleSearchChange}
-                  placeholder='Search…'
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </Search>
-            )}
-            <Box sx={{ flexGrow: 1 }} />
-            <Box
-              sx={{
-                display: 'flex',
-                // justifyContent: 'space-between',
-                alignItems: 'center',
-                // width: '25%',
-                marginRight: 2,
-              }}
-            >
-              {/* Conditionally render the Create Recording button */}
-              {showCreateRecording && (
-                <Link to='/recording'>
-                  <Button
-                    className='w-full h-full t-[10vw] border-solid !border-2 !border-red-700 hover:!bg-red-700/30 !text-white !rounded-full !text-l !mr-6 whitespace-nowrap'
-                    color='inherit'
-                    variant='outlined'
-                  >
-                    <AiFillVideoCamera className='text-red-700 mr-2 text-lg' />
-                    Create Recording
-                  </Button>
-                </Link>
-              )}
-
-              {/* Conditionally render the Dashboard button */}
-              {showDashboard && loggedIn && (
-                <Link to='/dashboard'>
-                  <Button
-                    className='hover:!underline'
-                    color='inherit'
-                  >
-                    Dashboard
-                  </Button>
-                </Link>
-              )}
-              <Link to='/discover'>
-                <Button
-                  className='hover:!underline hover:!underline-offset-8'
-                  color='inherit'
+                <Typography
+                  variant='h6'
+                  noWrap
+                  component='div'
+                  sx={{ display: { xs: 'none', sm: 'block' } }}
                 >
-                  Discovery
-                </Button>
+                  {' '}
+                  <img
+                    src={youcoderlogo}
+                    style={{ height: '55px', marginBottom: '15px' }}
+                  ></img>
+                </Typography>
               </Link>
-              {showExamples && (
-                <Button
-                  className='hover:!underline hover:!underline-offset-8'
-                  color='inherit'
-                >
-                  Examples
-                </Button>
+              {showSearch && (
+                <Search>
+                  <SearchIconWrapper>
+                    <SearchIcon />
+                  </SearchIconWrapper>
+                  <StyledInputBase
+                    value={term}
+                    onChange={handleSearchChange}
+                    onKeyDown={handleSearchKeyPress}
+                    placeholder='Explore Recordings…'
+                    inputProps={{ 'aria-label': 'search' }}
+                  />
+                </Search>
               )}
-              <Link to='/docs'>
-                <Button
-                  className='hover:!underline hover:!underline-offset-8'
-                  color='inherit'
-                >
-                  FAQ
-                </Button>
-              </Link>
-            </Box>
-            <Box>
-              {loggedIn ? (
-                <>
-                  <Button
-                    className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto whitespace-nowrap'
-                    variant='outlined'
-                    onClick={logOut}
-                  >
-                    Log Out
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Link to='/login'>
+              <Box sx={{ flexGrow: 1 }} />
+              <Box
+                sx={{
+                  display: 'flex',
+                  // justifyContent: 'space-between',
+                  alignItems: 'center',
+                  // width: '25%',
+                  marginRight: 2,
+                }}
+              >
+                {/* Conditionally render the Create Recording button */}
+                {showCreateRecording && (
+                  <Link to='/recording'>
                     <Button
-                      // className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto'
-                      className='!border-bg-alt !text-bg-pri hover:!bg-bg-pri hover:!text-bg-alt !h-8 !my-auto !bg-bg-alt '
+                      className='w-full h-full t-[10vw] border-solid !border-2 !border-red-700 hover:!bg-red-700/30 !text-white !rounded-full !text-l !mr-6 whitespace-nowrap'
+                      color='inherit'
                       variant='outlined'
                     >
-                      Sign In
+                      <AiFillVideoCamera className='text-red-700 mr-2 text-lg' />
+                      Create Recording
                     </Button>
                   </Link>
-                </>
-              )}
+                )}
 
-            
-            </Box>
-           
-          </Toolbar>
-        </AppBar>
-        
-      </Box>
-    </div>
+                {/* Conditionally render the Dashboard button */}
+                {showDashboard && loggedIn && (
+                  <Link to='/dashboard'>
+                    <Button
+                      className='hover:!underline'
+                      color='inherit'
+                    >
+                      Dashboard
+                    </Button>
+                  </Link>
+                )}
+                <Link
+                  reloadDocument
+                  to='/discover'
+                >
+                  <Button
+                    className='hover:!underline hover:!underline-offset-8'
+                    color='inherit'
+                  >
+                    Discover
+                  </Button>
+                </Link>
+                {showExamples && (
+                  <Button
+                    className='hover:!underline hover:!underline-offset-8'
+                    color='inherit'
+                  >
+                    Examples
+                  </Button>
+                )}
+                <Link to='/docs'>
+                  <Button
+                    className='hover:!underline hover:!underline-offset-8'
+                    color='inherit'
+                  >
+                    FAQ
+                  </Button>
+                </Link>
+              </Box>
+              <Box>
+                {loggedIn ? (
+                  <>
+                    <div className='dropdown dropdown-end'>
+                      <label
+                        tabIndex={0}
+                        className='btn btn-ghost btn-circle avatar'
+                      >
+                        <div className='w-10 rounded-full'>
+                          <img src={user.picture} />
+                        </div>
+                      </label>
+                      <ul
+                        tabIndex={0}
+                        className='mt-3 p-2 shadow menu menu-compact dropdown-content bg-bg-muigrey rounded-box w-52 text-white'
+                      >
+                        <li>
+                          <button onClick={showEditProfile}>Profile</button>
+                        </li>
+                        <li>
+                          <button onClick={logOut}>Logout</button>
+                        </li>
+                      </ul>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Link to='/login'>
+                      <Button
+                        // className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto'
+                        className='!border-bg-alt !text-bg-pri hover:!bg-bg-pri hover:!text-bg-alt !h-8 !my-auto !bg-bg-alt '
+                        variant='outlined'
+                      >
+                        Sign In
+                      </Button>
+                    </Link>
+                  </>
+                )}
+              </Box>
+            </Toolbar>
+          </AppBar>
+        </Box>
+      </div>
+    </>
   );
 }
 

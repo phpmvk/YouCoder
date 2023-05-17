@@ -22,6 +22,13 @@ import { updateRecording } from '../types/Creator';
 import { setLoadingSpinner } from '../redux/spinnerSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import PauseIcon from '@mui/icons-material/Pause';
+import DoneIcon from '@mui/icons-material/Done';
+import EjectIcon from '@mui/icons-material/Eject';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import CloseIcon from '@mui/icons-material/Close';
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 
 export function MultiEditorRecorder() {
   //Multi states
@@ -41,7 +48,7 @@ export function MultiEditorRecorder() {
   const [recorderLoading, setRecorderLoading] = useState(false);
 
   const [selectedLanguage, setSelectedLanguage] = useState('multi');
-
+  const [alertVisible, setAlertVisible] = useState(true);
   const [consoleOutput, setConsoleOutput] = useState('');
   const [saveModalVisible, setSaveModalVisible] = useState(false);
 
@@ -202,6 +209,7 @@ export function MultiEditorRecorder() {
     const js = jsEditorInstance?.getValue() ?? '';
     const output = `<html>
     <head>
+      <style>:root { background-color: white; }</style>
       <style>${css}</style>
     </head>
     <body>
@@ -403,9 +411,9 @@ export function MultiEditorRecorder() {
     <>
       {recorderState === 'stopped' && (
         <>
-          <div className='flex items-center mx-[15vw]'>
+          <div className='flex items-center h-16  '>
             <label
-              className='block mb-2 text-sm font-medium text-white mr-3'
+              className='block text-sm font-medium text-white mr-3 font-console'
               htmlFor='language'
             >
               Choose a language
@@ -413,7 +421,7 @@ export function MultiEditorRecorder() {
             <select
               id='language'
               onChange={handleLanguageChange}
-              className='border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3'
+              className='border text-sm rounded-lg  block w-56 px-2.5 py-1 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec font-console'
             >
               <option defaultValue='multi'>HTML, CSS & JavaScript</option>
               <option value='javascript'>JavaScript</option>
@@ -429,13 +437,25 @@ export function MultiEditorRecorder() {
         </>
       )}
       {recorderState !== 'stopped' && (
-        <div className='border text-sm rounded-lg w-48 bg-gray-700 border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mb-3 flex items-center justify-center mx-[15vw]'>
-          {selectedLanguage}
+        <div className='h-16 flex items-end'>
+          <div className='border-t border-r border-l text-sm rounded-t-lg w-48 bg-bg-gptdark border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mt-2 flex items-center justify-center font-console'>
+            {selectedLanguage}
+          </div>
         </div>
       )}
-      <div className='flex w-full h-[500px] border border-white rounded-sm'>
+      <div className='flex w-full h-[500px] border border-gray-600 rounded-sm relative'>
+        <button
+          className='absolute -bottom-10 right-0 px-2 py-1 bg-red-300 roundedw-fit items-center text-sm  text-gray-200 rounded !bg-bg-sec/30 border !border-gray-400 uppercase hover:!bg-bg-sec/50 active:ring-1 active:ring-bg-alt'
+          onClick={handleRenderOutput}
+        >
+          Render HTML
+        </button>
+
         <Allotment>
-          <Allotment.Pane minSize={500}>
+          <div>
+            <div className='text-white text-md mt-1 px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
+              HTML
+            </div>
             <Editor
               height='500px'
               defaultLanguage='html'
@@ -452,117 +472,156 @@ export function MultiEditorRecorder() {
                 handleEditorDidMount(editor, monaco, 'html')
               }
             />
-          </Allotment.Pane>
-        </Allotment>
-        <Allotment>
-          <Allotment.Pane minSize={500}>
-            <Editor
-              height='500px'
-              defaultLanguage='css'
-              defaultValue=''
-              theme='vs-dark'
-              options={{
-                wordWrap: 'on',
-                fontSize: fontSize,
-              }}
-              onChange={(value, event) =>
-                handleEditorChange(value, event, 'css')
-              }
-              onMount={(editor, monaco) =>
-                handleEditorDidMount(editor, monaco, 'css')
-              }
-            />
-          </Allotment.Pane>
-        </Allotment>
-        <Allotment>
-          <Allotment.Pane minSize={500}>
-            <Editor
-              height='500px'
-              defaultLanguage='javascript'
-              defaultValue=''
-              theme='vs-dark'
-              options={{
-                wordWrap: 'on',
-                fontSize: fontSize,
-              }}
-              onChange={(value, event) =>
-                handleEditorChange(value, event, 'javascript')
-              }
-              onMount={(editor, monaco) =>
-                handleEditorDidMount(editor, monaco, 'javascript')
-              }
-            />
-          </Allotment.Pane>
+          </div>
+          <Allotment vertical={true}>
+            <div>
+              <div className='text-white text-md mt-1 px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
+                CSS
+              </div>
+
+              <Editor
+                height='500px'
+                defaultLanguage='css'
+                defaultValue=''
+                theme='vs-dark'
+                options={{
+                  wordWrap: 'on',
+                  fontSize: fontSize,
+                }}
+                onChange={(value, event) =>
+                  handleEditorChange(value, event, 'css')
+                }
+                onMount={(editor, monaco) =>
+                  handleEditorDidMount(editor, monaco, 'css')
+                }
+              />
+            </div>
+            <div>
+              <div className='text-white text-md mt-1 px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
+                Javascript
+              </div>
+
+              <Editor
+                height='500px'
+                defaultLanguage='javascript'
+                defaultValue=''
+                theme='vs-dark'
+                options={{
+                  wordWrap: 'on',
+                  fontSize: fontSize,
+                }}
+                onChange={(value, event) =>
+                  handleEditorChange(value, event, 'javascript')
+                }
+                onMount={(editor, monaco) =>
+                  handleEditorDidMount(editor, monaco, 'javascript')
+                }
+              />
+            </div>
+          </Allotment>
+          <Allotment>
+            <div className='h-full bg-white'>
+              <div className='w-full bg-bg-pri'>
+                <div className='text-white text-md mt-1 px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
+                  Output
+                </div>
+              </div>
+
+              <iframe
+                srcDoc={htmlOutput}
+                title='Output'
+                sandbox='allow-scripts'
+                width='100%'
+                height='100%'
+              ></iframe>
+            </div>
+          </Allotment>
         </Allotment>
       </div>
+      <div className='flex flex-wrap justify-start items-center border border-gray-600 rounded-full mt-2 w-[490px] min-w-[490px] mb-2 '>
+        {recorderState === 'stopped' && (
+          <div className='flex'>
+            <button
+              className='p-2 pr-4 text-white bg-red-900 flex rounded-full m-2 '
+              onClick={handleStartRecording}
+            >
+              <RadioButtonCheckedIcon className='mr-1 !fill-red-500 ' />
+              Start Recording
+            </button>
+            {alertVisible && (
+              <Alert
+                onClose={() => setAlertVisible(false)}
+                className='absolute top-60 ml-6 !bg-blue-200 w-60 '
+                severity='info'
+              >
+                <AlertTitle>Info</AlertTitle>
+                Any code typed into the editor before starting the recording
+                will be discarded.
+              </Alert>
+            )}
+          </div>
+        )}
 
-      {recorderState === 'stopped' && (
-        <button
-          className='p-2 text-white'
-          onClick={handleStartRecording}
-        >
-          Start Recording
-        </button>
-      )}
+        {recorderState === 'recording' && (
+          <>
+            <button
+              className='p-2 text-white bg-bg-gptdark rounded-full m-2 flex justify-center items-center w-48'
+              onClick={handlePauseRecording}
+            >
+              <PauseIcon className='mr-1 !fill-bg-alt' />
+              Pause Recording
+            </button>
+            <button
+              className='p-2 pr-4 flex text-white bg-bg-gptdark rounded-full m-2'
+              onClick={handleEndRecording}
+            >
+              <DoneIcon className='mr-1 !fill-bg-sec' />
+              End Recording
+            </button>
+          </>
+        )}
 
-      {recorderState === 'recording' && (
-        <>
-          <button
-            className='p-2 text-white'
-            onClick={handlePauseRecording}
-          >
-            Pause Recording
-          </button>
-          <button
-            className='p-2 text-white'
-            onClick={handleEndRecording}
-          >
-            End Recording
-          </button>
-        </>
-      )}
+        {recorderState === 'paused' && (
+          <>
+            <button
+              className='p-2 text-white flex bg-bg-gptdark rounded-full m-2 w-48'
+              onClick={handleResumeRecording}
+            >
+              {' '}
+              <EjectIcon className='mr-1 rotate-90 !fill-red-600' />
+              Resume Recording
+            </button>
+            <button
+              className='p-2 pr-4 text-white flex bg-bg-gptdark rounded-full m-2'
+              onClick={handleEndRecording}
+            >
+              <DoneIcon className='mr-1 !fill-bg-sec' />
+              End Recording
+            </button>
+          </>
+        )}
 
-      {recorderState === 'paused' && (
-        <>
-          <button
-            className='p-2 text-white'
-            onClick={handleResumeRecording}
-          >
-            Resume Recording
-          </button>
-          <button
-            className='p-2 text-white'
-            onClick={handleEndRecording}
-          >
-            End Recording
-          </button>
-        </>
-      )}
+        {recorderLoading && (
+          <div className='p-2'>
+            <span>Loading...</span>
+          </div>
+        )}
 
+        {recorderState !== 'stopped' && (
+          <div className='flex justify-center items-center space-x-4 text-white text-xl pl-3'>
+            <span>{formatTime(elapsedTime)}</span>
+            {recorderState === 'recording' && (
+              <div className='h-4 w-4 mr-2 bg-red-500 rounded-full animate-[blinking_1s_infinite]'></div>
+            )}
+          </div>
+        )}
+      </div>
       <button
-        className='p-2 text-white'
+        className='p-1 bg-red-300 roundedw-fit items-center px-2 text-sm  text-gray-200 rounded !bg-bg-sec/20 border !border-gray-400 uppercase hover:!bg-gray-600/50 active:ring-1 active:ring-bg-alt -mt-[200px] ml-[500px] '
         onClick={handleRenderOutput}
       >
         Render HTML
       </button>
-
-      {recorderLoading && (
-        <div className='p-2'>
-          <span>Loading...</span>
-        </div>
-      )}
-
-      {recorderState !== 'stopped' && (
-        <p className='p-2 text-white'>
-          {formatTime(elapsedTime)}
-          {recorderState === 'recording' && (
-            <span className='text-red-700 animate-[blinking_1s_infinite] text-4xl'>
-              •
-            </span>
-          )}
-        </p>
-      )}
-
       <Modal
         show={saveModalVisible}
         closeModal={() => setSaveModalVisible(false)}
@@ -577,12 +636,6 @@ export function MultiEditorRecorder() {
           warnBeforeUnpublish={false}
         />
       </Modal>
-
-      <iframe
-        srcDoc={htmlOutput}
-        title='Output'
-        sandbox='allow-scripts'
-      ></iframe>
     </>
   );
 }

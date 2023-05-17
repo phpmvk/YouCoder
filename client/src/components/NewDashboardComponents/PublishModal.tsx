@@ -4,9 +4,15 @@ interface PublishModalProps {
   close: () => void;
   confirm: () => void;
   text: string;
+  title?: string;
 }
 
-const PublishModal: FC<PublishModalProps> = ({ close, confirm, text }) => {
+const PublishModal: FC<PublishModalProps> = ({
+  close,
+  confirm,
+  text,
+  title = 'Unpublish Confirmation',
+}) => {
   return (
     <div
       className='absolute z-10 mx-auto left-0 right-0 top-0 bottom-0 overflow-y-hidden'
@@ -33,7 +39,7 @@ const PublishModal: FC<PublishModalProps> = ({ close, confirm, text }) => {
                   className='text-lg leading-6 font-medium text-white/90'
                   id='modal-title'
                 >
-                  Unpublish Confirmation
+                  {title}
                 </h3>
                 <div className='mt-2'>
                   <p className='text-sm text-white/90'>{text}</p>

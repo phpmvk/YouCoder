@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { getRecordingById, createNewRecording, findUser, fetchAllUserRecordings, updateRecording, deleteRecording, incrementViewCount, incrementLikeCount, fetchAllUserPublicRecordings, fetchPublicRecordingsBySearchQuery } from "../models/recordings.model";
-import moment from 'moment'
+import { getRecordingById, createNewRecording, findUser, fetchAllUserRecordings, updateRecording, deleteRecording, incrementViewCount, incrementLikeCount, fetchAllUserPublicRecordings, fetchPublicRecordingsBySearchQuery, fetchAllPublicRecordings } from "../models/recordings.model";
+import { convertToTimeFromNow } from "../utils/moment";
 
 export async function getRecordingByIdController(req: Request, res: Response) {
   console.log('Recordings - GET received - getRecordingById')
@@ -23,14 +23,14 @@ export async function getRecordingByIdController(req: Request, res: Response) {
     }
     await incrementViewCount(recording.recording_id)
     recording.view_count++;
-    recording.time_since_creation = moment(recording.created_at_datetime).fromNow()
+    recording.time_since_creation = convertToTimeFromNow(recording.created_at_datetime)
     return res.status(200).send(recording)
   } catch (err) {
     if (err instanceof InvalidRecordingError) {
       console.error(err)
       res.status(400).send({ message: err.message})
     } else {
-      console.error(err)
+      console.error('getRecordingByIdController error: ', err)
       res.status(500).send({ message: 'Internal server error'})
     }
   }
@@ -46,7 +46,7 @@ export async function incrementRecordingLikesController(req: Request, res: Respo
     }
     res.status(200).send({ message: 'Resource updated' })
   } catch (err) {
-    console.error(err)
+    console.error('incrementRecordingLikesController error: ', err)
     res.status(500).send({ message: 'Internal server error'})
   }
 }
@@ -60,11 +60,11 @@ export async function getAllUserRecordingsController(req: Request, res: Response
     }
     const allUserRecordings = await fetchAllUserRecordings(user.uid)
     allUserRecordings?.forEach(recording => {
-      recording.time_since_creation = moment(recording.created_at_datetime).fromNow()
+      recording.time_since_creation = convertToTimeFromNow(recording.created_at_datetime);
     })
     res.status(200).send(allUserRecordings)
   } catch (err) {
-    console.error(err)
+    console.error('getAllUserRecordingsController error: ', err)
     res.status(500).send({ message: 'Internal server error'})
   }
 }
@@ -82,39 +82,58 @@ export async function recordingsQueryController(req: Request, res: Response) {
       const uid = user.toString();
       try {
         const publicUserRecordings = await fetchAllUserPublicRecordings(uid);
+        publicUserRecordings?.forEach(recording => {
+          recording.time_since_creation = convertToTimeFromNow(recording.created_at_datetime)
+        })
         return res.status(200).send(publicUserRecordings)
       } catch (err) {
         console.error(err);
         return res.status(500).send({ message: 'Error searching for user with provided query parameters'})
       }
-    }
-
-    if (query) {
+    } else if (query) {
       const searchParams = query.toString();
       try {
         const publicSearchResults = await fetchPublicRecordingsBySearchQuery(searchParams);
+        publicSearchResults?.forEach(recording => {
+          recording.time_since_creation = convertToTimeFromNow(recording.created_at_datetime)
+        })
         return res.status(200).send(publicSearchResults)
       } catch (err) {
         console.error(err);
         return res.status(500).send({ message: 'Error searching for resources with provided query parameters'})
       }
     }
-
   } catch (err) {
-    console.error(err);
+    console.error('recordingsQueryController error: ', err);
     res.status(500).send({ message: 'Internal server error when searching with provided parameters: ' + req.query})
   }
 }
 
+export async function discoverPublicRecordingController(req: Request, res: Response) {
+  console.log('Recordings - GET received - discoverPublicRecordingController')
+  try {
+    const allPublicRecordings = await fetchAllPublicRecordings();
+    if (!allPublicRecordings) {
+      return res.status(400).send({ message: 'No public recordings available' })
+    }
+    allPublicRecordings?.forEach(recording => {
+      recording.time_since_creation = convertToTimeFromNow(recording.created_at_datetime)
+    })
+    res.status(200).send(allPublicRecordings);
+  } catch (err) {
+    console.error('discoverPublicRecordingController error: ', err);
+    res.status(500).send({ message: 'Internal server error fetching all public resources'})
+  }
+}
 
 export async function uploadRecordingController(req: Request, res: Response) {
   console.log('Recordings - POST received - uploadRecording')
   try {
     const newRecording = await createNewRecording(req.body);
-    newRecording.time_since_creation = moment(newRecording.created_at_datetime).fromNow()
+    newRecording.time_since_creation = convertToTimeFromNow(newRecording.created_at_datetime);
     res.status(201).send(newRecording)
   } catch (err) {
-    console.error(err);
+    console.error('uploadRecordingController error: ', err);
     res.status(409).send({ message: 'Unable to create resource' })
   }
 }
@@ -161,22 +180,22 @@ export async function updateRecordingController(req: Request, res: Response) {
 
     const updatedRecording = await updateRecording(recordingId, dataToUpdate);
 
-    updatedRecording.time_since_creation = moment(updatedRecording.created_at_datetime).fromNow()
+    updatedRecording.time_since_creation = convertToTimeFromNow(updatedRecording.created_at_datetime)
 
     res.status(200).send(updatedRecording)
   } catch (err) {
     if (err instanceof InvalidRecordingError) {
-      console.error(err)
-      res.status(400).send({ message: err.message})
+      console.error('updateRecordingController error: ', err);
+      res.status(400).send({ message: err.message});
     } else {
-      console.error(err)
-      res.status(500).send({ message: 'Internal server error' })
+      console.error('updateRecordingController error: ', err);
+      res.status(500).send({ message: 'Internal server error' });
     }
   }
 }
 
 export async function deleteRecordingController(req: Request, res: Response) {
-  console.log('Recordings - DELETE received - deleteRecording')
+  console.log('Recordings - DELETE received - deleteRecording');
   try {
     const recordingId = req.params.recordingid;
   
@@ -185,34 +204,33 @@ export async function deleteRecordingController(req: Request, res: Response) {
     const recording = await getRecordingById(recordingId);
 
     if (!recording) {
-      return res.status(404).send({ message: 'Resource not found'})
+      return res.status(404).send({ message: 'Resource not found'});
     }
 
     if (recording.creator_uid !== req.body.user.uid) {
-      return res.status(403).send({ message: 'Not authorized'})
+      return res.status(403).send({ message: 'Not authorized'});
     }
 
     const deletedRecording = await deleteRecording(recordingId)
     if (!deletedRecording) {
-      return res.status(500).send({ message: 'Internal server error'})
+      return res.status(500).send({ message: 'Internal server error'});
     }
 
-    res.status(204).send()
+    res.status(204).send();
   } catch (err) {
     if (err instanceof InvalidRecordingError) {
-      console.error(err)
-      res.status(400).send({ message: err.message})
+      console.error('deleteRecordingController error: ', err);
+      res.status(400).send({ message: err.message});
     } else {
-      console.error(err)
-      res.status(500).send({ message: 'Internal server error'})
+      console.error('deleteRecordingController error: ', err);
+      res.status(500).send({ message: 'Internal server error'});
     }
   }
 }
 
-
 function validateRecordingId(recordingId: string) {
   if (!/^[a-f0-9]{36}$/i.test(recordingId)) {
-    throw new InvalidRecordingError('Invalid recording id parameter')
+    throw new InvalidRecordingError('Invalid recording id parameter');
   }
 }
 

@@ -19,7 +19,7 @@ export async function creatorLoginController(req: Request, res: Response) {
     const newUser = await createCreatorAccount(userData)
     res.status(201).send({ user: newUser });
   } catch (err) {
-    console.error(err);
+    console.error('creatorLoginController error: ', err);
     res.status(500).send({ error: 'Internal server error' });
   }
 }
@@ -45,7 +45,7 @@ export async function updateCreatorController(req: Request, res: Response) {
     const updatedUserProfile = await updateField(uid, dataToUpdate)
     return res.status(200).send({ user: updatedUserProfile });
   } catch (err) {
-    console.error(err);
+    console.error('updateCreatorController error: ', err);
     res.status(500).send({ message: 'Internal error updating user data' })
   }
 }
@@ -56,6 +56,7 @@ export async function deleteCreatorController(req: Request, res: Response) {
     await deleteCreator(req.body.user.uid);
     res.status(204).send();
   } catch (err) {
+    console.error('deleteCreatorController error: ', err);
     return res.status(400).send({ error: 'User not found' });
   }
 }

@@ -14,6 +14,8 @@ import Button from '@mui/material/Button';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import VolumeDownIcon from '@mui/icons-material/VolumeDown';
 
 import {
   RecorderActions,
@@ -25,8 +27,12 @@ import Tooltip from './Tooltip';
 
 export function MultiEditorPlayback({
   recordingData,
+  autoplay,
+  theme = 'dark',
 }: {
   recordingData: Recording;
+  autoplay?: boolean;
+  theme: 'dark' | 'light';
 }) {
   const [monacoInstance, setMonacoInstance] = useState<typeof monaco | null>(
     null
@@ -69,6 +75,8 @@ export function MultiEditorPlayback({
     null
   );
   const [audioDuration, setAudioDuration] = useState<number>(0);
+  const [volume, setVolume] = useState(1);
+  const [showVolumeSlider, setShowVolumeSlider] = useState(false);
 
   useEffect(() => {
     playbackStateRef.current = playbackState;
@@ -155,7 +163,7 @@ export function MultiEditorPlayback({
         editorInstance = jsEditorInstance!;
         break;
     }
-    const model = editorInstance!.getModel();
+    const model = editorInstance.getModel();
     const rangeInstance = new monacoInstance!.Range(
       range.startLineNumber,
       range.startColumn,
@@ -466,6 +474,16 @@ export function MultiEditorPlayback({
     setHtmlOutput(output);
   }
 
+  function VolumeIcon() {
+    if (volume === 0) {
+      return <VolumeOffIcon />;
+    } else if (volume < 0.5) {
+      return <VolumeDownIcon />;
+    } else {
+      return <VolumeUpIcon />;
+    }
+  }
+
   return (
     <div>
       <audio
@@ -477,13 +495,16 @@ export function MultiEditorPlayback({
       <div className=''>
         <div className='bg-bg-pri flex w-full h-[400px] px-4 mb-2 '>
           <Allotment>
-            <Allotment.Pane minSize={600}>
+            <div>
+              <div className='text-white text-md px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
+                HTML
+              </div>
               <Editor
                 className=' border-bg-pri border-8 border-r-6 '
                 height='500px'
                 defaultLanguage='html'
                 defaultValue=''
-                theme='vs-dark'
+                theme={`vs-${theme}`}
                 options={{
                   wordWrap: 'on',
                   readOnly: ignoreUserInputs,
@@ -493,54 +514,84 @@ export function MultiEditorPlayback({
                   handleEditorDidMount(editor, monaco, 'html')
                 }
               />
-            </Allotment.Pane>
-          </Allotment>
-          <Allotment>
-            <Allotment.Pane minSize={600}>
-              <Editor
-                className=' border-bg-pri border-8 border-r-6 '
-                height='500px'
-                defaultLanguage='css'
-                defaultValue=''
-                theme='vs-dark'
-                options={{
-                  wordWrap: 'on',
-                  readOnly: ignoreUserInputs,
-                  fontSize: fontSize,
-                }}
-                onMount={(editor, monaco) =>
-                  handleEditorDidMount(editor, monaco, 'css')
-                }
-              />
-            </Allotment.Pane>
-          </Allotment>
-          <Allotment>
-            <Allotment.Pane minSize={600}>
-              <Editor
-                className=' border-bg-pri border-8 border-r-6 '
-                height='500px'
-                defaultLanguage='javascript'
-                defaultValue=''
-                theme='vs-dark'
-                options={{
-                  wordWrap: 'on',
-                  readOnly: ignoreUserInputs,
-                  fontSize: fontSize,
-                }}
-                onMount={(editor, monaco) =>
-                  handleEditorDidMount(editor, monaco, 'javascript')
-                }
-              />
-            </Allotment.Pane>
+            </div>
+            <Allotment vertical={true}>
+              <div>
+                <div className='text-white text-md px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
+                  CSS
+                </div>
+                <Editor
+                  className=' border-bg-pri border-8 border-r-6 '
+                  height='500px'
+                  defaultLanguage='css'
+                  defaultValue=''
+                  theme={`vs-${theme}`}
+                  options={{
+                    wordWrap: 'on',
+                    readOnly: ignoreUserInputs,
+                    fontSize: fontSize,
+                  }}
+                  onMount={(editor, monaco) =>
+                    handleEditorDidMount(editor, monaco, 'css')
+                  }
+                />
+              </div>
+              <div>
+                <div className='text-white text-md px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
+                  Javascript
+                </div>
+
+                <Editor
+                  className=' border-bg-pri border-8 border-r-6 '
+                  height='500px'
+                  defaultLanguage='javascript'
+                  defaultValue=''
+                  theme={`vs-${theme}`}
+                  options={{
+                    wordWrap: 'on',
+                    readOnly: ignoreUserInputs,
+                    fontSize: fontSize,
+                  }}
+                  onMount={(editor, monaco) =>
+                    handleEditorDidMount(editor, monaco, 'javascript')
+                  }
+                />
+              </div>
+            </Allotment>
+            <Allotment>
+              <div className='h-full bg-white'>
+                <div className='w-full bg-bg-pri'>
+                  <div className='text-white text-md px-2 rounded-t-lg bg-bg-muilightgrey w-fit font-console'>
+                    Output
+                  </div>
+                </div>
+
+                <iframe
+                  srcDoc={htmlOutput}
+                  title='Output'
+                  sandbox='allow-scripts'
+                  width='100%'
+                  height='100%'
+                ></iframe>
+              </div>
+            </Allotment>
           </Allotment>
         </div>
         <br></br>
         <br></br>
-        <div className='w-auto flex items-center justify-start space-x-10 -mt-12 bg-bg-pri mx-6 px-1 md:pax-auto'>
+        <div
+          className={`w-auto flex items-center justify-start space-x-10 -mt-12 bg-bg-pri mx-6 px-1 md:pax-auto ${
+            theme === 'light' ? 'bg-gray-200' : 'bg-bg-pri'
+          }`}
+        >
           {playbackState.status === 'stopped' && (
             <Button
-              variant='outlined'
-              className='!rounded-full !bg-bg-alt !text-bg-pri'
+              variant='contained'
+              className={`!rounded-xl !bg-bg-alt !text-bg-pri
+               ${
+                 theme === 'light' ? '!bg-gray-500 ' : '!bg-bg-alt !text-bg-pri'
+               }
+              `}
               onClick={handleStartPlayback}
             >
               <PlayArrowIcon />
@@ -548,8 +599,10 @@ export function MultiEditorPlayback({
           )}
           {playbackState.status === 'playing' && (
             <Button
-              variant='outlined'
-              className='!rounded-full !bg-bg-alt !text-bg-pri'
+              variant='contained'
+              className={`!rounded-xl !bg-bg-alt !text-bg-pri ${
+                theme === 'light' ? '!bg-gray-500' : '!bg-bg-alt'
+              }`}
               onClick={handlePausePlayback}
             >
               <PauseIcon />
@@ -557,22 +610,61 @@ export function MultiEditorPlayback({
           )}
           {playbackState.status === 'paused' && (
             <Button
-              variant='outlined'
-              className='!rounded-full !bg-bg-alt !text-bg-pri'
+              variant='contained'
+              className={`!rounded-xl !bg-bg-alt !text-bg-pri ${
+                theme === 'light' ? '!bg-gray-500' : '!bg-bg-alt'
+              }`}
               onClick={handleResumePlayback}
             >
               <PlayArrowIcon />
             </Button>
           )}
 
-          <div className='text-gray-200 mx-4 whitespace-nowrap'>
-            <button className='mr-8'>
-              <VolumeUpIcon />
-            </button>
-            {formatTime(sliderValue)} / {formatTime(audioDuration)}
+          <div
+            className={` mx-4 whitespace-nowrap ${
+              theme === 'light' ? 'text-black' : 'text-gray-200'
+            }`}
+          >
+            <div style={{ position: 'relative' }}>
+              <button
+                className='mr-8'
+                onClick={() => setShowVolumeSlider(!showVolumeSlider)}
+              >
+                <VolumeIcon />
+              </button>
+              {showVolumeSlider && (
+                <div style={{ position: 'absolute', left: 3, bottom: '100%' }}>
+                  <ReactSlider
+                    className={`w-3 h-32 max-h-[800px] rounded-full mx-auto border flex justify-center px-2 ${
+                      theme === 'light'
+                        ? 'bg-gray-200 border-bg-gptdark'
+                        : 'bg-bg-gptdark border-gray-200 '
+                    }`}
+                    thumbClassName={`w-5 h-5 rounded-full cursor-pointer focus:outline-none active:h-7 active:w-7 transition ${
+                      theme === 'light' ? 'bg-black' : 'bg-gray-200'
+                    }`}
+                    value={volume}
+                    step={0.01}
+                    min={0}
+                    max={1}
+                    orientation='vertical'
+                    invert
+                    onChange={(value) => {
+                      setVolume(value);
+                      audioElement!.volume = value;
+                    }}
+                  />
+                </div>
+              )}
+              {formatTime(sliderValue)} / {formatTime(audioDuration)}
+            </div>
           </div>
           <ReactSlider
-            className='w-10/12 max-w-[800px] h-5 bg-bg-gptdark rounded-full mx-auto border-white border flex items-center pr-2'
+            className={`w-10/12 max-w-[800px] h-5  rounded-full mx-auto  border flex items-center pr-2 ${
+              theme === 'light'
+                ? 'bg-gray-200 border-bg-gptdark'
+                : 'bg-bg-gptdark border-gray-200'
+            }`}
             thumbClassName='w-5 h-5 bg-white rounded-full cursor-pointer focus:outline-none active:h-7 active:w-7 transition'
             value={sliderValue}
             step={0.001}
@@ -590,18 +682,16 @@ export function MultiEditorPlayback({
               audioElement!.muted = false;
             }}
           />
-          <Tooltip />
-          <button className='p-2 text-white' onClick={handleRenderOutput}>
+
+          <button
+            className='p-2 w-fit  items-center text-sm  text-gray-200 rounded !bg-bg-sec/20 border !border-gray-400 uppercase hover:!bg-gray-600/50 active:ring-1 active:ring-bg-alt right-0 whitespace-nowrap '
+            onClick={handleRenderOutput}
+          >
             Render HTML
           </button>
         </div>
         <br></br>
       </div>
-      <iframe
-        srcDoc={htmlOutput}
-        title='Output'
-        sandbox='allow-scripts'
-      ></iframe>
     </div>
   );
 }
