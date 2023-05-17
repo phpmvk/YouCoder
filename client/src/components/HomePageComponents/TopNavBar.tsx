@@ -235,7 +235,7 @@ function TopNavBar({
                   className='hover:!underline hover:!underline-offset-8'
                   color='inherit'
                 >
-                  Docs
+                  FAQ
                 </Button>
               </Link>
             </Box>

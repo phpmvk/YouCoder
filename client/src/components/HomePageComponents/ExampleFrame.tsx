@@ -11,19 +11,20 @@ const ExampleFrame: React.FC = () => {
     <>
       <div className='absolute w-screen h-[12.5vw] top-[470vw] 600:top-[400vw] sm:top-[400vw] 700:top-[370vw] md:top-[360vw] 900:top-[350vw] lg:top-[355vw] xl:top-[362vw] flex justify-center items-center'>
         <motion.div
-          className='min-w-[910px] w-[25vw] h-[12.5vw] bg-bg-pri'
+          className='min-w-[910px] w-[25vw] h-[12.5vw] bg-bg-pri '
           style={{
             scale: scale,
             zIndex: 30,
           }}
         >
-          <div className=' hidden 850:block'>
+          <div className=' hidden 850:block border border-white '>
             <iframe
-              src='http://localhost:5173/player/e77140cd6c2bd389b902b538a4127ecb450e?embed=true&title=false&cover=false'
+              src='https://youcoder.io/player/5c15fdc9b5595d643f01e67c788318d3cd8b?embed=true&title=true&cover=false'
               width='900'
               height='480'
               allowFullScreen
-              title='the end of the world'
+              title='YouCoder Demo Recording'
+              scrolling='no'
             />
           </div>
           <div

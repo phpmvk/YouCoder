@@ -17,7 +17,7 @@ const HomePage: React.FC = () => {
   const user = useAppSelector((state) => state.user);
 
   return (
-    <div className='overflow-x-hidden w-screen text-center bg-bg-pri font-title snap-mandatory snap-y '>
+    <div className='overflow-x-hidden min-w-screen text-center bg-bg-pri font-title snap-mandatory snap-y '>
       <TopNavBar
         showFeatures={true}
         showSearch={true}

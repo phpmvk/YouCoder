@@ -170,7 +170,13 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
   );
   return (
     <>
-      <div className='overflow-hidden'>{toRender}</div>
+      <div
+        className={`overflow-hidden ${
+          setTheme === 'light' ? 'bg-gray-200' : 'bg-bg-pri'
+        }`}
+      >
+        {toRender}
+      </div>
     </>
   );
 };
