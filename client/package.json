@@ -19,6 +19,7 @@
     "allotment": "^1.19.0",
     "axios": "^1.4.0",
     "buffer": "^6.0.3",
+    "daisyui": "^2.51.6",
     "dotenv": "^16.0.3",
     "firebase": "^9.21.0",
     "framer-motion": "^10.12.8",
