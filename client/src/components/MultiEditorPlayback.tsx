@@ -163,7 +163,7 @@ export function MultiEditorPlayback({
         editorInstance = jsEditorInstance!;
         break;
     }
-    const model = editorInstance!.getModel();
+    const model = editorInstance.getModel();
     const rangeInstance = new monacoInstance!.Range(
       range.startLineNumber,
       range.startColumn,
@@ -181,6 +181,7 @@ export function MultiEditorPlayback({
       ],
       () => null
     );
+    editorInstance.revealLineInCenter(range.endLineNumber);
   }
 
   function startPlayback(
@@ -690,6 +691,7 @@ export function MultiEditorPlayback({
               audioElement!.muted = false;
             }}
           />
+
        
           <button
             className='p-2 w-fit  items-center text-sm  text-gray-200 rounded !bg-bg-sec/20 border !border-gray-400 uppercase hover:!bg-gray-600/50 active:ring-1 active:ring-bg-alt right-0 whitespace-nowrap '
