@@ -10,6 +10,7 @@ import {
 } from '../../redux/userSlice';
 import { setLoadingSpinner } from '../../redux/spinnerSlice';
 import { toast } from 'react-toastify';
+import { deleteYCRFile } from '../../utils/ycrUtils';
 
 interface DotsMenuProps {
   activeMenu: string | null;
@@ -73,9 +74,14 @@ const DotsMenu = ({
   };
 
   const handleDelete = () => {
+    const recordingLink = recording.recording_link;
     http
       .deleteRecording(recording.recording_id)
       .then((res) => {
+        console.log(res.status);
+        if (res.status === 204) {
+          deleteYCRFile(recordingLink);
+        }
         console.log('res from deleting recording: ', res);
         toast.success('Recording deleted successfully!');
         dispatch(deleteUserRecording({ recordingId: recording.recording_id }));
@@ -111,10 +117,7 @@ const DotsMenu = ({
         </button>
       </Modal>
 
-      <Modal
-        show={showModal}
-        closeModal={() => setShowModal(false)}
-      >
+      <Modal show={showModal} closeModal={() => setShowModal(false)}>
         <EditDetailsform
           detailsToEdit={details}
           setDetailsToEdit={setDetails}
