@@ -65,7 +65,11 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
               <>
                 {displayCover && !coverClicked ? (
                   <div
-                    className='cursor-pointer h-[480px] overflow-hidden flex items-center justify-center w-full bg-bg-pri'
+                    className={`cursor-pointer h-[480px] overflow-hidden flex items-center justify-center w-full ${
+                      setTheme === 'light'
+                        ? 'bg-white text-bg-pri/90'
+                        : 'bg-bg-pri text-white/90'
+                    } `}
                     onClick={hiderecordingCover}
                   >
                     {response.data.thumbnail_link && showCover && (
@@ -76,12 +80,18 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
                       />
                     )}
                     {showTitle && !showCover && (
-                      <div className='my-auto text-white/90 text-7xl capitalize line-clamp-3 leading-tight mx-10 text-center'>
+                      <div className='my-auto text-7xl capitalize line-clamp-3 leading-tight mx-10 text-center'>
                         {response.data.title}
                       </div>
                     )}
                     <div className='absolute w-full h-full opacity-0 hover:opacity-100 flex items-center justify-around'>
-                      <BiPlayCircle className='text-7xl text-white/30 z-10 ' />
+                      <BiPlayCircle
+                        className={`text-7xl ${
+                          setTheme === 'light'
+                            ? 'text-bg-pri/30'
+                            : 'text-white/30'
+                        } z-10 `}
+                      />
                     </div>
                   </div>
                 ) : (

@@ -14,7 +14,7 @@ const ExampleFrame: React.FC = () => {
           className='min-w-[910px] w-[25vw] h-[12.5vw] bg-bg-pri '
           style={{
             scale: scale,
-            zIndex: 1000,
+            zIndex: 30,
           }}
         >
           <div className=' hidden 850:block border border-white '>
@@ -23,7 +23,7 @@ const ExampleFrame: React.FC = () => {
               width='900'
               height='480'
               allowFullScreen
-              title='the end of the world'
+              title='YouCoder Demo Recording'
               scrolling='no'
             />
           </div>

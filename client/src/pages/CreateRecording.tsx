@@ -16,12 +16,11 @@ const CreateRecordingPage: FC<RecordingPageProps> = ({}) => {
       <div className='bg-bg-pri h-screen overflow-auto'>
         <TopNavBar
           showSearch={true}
-          showCreateRecording={true}
+          showCreateRecording={false}
           showDashboard={true}
-          showExamples={true}
         />
         <div>Recording Page</div>
-        <div className='w-full px-10 mx-auto'>
+        <div className='w-full mx-auto'>
           <RecorderEditor />
         </div>
       </div>

@@ -19,6 +19,7 @@ import LoadingPage from './components/LoadingPage';
 import Team from './pages/Team';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import DiscoverPage from './pages/Discover';
 
 export const Firebase = initializeApp(config.firebaseConfig);
 export const storage = getStorage(Firebase);
@@ -61,6 +62,10 @@ function App() {
           <Route
             path='/player/:id'
             element={<PlayerPage />}
+          />
+          <Route
+            path='/discover'
+            element={<DiscoverPage />}
           />
           <Route
             path='/dashboard'
