@@ -43,7 +43,7 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
         <div className='!font-title text-6xl ml-20 my-10 pb-10 flex items-center bg-gradient-to-r from-bg-sec via-white to-bg-alt text-transparent bg-clip-text'>
           F.A.Q.
         </div>
-        <div className='mx-auto max-w-[80vw] !stroke-gray-200 !stroke-2 !text-gray-200'>
+        <div className='mx-[25vw] w-[50vw] !stroke-gray-200 !stroke-2 !text-gray-200 '>
           <Accordion className='!bg-bg-gptdark/60 mb-5 !rounded-sm !font-console'>
             <AccordionSummary
               className='!bg-bg-gptdark !rounded-sm'
