@@ -518,7 +518,7 @@ export function PlaybackEditor({
       ></audio>
 
       <h1
-        className={`ml-6  w-[20ch] text-center rounded-t-md mt-2  ${
+        className={`ml-6  w-[20ch] text-center rounded-t-md mt-2 font-console ${
           theme === 'dark' && editorLanguage ? 'text-gray-200' : 'text-black'
         } ${theme === 'light' ? 'bg-gray-400/40' : ' bg-gray-800/60'} ${
           theme === 'light' && editorLanguage ? 'text-black' : 'bg-gray-800/60'

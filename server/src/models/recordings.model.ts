@@ -1,4 +1,4 @@
-import { Creator, PrismaClient, Recording } from '@prisma/client'
+import { Creator, PrismaClient, Recording, Prisma } from '@prisma/client'
 import { randomBytes } from 'crypto';
 import { FirebaseUser, FrontendRecording } from "../types/types";
 
@@ -14,6 +14,7 @@ export async function getRecordingById(recordingId: string): Promise<Recording |
         select: {
           picture: true,
           display_name: true,
+          uid: true,
         }
       }
     }
@@ -64,6 +65,7 @@ export async function fetchAllUserRecordings(uid: string): Promise<Recording[] |
         select: {
           picture: true,
           display_name: true,
+          uid: true,
         }
       }
     },
@@ -87,7 +89,8 @@ export async function fetchAllUserPublicRecordings(uid: string): Promise<Recordi
       creator: {
         select: {
           picture: true,
-          display_name: true
+          display_name: true,
+          uid: true,
         }
       }
     }
@@ -107,10 +110,12 @@ export async function fetchAllPublicRecordings(): Promise<Recording[] | null> {
       creator: {
         select: {
           picture: true,
-          display_name: true
+          display_name: true,
+          uid: true,
         }
       }
-    }
+    },
+    take: 50,
   });
   return allPublicRecordings;
 };
@@ -120,9 +125,10 @@ export async function fetchPublicRecordingsBySearchQuery(searchQuery: string ): 
     where: {
       published: true,
       OR: [
-        {title: { contains: searchQuery}},
-        {description: { contains: searchQuery}},
-        {language: { contains: searchQuery}}
+        {title: { contains: searchQuery, mode: Prisma.QueryMode.insensitive }},
+        {description: { contains: searchQuery, mode: Prisma.QueryMode.insensitive }},
+        {language: { contains: searchQuery, mode: Prisma.QueryMode.insensitive }},
+        {creator: { display_name: { contains: searchQuery, mode: Prisma.QueryMode.insensitive}}}
       ]
     },
     orderBy: {
@@ -132,7 +138,8 @@ export async function fetchPublicRecordingsBySearchQuery(searchQuery: string ): 
       creator: {
         select: {
           picture: true,
-          display_name: true
+          display_name: true,
+          uid: true,
         }
       }
     }
@@ -227,6 +234,7 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
         select: {
           picture: true,
           display_name: true,
+          uid: true,
         }
       }
     }
