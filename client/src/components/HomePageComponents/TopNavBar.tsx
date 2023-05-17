@@ -148,7 +148,10 @@ function TopNavBar({
           }}
         >
           <Toolbar>
-            <Link to='/'>
+            <Link
+              to='/'
+              reloadDocument
+            >
               <Typography
                 variant='h6'
                 noWrap

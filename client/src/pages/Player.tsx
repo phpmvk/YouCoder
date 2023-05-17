@@ -25,10 +25,6 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
     showCover || showTitle ? true : false
   );
 
-  console.log('showCover: ', showCover);
-  console.log('showTitle: ', showTitle);
-  console.log('displayCover: ', displayCover);
-
   const [coverClicked, setCoverClicked] = useState<boolean>(
     !showCover && !showTitle
   );
