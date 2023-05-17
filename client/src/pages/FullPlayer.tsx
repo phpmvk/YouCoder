@@ -12,18 +12,12 @@ import { Recording } from '../types/Creator';
 import ButtonGroup from '@mui/material';
 import { MultiEditorPlayback } from '../components/MultiEditorPlayback';
 import { toast } from 'react-toastify';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 interface FullPlayerPageProps {
   recordingData: Recording;
 }
 
-const recording = {
-  // title: 'Javascript Functions Explained Pt. 2',
-  description:
-    'Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson Today we will continue our lesson ',
-  creator: 'Michael ',
-  subs: '2.3K',
-};
 
 const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
   return (
@@ -34,34 +28,37 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
         <div className='bg-bg-pri relative flex justify-center items-center overflow-y-scroll overflow-x-hidden hide-scrollbar pt-4 max-w-[1600px]'>
           <div className=' bg-bg-pri border-solid mx-2 pt-4 top-[20px] mb-20 pb-0 overflow-y-scroll border border-gray-600  rounded-2xl hide-scrollbar'>
             {/* className="border border-bg-pri rounded-xl pt-2 */}
-            <PlaybackEditor theme='dark' recordingData={recordingData} />
+            <PlaybackEditor
+              theme='dark'
+              recordingData={recordingData}
+            />
 
             <div className='w-full bg-bg-pri h-auto mt-[15px] mx-auto '>
               <div className='bg-bg-pri mx-4 pt-2 -mt-10'>
                 <div className=''>
                   {/* title */}
 
-                  <div className='text-gray-200 text-4xl text-left pb-6 mx-2 mt-2 '>
+                  <div className='text-gray-200 text-4xl text-left pb-6 mx-2 mt-2 text-ellipsis line-clamp-2'>
                     {recordingData.title}
                   </div>
-                  <div className='bg-bg-pri flex flex-row'>
-                    <div className='flex flex-row bg-bg-pri w-full h-[250px]'>
+                  <div className='bg-bg-pri flex flex-row border border-gray-700 rounded-lg p-3 pt-4 h-60 mb-4'>
+                    
                       {/* ---------Left Card */}
                       <div className='flex flex-col items-center mx-1 min-w-36 max-w-[20vw] '>
-                        <div className='h-36 w-36 border border-gray-700 rounded-xl shadow bg-bg-pri flex items-center justify-center mb-7'>
+                        <div className='h-36 w-36 md:h-44 md:w-44 rounded-xl shadow bg-bg-pri flex items-center justify-center md:-mt-4'>
                           <div className='flex flex-col items-center'>
                             <img
                               className='w-20 h-20 !min-w-20 mb-3 rounded-full shadow-lg'
                               src={recordingData.creator!.picture}
                               alt=''
                             />
-                            <h5 className=' text-xl font-medium text-white'>
+                            <h5 className=' text-sm md:text-lg  font-medium text-white text-ellipsis line-clamp-2'>
                               {recordingData.creator?.display_name}
                             </h5>
                           </div>
                         </div>
                         <Button
-                          variant='outlined'
+                          variant='contained'
                           size='small'
                           onClick={(e) => {
                             navigator.clipboard.writeText(
@@ -69,19 +66,21 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                             );
                             toast.success('Link copied to clipboard');
                           }}
-                          className='!rounded-lg !bg-bg-muigrey !border-gray-700 w-36 !text-gray-100 whitespace-nowrap h-8 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700 mt-4'
+                          className='!rounded-full !bg-bg-muigrey !border-gray-700 w-36 md:w-44 !text-gray-100 whitespace-nowrap h-8 align-middle active:ring-1 active:ring-bg-alt hover:!bg-gray-700'
                         >
-                          {/* <ReplyIcon className='transform scale-x-[-1]' /> */}
+                           <ContentCopyIcon className='scale-75'/> 
                           copy link
                         </Button>
                       </div>
 
                       {/* Middle Card -----------------------------------   */}
 
-                      <div className='flex-col mx-1 min-w-[60vw] max-w-[1000px] w-full py-4 ml-4 h-56 text-left  border rounded-xl shadow bg-bg-pri border-gray-700 overflow-hidden text-white'>
-                        <div className='flex justify-start px-5 pt-1  md:h-full overflow-y-scroll scrollbar-hide'>
-                          <p>{recordingData.description}</p>
-                        </div>
+                      <div className='flex-col mx-1 min-w-[60vw] max-w-[1000px] w-full py-4 ml-4 h-52 text-left  border rounded-lg shadow bg-bg-pri border-gray-700 overflow-hidden text-white'>
+  <div className='px-5 pt-1 md:h-full max-w-[60vw] overflow-y-auto scrollbar-hide overflow-x-hidden' style={{wordWrap: 'break-word', whiteSpace: 'pre-wrap'}}>
+    <p>{recordingData.description}</p>
+  </div>
+</div>
+
                         {/* <div className='py-8 md:hidden'>
                           <Stack
                             className='mx-auto max-w-sm'
@@ -107,7 +106,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                             </Button>
                           </Stack>
                         </div> */}
-                      </div>
+                      {/* </div> */}
 
                       {/* ------Right Side Card */}
 
@@ -138,7 +137,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                       {/* </Stack>
                         </div>
                       </div> */}
-                    </div>
+                    
                   </div>
                   {/* <div className='flex  w-1/4 text-left mx-2  bg-bg-pri  text-3xl text-gray-200'>
                     <div className='flex justify-end pb-4'>

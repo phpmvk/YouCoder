@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, KeyboardEvent } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -14,7 +14,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { getAuth, signOut } from 'firebase/auth';
 import { removeUser } from '../../redux/userSlice';
 import { AiFillVideoCamera } from 'react-icons/ai';
-import { setSearchTerm } from '../../redux/searchSlice';
+import { setSearchTerm, setSearchTriggered } from '../../redux/searchSlice';
 import { persistor } from '../../redux/store';
 import { toast } from 'react-toastify';
 
@@ -64,6 +64,7 @@ interface TopNavBarProps {
   showDashboard?: boolean;
   showFeatures?: boolean;
   showExamples?: boolean;
+  onEnterPress?: (event: React.KeyboardEvent) => void;
 }
 
 function TopNavBar({
@@ -71,6 +72,7 @@ function TopNavBar({
   showCreateRecording = false,
   showDashboard = true,
   showExamples = false,
+  onEnterPress,
 }: TopNavBarProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -126,6 +128,15 @@ function TopNavBar({
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  function handleSearchKeyPress(e: React.KeyboardEvent) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      dispatch(setSearchTerm(term));
+      dispatch(setSearchTriggered(true));
+      navigate('/discover');
+    }
+  }
+
   return (
     <div className='sticky top-0 z-40'>
       <Box sx={{ flexGrow: 1, height: '60px' }}>
@@ -137,7 +148,10 @@ function TopNavBar({
           }}
         >
           <Toolbar>
-            <Link to='/'>
+            <Link
+              to='/'
+              reloadDocument
+            >
               <Typography
                 variant='h6'
                 noWrap
@@ -159,7 +173,8 @@ function TopNavBar({
                 <StyledInputBase
                   value={term}
                   onChange={handleSearchChange}
-                  placeholder='Search…'
+                  onKeyDown={handleSearchKeyPress}
+                  placeholder='Explore Recordings…'
                   inputProps={{ 'aria-label': 'search' }}
                 />
               </Search>
@@ -199,12 +214,15 @@ function TopNavBar({
                   </Button>
                 </Link>
               )}
-              <Link to='/discover'>
+              <Link
+                reloadDocument
+                to='/discover'
+              >
                 <Button
                   className='hover:!underline hover:!underline-offset-8'
                   color='inherit'
                 >
-                  Discovery
+                  Discover
                 </Button>
               </Link>
               {showExamples && (
@@ -248,13 +266,9 @@ function TopNavBar({
                   </Link>
                 </>
               )}
-
-            
             </Box>
-           
           </Toolbar>
         </AppBar>
-        
       </Box>
     </div>
   );

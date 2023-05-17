@@ -20,8 +20,7 @@ const HomePage: React.FC = () => {
     <div className='overflow-x-hidden min-w-screen text-center bg-bg-pri font-title snap-mandatory snap-y '>
       <TopNavBar
         showFeatures={true}
-        showExamples={true}
-        showSearch={false}
+        showSearch={true}
         showCreateRecording={false}
         showDashboard={true}
       />
