@@ -16,6 +16,7 @@ export async function existingCreatorLogin(userData: FirebaseUser){
               picture: true,
               display_name: true,
               uid: true,
+              socials: true,
             }
           }
         },

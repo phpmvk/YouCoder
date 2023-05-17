@@ -15,6 +15,7 @@ export async function getRecordingById(recordingId: string): Promise<Recording |
           picture: true,
           display_name: true,
           uid: true,
+          socials: true,
         }
       }
     }
@@ -66,6 +67,7 @@ export async function fetchAllUserRecordings(uid: string): Promise<Recording[] |
           picture: true,
           display_name: true,
           uid: true,
+          socials: true,
         }
       }
     },
@@ -91,6 +93,7 @@ export async function fetchAllUserPublicRecordings(uid: string): Promise<Recordi
           picture: true,
           display_name: true,
           uid: true,
+          socials: true,
         }
       }
     }
@@ -112,6 +115,7 @@ export async function fetchAllPublicRecordings(): Promise<Recording[] | null> {
           picture: true,
           display_name: true,
           uid: true,
+          socials: true,
         }
       }
     },
@@ -140,6 +144,7 @@ export async function fetchPublicRecordingsBySearchQuery(searchQuery: string ): 
           picture: true,
           display_name: true,
           uid: true,
+          socials: true,
         }
       }
     }
@@ -235,6 +240,7 @@ export async function createNewRecording(frontendRecording: FrontendRecording): 
           picture: true,
           display_name: true,
           uid: true,
+          socials: true,
         }
       }
     }
