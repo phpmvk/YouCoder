@@ -35,7 +35,10 @@ export const rootUser: Creator = {
 
 export interface Recording {
   created_at: string;
-  creator?: { picture: string; display_name: string; uid: string };
+  creator?: {
+    socials: any;
+    socials: any; picture: string; display_name: string; uid: string 
+};
   creator_uid: string;
   description: string;
   full_link: string;

@@ -30,7 +30,7 @@ export async function getRecordingByIdController(req: Request, res: Response) {
       console.error(err)
       res.status(400).send({ message: err.message})
     } else {
-      console.error(err)
+      console.error('getRecordingByIdController error: ', err)
       res.status(500).send({ message: 'Internal server error'})
     }
   }
@@ -46,7 +46,7 @@ export async function incrementRecordingLikesController(req: Request, res: Respo
     }
     res.status(200).send({ message: 'Resource updated' })
   } catch (err) {
-    console.error(err)
+    console.error('incrementRecordingLikesController error: ', err)
     res.status(500).send({ message: 'Internal server error'})
   }
 }
@@ -64,7 +64,7 @@ export async function getAllUserRecordingsController(req: Request, res: Response
     })
     res.status(200).send(allUserRecordings)
   } catch (err) {
-    console.error(err)
+    console.error('getAllUserRecordingsController error: ', err)
     res.status(500).send({ message: 'Internal server error'})
   }
 }
@@ -104,7 +104,7 @@ export async function recordingsQueryController(req: Request, res: Response) {
       }
     }
   } catch (err) {
-    console.error(err);
+    console.error('recordingsQueryController error: ', err);
     res.status(500).send({ message: 'Internal server error when searching with provided parameters: ' + req.query})
   }
 }
@@ -121,7 +121,7 @@ export async function discoverPublicRecordingController(req: Request, res: Respo
     })
     res.status(200).send(allPublicRecordings);
   } catch (err) {
-    console.error(err);
+    console.error('discoverPublicRecordingController error: ', err);
     res.status(500).send({ message: 'Internal server error fetching all public resources'})
   }
 }
@@ -133,7 +133,7 @@ export async function uploadRecordingController(req: Request, res: Response) {
     newRecording.time_since_creation = convertToTimeFromNow(newRecording.created_at_datetime);
     res.status(201).send(newRecording)
   } catch (err) {
-    console.error(err);
+    console.error('uploadRecordingController error: ', err);
     res.status(409).send({ message: 'Unable to create resource' })
   }
 }
@@ -185,11 +185,11 @@ export async function updateRecordingController(req: Request, res: Response) {
     res.status(200).send(updatedRecording)
   } catch (err) {
     if (err instanceof InvalidRecordingError) {
-      console.error(err)
-      res.status(400).send({ message: err.message})
+      console.error('updateRecordingController error: ', err);
+      res.status(400).send({ message: err.message});
     } else {
-      console.error(err)
-      res.status(500).send({ message: 'Internal server error' })
+      console.error('updateRecordingController error: ', err);
+      res.status(500).send({ message: 'Internal server error' });
     }
   }
 }
@@ -219,15 +219,14 @@ export async function deleteRecordingController(req: Request, res: Response) {
     res.status(204).send();
   } catch (err) {
     if (err instanceof InvalidRecordingError) {
-      console.error(err);
+      console.error('deleteRecordingController error: ', err);
       res.status(400).send({ message: err.message});
     } else {
-      console.error(err);
+      console.error('deleteRecordingController error: ', err);
       res.status(500).send({ message: 'Internal server error'});
     }
   }
 }
-
 
 function validateRecordingId(recordingId: string) {
   if (!/^[a-f0-9]{36}$/i.test(recordingId)) {

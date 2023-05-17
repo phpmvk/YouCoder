@@ -15,6 +15,8 @@ export async function existingCreatorLogin(userData: FirebaseUser){
             select: {
               picture: true,
               display_name: true,
+              uid: true,
+              socials: true,
             }
           }
         },
@@ -34,7 +36,7 @@ export async function createCreatorAccount(userData: FirebaseUser){
   const newUser = await prisma.creator.create({
     data: {
       uid: userData.uid,
-      display_name: userData.name,
+      display_name: userData.name || 'User',
       email: userData.email!,
       picture: userData.picture,
       join_date: new Date(Date.now()),

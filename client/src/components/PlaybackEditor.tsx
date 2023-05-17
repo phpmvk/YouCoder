@@ -508,7 +508,7 @@ export function PlaybackEditor({
   }
 
   return recordingData.language === 'multi' ? (
-    <MultiEditorPlayback recordingData={recordingData} />
+    <MultiEditorPlayback theme={theme} recordingData={recordingData} />
   ) : (
     <div className={`${theme === 'light' ? 'bg-gray-200' : 'bg-bg-pri'}`}>
       <audio
@@ -702,6 +702,9 @@ export function PlaybackEditor({
               )}
               {formatTime(sliderValue)} / {formatTime(audioDuration)}
             </div>
+
+
+
           </div>
           <ReactSlider
             className={`w-10/12 max-w-[800px] h-5  rounded-full mx-auto  border flex items-center pr-2 ${
