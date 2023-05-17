@@ -51,7 +51,7 @@ export const UserProfile: FC<UserProfileProps> = ({ save, cancel }) => {
   const placeholderAvatar = 'https://robohash.org/mail@ashallendesign.co.uk';
 
   return (
-    <div className='p-4 font-console grid grid-cols-3 gap-4 text-lg'>
+    <div className='p-4 font-console grid grid-cols-3 gap-4 text-lg text-white'>
   <label htmlFor='fileInput' className='col-span-3 text-center'>
     <img
       className='h-24 w-24 rounded-full cursor-pointer'
