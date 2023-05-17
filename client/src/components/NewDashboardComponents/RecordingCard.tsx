@@ -43,7 +43,7 @@ const RecordingCard = ({
               )} */}
               {recording.thumbnail_link ? (
                 <img
-                  className='absolute object-cover w-full h-full rounded-t-md'
+                  className='absolute object-cover w-full h-full rounded-2xl'
                   src={recording.thumbnail_link}
                   alt={`cover image for ${recording.title}`}
                 />
