@@ -11,10 +11,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import PauseIcon from '@mui/icons-material/Pause';
 import DoneIcon from '@mui/icons-material/Done';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import EjectIcon from '@mui/icons-material/Eject';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import CloseIcon from '@mui/icons-material/Close';
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 
 import consoleApi from '../services/consoleApi';
 import { CodeToExecute } from '../types/Console';
@@ -467,9 +468,9 @@ export function RecorderEditor() {
     
       {recorderState === 'stopped' && (
         <>
-          <div className='flex items-center mx-[10vw]'>
+          <div className='flex items-center'>
             <label
-              className='block mb-2 text-sm font-medium text-white mr-3'
+              className='block mb-2 text-sm font-medium text-white mr-3 font-console'
               htmlFor='language'
             >
               Choose a language
@@ -477,7 +478,7 @@ export function RecorderEditor() {
             <select
               id='language'
               onChange={handleLanguageChange}
-              className='border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3'
+              className='border text-sm rounded-lg  block w-48 px-2.5 py-1 bg-bg-gptdark border-gray-600 placeholder-gray-400 text-white focus:ring-bg-sec focus:border-bg-sec mb-3 font-console'
             >
               <option defaultValue='javascript'>JavaScript</option>
               {/* <option value='multi'>HTML, CSS & JavaScript</option> */}
@@ -493,7 +494,7 @@ export function RecorderEditor() {
         </>
       )}
       {recorderState !== 'stopped' && (
-        <div className='border text-sm rounded-lg w-48 bg-gray-700 border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mb-3 flex items-center justify-center mx-[10vw]'>
+        <div className='border text-sm rounded-lg w-48 bg-bg-gptdark border-gray-600 text-white focus:ring-bg-sec focus:border-bg-sec mb-3 flex items-center justify-center font-console'>
           {selectedLanguage}
         </div>
       )}
@@ -577,19 +578,19 @@ export function RecorderEditor() {
           </Allotment>
         </div>
       </div>
-      <div className="flex flex-wrap justify-start items-center border border-gray-600 rounded-xl mt-2 w-[490px] min-w-[490px] mb-2">
+      <div className="flex flex-wrap justify-start items-center border border-gray-600 rounded-full mt-2 w-[490px] min-w-[490px] mb-2">
       {recorderState === 'stopped' && (
       <div className="flex">  
         <button
-          className='p-2 text-white border border-red-600 rounded-xl m-2 '
+          className='p-2 text-white bg-red-900 flex rounded-full m-2 '
           onClick={handleStartRecording}
-        >
+        ><RadioButtonCheckedIcon className="mr-1 !fill-red-500 "/>
           Start Recording
         </button>
         {alertVisible && (
   <Alert 
     onClose={() => setAlertVisible(false)} 
-    className="fixed top-64 ml-6 !bg-blue-200 w-60 " 
+    className="fixed top-96 ml-6 !bg-blue-200 w-60 " 
     severity="info"
   >
     <AlertTitle>Info</AlertTitle>
@@ -602,15 +603,15 @@ export function RecorderEditor() {
       {recorderState === 'recording' && (
         <>
           <button
-            className='p-2 text-white border  border-bg-alt/60 rounded-xl m-2 flex justify-center items-center w-48'
+            className='p-2 text-white bg-bg-gptdark rounded-full m-2 flex justify-center items-center w-48'
             onClick={handlePauseRecording}
-          > <PauseIcon className="mr-1" />
+          > <PauseIcon className="mr-1 !fill-bg-alt" />
             Pause Recording
           </button>
           <button
-            className='p-2 text-white border border-bg-sec rounded-xl m-2'
+            className='p-2 text-white bg-bg-gptdark rounded-full m-2'
             onClick={handleEndRecording}
-          ><DoneIcon className="mr-1"/>
+          ><DoneIcon className="mr-1 !fill-bg-sec"/>
             End Recording
           </button>
         </>
@@ -619,15 +620,15 @@ export function RecorderEditor() {
       {recorderState === 'paused' && (
         <>
           <button
-            className='p-2 text-white border border-red-600 rounded-xl m-2 w-48'
+            className='p-2 text-white bg-bg-gptdark rounded-full m-2 w-48'
             onClick={handleResumeRecording}
-          > <ArrowForwardIosIcon className="mr-1 scale-80"/>
+          > <EjectIcon className="mr-1 rotate-90 !fill-red-600"/>
             Resume Recording
           </button>
           <button
-            className='p-2 text-white border border-bg-sec rounded-xl m-2'
+            className='p-2 text-white  bg-bg-gptdark rounded-full m-2'
             onClick={handleEndRecording}
-          ><DoneIcon className="mr-1"/>
+          ><DoneIcon className="mr-1 !fill-bg-sec"/>
             End Recording
           </button>
         </>
