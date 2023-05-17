@@ -250,7 +250,7 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
         <button
           type='button'
           onClick={handleSave}
-          className='w-fit py-2 px-4 border border-gray-400 rounded-md bg-bg-sec/40 mb-4 hover:bg-bg-sec/90 active:bg-white/30'
+          className='w-fit py-2 px-4 border border-gray-400 rounded-md bg-bg-sec/90 mb-4 hover:bg-bg-sec/20 active:bg-white/30'
           disabled={buttonDisabled}
         >
           Save

@@ -22,7 +22,7 @@ const Modal: FC<ModalProps> = ({
         className='absolute inset-0 bg-black opacity-70'
         onClick={closeOnOutsideClick ? closeModal : undefined}
       />
-      <div className='w-full max-w-md my-8 overflow-hidden text-left align-middle transition-all transform shadow-[0px_0px_3px_1px_rgba(0,0,0)] rounded-2xl shadow-gray-400 p-6 bg-bg-pri z-50'>
+      <div className='w-full max-w-md my-8 overflow-hidden text-left align-middle transition-all transform shadow-[0px_0px_3px_1px_rgba(0,0,0)] rounded-2xl border border-gray-400 p-6 bg-bg-pri z-50'>
         {children}
       </div>
     </div>
