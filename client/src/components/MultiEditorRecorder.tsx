@@ -435,7 +435,7 @@ export function MultiEditorRecorder() {
       )}
       <div className='flex w-full h-[500px] border border-white rounded-sm'>
         <Allotment>
-          <Allotment.Pane minSize={500}>
+          <Allotment.Pane>
             <Editor
               height='500px'
               defaultLanguage='html'
@@ -453,9 +453,7 @@ export function MultiEditorRecorder() {
               }
             />
           </Allotment.Pane>
-        </Allotment>
-        <Allotment>
-          <Allotment.Pane minSize={500}>
+          <Allotment.Pane>
             <Editor
               height='500px'
               defaultLanguage='css'
@@ -473,9 +471,7 @@ export function MultiEditorRecorder() {
               }
             />
           </Allotment.Pane>
-        </Allotment>
-        <Allotment>
-          <Allotment.Pane minSize={500}>
+          <Allotment.Pane>
             <Editor
               height='500px'
               defaultLanguage='javascript'

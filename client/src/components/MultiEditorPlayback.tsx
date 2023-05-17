@@ -477,7 +477,7 @@ export function MultiEditorPlayback({
       <div className=''>
         <div className='bg-bg-pri flex w-full h-[400px] px-4 mb-2 '>
           <Allotment>
-            <Allotment.Pane minSize={600}>
+            <Allotment.Pane>
               <Editor
                 className=' border-bg-pri border-8 border-r-6 '
                 height='500px'
@@ -494,9 +494,7 @@ export function MultiEditorPlayback({
                 }
               />
             </Allotment.Pane>
-          </Allotment>
-          <Allotment>
-            <Allotment.Pane minSize={600}>
+            <Allotment.Pane>
               <Editor
                 className=' border-bg-pri border-8 border-r-6 '
                 height='500px'
@@ -513,9 +511,7 @@ export function MultiEditorPlayback({
                 }
               />
             </Allotment.Pane>
-          </Allotment>
-          <Allotment>
-            <Allotment.Pane minSize={600}>
+            <Allotment.Pane>
               <Editor
                 className=' border-bg-pri border-8 border-r-6 '
                 height='500px'
@@ -591,7 +587,10 @@ export function MultiEditorPlayback({
             }}
           />
           <Tooltip />
-          <button className='p-2 text-white' onClick={handleRenderOutput}>
+          <button
+            className='p-2 text-white'
+            onClick={handleRenderOutput}
+          >
             Render HTML
           </button>
         </div>

@@ -19,7 +19,7 @@ const ExampleFrame: React.FC = () => {
         >
           <div className=' hidden 850:block border border-white '>
             <iframe
-              src='https://youcoder.io/player/5c15fdc9b5595d643f01e67c788318d3cd8b?embed=true&title=true&cover=false'
+              src='https://youcoder.io/player/5c15fdc9b5595d643f01e67c788318d3cd8b?embed=true&title=true&cover=false&theme=light'
               width='900'
               height='480'
               allowFullScreen
