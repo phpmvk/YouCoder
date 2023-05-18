@@ -56,7 +56,6 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
           if (embed) {
             setCoverClicked(false);
 
-            // show the embed player
             setToRender(
               <>
                 {displayCover && !coverClicked ? (

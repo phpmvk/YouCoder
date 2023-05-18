@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Recording, updateRecording } from '../../types/Creator';
 import Modal from '../Modal';
 import EditDetailsform from './EditDetailsForm';
@@ -117,7 +117,10 @@ const DotsMenu = ({
         </button>
       </Modal>
 
-      <Modal show={showModal} closeModal={() => setShowModal(false)}>
+      <Modal
+        show={showModal}
+        closeModal={() => setShowModal(false)}
+      >
         <EditDetailsform
           detailsToEdit={details}
           setDetailsToEdit={setDetails}

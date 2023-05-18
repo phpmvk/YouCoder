@@ -19,21 +19,6 @@ const NewDashboardPage = ({}: NewDashboardPageProps) => {
   const user = useAppSelector((state) => state.user);
   const [filterTerm, setFilterTerm] = useState<string>('');
 
-  // // this is how to use the search term from the navbar (uses redux)
-  // const searchTerm = useAppSelector((state: RootState) => state.search.searchTerm);
-  // // to filter the recordings based on the search term
-  // useEffect(() => {
-  //   if (searchTerm === '') {
-  //     setDisplayRecordings(user.recordings!);
-  //   } else {
-  //     setDisplayRecordings(
-  //       user.recordings!.filter((recording) =>
-  //         recording.title.toLowerCase().includes(searchTerm.toLowerCase())
-  //       )
-  //     );
-  //   }
-  // }, [searchTerm]);
-
   const createRecordingButtonRef = useRef(null);
 
   const observerCallback = (entries: any, observer: any) => {
@@ -84,7 +69,6 @@ const NewDashboardPage = ({}: NewDashboardPageProps) => {
   const recordings = useAppSelector((state) => state.user.recordings);
 
   useEffect(() => {
-    // re-calculate displayRecordings when recordings changes
     setDisplayRecordings(
       filterTerm === ''
         ? recordings || []
@@ -96,7 +80,6 @@ const NewDashboardPage = ({}: NewDashboardPageProps) => {
               recording.language
                 .toLowerCase()
                 .includes(filterTerm.toLowerCase())
-            // add more filters here
           )
     );
   }, [recordings, filterTerm]);

@@ -80,9 +80,7 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
                 </div>
               </Typography>
             </AccordionDetails>
-            {/* /----------------------------------------------------------------------------------------------/ */}
           </Accordion>
-
           <Accordion className='!bg-bg-gptdark/60 mb-5 !rounded-sm'>
             <AccordionSummary
               className='!bg-bg-gptdark !rounded-sm'
@@ -168,9 +166,12 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
                     Can I personalise the embedded recording?
                   </h2>
                   <p className='text-gray-200 !font-console'>
-
-                  Yes! You can chose to display either the title or the thumbnail provided during the recording creation. In addition, you can also toggle between a &apos;light&apos; and &apos;dark&apos;. Just edit the fields in the provided iFrame link. Keep in mind that the cover takes precedence over the title.
-
+                    Yes! You can chose to display either the title or the
+                    thumbnail provided during the recording creation. In
+                    addition, you can also toggle between a &apos;light&apos;
+                    and &apos;dark&apos;. Just edit the fields in the provided
+                    iFrame link. Keep in mind that the cover takes precedence
+                    over the title.
                   </p>
                   <br />
                 </div>
@@ -350,38 +351,36 @@ const DocsPage: React.FC<DocsPageProps> = ({}) => {
                     Who is the YouCoder team?
                   </h2>
                   <div className='text-gray-200'>
-
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-1 justify-items-center">
-          {teamMembers.map((member, index) => (
-            <div
-              key={index}
-
-              className="h-[40vw] w-[40vw] md:h-[20vw] md:w-[20vw] flex items-center justify-center p-5"
-
-            >
-              <div className="flex items-center text-left flex-col">
-                <img
-                  src={member.img}
-                  alt={member.name}
-
-                  className="h-[16vw] w-[16vw] md:h-[8vw] md:w-[8vw] object-cover rounded-full mb-4"
-
-                />
-                <h2 className=" sm:text-sm md:text-md text-lg text-white whitespace-nowrap z-10 mb-2">{member.name}</h2>
-                <div>
-                  <a href={member.gh} target="_blank" rel="noopener noreferrer">
-
-                    <IconButton className="!text-white !stroke-none scale-150">
-
-                      <GitHubIcon/>
-                    </IconButton>
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
+                    <div className='grid grid-cols-2 md:grid-cols-4 gap-1 justify-items-center'>
+                      {teamMembers.map((member, index) => (
+                        <div
+                          key={index}
+                          className='h-[40vw] w-[40vw] md:h-[20vw] md:w-[20vw] flex items-center justify-center p-5'
+                        >
+                          <div className='flex items-center text-left flex-col'>
+                            <img
+                              src={member.img}
+                              alt={member.name}
+                              className='h-[16vw] w-[16vw] md:h-[8vw] md:w-[8vw] object-cover rounded-full mb-4'
+                            />
+                            <h2 className=' sm:text-sm md:text-md text-lg text-white whitespace-nowrap z-10 mb-2'>
+                              {member.name}
+                            </h2>
+                            <div>
+                              <a
+                                href={member.gh}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                              >
+                                <IconButton className='!text-white !stroke-none scale-150'>
+                                  <GitHubIcon />
+                                </IconButton>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                   <br />
                 </div>

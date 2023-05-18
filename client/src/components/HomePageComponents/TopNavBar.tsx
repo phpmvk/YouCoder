@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, KeyboardEvent } from 'react';
+import { useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -9,10 +9,10 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import youcoderlogo from '../../assets/logo.png';
 import { Button } from '@mui/material';
-import { Link, Router, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { getAuth, signOut } from 'firebase/auth';
-import { editUser, removeUser, setUser } from '../../redux/userSlice';
+import { editUser, removeUser } from '../../redux/userSlice';
 import { AiFillVideoCamera } from 'react-icons/ai';
 import { setSearchTerm, setSearchTriggered } from '../../redux/searchSlice';
 import { persistor } from '../../redux/store';
@@ -22,12 +22,7 @@ import { UserProfile } from './EditProfileForm';
 import { CreatorUpdate } from '../../types/Creator';
 import http from '../../services/userApi';
 import { storage } from '../../App';
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject,
-} from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',

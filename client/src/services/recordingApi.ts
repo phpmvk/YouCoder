@@ -24,16 +24,6 @@ class RecordingApiService {
     const response = await protectedHttp.get<Recording>(`/recording/get/${id}`);
     return response.data;
   }
-
-  // async getRecording3 (id: string): ({message: AxiosResponse<Recording> | null, error: AxiosError | null }) {
-  //   try {
-  //     const res = await http.get<Recording>(`/recording/get/${id}`);
-  //     return {message: res.data, error: null}
-  //   } catch (error) {
-  //     return { response: null, error };
-  //   }
-  // }
-
   postRecording(
     data: EditorRecording
     // data: RecorderActions
