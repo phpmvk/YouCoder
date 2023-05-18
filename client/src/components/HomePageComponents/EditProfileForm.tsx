@@ -110,14 +110,14 @@ export const UserProfile: FC<UserProfileProps> = ({ save, cancel }) => {
       />
 
       <button
-        className='col-span-3 mt-4 p-2 bg-bg-sec text-white rounded-md uppercase'
+        className='col-span-3 mt-4 p-2 bg-bg-sec text-white rounded-md uppercase hover:bg-bg-sec/50'
         onClick={() => save(userDetails, blob ? blob : undefined)}
       >
         Save Profile
       </button>
 
       <button
-        className='col-span-3 mt-4 p-2 bg-bg-pri text-white outline outline-white rounded-md uppercase'
+        className='col-span-3 mt-4 p-2 bg-bg-pri text-white outline outline-white rounded-md uppercase hover:bg-bg-sec/50'
         onClick={cancel}
       >
         cancel
