@@ -16,6 +16,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import VolumeDownIcon from '@mui/icons-material/VolumeDown';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 import {
   RecorderActions,
@@ -684,9 +685,9 @@ export function MultiEditorPlayback({
           />
 
           <button
-            className='p-2 w-fit  items-center text-sm  text-gray-200 rounded !bg-bg-sec/20 border !border-gray-400 uppercase hover:!bg-gray-600/50 active:ring-1 active:ring-bg-alt right-0 whitespace-nowrap '
+            className='py-1 px-2 w-fit  flex items-center text-md  text-gray-200 rounded-xl !bg-bg-sec/40  uppercase hover:!bg-gray-600 active:ring-1 active:ring-bg-alt justify-self-end whitespace-nowrap'
             onClick={handleRenderOutput}
-          >
+          ><div className="mr-2" ><VisibilityIcon/></div>
             Render HTML
           </button>
         </div>

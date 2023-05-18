@@ -36,7 +36,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
         <TopNavBar />
 
         <div className='bg-bg-pri relative flex justify-center items-center overflow-y-scroll overflow-x-hidden hide-scrollbar pt-4 max-w-[1600px]'>
-          <div className=' bg-bg-pri border-solid mx-2 pt-4 top-[20px] mb-20 pb-0 overflow-y-scroll border border-gray-600  rounded-2xl hide-scrollbar'>
+          <div className=' bg-bg-pri border-solid mx-2 pt-4 top-[20px] mb-20 pb-0 overflow-y-scroll border border-gray-600  rounded-xl hide-scrollbar'>
             {/* className="border border-bg-pri rounded-xl pt-2 */}
             <PlaybackEditor
               theme='dark'
@@ -73,7 +73,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                       {}
 
                       <div className='flex justify-around items-center lg:space-x-2 md:scale-125 lg:scale-150'>
-                        {recordingData.creator!.socials.github !== '' ? (
+                        {recordingData.creator?.socials.github && (recordingData.creator!.socials.github !== '' || recordingData.creator!.socials.github !== '#') ? (
                           <a
                             href={`https://github.com/${recordingData.creator?.socials.github}`}
                           >
@@ -85,7 +85,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                           <GitHubIcon className='!fill-bg-gptdark' />
                         )}
 
-                        {recordingData.creator!.socials.youtube !== '' ? (
+                        {recordingData.creator?.socials.youtube && ( recordingData.creator!.socials.youtube !== '' || recordingData.creator!.socials.youtube !== '#') ? (
                           <a
                             href={`https://youtube.com/@${recordingData.creator?.socials.youtube}`}
                           >
@@ -97,7 +97,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                           <YouTubeIcon className='!fill-bg-gptdark' />
                         )}
 
-                        {recordingData.creator!.socials.twitter !== '' ? (
+                        {recordingData.creator?.socials.twitter && (recordingData.creator!.socials.twitter !== '' || recordingData.creator!.socials.twitter !== '#') ? (
                           <a
                             href={`https://twitter.com/${
                               recordingData.creator!.socials.twitter
