@@ -54,7 +54,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                   <div className='bg-bg-pri flex flex-row border border-gray-600 rounded-lg p-3 pt-4 h-60 mb-4'>
                     {/* ---------Left Card */}
                     <div className='flex flex-col items-center mx-1 min-w-36 max-w-[20vw] '>
-                      <div className='h-36 w-36 md:h-44 md:w-44 rounded-xl shadow bg-bg-pri flex items-center justify-center md:-mt-4'>
+                      <div className='h-36 w-36 md:h-44 md:w-44 flex items-center justify-center md:-mt-4'>
                         <div className='flex flex-col items-center'>
                           <img
                             className='w-20 h-20 !min-w-20 mb-3 rounded-full shadow-lg'
@@ -72,7 +72,7 @@ const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
                       </div>
                       {}
 
-                      <div className='flex justify-around items-center space-x-3 lg:space-x-4 scale-150'>
+                      <div className='flex justify-around items-center lg:space-x-2 md:scale-125 lg:scale-150'>
                         {recordingData.creator!.socials.github !== '' ? (
                           <a
                             href={`https://github.com/${recordingData.creator?.socials.github}`}
