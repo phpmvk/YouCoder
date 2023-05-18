@@ -63,13 +63,12 @@ const DotsMenu = ({
     http
       .patchRecording(recording.recording_id, updatedDetails)
       .then((res) => {
-        console.log('res.data: ', res);
         dispatch(updateUserRecording({ recording: res.data }));
         setShowModal(false);
         dispatch(setLoadingSpinner(false));
       })
       .catch((err) => {
-        console.log('err: ', err);
+        toast.error('Error updating recording');
       });
   };
 
@@ -78,16 +77,13 @@ const DotsMenu = ({
     http
       .deleteRecording(recording.recording_id)
       .then((res) => {
-        console.log(res.status);
         if (res.status === 204) {
           deleteYCRFile(recordingLink);
         }
-        console.log('res from deleting recording: ', res);
         toast.success('Recording deleted successfully!');
         dispatch(deleteUserRecording({ recordingId: recording.recording_id }));
       })
       .catch((err) => {
-        console.log('err from deleting recording: ', err);
         toast.error('Error deleting recording');
       })
       .finally(() => {

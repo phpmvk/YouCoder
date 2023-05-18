@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { RootState } from '../redux/store';
 import { setSearchTriggered } from '../redux/searchSlice';
 import { motion, useTransform, useScroll } from 'framer-motion';
+import { toast } from 'react-toastify';
 
 interface DiscoverPageProps {
   userId?: string;
@@ -41,7 +42,7 @@ const DiscoverPage: FC<DiscoverPageProps> = ({ userId }) => {
           setFirstRecordingsToDisplay(response.data);
         })
         .catch((error) => {
-          console.log('error: ', error);
+          toast.error('User not found');
         });
     } else if (searchTriggered) {
       if (searchTerm !== '') {
@@ -53,7 +54,7 @@ const DiscoverPage: FC<DiscoverPageProps> = ({ userId }) => {
             dispatch(setSearchTriggered(false));
           })
           .catch((error) => {
-            console.log('error: ', error);
+            toast.error('No results found');
           });
       } else {
         setRecordingsToDisplay(firstRecordingsToDisplay);
@@ -69,7 +70,7 @@ const DiscoverPage: FC<DiscoverPageProps> = ({ userId }) => {
             setFirstRecordingsToDisplay(response.data);
           })
           .catch((error) => {
-            console.log('error: ', error);
+            toast.error('No results found');
           });
       } else {
         setRecordingsToDisplay(firstRecordingsToDisplay);

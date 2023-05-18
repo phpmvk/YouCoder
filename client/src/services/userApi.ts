@@ -16,7 +16,6 @@ class UserApiService {
         resolve(response);
       } catch (e) {
         const error = e as AxiosError;
-        console.log(error);
         reject(error);
       }
     });
@@ -24,7 +23,6 @@ class UserApiService {
   creatorUpdate(
     data: CreatorUpdate
   ): Promise<AxiosResponse<UserLogin>> | undefined {
-    console.log('data:', data);
     return new Promise(async (resolve, reject) => {
       try {
         const response = await protectedHttp.patch<UserLogin>(
@@ -34,7 +32,6 @@ class UserApiService {
         resolve(response);
       } catch (e) {
         const error = e as AxiosError;
-        console.log(error);
         reject(error);
       }
     });
@@ -49,7 +46,6 @@ class UserApiService {
         resolve(response);
       } catch (e) {
         const error = e as AxiosError;
-        console.log(error);
         reject(error);
       }
     });

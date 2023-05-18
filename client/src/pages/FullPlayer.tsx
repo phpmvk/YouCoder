@@ -18,8 +18,6 @@ interface Social {
 }
 
 const FullPlayerPage: React.FC<FullPlayerPageProps> = ({ recordingData }) => {
-  console.log('recordingData:--->', recordingData);
-
   return (
     <div className='min-h-screen bg-bg-pri min-w-[720px] px-20 flex flex-col justify-center items-center'>
       <div>

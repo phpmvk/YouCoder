@@ -106,13 +106,13 @@ function TopNavBar({
         localStorage.removeItem('token');
         dispatch(removeUser({}));
         persistor.purge();
-        console.log('signed out');
         setLoggedIn(false);
         navigate('/');
         toast.success('Logged out successfully');
       })
       .catch((error: Error) => {
-        console.log(error);
+        console.error(error);
+        toast.error('Error logging out');
       });
   }
 
@@ -141,17 +141,13 @@ function TopNavBar({
     http
       .creatorUpdate(userToUpdate)
       ?.then((res) => {
-        console.log(res);
         dispatch(editUser({ ...user, ...res.data.user }));
         toast.success('Profile updated successfully');
-        navigate('/dashboard');
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         toast.error('Error updating profile');
       });
-
-    console.log('we are saving you');
     setShowEditProfileModal(false);
   }
 

@@ -9,6 +9,7 @@ import CreateRecordingButton from '../components/NewDashboardComponents/CreateRe
 import RecordingsList from '../components/NewDashboardComponents/RecordingsList';
 import NoRecordings from '../components/NewDashboardComponents/NoRecordings';
 import FilterRecordings from '../components/NewDashboardComponents/FilterRecordings';
+import { toast } from 'react-toastify';
 
 interface NewDashboardPageProps {}
 
@@ -57,12 +58,11 @@ const NewDashboardPage = ({}: NewDashboardPageProps) => {
     http
       .getAllUserRecordings()
       .then((response) => {
-        console.log(response.data);
         dispatch(editUser({ ...user, recordings: response.data }));
         dispatch(setLoadingPage(false));
       })
       .catch((error) => {
-        console.log(error);
+        toast.error('Error fetching recordings');
       });
   }, []);
 

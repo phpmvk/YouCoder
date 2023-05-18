@@ -43,7 +43,6 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
         setAuthing(false);
       });
   };
@@ -78,12 +77,11 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
     http
       .creatorLogin()
       .then((response) => {
-        console.log('user from backend response: ', response.data);
         dispatch(setUser({ user: response.data.user }));
         navigate('/dashboard');
       })
       .catch((error) => {
-        console.log(error);
+        toast.error('Error logging in');
         setShowError(true);
       })
       .finally(() => {

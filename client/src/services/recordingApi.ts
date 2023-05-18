@@ -14,7 +14,6 @@ class RecordingApiService {
         resolve(response);
       } catch (e) {
         const error = e as AxiosError;
-        // console.log(error);
         reject(error);
       }
     });
@@ -37,7 +36,6 @@ class RecordingApiService {
         resolve(response);
       } catch (e) {
         const error = e as AxiosError;
-        console.log(error);
         reject(error);
       }
     });
@@ -47,8 +45,6 @@ class RecordingApiService {
     id: string,
     data: updateRecording
   ): Promise<AxiosResponse<Recording>> {
-    console.log('id', id);
-    console.log('data', data);
     return new Promise(async (resolve, reject) => {
       try {
         const response = await protectedHttp.patch<Recording>(
@@ -58,7 +54,6 @@ class RecordingApiService {
         resolve(response);
       } catch (e) {
         const error = e as AxiosError;
-        console.log(error);
         reject(error);
       }
     });
@@ -73,7 +68,6 @@ class RecordingApiService {
         resolve(response);
       } catch (e) {
         const error = e as AxiosError;
-        console.log(error);
         reject(error);
       }
     });
@@ -88,7 +82,6 @@ class RecordingApiService {
         resolve(response);
       } catch (e) {
         const error = e as AxiosError;
-        console.log(error);
         reject(error);
       }
     });
