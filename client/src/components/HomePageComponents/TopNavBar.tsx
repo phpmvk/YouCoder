@@ -217,9 +217,9 @@ function TopNavBar({
               <Box
                 sx={{
                   display: 'flex',
-                  // justifyContent: 'space-between',
+                  
                   alignItems: 'center',
-                  // width: '25%',
+                  
                   marginRight: 2,
                 }}
               >
@@ -305,8 +305,7 @@ function TopNavBar({
                   <>
                     <Link to='/login'>
                       <Button
-                        // className='!border-bg-alt !text-bg-alt hover:!text-bg-pri hover:!bg-bg-alt !h-8 !my-auto'
-                        className='!border-bg-alt !text-bg-pri hover:!bg-bg-pri hover:!text-bg-alt !h-8 !my-auto !bg-bg-alt '
+                        className='!border-bg-alt !text-bg-pri hover:!bg-bg-pri hover:!text-bg-alt !h-8 !my-auto !bg-bg-alt'
                         variant='outlined'
                       >
                         Sign In
@@ -325,8 +324,3 @@ function TopNavBar({
 
 export default TopNavBar;
 
-// // Show the search bar on the dashboard page
-// <TopNavBar showSearch={true} />
-
-// // Hide the search bar on the home page
-// <TopNavBar showSearch={false} />

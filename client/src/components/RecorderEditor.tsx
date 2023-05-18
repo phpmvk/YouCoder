@@ -522,26 +522,7 @@ export function RecorderEditor() {
               preferredSize={300}
             >
               <div className='border w-full h-full border-[#1e1e1e] text-white relative'>
-                {/* <button
-                  className='absolute bottom-2 right-2 border-white border rounded-sm p-2 bg-slate-500 hover:bg-slate-500/50 '
-                  onClick={handleJudge0}
-                  disabled={isConsoleLoading}
-                >
-                  {isConsoleLoading ? (
-                    <svg
-                      className='animate-spin h-5 w-5 mr-3'
-                      viewBox='0 0 24 24'
-                    ></svg>
-                  ) : (
-                    'Compile & Execute'
-                  )}
-                </button>
-                <button
-                  className='absolute top-2 right-2 border-white border text-sm rounded-md px-1 bg-slate-500 hover:bg-slate-500/50'
-                  onClick={() => setConsoleOutput('')}
-                >
-                  clear
-                </button> */}
+                
                 <TooltipMUI title='Compile & Execute'>
                   <button
                     className=' absolute top-0 right-20 w-fit items-center px-2 text-sm  text-gray-200 rounded !bg-green-900/20 border !border-gray-400 uppercase hover:!bg-green-900/50 active:ring-1 active:ring-bg-alt mt-2'
