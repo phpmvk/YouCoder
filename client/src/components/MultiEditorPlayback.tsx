@@ -24,8 +24,6 @@ import {
   EditorAction,
 } from '../types/MultiEditor';
 
-import Tooltip from './Tooltip';
-
 export function MultiEditorPlayback({
   recordingData,
   autoplay,
@@ -394,14 +392,12 @@ export function MultiEditorPlayback({
           if (prevSliderValue >= audioDuration) {
             // When the maximum value is reached, stop the interval
             clearInterval(intervalId);
-            // Stop audio playback
             audioElement?.pause();
-            // Update the playback state
             setPlaybackState({
               status: 'stopped',
               currentPosition: 0,
             });
-            return 0; // Set sliderValue to audioDuration
+            return 0;
           }
           return prevSliderValue + 100;
         });
@@ -459,7 +455,7 @@ export function MultiEditorPlayback({
   }
 
   function handleRenderOutput() {
-    const html = htmlEditorInstance?.getValue() ?? '<h1>hello</h1>';
+    const html = htmlEditorInstance?.getValue() ?? '';
     const css = cssEditorInstance?.getValue() ?? '';
     const js = jsEditorInstance?.getValue() ?? '';
     const output = `<html>
