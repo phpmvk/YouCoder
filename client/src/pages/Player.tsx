@@ -48,15 +48,12 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
 
   const getRecording = useCallback(
     (id: string) => {
-      console.log('hello');
       http
         .getRecording(id)
         .then((response) => {
-          console.log('recording: ', response.data);
           if (embed) {
             setCoverClicked(false);
 
-            // show the embed player
             setToRender(
               <>
                 {displayCover && !coverClicked ? (
@@ -107,10 +104,6 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
         .catch((error) => {
           if (embed) {
             if (error.response) {
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-
               switch (error.response.status) {
                 case 400:
                   setToRender(<Page404 />);
@@ -124,18 +117,12 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
                   setToRender(<Page500 />);
               }
             } else if (error.request) {
-              console.log(error.request);
               setToRender(<Page500 />);
             } else {
-              console.log('Error', error.message);
               setToRender(<Page500 />);
             }
           } else {
             if (error.response) {
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-
               switch (error.response.status) {
                 case 400:
                   navigate('/404');
@@ -153,10 +140,8 @@ const PlayerPage: FC<PlayerPageProps> = ({}) => {
                   navigate('/oops');
               }
             } else if (error.request) {
-              console.log('Request Error: ', error.request);
               navigate('/oops');
             } else {
-              console.log('Other Error', error.message);
               navigate('/oops');
             }
           }

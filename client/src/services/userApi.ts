@@ -1,23 +1,7 @@
 import { AxiosResponse, AxiosError } from 'axios';
-import { rootUser } from '../redux/userSlice';
 import { protectedHttp } from './baseUrl';
 import { Creator, CreatorUpdate } from '../types/Creator';
 
-/***************************
-to use this file:
-
-import userApi from '../services/userApi';
-to call each function:
-
-userApi.creatorLogin(id)
-.then((response) => {
-  console.log(response);
-})
-.catch((e) => {
-  console.log(e);
-});
-
-****************************/
 interface UserLogin {
   user: Creator;
 }
@@ -32,42 +16,13 @@ class UserApiService {
         resolve(response);
       } catch (e) {
         const error = e as AxiosError;
-        console.log(error);
         reject(error);
       }
     });
   }
-
-  // async creatorLogin2(): Promise<AxiosResponse<UserLogin>> {
-  //   try {
-  //     const response = await protectedHttp.post<UserLogin>(
-  //       `/users/creator/login`
-  //     );
-  //     return { response, error: null };
-  //   } catch (e) {
-  //     const error = e as AxiosError;
-  //     console.log(error);
-  //     return { response: null, error };
-  //   }
-  // }
-  /*
-  async function xxxxxx (){
-  const user = await creatorLogin2()
-  if (user.error) {
-
-  } else {
-
-  }
-
-
-  }
-
-
-  */
   creatorUpdate(
     data: CreatorUpdate
   ): Promise<AxiosResponse<UserLogin>> | undefined {
-    console.log('data:', data);
     return new Promise(async (resolve, reject) => {
       try {
         const response = await protectedHttp.patch<UserLogin>(
@@ -77,7 +32,6 @@ class UserApiService {
         resolve(response);
       } catch (e) {
         const error = e as AxiosError;
-        console.log(error);
         reject(error);
       }
     });
@@ -92,7 +46,6 @@ class UserApiService {
         resolve(response);
       } catch (e) {
         const error = e as AxiosError;
-        console.log(error);
         reject(error);
       }
     });

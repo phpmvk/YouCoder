@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react';
-import styles from './Content.module.css';
-
 interface TerminalProps {
   output: null | string;
   terminalName?: string;

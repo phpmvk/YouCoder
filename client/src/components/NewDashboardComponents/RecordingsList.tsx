@@ -1,11 +1,7 @@
-import { Filter } from '@mui/icons-material';
 import { Recording } from '../../types/Creator';
-import { useEffect, useState } from 'react';
-import FilterRecordings from './FilterRecordings';
+import { useState } from 'react';
 import RecordingCard from './RecordingCard';
 import { useAppSelector } from '../../redux/hooks';
-import CreateRecordingButton from './CreateRecordingButton';
-import LoginArt from '../LoginPageComponents/LoginArt';
 
 interface RecordingsListProps {
   allowEdit: boolean;
@@ -16,32 +12,10 @@ interface RecordingsListProps {
 
 const RecordingsList = ({
   allowEdit,
-  filterTerm,
   setFilterTerm,
   displayRecordings,
 }: RecordingsListProps) => {
-  // const [displayRecordings, setDisplayRecordings] = useState<Recording[]>([]);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-
-  const recordings = useAppSelector((state) => state.user.recordings);
-
-  // useEffect(() => {
-  //   // re-calculate displayRecordings when recordings changes
-  //   setDisplayRecordings(
-  //     filterTerm === ''
-  //       ? recordings || []
-  //       : (recordings || []).filter(
-  //           (recording) =>
-  //             recording.title
-  //               .toLowerCase()
-  //               .includes(filterTerm.toLowerCase()) ||
-  //             recording.language
-  //               .toLowerCase()
-  //               .includes(filterTerm.toLowerCase())
-  //           // add more filters here
-  //         )
-  //   );
-  // }, [recordings, filterTerm]);
 
   return (
     <div className='px-[10vw] flex justify-around flex-col mr-[unset]'>
