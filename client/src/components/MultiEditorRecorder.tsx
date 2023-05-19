@@ -27,7 +27,6 @@ import DoneIcon from '@mui/icons-material/Done';
 import EjectIcon from '@mui/icons-material/Eject';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import CloseIcon from '@mui/icons-material/Close';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 
 export function MultiEditorRecorder() {
@@ -204,7 +203,7 @@ export function MultiEditorRecorder() {
   }
 
   function handleRenderOutput() {
-    const html = htmlEditorInstance?.getValue() ?? '<h1>hello</h1>';
+    const html = htmlEditorInstance?.getValue() ?? '';
     const css = cssEditorInstance?.getValue() ?? '';
     const js = jsEditorInstance?.getValue() ?? '';
     const output = `<html>
@@ -285,7 +284,6 @@ export function MultiEditorRecorder() {
     setPauseAction(false);
   }
   function handleEndRecording() {
-    console.log(recorderActions);
     if (pauseAction) {
       if (
         !window.confirm(
@@ -350,7 +348,6 @@ export function MultiEditorRecorder() {
         return { ...change, playbackTimestamp: adjustedTimestamp };
       });
 
-    console.log(recorderState);
     if (recorderState === 'paused') {
       mediaRecorderRef.current!.resume(); // Resume recording
       mediaRecorderRef.current!.onresume = () => {
@@ -379,7 +376,6 @@ export function MultiEditorRecorder() {
         audioRecordingBlobRef.current!,
         user.uid!
       );
-      console.log(ycrFileUrl);
       const language = 'multi';
 
       const Recording: EditorRecording = {
