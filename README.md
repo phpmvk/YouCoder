@@ -1,4 +1,17 @@
 # Frontend
+## **Stack**
+Youcoder's frontend is built with the following:
+- [React](https://react.dev/)
+- [Vite](https://vitejs.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Redux](https://redux.js.org/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [Material-UI](https://mui.com/)
+- [Framer-Motion](https://www.framer.com/motion/)
+- [Monaco Editor](https://microsoft.github.io/monaco-editor/)
+- [Axios](https://axios-http.com/)
+- [Firebase](https://firebase.google.com/)
+
 
 ## Frontend Configuration
 This project was built using [Vite](https://vitejs.dev/), with [Tailwind](https://tailwindcss.com/). Please follow these steps to host the frontend locally:
