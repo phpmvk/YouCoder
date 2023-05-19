@@ -1,4 +1,44 @@
+# Welcome to YouCoder 
+It's where YouTube meets the code editor. YouCoder is an innovative platform designed for creating and sharing interactive code lessons. It's also a place for discovering and learning from a variety of tutorials. Code and explain your process in one go.
+
+## For Content Creators
+YouCoder equips content creators with easy-to-use tools to create dynamic coding lessons:
+- Choose from a multitude of programming languages, including a multi-edit mode for HTML, CSS, and JavaScript.
+- Pause your recording anytime to fix errors and continue seamlessly.
+- The output of your executed code during the recording will be displayed during playback.
+- Upon finishing your recording, you'll be directed to your dashboard where you can manage your content. Modify recording details and determine which lessons should be publicly accessible.
+- Share your work by providing a link to your lessons on our site, or copy an iframe tag to embed your recording on any other platform.
+
+## For Learners
+The Discover page is your starting point if you're here to learn:
+- Explore and search for lessons from various content creators.
+- Enjoy complete control over the lesson playback - pause, play, and navigate to any part of the code.
+- Pause and interact with the code, modify it, execute it, and view the output.
+- Resume the lesson from where you left off.
+- If the coding panels seem too cramped, simply drag the edges to resize them to your preference.
+
+## Embedding a Lesson
+Embedding a YouCoder lesson into your website or platform is a breeze. Simply copy the provided embed code and paste it into your desired location for a seamless and visually appealing integration of your coding sessions.
+
+
+YouCoder is a platform made for everyone - students, teachers, and professionals alike. Whether you're just starting out or aiming to improve your skills, YouCoder has got you covered. Welcome to a world of interactive coding lessons!
+
+*******
+
 # Frontend
+## **Stack**
+Youcoder's frontend is built with the following:
+- [React](https://react.dev/)
+- [Vite](https://vitejs.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Redux](https://redux.js.org/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [Material-UI](https://mui.com/)
+- [Framer-Motion](https://www.framer.com/motion/)
+- [Monaco Editor](https://microsoft.github.io/monaco-editor/)
+- [Axios](https://axios-http.com/)
+- [Firebase](https://firebase.google.com/)
+
 
 ## Frontend Configuration
 This project was built using [Vite](https://vitejs.dev/), with [Tailwind](https://tailwindcss.com/). Please follow these steps to host the frontend locally:

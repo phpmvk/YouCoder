@@ -11,7 +11,6 @@ import http from '../services/userApi';
 import { setUser } from '../redux/userSlice';
 import { useAppDispatch } from '../redux/hooks';
 import LoginArt from '../components/HomePageComponents/LoginArt';
-import ErrorBackend from '../components/LoginPageComponents/ErrorBackend';
 import { setLoadingPage } from '../redux/spinnerSlice';
 import { toast } from 'react-toastify';
 
@@ -39,13 +38,11 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
       .then(async (response) => {
         const token = await response.user.getIdToken();
         if (token) {
-          console.log('----token: ', token);
           localStorage.setItem('token', token);
           login();
         }
       })
       .catch((error) => {
-        console.log(error);
         setAuthing(false);
       });
   };
@@ -56,7 +53,6 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
       .then(async (response) => {
         const token = await response.user.getIdToken();
         if (token) {
-          console.log('----token: ', token);
           localStorage.setItem('token', token);
           login();
         }
@@ -81,12 +77,11 @@ const LoginPage: React.FC<ILoginPageProps> = () => {
     http
       .creatorLogin()
       .then((response) => {
-        console.log('user from backend response: ', response.data);
         dispatch(setUser({ user: response.data.user }));
         navigate('/dashboard');
       })
       .catch((error) => {
-        console.log(error);
+        toast.error('Error logging in');
         setShowError(true);
       })
       .finally(() => {

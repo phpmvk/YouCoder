@@ -12,14 +12,12 @@ class DiscoverApiService {
         resolve(response);
       } catch (e) {
         const error = e as AxiosError;
-        console.log(error);
         reject(error);
       }
     });
   }
 
   discoverQuery(query: string): Promise<AxiosResponse<Recording[]>> {
-    console.log('query', query);
     return new Promise(async (resolve, reject) => {
       try {
         const response = await protectedHttp.get<Recording[]>(
@@ -28,7 +26,6 @@ class DiscoverApiService {
         resolve(response);
       } catch (e) {
         const error = e as AxiosError;
-        console.log(error);
         reject(error);
       }
     });
@@ -43,7 +40,6 @@ class DiscoverApiService {
         resolve(response);
       } catch (e) {
         const error = e as AxiosError;
-        console.log(error);
         reject(error);
       }
     });

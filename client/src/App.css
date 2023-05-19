@@ -1,41 +1,13 @@
-/* Editor slider css temporary placed */
-/* .horizontal-slider {
-  width: 100%;
-  max-width: 800px;
-  height: 20px;
-  background-color: #ccc;
-  border-radius: 10px;
-  margin: 0 auto;
-}
 
-.slider-thumb {
-  width: 20px;
-  height: 20px;
-  background-color: #2196f3;
-  border-radius: 50%;
-  cursor: pointer;
-  outline: none;
-} */
-
-terminal {
-  /* Your custom styles for the terminal component */
-  /* Example styles: */
-  background-color: red !important;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 10px;
-  font-family: monospace;
-}
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
 .hide-scrollbar {
-  -ms-overflow-style: none; /* for Internet Explorer and Edge */
-  scrollbar-width: none; /* for Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
-/* This applies to all scrollbars on the page */
 ::-webkit-scrollbar {
   width: 10px;
 }

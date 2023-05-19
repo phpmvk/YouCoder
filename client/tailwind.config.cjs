@@ -43,10 +43,6 @@ module.exports = {
           gptdark: '#202123',
           console: '#1e1e1e',
         },
-
-        text: {
-          // normal: 'slate-300',
-        },
       },
 
       backgroundImage: {

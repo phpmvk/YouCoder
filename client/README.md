@@ -1,4 +1,4 @@
-# { YouCoder... }
+# { YouCoder }
 
 ## How to start
 

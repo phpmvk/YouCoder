@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { auth } from '../config/firebase';
 
-// const baseURL = 'http://localhost:3000';
 const baseURL = 'https://yc-serv.fly.dev/';
 
 export const protectedHttp = axios.create({
@@ -40,13 +39,8 @@ protectedHttp.interceptors.request.use(
   async (config) => {
     const token = localStorage.getItem('token');
     if (token) {
-      console.log('******* auth ********', auth);
-      console.log('isTokenExpired(token)', isTokenExpired(token));
-      console.log('auth.currentUser', auth.currentUser);
       if (isTokenExpired(token) && auth.currentUser) {
-        console.log('we are here !!!!!!');
         const refreshedToken = await auth.currentUser.getIdToken(true);
-        console.log('got a fresh token', refreshedToken);
         localStorage.setItem('token', refreshedToken);
         config.headers.Authorization = `Bearer ${refreshedToken}`;
       } else if (auth.currentUser) {

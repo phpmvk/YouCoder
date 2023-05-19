@@ -10,7 +10,6 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import { PersistGate } from 'redux-persist/integration/react';
 import storage from 'redux-persist/lib/storage';
 import userReducer from './userSlice';
 import searchReducer from './searchSlice';
@@ -28,7 +27,7 @@ export type RootState = ReturnType<typeof rootReducer>;
 const persistConfig: PersistConfig<RootState> = {
   key: 'root',
   storage,
-  whitelist: ['user'], // only user will be persisted, add other reducers if needed
+  whitelist: ['user'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

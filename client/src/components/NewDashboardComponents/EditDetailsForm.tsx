@@ -90,9 +90,6 @@ const EditDetailsform: FC<EditDetailsformProps> = ({
     setButtonDisabled(true);
     let updatedDetails = { ...detailsToEdit };
 
-    console.log('file: ', file);
-    console.log('image: ', image);
-
     if (file) {
       try {
         dispatch(setLoadingSpinner(true));

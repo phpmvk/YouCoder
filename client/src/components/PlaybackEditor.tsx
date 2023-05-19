@@ -15,7 +15,6 @@ import {
   formatTime,
   getLanguageId,
   formatLanguage,
-  toggleTheme,
 } from '../utils/editorUtils';
 import { Recording } from '../types/Creator';
 import Button from '@mui/material/Button';
@@ -24,8 +23,6 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import VolumeDownIcon from '@mui/icons-material/VolumeDown';
-import ClearIcon from '@mui/icons-material/Clear';
-import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 import { default as TooltipMUI } from '@mui/material/Tooltip';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
@@ -36,7 +33,6 @@ import {
   EditorAction,
   Language,
 } from '../types/Editor';
-import Tooltip from './Tooltip';
 import { MultiEditorPlayback } from './MultiEditorPlayback';
 
 export function PlaybackEditor({
@@ -112,10 +108,6 @@ export function PlaybackEditor({
       monacoInstance.editor.setModelLanguage(model!, editorLanguage);
     }
   }, []);
-
-  // useEffect(() => {
-  //   if (monacoInstance) toggleTheme(theme, monacoInstance!);
-  // }, [theme, monacoInstance]);
 
   useEffect(() => {
     const defaultFontSize = getDefaultFontSize();
@@ -397,15 +389,13 @@ export function PlaybackEditor({
           if (prevSliderValue >= audioDuration) {
             // When the maximum value is reached, stop the interval
             clearInterval(intervalId);
-            // Stop audio playback
             audioElement?.pause();
-            // Update the playback state
             setPlaybackState({
               status: 'stopped',
               currentPosition: 0,
             });
             updateAudioCurrentTime(0);
-            return 0; // Set sliderValue to audioDuration
+            return 0;
           }
           return prevSliderValue + 100;
         });
@@ -550,10 +540,7 @@ export function PlaybackEditor({
                 onMount={handleEditorDidMount}
               />
             </Allotment.Pane>
-            <Allotment.Pane
-              minSize={200}
-              preferredSize={400}
-            >
+            <Allotment.Pane minSize={200} preferredSize={400}>
               <div
                 className={`w-full h-[50%] border-r-8 border-t-8 border-l-2  ${
                   theme === 'light' ? 'border-gray-200' : 'border-bg-pri'
@@ -592,7 +579,6 @@ export function PlaybackEditor({
                           <CircularProgress size={20} />
                         </Box>
                       ) : (
-                        // <PlayArrowOutlinedIcon style={{ fontSize: 24 }} />
                         <p>run</p>
                       )}
                     </button>
@@ -608,7 +594,6 @@ export function PlaybackEditor({
                     >
                       {' '}
                       <p>clear</p>
-                      {/* <ClearIcon /> */}
                     </button>
                   </TooltipMUI>
                 </div>
@@ -702,9 +687,6 @@ export function PlaybackEditor({
               )}
               {formatTime(sliderValue)} / {formatTime(audioDuration)}
             </div>
-
-
-
           </div>
           <ReactSlider
             className={`w-10/12 max-w-[800px] h-5  rounded-full mx-auto  border flex items-center pr-2 ${
