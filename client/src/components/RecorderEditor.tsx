@@ -62,7 +62,6 @@ export function RecorderEditor() {
   const [selectedLanguage, setSelectedLanguage] = useState('javascript');
   const [alertVisible, setAlertVisible] = useState(true);
 
-
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [recordingIntervalId, setRecordingIntervalId] =
     useState<NodeJS.Timeout | null>(null);
@@ -127,7 +126,6 @@ export function RecorderEditor() {
       })
       .catch((error) => {
         console.error('Could not get user media', error);
-        // Display message to user
         alert(
           'Permission for microphone is required to record. Please enable access and refresh the page.'
         );
@@ -233,7 +231,7 @@ export function RecorderEditor() {
     mediaRecorderRef.current!.start();
     setRecorderLoading(false);
 
-    // Wait for 5 seconds and then check if the microphone is recording data
+    // Wait for 10 seconds and then check if the microphone is recording data
     setTimeout(() => {
       const bufferLength = analyserRef.current!.frequencyBinCount;
       const dataArray = new Uint8Array(bufferLength);
@@ -454,12 +452,9 @@ export function RecorderEditor() {
   }
 
   return selectedLanguage === 'multi' ? (
-
     <MultiEditorRecorder />
-
   ) : (
     <>
-
       {recorderState === 'stopped' && (
         <>
           <div className='flex items-center h-16'>
@@ -515,7 +510,6 @@ export function RecorderEditor() {
             </Allotment.Pane>
             <Allotment.Pane minSize={180} preferredSize={300}>
               <div className='border w-full h-full border-[#1e1e1e] text-white relative'>
-
                 <TooltipMUI title='Compile & Execute'>
                   <button
                     className=' absolute top-0 right-20 w-fit items-center px-2 text-sm  text-gray-200 rounded !bg-green-900/20 border !border-gray-400 uppercase hover:!bg-green-900/50 active:ring-1 active:ring-bg-alt mt-2'
@@ -541,8 +535,9 @@ export function RecorderEditor() {
                   <button
                     className='absolute top-0 right-2 w-fit items-center px-2 text-sm font-light text-gray-200 rounded !bg-red-900/20 border !border-gray-400 uppercase hover:!bg-red-900/50 active:ring-1 active:ring-bg-alt mt-2'
                     onClick={() => setConsoleOutput('')}
-                  > <p>clear</p>
-
+                  >
+                    {' '}
+                    <p>clear</p>
                   </button>
                 </TooltipMUI>
 
@@ -552,27 +547,29 @@ export function RecorderEditor() {
           </Allotment>
         </div>
       </div>
-      <div className="flex flex-wrap justify-start items-center border border-gray-600 rounded-full mt-2 w-[490px] min-w-[490px] mb-2">
-      {recorderState === 'stopped' && (
-      <div className="flex">
-        <button
-          className='p-2 pr-4 text-white bg-red-900 flex rounded-full m-2 '
-          onClick={handleStartRecording}
-        ><RadioButtonCheckedIcon className="mr-1 !fill-red-500 "/>
-          Start Recording
-        </button>
-        {alertVisible && (
-  <Alert
-    onClose={() => setAlertVisible(false)}
-    className="absolute top-60 ml-6 !bg-blue-200 w-60 "
-    severity="info"
-  >
-    <AlertTitle>Info</AlertTitle>
-    Any code typed into the editor before starting the recording will be discarded.
-  </Alert>
-)}
-        </div>
-      )}
+      <div className='flex flex-wrap justify-start items-center border border-gray-600 rounded-full mt-2 w-[490px] min-w-[490px] mb-2'>
+        {recorderState === 'stopped' && (
+          <div className='flex'>
+            <button
+              className='p-2 pr-4 text-white bg-red-900 flex rounded-full m-2 '
+              onClick={handleStartRecording}
+            >
+              <RadioButtonCheckedIcon className='mr-1 !fill-red-500 ' />
+              Start Recording
+            </button>
+            {alertVisible && (
+              <Alert
+                onClose={() => setAlertVisible(false)}
+                className='absolute top-60 ml-6 !bg-blue-200 w-60 '
+                severity='info'
+              >
+                <AlertTitle>Info</AlertTitle>
+                Any code typed into the editor before starting the recording
+                will be discarded.
+              </Alert>
+            )}
+          </div>
+        )}
 
         {recorderState === 'recording' && (
           <>
@@ -628,10 +625,6 @@ export function RecorderEditor() {
           </div>
         )}
       </div>
-
-
-      )}
-</div>
       <Modal
         show={saveModalVisible}
         closeModal={() => setSaveModalVisible(false)}
@@ -646,8 +639,6 @@ export function RecorderEditor() {
           warnBeforeUnpublish={false}
         />
       </Modal>
-
     </>
-
   );
 }
