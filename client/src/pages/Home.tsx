@@ -1,14 +1,10 @@
-import React, { useState } from 'react';
-import { getAuth, signOut } from 'firebase/auth';
-
+import React from 'react';
 import TopNavBar from './../components/HomePageComponents/TopNavBar';
-import TeachInteractively from './../components/HomePageComponents/TeachInteractively';
 import Heading from './../components/HomePageComponents/Heading';
 import ExampleFrame from './../components/HomePageComponents/ExampleFrame';
 import TopBall from './../components/HomePageComponents/TopBall';
 import MiddleBall from './../components/HomePageComponents/MiddleBall';
 import BottomBall from './../components/HomePageComponents/BottomBall';
-import Footer from './../components/HomePageComponents/Footer';
 import { useAppSelector } from '../redux/hooks';
 import GotoBottom from '../components/HomePageComponents/GotoBottom';
 import Explainer from '../components/HomePageComponents/Explainer';

@@ -4,7 +4,6 @@ import { IoEyeSharp } from 'react-icons/io5';
 import { formatLanguage, formatTime } from '../../utils/editorUtils';
 import DotsMenu from './DotsMenu';
 import youcoderlogo from '../../assets/logo.png';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 interface RecordingCardProps {
@@ -105,7 +104,6 @@ const RecordingCard = ({
                   </div>
                 )}
                 <div className='col-start-3 text-right'>
-                  {/* 2 months ago */}
                   {recording.time_since_creation}
                 </div>
               </div>

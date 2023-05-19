@@ -9,6 +9,7 @@ import CreateRecordingButton from '../components/NewDashboardComponents/CreateRe
 import RecordingsList from '../components/NewDashboardComponents/RecordingsList';
 import NoRecordings from '../components/NewDashboardComponents/NoRecordings';
 import FilterRecordings from '../components/NewDashboardComponents/FilterRecordings';
+import { toast } from 'react-toastify';
 
 interface NewDashboardPageProps {}
 
@@ -18,21 +19,6 @@ const NewDashboardPage = ({}: NewDashboardPageProps) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
   const [filterTerm, setFilterTerm] = useState<string>('');
-
-  // // this is how to use the search term from the navbar (uses redux)
-  // const searchTerm = useAppSelector((state: RootState) => state.search.searchTerm);
-  // // to filter the recordings based on the search term
-  // useEffect(() => {
-  //   if (searchTerm === '') {
-  //     setDisplayRecordings(user.recordings!);
-  //   } else {
-  //     setDisplayRecordings(
-  //       user.recordings!.filter((recording) =>
-  //         recording.title.toLowerCase().includes(searchTerm.toLowerCase())
-  //       )
-  //     );
-  //   }
-  // }, [searchTerm]);
 
   const createRecordingButtonRef = useRef(null);
 
@@ -72,19 +58,17 @@ const NewDashboardPage = ({}: NewDashboardPageProps) => {
     http
       .getAllUserRecordings()
       .then((response) => {
-        console.log(response.data);
         dispatch(editUser({ ...user, recordings: response.data }));
         dispatch(setLoadingPage(false));
       })
       .catch((error) => {
-        console.log(error);
+        toast.error('Error fetching recordings');
       });
   }, []);
 
   const recordings = useAppSelector((state) => state.user.recordings);
 
   useEffect(() => {
-    // re-calculate displayRecordings when recordings changes
     setDisplayRecordings(
       filterTerm === ''
         ? recordings || []
@@ -96,7 +80,6 @@ const NewDashboardPage = ({}: NewDashboardPageProps) => {
               recording.language
                 .toLowerCase()
                 .includes(filterTerm.toLowerCase())
-            // add more filters here
           )
     );
   }, [recordings, filterTerm]);
