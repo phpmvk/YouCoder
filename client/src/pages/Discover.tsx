@@ -25,7 +25,6 @@ const DiscoverPage: FC<DiscoverPageProps> = ({ userId }) => {
   const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
   const userParams = searchParams.get('user');
-
   const searchTerm = useAppSelector(
     (state: RootState) => state.search.searchTerm
   );
@@ -97,6 +96,7 @@ const DiscoverPage: FC<DiscoverPageProps> = ({ userId }) => {
         <p className='text-white/80 font-title px-7 z-10'>
           Trending recordings
         </p>
+
       </Link>
       <RecordingsList
         displayRecordings={recordingsToDisplay}

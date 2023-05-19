@@ -48,10 +48,6 @@ function App() {
             element={<HomePage />}
           />
           <Route
-            path='/team'
-            element={<Team />}
-          />
-          <Route
             path='/login'
             element={<LoginPage />}
           />
